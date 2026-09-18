@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "next": "16.3.5",
+    "next-sanity": "^9.8.0",
+    "@sanity/image-url": "^1.0.2",
+    "@portabletext/react": "^3.2.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "sanity": "^3.66.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

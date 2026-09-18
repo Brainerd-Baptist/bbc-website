@@ -1,4 +1,5 @@
-import { SERMONS, ALL_SERIES, ALL_SPEAKERS, ALL_YEARS } from "@/lib/sermons";
+import { getAllSermons, getAllSeries, FALLBACK_SERMONS } from "@/lib/sanity";
+import { ALL_SERIES as FALLBACK_SERIES } from "@/lib/sermons";
 import SermonGrid from "@/components/sermons/SermonGrid";
 
 export const metadata = {
@@ -7,7 +8,58 @@ export const metadata = {
     "Listen to sermons from Brainerd Baptist Church. Expository preaching through books of the Bible — searchable by series, speaker, passage, and year.",
 };
 
-export default function SermonsPage() {
+export const revalidate = 300; // ISR: regenerate every 5 minutes
+
+export default async function SermonsPage() {
+  // Try Sanity first; fall back to static file while CMS is being populated
+  const [sanitySermons, sanitySeries] = await Promise.all([
+    getAllSermons().catch(() => []),
+    getAllSeries().catch(() => []),
+  ]);
+
+  const usingSanity = sanitySermons.length > 0;
+
+  const sermons = usingSanity
+    ? sanitySermons.map((s) => ({
+        id: s._id,
+        youtubeId: s.youtubeId ?? "",
+        title: s.title,
+        slug: s.slug?.current ?? "",
+        series: s.series?.title ?? "",
+        seriesId: s.series?.slug?.current ?? "",
+        seriesAccent: s.series?.accentColor,
+        seriesBg: s.series?.bgColor,
+        speaker: s.speaker,
+        date: s.date,
+        passage: s.passage ?? "",
+        book: s.book ?? "",
+        duration: s.duration,
+      }))
+    : FALLBACK_SERMONS.map((s) => ({
+        id: s.id,
+        youtubeId: s.youtubeId,
+        title: s.title,
+        slug: "",
+        series: s.series,
+        seriesId: s.seriesId,
+        seriesAccent: undefined as string | undefined,
+        seriesBg: undefined as string | undefined,
+        speaker: s.speaker,
+        date: s.date,
+        passage: s.passage,
+        book: s.book,
+        duration: s.duration,
+      }));
+
+  const allSeries = usingSanity
+    ? sanitySeries.map((s) => ({ id: s.slug.current, name: s.title }))
+    : FALLBACK_SERIES;
+
+  const allSpeakers = Array.from(new Set(sermons.map((s) => s.speaker)));
+  const allYears = Array.from(
+    new Set(sermons.map((s) => s.date.slice(0, 4)))
+  ).sort((a, b) => Number(b) - Number(a));
+
   return (
     <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
 
@@ -39,10 +91,10 @@ export default function SermonsPage() {
 
       {/* ── Filter + grid (client component) ─────────────────────────── */}
       <SermonGrid
-        sermons={SERMONS}
-        allSeries={ALL_SERIES}
-        allSpeakers={ALL_SPEAKERS}
-        allYears={ALL_YEARS}
+        sermons={sermons}
+        allSeries={allSeries}
+        allSpeakers={allSpeakers}
+        allYears={allYears}
       />
 
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}

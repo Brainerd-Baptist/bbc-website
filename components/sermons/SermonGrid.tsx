@@ -2,18 +2,41 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import {
-  type Sermon,
-  thumbnailUrl,
-  watchUrl,
-  formatDate,
-} from "@/lib/sermons";
+import { formatDate } from "@/lib/sermons";
+
+// Normalised sermon shape — works for both static and Sanity data
+export interface GridSermon {
+  id: string;
+  youtubeId: string;
+  title: string;
+  slug: string;          // empty string when coming from static data
+  series: string;
+  seriesId: string;
+  seriesAccent?: string; // overrides default palette when set in Sanity
+  seriesBg?: string;
+  speaker: string;
+  date: string;
+  passage: string;
+  book: string;
+  duration?: string;
+}
 
 interface Props {
-  sermons: Sermon[];
+  sermons: GridSermon[];
   allSeries: { id: string; name: string }[];
   allSpeakers: string[];
   allYears: string[];
+}
+
+function thumbnailUrl(youtubeId: string): string {
+  if (!youtubeId) return "";
+  return `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
+}
+
+function watchUrl(youtubeId: string, slug: string): string {
+  if (slug) return `/sermons/${slug}`;
+  if (youtubeId) return `https://www.youtube.com/watch?v=${youtubeId}`;
+  return "/sermons";
 }
 
 // Per-series accent colors so each series has a visual identity
@@ -155,16 +178,22 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
 
 // ── Individual sermon card ────────────────────────────────────────────────────
 
-function SermonCard({ sermon, index }: { sermon: Sermon; index: number }) {
+function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
   const thumb = thumbnailUrl(sermon.youtubeId);
-  const url   = watchUrl(sermon.youtubeId);
-  const color = seriesColor(sermon.seriesId);
+  const url   = watchUrl(sermon.youtubeId, sermon.slug);
+  const defaultColor = seriesColor(sermon.seriesId);
+  const color = {
+    bg:     sermon.seriesBg     ?? defaultColor.bg,
+    accent: sermon.seriesAccent ?? defaultColor.accent,
+  };
+  // Internal sermon page vs external YouTube
+  const isInternal = !!sermon.slug;
 
   return (
     <a
       href={url}
-      target={sermon.youtubeId ? "_blank" : undefined}
-      rel={sermon.youtubeId ? "noopener noreferrer" : undefined}
+      target={isInternal ? undefined : "_blank"}
+      rel={isInternal ? undefined : "noopener noreferrer"}
       className="group flex gap-0 rounded-2xl overflow-hidden border border-white/6 hover:border-white/12 bg-white/4 hover:bg-white/7 transition-all duration-200 block"
       style={{ animationDelay: `${index * 30}ms` }}
     >
