@@ -16,7 +16,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sanity": "^3.66.1",
-    "styled-components": "^6.1.0"
+    "styled-components": "^6.1.0",
+    "@sanity/vision": "^3.66.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
