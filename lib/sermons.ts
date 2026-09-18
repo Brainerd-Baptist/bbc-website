@@ -22,7 +22,7 @@ export const SERMONS: Sermon[] = [
   // ── God's Work / Our Work (current series) ────────────────────────────────
   {
     id: "gods-work-1",
-    youtubeId: "",
+    youtubeId: "VLzTn8WEdAA",
     title: "The God Who Keeps His Promises",
     series: "God's Work / Our Work",
     seriesId: "gods-work-our-work",
