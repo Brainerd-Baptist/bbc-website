@@ -161,37 +161,36 @@ export default async function SermonsPage() {
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory">
             {allSeries.map((sr) => {
               const count = sermons.filter((s) => s.seriesId === sr.id).length;
-              const accent = (sermons.find((s) => s.seriesId === sr.id) as { seriesAccent?: string } | undefined)?.seriesAccent;
-              const COLORS: Record<string, { bg: string; accent: string }> = {
-                "behind-the-scenes":    { bg: "#1a0d2e", accent: "#a78bfa" },
-                "prayer-that-shapes-us":{ bg: "#0f2040", accent: "#00abc9" },
-                "ot-revisited":         { bg: "#1c1209", accent: "#f59e0b" },
-                "complete-in-christ":   { bg: "#0d2618", accent: "#34d399" },
-                "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9" },
-                "guest-messages":       { bg: "#111827", accent: "#94a3b8" },
-              };
-              const color = COLORS[sr.id] ?? { bg: "#00205B", accent: accent ?? "#00abc9" };
+              // Use the most recent sermon's YouTube thumbnail as card artwork
+              const firstSermon = sermons.find((s) => s.seriesId === sr.id);
+              const thumbUrl = firstSermon?.youtubeId
+                ? `https://img.youtube.com/vi/${firstSermon.youtubeId}/maxresdefault.jpg`
+                : null;
               return (
                 <a
                   key={sr.id}
                   href={`/sermons/series/${sr.id}`}
-                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-white/8 hover:border-white/18 transition-all"
-                  style={{ background: color.bg }}
+                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-white/8 hover:border-white/18 transition-all relative"
+                  style={{ background: "#0a1628" }}
                 >
-                  <div className="p-5 h-full flex flex-col justify-between min-h-[120px]">
+                  {/* Artwork background */}
+                  {thumbUrl && (
                     <div
-                      className="w-6 h-0.5 mb-3 rounded-full"
-                      style={{ background: color.accent }}
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                      style={{ backgroundImage: `url(${thumbUrl})` }}
                     />
-                    <div>
-                      <p
-                        className="text-white font-bold text-sm leading-snug mb-1.5"
-                        style={{ letterSpacing: "-0.02em" }}
-                      >
-                        {sr.name}
-                      </p>
-                      <p className="text-white/35 text-[11px]">{count} sermon{count !== 1 ? "s" : ""}</p>
-                    </div>
+                  )}
+                  {/* Dark gradient overlay so text stays readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
+                  {/* Content */}
+                  <div className="relative p-5 h-full flex flex-col justify-end min-h-[140px]">
+                    <p
+                      className="text-white font-bold text-sm leading-snug mb-1"
+                      style={{ letterSpacing: "-0.02em" }}
+                    >
+                      {sr.name}
+                    </p>
+                    <p className="text-white/50 text-[11px]">{count} sermon{count !== 1 ? "s" : ""}</p>
                   </div>
                 </a>
               );

@@ -86,18 +86,24 @@ const BOOK_MAP: Record<string, string> = {
   revelation: "REV", rev: "REV",
 };
 
-/** Convert "John 3:16" or "John 3:16-18" or "Psalm 23" → api.bible passage ID */
+/** Convert "John 3:16", "John 3:16-18", "Psalm 23", or "Esther 9-10" → api.bible passage ID */
 function passageToId(passage: string): string | null {
   const s = passage.trim().toLowerCase();
-  const m = s.match(/^(.+?)\s+(\d+)(?::(\d+)(?:[–\-](\d+))?)?$/);
+  // Groups: (book) (startChapter) optional(-endChapter) optional(:startVerse optional(-endVerse))
+  const m = s.match(/^(.+?)\s+(\d+)(?:[–\-](\d+))?(?::(\d+)(?:[–\-](\d+))?)?$/);
   if (!m) return null;
-  const [, bookRaw, ch, vs, ve] = m;
+  const [, bookRaw, ch, chEnd, vs, ve] = m;
   const bookId = BOOK_MAP[bookRaw.trim()];
   if (!bookId) return null;
   if (vs) {
+    // Verse reference: Book X:V or Book X:V-W
     return ve
       ? `${bookId}.${ch}.${vs}-${bookId}.${ch}.${ve}`
       : `${bookId}.${ch}.${vs}`;
+  }
+  if (chEnd) {
+    // Chapter range: Book X-Y (e.g. "Esther 9-10")
+    return `${bookId}.${ch}-${bookId}.${chEnd}`;
   }
   return `${bookId}.${ch}`;
 }
@@ -105,11 +111,17 @@ function passageToId(passage: string): string | null {
 async function fetchCSB(passage: string, apiKey: string): Promise<ScriptureResult | null> {
   const pid = passageToId(passage);
   if (!pid) return null;
+
+  // Detect multi-chapter range (e.g. "EST.9-EST.10")
+  const isChapterRange = pid.includes("-") && !pid.match(/\.\d+-[A-Z]/);
+  const isMultiChapter = /-[A-Z]/.test(pid); // e.g. EST.9-EST.10
+
   const params = new URLSearchParams({
     "content-type": "text",
     "include-notes": "false",
     "include-titles": "false",
-    "include-chapter-numbers": "false",
+    // For multi-chapter ranges, include chapter numbers so we can parse them
+    "include-chapter-numbers": isMultiChapter ? "true" : "false",
     "include-verse-numbers": "true",
     "include-verse-spans": "false",
   });
@@ -124,34 +136,61 @@ async function fetchCSB(passage: string, apiKey: string): Promise<ScriptureResul
   if (!d?.content) return null;
 
   // api.bible text format: "¶[16]Text here [17]More text"
-  // Strip paragraph markers and split on verse numbers
+  // With chapter numbers enabled: "[ 9 ] [1]Text [2]More [ 10 ] [1]..."
   const raw: string = d.content.replace(/¶\s*/g, "").trim();
-  const chapterNum = parseInt(pid.match(/\.(\d+)\./)?.[1] ?? "1");
+  const bookId = pid.split(".")[0];
+  const bookName = d.reference?.replace(/\s+\d.*$/, "") ?? passage;
 
   const verses: ScriptureVerse[] = [];
-  const bookName = d.reference?.replace(/\s+\d.*$/, "") ?? passage;
-  const bookId = pid.split(".")[0];
 
-  const parts = raw.split(/\[(\d+)\]/);
-  let verse: number | null = null;
-  for (const part of parts) {
-    if (/^\d+$/.test(part.trim())) {
-      verse = parseInt(part);
-    } else if (verse !== null && part.trim()) {
-      verses.push({
-        book_id: bookId,
-        book_name: bookName,
-        chapter: chapterNum,
-        verse,
-        text: part.replace(/\s+/g, " ").trim(),
-      });
+  if (isMultiChapter) {
+    // Parse interleaved chapter and verse markers: "[ 9 ] [1]text [2]text [ 10 ] [1]text"
+    // Chapter markers look like "[ N ]", verse markers look like "[N]"
+    const tokens = raw.split(/(\[\s*\d+\s*\])/);
+    let currentChapter = parseInt(pid.match(/\.(\d+)/)?.[1] ?? "1");
+    let currentVerse: number | null = null;
+    for (const token of tokens) {
+      const chMatch = token.match(/^\[\s+(\d+)\s+\]$/); // chapter: has spaces
+      const vsMatch = token.match(/^\[(\d+)\]$/);        // verse: no spaces
+      if (chMatch) {
+        currentChapter = parseInt(chMatch[1]);
+        currentVerse = null;
+      } else if (vsMatch) {
+        currentVerse = parseInt(vsMatch[1]);
+      } else if (currentVerse !== null && token.trim()) {
+        verses.push({
+          book_id: bookId,
+          book_name: bookName,
+          chapter: currentChapter,
+          verse: currentVerse,
+          text: token.replace(/\s+/g, " ").trim(),
+        });
+      }
+    }
+  } else {
+    // Single chapter passage
+    const chapterNum = parseInt(pid.match(/\.(\d+)/)?.[1] ?? "1");
+    const parts = raw.split(/\[(\d+)\]/);
+    let verse: number | null = null;
+    for (const part of parts) {
+      if (/^\d+$/.test(part.trim())) {
+        verse = parseInt(part);
+      } else if (verse !== null && part.trim()) {
+        verses.push({
+          book_id: bookId,
+          book_name: bookName,
+          chapter: chapterNum,
+          verse,
+          text: part.replace(/\s+/g, " ").trim(),
+        });
+      }
     }
   }
 
   return {
     reference: d.reference ?? passage,
     verses,
-    text: raw.replace(/\[\d+\]/g, " ").replace(/\s+/g, " ").trim(),
+    text: raw.replace(/\[\s*\d+\s*\]/g, " ").replace(/\s+/g, " ").trim(),
     translation_id: "csb",
     translation_name: "Christian Standard Bible",
   };
