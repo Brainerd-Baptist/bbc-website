@@ -119,9 +119,9 @@ export default async function SermonsPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {[
-              { label: "Apple Podcasts", href: "#" },
-              { label: "Spotify",        href: "#" },
-              { label: "Pocket Casts",   href: "#" },
+              { label: "Apple Podcasts", href: "https://podcasts.apple.com/us/podcast/brainerd-baptist-church-chattanooga/id335490566" },
+              { label: "Spotify",        href: "https://open.spotify.com/show/5aLbyd17Yh7voLkDqzrW9I" },
+              { label: "Pocket Casts",   href: "https://pocketcasts.com/podcast/brainerd-baptist-church-chattanooga/3a3bda30-88b7-012e-41fa-00163e1b201c" },
             ].map((p) => (
               <a
                 key={p.label}
