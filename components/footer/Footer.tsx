@@ -86,13 +86,13 @@ export default function Footer() {
           </div>
 
           {/* Nav columns */}
-          {FOOTER_LINKS.map((group) => (
-            <div key={group.label}>
+          {(Object.entries(FOOTER_LINKS) as [string, { label: string; href: string }[]][]).map(([groupLabel, links]) => (
+            <div key={groupLabel}>
               <p className="text-white/30 text-xs font-semibold tracking-widest uppercase mb-4">
-                {group.label}
+                {groupLabel}
               </p>
               <ul className="space-y-2.5">
-                {group.links.map((link) => (
+                {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
@@ -127,7 +127,7 @@ export default function Footer() {
                 Ministerio Hispano
               </p>
               <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.address}</p>
-              <p className="text-white/40 text-sm">{HISPANIC_MINISTRY.day} · {HISPANIC_MINISTRY.time}</p>
+              <p className="text-white/40 text-sm">{HISPANIC_MINISTRY.serviceTime}</p>
             </div>
           </div>
         </div>
