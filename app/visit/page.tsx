@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SERVICES, SERVICE_NOTE, CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
+import VideoHero from "@/components/visit/VideoHero";
 
 export const metadata = {
   title: "Visit — Brainerd Baptist Church",
@@ -33,27 +34,11 @@ const EXPECT_ITEMS = [
 export default function VisitPage() {
   return (
     <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
-      {/* Page header */}
-      <div className="pt-32 pb-16 px-6 text-center">
-        <div className="max-w-3xl mx-auto">
-          <p className="eyebrow mb-4">Join Us Sunday</p>
-          <div className="flex justify-center mb-6">
-            <div className="gold-divider" />
-          </div>
-          <h1
-            className="font-condensed font-900 text-white mb-4"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)" }}
-          >
-            Plan Your Visit
-          </h1>
-          <p className="text-white/55 text-lg leading-relaxed">
-            We would love to have you. Here is everything you need to know before Sunday.
-          </p>
-        </div>
-      </div>
+      {/* Video hero */}
+      <VideoHero />
 
       {/* Service times */}
-      <section className="py-16 px-6">
+      <section id="service-times" className="py-16 px-6">
         <div className="max-w-5xl mx-auto">
           <h2 className="font-condensed font-800 text-white text-3xl mb-8 text-center">
             Service Times
@@ -130,7 +115,6 @@ export default function VisitPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Main */}
             <div className="glass rounded-2xl p-7">
-              <p className="eyebrow mb-3">Main Campus</p>
               <p className="text-white font-semibold text-lg mb-1">Brainerd Baptist Church</p>
               <p className="text-white/55 text-sm leading-relaxed mb-4">
                 300 Brookfield Ave<br />Chattanooga, TN 37411
