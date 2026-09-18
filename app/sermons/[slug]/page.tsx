@@ -13,6 +13,7 @@ import SpeakerCard from "@/components/sermons/SpeakerCard";
 import GiveCTA from "@/components/sermons/GiveCTA";
 import AudioPlayer from "@/components/sermons/AudioPlayer";
 import ScriptureInline from "@/components/sermons/ScriptureInline";
+import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 
 export const revalidate = 300;
 
@@ -141,6 +142,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
   }
 
   const accentColor = s.accentColor;
+
+  // Auto-populate audio from podcast feed when not set manually
+  if (!s.audioUrl && s.date) {
+    const podcastMap = await getPodcastAudioMap();
+    const key = dateToKey(s.date);
+    if (podcastMap[key]) s.audioUrl = podcastMap[key];
+  }
 
   // Build AudioTrack for the audio player
   const audioTrack = s.audioUrl ? {
