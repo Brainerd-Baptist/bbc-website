@@ -33,9 +33,14 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="font-condensed font-800 text-white text-xl tracking-wide uppercase">
-              Brainerd Baptist
-            </span>
+            <Image
+              src="/logo-white.png"
+              alt="Brainerd Baptist Church"
+              width={120}
+              height={48}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -90,9 +95,14 @@ export default function Navbar() {
         <div className="flex flex-col h-full px-8 py-10">
           {/* Close */}
           <div className="flex justify-between items-center mb-12">
-            <span className="font-condensed font-800 text-white text-xl tracking-wide uppercase">
-              Brainerd Baptist
-            </span>
+            <Image
+              src="/logo-white.png"
+              alt="Brainerd Baptist Church"
+              width={120}
+              height={48}
+              className="h-10 w-auto"
+              priority
+            />
             <button
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
