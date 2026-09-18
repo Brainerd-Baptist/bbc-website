@@ -66,20 +66,20 @@ body {
 
 /* ── Eyebrow ───────────────────────────────────────────── */
 .eyebrow {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--bbc-blue);
+  color: #9ca3af;
 }
 .eyebrow-white {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.65);
+  color: rgba(255,255,255,0.5);
 }
 
 /* ── Divider ───────────────────────────────────────────── */
@@ -98,11 +98,10 @@ body {
 
 /* ── Button styles ─────────────────────────────────────── */
 .btn-primary {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 700;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
   font-size: 0.875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
   background: var(--bbc-blue);
   color: #ffffff;
   padding: 0.75rem 1.75rem;
@@ -117,11 +116,10 @@ body {
   transform: translateY(-1px);
 }
 .btn-outline-white {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 700;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
   font-size: 0.875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
   background: transparent;
   color: #ffffff;
   border: 1.5px solid rgba(255,255,255,0.35);
@@ -134,11 +132,10 @@ body {
   background: rgba(255,255,255,0.08);
 }
 .btn-outline-navy {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 700;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
   font-size: 0.875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
   background: transparent;
   color: var(--bbc-navy);
   border: 1.5px solid rgba(0,32,91,0.25);
@@ -168,26 +165,36 @@ body {
 }
 
 /* ── Typography ─────────────────────────────────────────── */
-.font-condensed { font-family: var(--font-barlow-condensed), sans-serif; }
+.font-condensed { font-family: var(--font-inter), sans-serif; }
 .font-serif { font-family: Georgia, 'Times New Roman', serif; }
 
 /* Headline sizes */
 .h-display {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 900;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 800;
   font-size: clamp(3rem, 7vw, 5.5rem);
   line-height: 0.95;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.04em;
 }
 .h-hero {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 900;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 800;
   font-size: clamp(2.5rem, 5vw, 4rem);
-  line-height: 1;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
 }
 .h-section {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 800;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 700;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* ── Frosted glass nav ─────────────────────────────────── */
+.nav-glass {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }

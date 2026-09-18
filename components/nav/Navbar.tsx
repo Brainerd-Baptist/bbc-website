@@ -23,9 +23,9 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-md shadow-sm shadow-black/8"
+            ? "nav-glass"
             : "bg-transparent"
         }`}
       >
@@ -137,7 +137,8 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="font-condensed font-800 text-4xl text-white hover:text-[#00abc9] transition-colors tracking-wide uppercase"
+                className="font-bold text-4xl text-white hover:text-[#00abc9] transition-colors tracking-tight"
+                style={{ letterSpacing: "-0.03em" }}
               >
                 {link.label}
               </Link>
