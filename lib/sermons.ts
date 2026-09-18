@@ -394,6 +394,36 @@ export const SERMONS: Sermon[] = [
 
 ];
 
+// ── Series metadata ───────────────────────────────────────────────────────────
+
+export const SERIES_META: Record<string, {
+  description: string
+  passage?: string
+}> = {
+  "behind-the-scenes": {
+    description: "The book of Esther never mentions God by name — yet every scene is saturated with his providence. In this series we trace the unseen hand of God working through ordinary people caught in an extraordinary moment.",
+    passage: "Esther",
+  },
+  "prayer-that-shapes-us": {
+    description: "A verse-by-verse walk through the Lord's Prayer in Matthew 6. What does it look like to pray in a way that actually reshapes how you see God, yourself, and the world around you?",
+    passage: "Matthew 6",
+  },
+  "ot-revisited": {
+    description: "Three figures from the Old Testament — Elijah, Hezekiah, and Saul — each offer a window into the human condition and the grace of God that meets us there.",
+    passage: "Selected OT passages",
+  },
+  "complete-in-christ": {
+    description: "Paul's letter to the Colossians confronts anything that competes with Christ. This series works through the whole letter, making the case that Jesus is enough — completely enough.",
+    passage: "Colossians",
+  },
+  "gods-work-our-work": {
+    description: "What does it look like to be a church on mission together? This series roots our collective work in the character and purposes of God.",
+  },
+  "guest-messages": {
+    description: "Standalone messages from guest speakers.",
+  },
+}
+
 // ── Derived lists for filter dropdowns ────────────────────────────────────────
 
 export const ALL_SERIES = Array.from(

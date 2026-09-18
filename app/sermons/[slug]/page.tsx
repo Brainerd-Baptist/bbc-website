@@ -9,6 +9,8 @@ import { SERMONS, formatDate as staticFormatDate } from "@/lib/sermons";
 import ShareButton from "@/components/sermons/ShareButton";
 import RelatedSermons from "@/components/sermons/RelatedSermons";
 import SermonPlayer from "@/components/sermons/SermonPlayer";
+import SpeakerCard from "@/components/sermons/SpeakerCard";
+import GiveCTA from "@/components/sermons/GiveCTA";
 
 export const revalidate = 300;
 
@@ -225,7 +227,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
           </div>
 
           {/* Action row */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 mb-8">
             {s.youtubeId && (
               <a
                 href={`https://www.youtube.com/watch?v=${s.youtubeId}`}
@@ -247,6 +249,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             )}
             <ShareButton title={s.title} speaker={s.speaker} />
           </div>
+
+          {/* Speaker card */}
+          {s.speaker && (
+            <div className="max-w-xs">
+              <SpeakerCard name={s.speaker} accentColor={accentColor} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -255,7 +264,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
 
       {/* ── Outline + Notes (two-column on desktop, Sanity-only) ──────── */}
       {(s.outline || s.notes) && (
-        <div className="px-5 md:px-8 pb-24">
+        <div className="px-5 md:px-8 pb-10">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-[280px_1fr] gap-8 md:gap-12">
 
@@ -292,6 +301,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
           </div>
         </div>
       )}
+
+      {/* ── Give CTA ───────────────────────────────────────────────────── */}
+      <div className="px-5 md:px-8 pb-24">
+        <div className="max-w-4xl mx-auto">
+          <GiveCTA />
+        </div>
+      </div>
     </div>
   );
 }

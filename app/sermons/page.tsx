@@ -110,7 +110,7 @@ export default async function SermonsPage() {
               return (
                 <a
                   key={sr.id}
-                  href={`/sermons?series=${sr.id}`}
+                  href={`/sermons/series/${sr.id}`}
                   className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-white/8 hover:border-white/18 transition-all"
                   style={{ background: color.bg }}
                 >
