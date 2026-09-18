@@ -179,7 +179,7 @@ export default function VisitPage() {
             className="font-condensed font-900 text-[#00205B] text-center mb-4"
             style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
-            Worship Care of Kids
+            Worship Care for Kids
           </h2>
           <p className="text-[#00205B]/50 text-center mb-14 max-w-md mx-auto">
             Safe, age-appropriate care so you can worship fully and your kids love coming.
