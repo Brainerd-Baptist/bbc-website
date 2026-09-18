@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getSpeaker } from "@/lib/speakers";
 import { SERMONS } from "@/lib/sermons";
 
@@ -12,14 +13,28 @@ export default function SpeakerCard({ name, accentColor }: Props) {
 
   return (
     <div className="flex items-center gap-4 p-4 rounded-xl border border-white/6 bg-white/3">
-      {/* Avatar placeholder — initials */}
+      {/* Avatar — photo if available, else initials */}
       <div
-        className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold text-white"
-        style={{ background: accentColor + "33", border: `1px solid ${accentColor}44` }}
+        className="flex-shrink-0 w-11 h-11 rounded-full overflow-hidden flex items-center justify-center text-sm font-bold"
+        style={
+          info.photo
+            ? {}
+            : { background: accentColor + "33", border: `1px solid ${accentColor}44` }
+        }
       >
-        <span style={{ color: accentColor }}>
-          {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-        </span>
+        {info.photo ? (
+          <Image
+            src={`/staff/${info.photo}.jpg`}
+            alt={name}
+            width={44}
+            height={44}
+            className="w-full h-full object-cover object-top"
+          />
+        ) : (
+          <span style={{ color: accentColor }}>
+            {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+          </span>
+        )}
       </div>
 
       {/* Info */}
