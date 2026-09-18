@@ -9,33 +9,45 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Official BBC Brand Colors
+        bbc: {
+          blue: "#00abc9",
+          "blue-dark": "#0090a8",
+          "blue-light": "#33c1d9",
+          "blue-pale": "#e6f7fb",
+          navy: "#00205B",
+          "navy-light": "#0a2d6e",
+        },
+        // Legacy (kept for compatibility)
         navy: {
-          DEFAULT: "#0a1628",
-          light: "#0f2040",
-          mid: "#122540",
-          deep: "#07101e",
+          DEFAULT: "#00205B",
+          light: "#0a2d6e",
+          mid: "#001850",
+          deep: "#001340",
         },
         gold: {
-          DEFAULT: "#c9a84c",
-          light: "#e0bc6a",
-          dark: "#a8893a",
+          DEFAULT: "#00abc9",
+          light: "#33c1d9",
+          dark: "#0090a8",
         },
         glass: {
           white: "rgba(255,255,255,0.06)",
           "white-md": "rgba(255,255,255,0.10)",
           "white-lg": "rgba(255,255,255,0.14)",
-          dark: "rgba(10,22,40,0.72)",
-          "dark-md": "rgba(10,22,40,0.85)",
+          blue: "rgba(0,171,201,0.06)",
+          "blue-md": "rgba(0,171,201,0.12)",
+          dark: "rgba(0,32,91,0.72)",
         },
       },
       fontFamily: {
         sans: ["var(--font-barlow)", "sans-serif"],
         condensed: ["var(--font-barlow-condensed)", "sans-serif"],
-        serif: ["var(--font-lora)", "serif"],
+        serif: ["Georgia", "'Times New Roman'", "serif"],
       },
       backgroundImage: {
-        "gradient-navy": "linear-gradient(135deg, #0a1628 0%, #0f2040 100%)",
-        "gradient-gold": "linear-gradient(135deg, #c9a84c 0%, #a8893a 100%)",
+        "gradient-blue": "linear-gradient(135deg, #00205B 0%, #00abc9 100%)",
+        "gradient-navy": "linear-gradient(135deg, #00205B 0%, #001340 100%)",
+        "gradient-hero": "linear-gradient(160deg, #00205B 60%, #0a2d6e 100%)",
       },
       backdropBlur: {
         xs: "4px",
@@ -45,9 +57,9 @@ const config: Config = {
         lg: "24px",
       },
       animation: {
-        "fade-up": "fadeUp 0.6s ease forwards",
+        "fade-up": "fadeUp 0.65s ease forwards",
         "fade-in": "fadeIn 0.5s ease forwards",
-        countdown: "pulse 1s ease-in-out infinite",
+        pulse: "pulse 2s ease-in-out infinite",
       },
       keyframes: {
         fadeUp: {

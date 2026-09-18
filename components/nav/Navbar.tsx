@@ -10,12 +10,11 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 48);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -26,21 +25,32 @@ export default function Navbar() {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-navy-deep/95 backdrop-blur-md shadow-lg shadow-black/30"
+            ? "bg-white/95 backdrop-blur-md shadow-sm shadow-black/8"
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-          {/* Logo */}
+        <div className="max-w-7xl mx-auto px-5 flex items-center justify-between h-16">
+          {/* Logo — white on hero, color on scroll */}
           <Link href="/" className="flex items-center">
-            <Image
-              src="/logo-white.png"
-              alt="Brainerd Baptist Church"
-              width={120}
-              height={48}
-              className="h-10 w-auto"
-              priority
-            />
+            {scrolled ? (
+              <Image
+                src="/logo-black.png"
+                alt="Brainerd Baptist Church"
+                width={120}
+                height={48}
+                className="h-9 w-auto"
+                priority
+              />
+            ) : (
+              <Image
+                src="/logo-white.png"
+                alt="Brainerd Baptist Church"
+                width={120}
+                height={48}
+                className="h-9 w-auto"
+                priority
+              />
+            )}
           </Link>
 
           {/* Desktop nav */}
@@ -49,7 +59,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-white/75 hover:text-white transition-colors tracking-wide"
+                className={`text-sm font-medium tracking-wide transition-colors ${
+                  scrolled
+                    ? "text-[#00205B]/70 hover:text-[#00205B]"
+                    : "text-white/80 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>
@@ -60,15 +74,17 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/give"
-              className="text-sm font-semibold text-gold hover:text-gold-light transition-colors tracking-wide"
+              className={`text-sm font-semibold tracking-wide transition-colors ${
+                scrolled ? "text-[#00abc9] hover:text-[#0090a8]" : "text-white/80 hover:text-white"
+              }`}
             >
               Give
             </Link>
             <Link
-              href="/connect"
-              className="text-sm font-semibold bg-gold hover:bg-gold-light text-navy px-5 py-2 rounded-full transition-colors"
+              href="/visit"
+              className="text-sm font-semibold bg-[#00abc9] hover:bg-[#0090a8] text-white px-5 py-2.5 rounded-full transition-all transition-transform hover:-translate-y-0.5"
             >
-              Connect
+              Plan a Visit
             </Link>
           </div>
 
@@ -78,9 +94,9 @@ export default function Navbar() {
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
           >
-            <span className="w-6 h-0.5 bg-white rounded-full" />
-            <span className="w-6 h-0.5 bg-white rounded-full" />
-            <span className="w-4 h-0.5 bg-white rounded-full" />
+            <span className={`w-6 h-0.5 rounded-full transition-colors ${scrolled ? "bg-[#00205B]" : "bg-white"}`} />
+            <span className={`w-6 h-0.5 rounded-full transition-colors ${scrolled ? "bg-[#00205B]" : "bg-white"}`} />
+            <span className={`w-4 h-0.5 rounded-full transition-colors ${scrolled ? "bg-[#00205B]" : "bg-white"}`} />
           </button>
         </div>
       </nav>
@@ -90,17 +106,17 @@ export default function Navbar() {
         className={`fixed inset-0 z-[100] transition-all duration-300 ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        style={{ background: "rgba(7,16,30,0.97)", backdropFilter: "blur(20px)" }}
+        style={{ background: "#00205B", backdropFilter: "blur(20px)" }}
       >
         <div className="flex flex-col h-full px-8 py-10">
-          {/* Close */}
+          {/* Header */}
           <div className="flex justify-between items-center mb-12">
             <Image
               src="/logo-white.png"
               alt="Brainerd Baptist Church"
               width={120}
               height={48}
-              className="h-10 w-auto"
+              className="h-9 w-auto"
               priority
             />
             <button
@@ -115,13 +131,13 @@ export default function Navbar() {
           </div>
 
           {/* Links */}
-          <nav className="flex flex-col gap-6 flex-1">
+          <nav className="flex flex-col gap-5 flex-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="font-condensed font-700 text-4xl text-white hover:text-gold transition-colors tracking-wide uppercase"
+                className="font-condensed font-800 text-4xl text-white hover:text-[#00abc9] transition-colors tracking-wide uppercase"
               >
                 {link.label}
               </Link>
@@ -129,7 +145,7 @@ export default function Navbar() {
           </nav>
 
           {/* Bottom */}
-          <div className="pt-8 border-t border-white/10">
+          <div className="pt-8 border-t border-white/15">
             <p className="text-white/50 text-sm">300 Brookfield Ave · Chattanooga, TN 37411</p>
             <p className="text-white/50 text-sm mt-1">Sundays · 8:30 AM & 11:00 AM</p>
           </div>
