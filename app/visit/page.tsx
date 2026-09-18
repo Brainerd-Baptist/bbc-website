@@ -113,7 +113,7 @@ export default function VisitPage() {
                 9:45 AM · Between Services
               </p>
               <p className="text-white font-condensed font-700 text-xl">Life Groups</p>
-              <p className="text-white/65 text-sm mt-1">{SERVICE_NOTE}</p>
+              <p className="text-white/65 text-sm mt-1">Small-group Bible study for all ages — the best way to get connected beyond Sunday.</p>
             </div>
           </div>
         </div>
