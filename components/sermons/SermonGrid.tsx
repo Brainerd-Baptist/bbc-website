@@ -33,8 +33,10 @@ function thumbnailUrl(youtubeId: string): string {
   return `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
 }
 
-function watchUrl(youtubeId: string, slug: string): string {
+function watchUrl(id: string, youtubeId: string, slug: string): string {
+  // Sanity slug takes priority; static sermons use their id for the internal page
   if (slug) return `/sermons/${slug}`;
+  if (id)   return `/sermons/${id}`;
   if (youtubeId) return `https://www.youtube.com/watch?v=${youtubeId}`;
   return "/sermons";
 }
@@ -181,14 +183,14 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
 
 function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
   const thumb = thumbnailUrl(sermon.youtubeId);
-  const url   = watchUrl(sermon.youtubeId, sermon.slug);
+  const url   = watchUrl(sermon.id, sermon.youtubeId, sermon.slug);
   const defaultColor = seriesColor(sermon.seriesId);
   const color = {
     bg:     sermon.seriesBg     ?? defaultColor.bg,
     accent: sermon.seriesAccent ?? defaultColor.accent,
   };
-  // Internal sermon page vs external YouTube
-  const isInternal = !!sermon.slug;
+  // Always internal — static sermons use id-based route, Sanity uses slug
+  const isInternal = !!(sermon.slug || sermon.id);
 
   return (
     <a

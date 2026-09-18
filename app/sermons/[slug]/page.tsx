@@ -5,19 +5,30 @@ import {
   getAllSermons,
   formatDate,
 } from "@/lib/sanity";
+import { SERMONS, formatDate as staticFormatDate } from "@/lib/sermons";
 
 export const revalidate = 300;
 
-// Pre-render known sermon slugs at build time
+// Pre-render both Sanity slugs and static sermon ids at build time
 export async function generateStaticParams() {
-  const sermons = await getAllSermons().catch(() => []);
-  return sermons.map((s) => ({ slug: s.slug?.current ?? "" })).filter((s) => s.slug);
+  const sanitySermons = await getAllSermons().catch(() => []);
+  const sanityParams  = sanitySermons.map((s) => ({ slug: s.slug?.current ?? "" })).filter((s) => s.slug);
+  const staticParams  = SERMONS.map((s) => ({ slug: s.id }));
+  return [...sanityParams, ...staticParams];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const sermon = await getSermonBySlug(slug).catch(() => null);
-  if (!sermon) return {};
+  if (!sermon) {
+    // Fall back to static data
+    const s = SERMONS.find((s) => s.id === slug);
+    if (!s) return {};
+    return {
+      title: `${s.title} — Brainerd Baptist Church`,
+      description: s.description ?? `${s.passage} · ${s.speaker}`,
+    };
+  }
   return {
     title: `${sermon.title} — Brainerd Baptist Church`,
     description: sermon.description ?? `${sermon.passage} · ${sermon.speaker}`,
@@ -87,10 +98,55 @@ const ptComponents = {
 
 export default async function SermonPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const sermon = await getSermonBySlug(slug).catch(() => null);
-  if (!sermon) notFound();
+  const sanitySermon = await getSermonBySlug(slug).catch(() => null);
 
-  const accentColor = sermon.series?.accentColor ?? "#00abc9";
+  // ── Normalise to a common shape ──────────────────────────────────────────
+  type NormSermon = {
+    youtubeId: string;
+    title: string;
+    series: string;
+    passage: string;
+    speaker: string;
+    date: string;
+    duration?: string;
+    audioUrl?: string;
+    accentColor: string;
+    outline?: Parameters<typeof PortableText>[0]["value"];
+    notes?: Parameters<typeof PortableText>[0]["value"];
+  };
+
+  let s: NormSermon;
+
+  if (sanitySermon) {
+    s = {
+      youtubeId:   sanitySermon.youtubeId ?? "",
+      title:       sanitySermon.title,
+      series:      sanitySermon.series?.title ?? "",
+      passage:     sanitySermon.passage ?? "",
+      speaker:     sanitySermon.speaker ?? "",
+      date:        sanitySermon.date ?? "",
+      duration:    sanitySermon.duration,
+      audioUrl:    sanitySermon.audioUrl,
+      accentColor: sanitySermon.series?.accentColor ?? "#00abc9",
+      outline:     sanitySermon.outline as NormSermon["outline"],
+      notes:       sanitySermon.notes   as NormSermon["notes"],
+    };
+  } else {
+    const staticS = SERMONS.find((x) => x.id === slug);
+    if (!staticS) notFound();
+    s = {
+      youtubeId:   staticS.youtubeId,
+      title:       staticS.title,
+      series:      staticS.series,
+      passage:     staticS.passage,
+      speaker:     staticS.speaker,
+      date:        staticS.date,
+      duration:    staticS.duration,
+      accentColor: "#00abc9",
+    };
+  }
+
+  const accentColor = s.accentColor;
 
   return (
     <div
@@ -113,7 +169,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       </div>
 
       {/* ── Video embed ────────────────────────────────────────────────── */}
-      {sermon.youtubeId && (
+      {s.youtubeId && (
         <div className="px-5 md:px-8 mb-10">
           <div className="max-w-4xl mx-auto">
             <div
@@ -121,8 +177,8 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               style={{ paddingBottom: "56.25%" }}
             >
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${sermon.youtubeId}?rel=0&modestbranding=1&color=white`}
-                title={sermon.title}
+                src={`https://www.youtube-nocookie.com/embed/${s.youtubeId}?rel=0&modestbranding=1&color=white`}
+                title={s.title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 className="absolute inset-0 w-full h-full"
@@ -140,18 +196,18 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               className="text-[10px] font-semibold tracking-widest uppercase"
               style={{ color: accentColor }}
             >
-              {sermon.series?.title}
+              {s.series}
             </span>
-            {sermon.passage && (
+            {s.passage && (
               <>
                 <span className="text-white/20 text-[10px]">·</span>
                 <a
-                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=ESV`}
+                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(s.passage)}&version=ESV`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white/45 text-[10px] font-medium hover:text-[#00abc9] transition-colors"
                 >
-                  {sermon.passage}
+                  {s.passage}
                 </a>
               </>
             )}
@@ -167,20 +223,20 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               lineHeight: 1.05,
             }}
           >
-            {sermon.title}
+            {s.title}
           </h1>
 
           <div className="flex flex-wrap gap-x-5 gap-y-1 text-white/40 text-sm mb-6">
-            <span>{sermon.speaker}</span>
-            <span>{formatDate(sermon.date)}</span>
-            {sermon.duration && <span>{sermon.duration}</span>}
+            <span>{s.speaker}</span>
+            <span>{s.date ? (sanitySermon ? formatDate(s.date) : staticFormatDate(s.date)) : ""}</span>
+            {s.duration && <span>{s.duration}</span>}
           </div>
 
           {/* Action row */}
           <div className="flex flex-wrap gap-3">
-            {sermon.youtubeId && (
+            {s.youtubeId && (
               <a
-                href={`https://www.youtube.com/watch?v=${sermon.youtubeId}`}
+                href={`https://www.youtube.com/watch?v=${s.youtubeId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/25 px-4 py-2 rounded-full transition-all"
@@ -188,9 +244,9 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                 Watch on YouTube
               </a>
             )}
-            {sermon.audioUrl && (
+            {s.audioUrl && (
               <a
-                href={sermon.audioUrl}
+                href={s.audioUrl}
                 download
                 className="inline-flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/25 px-4 py-2 rounded-full transition-all"
               >
@@ -201,14 +257,14 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
-      {/* ── Outline + Notes (two-column on desktop) ────────────────────── */}
-      {(sermon.outline || sermon.notes) && (
+      {/* ── Outline + Notes (two-column on desktop, Sanity-only) ──────── */}
+      {(s.outline || s.notes) && (
         <div className="px-5 md:px-8 pb-24">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-[280px_1fr] gap-8 md:gap-12">
 
               {/* Outline */}
-              {sermon.outline && (sermon.outline as unknown[]).length > 0 && (
+              {s.outline && (s.outline as unknown[]).length > 0 && (
                 <div>
                   <h2
                     className="text-white text-xs font-semibold tracking-widest uppercase mb-5"
@@ -217,13 +273,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                     Outline
                   </h2>
                   <div className="text-sm">
-                    <PortableText value={sermon.outline as Parameters<typeof PortableText>[0]["value"]} components={ptComponents} />
+                    <PortableText value={s.outline} components={ptComponents} />
                   </div>
                 </div>
               )}
 
               {/* Notes */}
-              {sermon.notes && (sermon.notes as unknown[]).length > 0 && (
+              {s.notes && (s.notes as unknown[]).length > 0 && (
                 <div>
                   <h2
                     className="text-white text-xs font-semibold tracking-widest uppercase mb-5"
@@ -232,7 +288,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                     Notes
                   </h2>
                   <div className="prose-sm">
-                    <PortableText value={sermon.notes as Parameters<typeof PortableText>[0]["value"]} components={ptComponents} />
+                    <PortableText value={s.notes} components={ptComponents} />
                   </div>
                 </div>
               )}
