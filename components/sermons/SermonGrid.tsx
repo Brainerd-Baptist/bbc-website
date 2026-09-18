@@ -49,6 +49,7 @@ const SERIES_COLORS: Record<string, { bg: string; accent: string }> = {
   "ot-revisited":         { bg: "#1c1209", accent: "#f59e0b" }, // OT — warm amber
   "complete-in-christ":   { bg: "#0d2618", accent: "#34d399" }, // Colossians — emerald
   "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9" }, // BBC Navy + Blue
+  "guest-messages":       { bg: "#111827", accent: "#94a3b8" }, // neutral slate
 };
 const DEFAULT_COLOR = { bg: "#00205B", accent: "#00abc9" };
 

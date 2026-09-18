@@ -104,6 +104,7 @@ export default async function SermonsPage() {
                 "ot-revisited":         { bg: "#1c1209", accent: "#f59e0b" },
                 "complete-in-christ":   { bg: "#0d2618", accent: "#34d399" },
                 "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9" },
+                "guest-messages":       { bg: "#111827", accent: "#94a3b8" },
               };
               const color = COLORS[sr.id] ?? { bg: "#00205B", accent: accent ?? "#00abc9" };
               return (
