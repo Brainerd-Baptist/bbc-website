@@ -20,6 +20,7 @@ export interface SanitySermon {
   youtubeId: string;
   duration?: string;
   audioUrl?: string;
+  passages?: string[];
   description?: string;
   outline?: unknown[];   // Portable Text
   notes?: unknown[];     // Portable Text
@@ -55,6 +56,7 @@ const SERMON_FIELDS = `
   youtubeId,
   duration,
   audioUrl,
+  passages,
   description,
   series->{
     _id,
