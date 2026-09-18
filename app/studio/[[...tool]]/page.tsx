@@ -1,18 +1,19 @@
 /**
  * Sanity Studio embedded at /studio
  * Only BBC staff with a Sanity account can log in.
- * Sermons and series are managed here.
  *
- * sanity.config.ts calls React.createContext at module evaluation time,
- * which fails in Next.js SSR. Loading with ssr:false keeps it client-only.
+ * Architecture:
+ *   page.tsx (Server Component) → StudioLoader.tsx (Client Component)
+ *     → Studio.tsx loaded with ssr:false
+ *
+ * This keeps sanity.config.ts — which calls React.createContext at
+ * module evaluation time — entirely out of the SSR code path.
  */
-import nextDynamic from "next/dynamic";
-
 export { metadata, viewport } from "next-sanity/studio";
 export const dynamic = "force-dynamic";
 
-const Studio = nextDynamic(() => import("./Studio"), { ssr: false });
+import StudioLoader from "./StudioLoader";
 
 export default function StudioPage() {
-  return <Studio />;
+  return <StudioLoader />;
 }
