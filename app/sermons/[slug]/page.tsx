@@ -144,10 +144,19 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
   const accentColor = s.accentColor;
 
   // Auto-populate audio from podcast feed when not set manually
+  // Libsyn filenames use the Sunday the sermon was preached; some dates in
+  // lib/sermons.ts were entered as the following Monday — try both.
   if (!s.audioUrl && s.date) {
     const podcastMap = await getPodcastAudioMap();
     const key = dateToKey(s.date);
-    if (podcastMap[key]) s.audioUrl = podcastMap[key];
+    if (podcastMap[key]) {
+      s.audioUrl = podcastMap[key];
+    } else {
+      const d = new Date(s.date + "T12:00:00Z");
+      d.setUTCDate(d.getUTCDate() - 1);
+      const prevKey = dateToKey(d.toISOString().slice(0, 10));
+      if (podcastMap[prevKey]) s.audioUrl = podcastMap[prevKey];
+    }
   }
 
   // Build AudioTrack for the audio player
