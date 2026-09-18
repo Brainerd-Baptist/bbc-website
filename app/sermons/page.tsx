@@ -180,17 +180,11 @@ export default async function SermonsPage() {
                       style={{ backgroundImage: `url(${thumbUrl})` }}
                     />
                   )}
-                  {/* Dark gradient overlay so text stays readable */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
-                  {/* Content */}
-                  <div className="relative p-5 h-full flex flex-col justify-end min-h-[140px]">
-                    <p
-                      className="text-white font-bold text-sm leading-snug mb-1"
-                      style={{ letterSpacing: "-0.02em" }}
-                    >
-                      {sr.name}
-                    </p>
-                    <p className="text-white/50 text-[11px]">{count} sermon{count !== 1 ? "s" : ""}</p>
+                  {/* Minimal bottom scrim for the count badge */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  {/* Sermon count badge */}
+                  <div className="relative p-3 h-full flex flex-col justify-end min-h-[140px]">
+                    <p className="text-white/70 text-[10px] font-medium">{count} sermon{count !== 1 ? "s" : ""}</p>
                   </div>
                 </a>
               );
