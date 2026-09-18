@@ -42,7 +42,7 @@ const VIEWBOXES: Record<string,VB> = {
   brokenness: [184,  8, 242, 242],   // zoom into Brokenness circle
   design:     [  8,  8, 400, 220],   // both top circles
   sin:        [  8,  2, 400, 228],   // + sin arc above
-  coping:     [  8,  2, 410, 240],   // + coping labels
+  coping:     [  8,  2, 400, 270],   // + coping labels below Brokenness
   gospel:     [  8,  2, 408, 398],   // all three circles
   repent:     [  8,  2, 408, 398],
   recover:    [  8,  2, 408, 398],
@@ -118,7 +118,7 @@ function MLText({x,y,lines,fill,size=15,weight=800,anchor="middle",ls="0.06em"}:
   x:number;y:number;lines:string[];fill:string;size?:number;weight?:number;anchor?:string;ls?:string
 }) {
   return (
-    <text textAnchor={anchor as any} fill={fill} fontSize={size} fontWeight={weight}
+    <text y={y} textAnchor={anchor as any} fill={fill} fontSize={size} fontWeight={weight}
       fontFamily="var(--font-barlow-condensed), sans-serif"
       letterSpacing={ls} style={{textTransform:"uppercase"}}>
       {lines.map((l,i)=><tspan key={i} x={x} dy={i===0?0:size*1.3}>{l}</tspan>)}
@@ -262,7 +262,7 @@ export default function ThreeCircles() {
               style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
             {/* Label inside */}
             <Fade show={vis(v,"design-inner")}>
-              <MLText x={GDX} y={GDY-8} lines={["God's","Design"]} fill={TEAL} size={15}/>
+              <MLText x={GDX} y={GDY-4} lines={["God's","Design"]} fill={TEAL} size={15}/>
             </Fade>
 
             {/* ═══ BROKENNESS (top-right) ═══ */}
@@ -271,13 +271,13 @@ export default function ThreeCircles() {
             </g>
             {/* Label inside + words */}
             <Fade show={vis(v,"broken-inner")}>
-              <MLText x={BX} y={BY-4} lines={["Broken-","ness"]} fill={WHITE} size={15}/>
+              <MLText x={BX} y={BY-4} lines={["Broken","ness"] } fill={WHITE} size={14}/>
             </Fade>
-            {/* Coping labels — float around Brokenness */}
+            {/* Coping labels — float below Brokenness (Gospel not visible yet on step 4) */}
             <Fade show={vis(v,"cope-labels")} delay={0}>
-              <MLText x={BX+92} y={BY-52} lines={["Money"]}   fill="rgba(255,255,255,0.32)" size={12} weight={500}/>
-              <MLText x={BX+92} y={BY+48} lines={["Success"]} fill="rgba(255,255,255,0.32)" size={12} weight={500}/>
-              <MLText x={BX+4}  y={BY-96} lines={["Religion"]}fill="rgba(255,255,255,0.32)" size={12} weight={500}/>
+              <MLText x={BX-70} y={BY+108} lines={["Money"]}   fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
+              <MLText x={BX+4}  y={BY+108} lines={["Success"]} fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
+              <MLText x={BX+78} y={BY+108} lines={["Religion"]}fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
             </Fade>
 
             {/* ═══ GOSPEL (bottom-center) ═══ */}
