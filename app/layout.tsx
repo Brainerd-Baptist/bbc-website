@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Barlow } from "next/font/google";
+import { Inter, Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/nav/Navbar";
 import Footer from "@/components/footer/Footer";
@@ -15,8 +15,15 @@ const inter = Inter({
 
 const barlow = Barlow({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-barlow",
+  display: "swap",
+});
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-barlow-condensed",
   display: "swap",
 });
 
@@ -39,7 +46,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${barlow.variable} antialiased`}>
+      <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} antialiased`}>
         <AudioProvider>
           <Navbar />
           <main>{children}</main>
