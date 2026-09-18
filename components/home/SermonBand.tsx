@@ -1,18 +1,29 @@
 import Link from "next/link";
+import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
+import { getLatestSermon, formatSermonDate } from "@/lib/youtube";
 
-// Placeholder — in Phase 3 this pulls from Planning Center Publishing / YouTube API
-const FEATURED_SERMON = {
-  series: "God's Work / Our Work",
+// Fallback shown when the API key is missing or the request fails
+const FALLBACK = {
+  videoId: "",
   title: "The God Who Keeps His Promises",
-  speaker: "Curtis Hill",
-  date: "September 14, 2026",
+  publishedAt: new Date().toISOString(),
+  thumbnail: "",
+  channelTitle: "Brainerd Baptist Church",
+  description: "",
+  series: "God's Work / Our Work",
   passage: "Romans 8:28–39",
-  duration: "42 min",
-  youtubeId: "", // set this to a real YouTube ID to show embedded player
 };
 
-export default function SermonBand() {
+export default async function SermonBand() {
+  const sermon = await getLatestSermon();
+
+  const title     = sermon?.title     ?? FALLBACK.title;
+  const videoId   = sermon?.videoId   ?? FALLBACK.videoId;
+  const thumbnail = sermon?.thumbnail ?? FALLBACK.thumbnail;
+  const date      = sermon ? formatSermonDate(sermon.publishedAt) : "Recent";
+  const watchUrl  = videoId ? `https://www.youtube.com/watch?v=${videoId}` : "/sermons";
+
   return (
     <section className="bg-white section-pad border-b border-gray-100">
       <div className="max-w-7xl mx-auto">
@@ -41,69 +52,92 @@ export default function SermonBand() {
         <ScrollReveal delay={100}>
           <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-lg shadow-black/5">
             <div className="grid md:grid-cols-5">
+
               {/* Thumbnail / Play */}
-              <div
-                className="md:col-span-2 min-h-[240px] relative flex items-center justify-center"
-                style={{
-                  background: "linear-gradient(135deg, #00205B 0%, #001840 100%)",
-                }}
-              >
-                {/* Series label */}
-                <div className="absolute top-4 left-4">
-                  <span className="text-[10px] font-semibold tracking-widest uppercase text-[#00abc9] bg-[#00abc9]/10 border border-[#00abc9]/20 px-3 py-1 rounded-full">
-                    {FEATURED_SERMON.series}
+              <div className="md:col-span-2 min-h-[240px] relative flex items-center justify-center bg-[#00205B]">
+                {/* Real YouTube thumbnail */}
+                {thumbnail ? (
+                  <Image
+                    src={thumbnail}
+                    alt={title}
+                    fill
+                    className="object-cover opacity-70"
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    unoptimized // YouTube URLs bypass Next.js image optimizer
+                  />
+                ) : (
+                  /* Fallback gradient when no thumbnail */
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(135deg, #00205B 0%, #001840 100%)" }}
+                  />
+                )}
+
+                {/* Dark overlay for readability */}
+                <div className="absolute inset-0 bg-[#00205B]/40" />
+
+                {/* Series chip */}
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-[10px] font-semibold tracking-widest uppercase text-[#00abc9] bg-black/30 border border-[#00abc9]/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                    Latest
                   </span>
                 </div>
 
-                {/* BBC triangle motif watermark */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                  <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-                    <polygon points="60,8 112,104 8,104" fill="#00abc9"/>
-                    <polygon points="60,28 92,88 28,88" fill="white"/>
-                    <polygon points="60,48 80,80 40,80" fill="#00abc9"/>
-                  </svg>
-                </div>
-
                 {/* Play button */}
-                <Link href="/sermons" className="relative z-10">
+                <a
+                  href={watchUrl}
+                  target={videoId ? "_blank" : undefined}
+                  rel={videoId ? "noopener noreferrer" : undefined}
+                  className="relative z-10"
+                  aria-label={`Watch ${title} on YouTube`}
+                >
                   <div className="w-16 h-16 rounded-full bg-[#00abc9] hover:bg-[#0090a8] flex items-center justify-center cursor-pointer transition-all shadow-lg shadow-[#00abc9]/40 hover:scale-105">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
                   </div>
-                </Link>
+                </a>
               </div>
 
               {/* Info panel */}
               <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center bg-white">
                 <h3
                   className="font-condensed font-800 text-[#00205B] text-2xl md:text-3xl leading-tight mb-4"
+                  style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
                 >
-                  {FEATURED_SERMON.title}
+                  {title}
                 </h3>
                 <div className="flex flex-wrap gap-x-5 gap-y-2 text-gray-400 text-sm mb-6">
                   <span className="flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
-                    {FEATURED_SERMON.speaker}
+                    Curtis Hill
                   </span>
                   <span className="flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
-                    {FEATURED_SERMON.date}
+                    {date}
                   </span>
-                  <span className="text-[#00abc9] font-medium">{FEATURED_SERMON.passage}</span>
-                  <span>{FEATURED_SERMON.duration}</span>
+                  {sermon && (
+                    <span className="flex items-center gap-1.5 text-[#00abc9]">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+                      </svg>
+                      YouTube
+                    </span>
+                  )}
                 </div>
                 <div className="flex gap-3 flex-wrap">
-                  <Link
-                    href="/sermons"
+                  <a
+                    href={watchUrl}
+                    target={videoId ? "_blank" : undefined}
+                    rel={videoId ? "noopener noreferrer" : undefined}
                     className="btn-primary text-sm"
                   >
-                    Listen Now
-                  </Link>
+                    Watch Now
+                  </a>
                   <Link
                     href="/sermons"
                     className="btn-outline-navy text-sm"
@@ -112,6 +146,7 @@ export default function SermonBand() {
                   </Link>
                 </div>
               </div>
+
             </div>
           </div>
         </ScrollReveal>
