@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getSpeaker } from "@/lib/speakers";
+import { getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS } from "@/lib/sermons";
 
 interface Props {
@@ -11,8 +11,13 @@ export default function SpeakerCard({ name, accentColor }: Props) {
   const info = getSpeaker(name);
   const sermonCount = SERMONS.filter((s) => s.speaker === name).length;
 
+  const slug = speakerSlug(name);
+
   return (
-    <div className="flex items-center gap-4 p-4 rounded-xl border border-white/6 bg-white/3">
+    <a
+      href={`/speakers/${slug}`}
+      className="group flex items-center gap-4 p-4 rounded-xl border border-white/6 bg-white/3 hover:border-white/15 hover:bg-white/5 transition-all"
+    >
       {/* Avatar — photo if available, else initials */}
       <div
         className="flex-shrink-0 w-11 h-11 rounded-full overflow-hidden flex items-center justify-center text-sm font-bold"
@@ -54,6 +59,15 @@ export default function SpeakerCard({ name, accentColor }: Props) {
           )}
         </p>
       </div>
-    </div>
+
+      {/* Arrow hint */}
+      <svg
+        width="14" height="14" viewBox="0 0 14 14" fill="none"
+        className="flex-shrink-0 text-white/15 group-hover:text-white/40 transition-colors"
+        stroke="currentColor" strokeWidth="1.5"
+      >
+        <path d="M3 7h8M8 4l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </a>
   );
 }

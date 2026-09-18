@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { STAFF_ROSTER, SPEAKERS } from "@/lib/speakers";
+import { STAFF_ROSTER, SPEAKERS, speakerSlug } from "@/lib/speakers";
 
 export const metadata = {
   title: "Our Team — Brainerd Baptist Church",
@@ -45,7 +45,7 @@ export default function StaffPage() {
               const info = SPEAKERS[name];
               if (!info) return null;
               return (
-                <div key={name} className="group">
+                <a key={name} href={`/speakers/${speakerSlug(name)}`} className="group">
                   {/* Photo */}
                   <div
                     className="relative w-full overflow-hidden rounded-2xl mb-3"
@@ -81,13 +81,13 @@ export default function StaffPage() {
 
                   {/* Name + title */}
                   <p
-                    className="text-white font-semibold text-sm leading-snug"
+                    className="text-white font-semibold text-sm leading-snug group-hover:text-white/80 transition-colors"
                     style={{ letterSpacing: "-0.015em" }}
                   >
                     {name}
                   </p>
                   <p className="text-white/35 text-xs mt-0.5">{info.title}</p>
-                </div>
+                </a>
               );
             })}
           </div>

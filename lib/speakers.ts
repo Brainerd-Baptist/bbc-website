@@ -2,12 +2,31 @@ export interface SpeakerInfo {
   title: string
   /** Slug matching /public/staff/<slug>.jpg — set when photo is available */
   photo?: string
-  /** Optional short bio */
-  bio?: string
+  /** Short bio paragraphs */
+  bio?: string[]
+}
+
+/** Convert a speaker's display name to a URL slug */
+export function speakerSlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+}
+
+/** Reverse-lookup: slug → display name */
+export function speakerFromSlug(slug: string): string | null {
+  return Object.keys(SPEAKERS).find((name) => speakerSlug(name) === slug) ?? null;
 }
 
 export const SPEAKERS: Record<string, SpeakerInfo> = {
-  "Curtis Hill":       { title: "Lead Pastor",            photo: "hill_curtis_leadpastor" },
+  "Curtis Hill": {
+    title: "Lead Pastor",
+    photo: "hill_curtis_leadpastor",
+    bio: [
+      "Curtis Hill grew up in Augusta, Georgia — which means he has strong opinions about The Masters — and was born in Oklahoma, which means he'll always pull for the Sooners.",
+      "He earned his master's degree from Temple Baptist Seminary in Chattanooga and completed his doctorate in Expositional Preaching at The Southern Baptist Theological Seminary in Louisville, Kentucky.",
+      "His early pastoral work began at Brainerd Baptist in various staff roles following seminary. He then served as Senior Pastor at Ogletown Baptist Church in Newark, Delaware for 15 years before returning to Brainerd in early 2023 as Lead Pastor.",
+      "Curtis and his wife Shawna have been married nearly 25 years and have three children. The family lives in Chattanooga. When he's not preaching, you might find him trail running, reading several books at once, or making his way through a documentary. He enjoys spreadsheets and Venn diagrams, plays golf, and has a well-documented weakness for Reese's Peanut Butter Cups.",
+    ],
+  },
   "Josiah King":       { title: "Operations Pastor",      photo: "king_josiah_operationspastor" },
   "Paul Christensen":  { title: "Students Pastor",        photo: "christensen_paul_studentspastor" },
   "Micah Frink":       { title: "Young Adults Pastor",    photo: "frink_micah_youngadultspastor" },
