@@ -41,10 +41,11 @@ function watchUrl(youtubeId: string, slug: string): string {
 
 // Per-series accent colors so each series has a visual identity
 const SERIES_COLORS: Record<string, { bg: string; accent: string }> = {
-  "gods-work-our-work":   { bg: "#0f2040", accent: "#00abc9" },
-  "psalms-of-ascent":     { bg: "#1a1a2e", accent: "#7c6af7" },
-  "grace-upon-grace":     { bg: "#0d2618", accent: "#4ade80" },
-  "king-and-his-kingdom": { bg: "#2a1100", accent: "#f59e0b" },
+  "behind-the-scenes":    { bg: "#1a0d2e", accent: "#a78bfa" }, // Esther — rich purple
+  "prayer-that-shapes-us":{ bg: "#0f2040", accent: "#00abc9" }, // Matthew 6 — Brainerd Blue
+  "ot-revisited":         { bg: "#1c1209", accent: "#f59e0b" }, // OT — warm amber
+  "complete-in-christ":   { bg: "#0d2618", accent: "#34d399" }, // Colossians — emerald
+  "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9" }, // BBC Navy + Blue
 };
 const DEFAULT_COLOR = { bg: "#00205B", accent: "#00abc9" };
 
