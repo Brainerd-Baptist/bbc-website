@@ -47,12 +47,12 @@ export default function VisitPage() {
             {SERVICES.map((s) => (
               <div key={s.time} className="glass rounded-2xl p-8 text-center">
                 <p
-                  className="font-condensed font-900 text-gold"
+                  className="font-condensed font-900 text-white"
                   style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}
                 >
                   {s.time}
                 </p>
-                <p className="font-condensed font-700 text-white text-xl mt-1">{s.style}</p>
+                <p className="font-condensed font-700 mt-1" style={{ color: "var(--gold)", fontSize: "1.1rem" }}>{s.style}</p>
               </div>
             ))}
           </div>
