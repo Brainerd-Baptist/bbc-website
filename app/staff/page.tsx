@@ -8,36 +8,20 @@ export const metadata = {
 
 export default function StaffPage() {
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}
-    >
-      {/* ── Header ─────────────────────────────────────────────────────── */}
+    <div className="min-h-screen bg-white">
+      {/* Header */}
       <div className="pt-28 pb-16 px-5 md:px-8 text-center">
-        <p
-          className="text-[10px] font-semibold tracking-widest uppercase mb-4"
-          style={{ color: "#00abc9" }}
-        >
-          Our Team
-        </p>
-        <h1
-          className="text-white mb-4"
-          style={{
-            fontFamily: "var(--font-inter), sans-serif",
-            fontWeight: 800,
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-            letterSpacing: "-0.035em",
-            lineHeight: 1.05,
-          }}
-        >
+        <p className="eyebrow mb-4">Our Team</p>
+        <h1 className="font-condensed font-800 text-[#00205B] mb-4"
+          style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", lineHeight: 1.05 }}>
           Meet the Staff
         </h1>
-        <p className="text-white/40 text-base max-w-md mx-auto leading-relaxed">
+        <p className="text-[#00205B]/50 text-base max-w-md mx-auto leading-relaxed">
           People serving Brainerd Baptist Church and the surrounding community.
         </p>
       </div>
 
-      {/* ── Grid ───────────────────────────────────────────────────────── */}
+      {/* Grid */}
       <div className="px-5 md:px-8 pb-24">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
@@ -47,10 +31,7 @@ export default function StaffPage() {
               return (
                 <a key={name} href={`/speakers/${speakerSlug(name)}`} className="group">
                   {/* Photo */}
-                  <div
-                    className="relative w-full overflow-hidden rounded-2xl mb-3"
-                    style={{ aspectRatio: "4/5" }}
-                  >
+                  <div className="relative w-full overflow-hidden rounded-2xl mb-3" style={{ aspectRatio: "4/5" }}>
                     {info.photo ? (
                       <Image
                         src={`/staff/${info.photo}.jpg`}
@@ -61,32 +42,21 @@ export default function StaffPage() {
                         priority={name === "Curtis Hill"}
                       />
                     ) : (
-                      /* Fallback initials avatar */
-                      <div
-                        className="w-full h-full flex items-center justify-center text-2xl font-bold text-white/30"
-                        style={{ background: "rgba(255,255,255,0.04)" }}
-                      >
+                      <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-[#00205B]/30"
+                        style={{ background: "#f4f6f9" }}>
                         {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                       </div>
                     )}
-                    {/* Subtle gradient at bottom */}
-                    <div
-                      className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(7,16,30,0.55) 0%, transparent 100%)",
-                      }}
-                    />
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
+                      style={{ background: "linear-gradient(to top, rgba(0,32,91,0.18) 0%, transparent 100%)" }} />
                   </div>
 
                   {/* Name + title */}
-                  <p
-                    className="text-white font-semibold text-sm leading-snug group-hover:text-white/80 transition-colors"
-                    style={{ letterSpacing: "-0.015em" }}
-                  >
+                  <p className="text-[#00205B] font-semibold text-sm leading-snug group-hover:text-[#00abc9] transition-colors"
+                    style={{ letterSpacing: "-0.015em" }}>
                     {name}
                   </p>
-                  <p className="text-white/35 text-xs mt-0.5">{info.title}</p>
+                  <p className="text-[#00205B]/45 text-xs mt-0.5">{info.title}</p>
                 </a>
               );
             })}

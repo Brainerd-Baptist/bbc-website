@@ -28,24 +28,25 @@ const EXPECT_ITEMS = [
   {
     icon: "people",
     title: "Come as You Are",
-    desc: "You will find people in everything from jeans to Sunday best. There is no dress code — just come.",
+    desc: "We're not thinking about what you're wearing — we're eager to learn your name and hear your story.",
   },
 ];
 
 export default function VisitPage() {
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
-      {/* Video hero */}
+    <div className="min-h-screen bg-white">
+      {/* Video hero — stays dark by design */}
       <VideoHero />
 
       {/* Service times */}
-      <section id="service-times" className="py-16 px-6">
+      <section id="service-times" className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
-          <h2 className="font-condensed font-800 text-white text-3xl mb-2 text-center">
-            Sunday Mornings
+          <p className="eyebrow text-center mb-3">Sunday Mornings</p>
+          <h2 className="font-condensed font-800 text-[#00205B] text-4xl md:text-5xl mb-3 text-center">
+            Two Services. One Family.
           </h2>
-          <p className="text-white/50 text-center text-sm mb-10">
-            Two worship services, Life Groups in between — all at 300 Brookfield Ave.
+          <p className="text-[#00205B]/55 text-center text-sm mb-12 max-w-lg mx-auto">
+            Both at 300 Brookfield Ave — Life Groups meet between services.
           </p>
 
           {/* Photo service cards */}
@@ -59,7 +60,6 @@ export default function VisitPage() {
                 className="object-cover object-center"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              {/* dark gradient overlay */}
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(7,16,30,0.92) 0%, rgba(7,16,30,0.45) 55%, rgba(7,16,30,0.15) 100%)" }} />
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <p
@@ -68,7 +68,7 @@ export default function VisitPage() {
                 >
                   8:30 AM
                 </p>
-                <p className="font-condensed font-700 mt-1" style={{ color: "var(--gold)", fontSize: "1.05rem" }}>
+                <p className="font-condensed font-700 mt-1" style={{ color: "#00abc9", fontSize: "1.05rem" }}>
                   Choir &amp; Orchestra
                 </p>
               </div>
@@ -91,7 +91,7 @@ export default function VisitPage() {
                 >
                   11:00 AM
                 </p>
-                <p className="font-condensed font-700 mt-1" style={{ color: "var(--gold)", fontSize: "1.05rem" }}>
+                <p className="font-condensed font-700 mt-1" style={{ color: "#00abc9", fontSize: "1.05rem" }}>
                   Band-Led Worship
                 </p>
               </div>
@@ -109,7 +109,7 @@ export default function VisitPage() {
             />
             <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(7,16,30,0.88) 0%, rgba(7,16,30,0.65) 60%, rgba(7,16,30,0.3) 100%)" }} />
             <div className="absolute inset-0 flex flex-col justify-center px-8">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--gold)" }}>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#00abc9" }}>
                 9:45 AM · Between Services
               </p>
               <p className="text-white font-condensed font-700 text-xl">Life Groups</p>
@@ -138,16 +138,17 @@ export default function VisitPage() {
       </div>
 
       {/* What to expect */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
-          <h2 className="font-condensed font-800 text-white text-3xl mb-10 text-center">
+          <p className="eyebrow text-center mb-3">Before You Arrive</p>
+          <h2 className="font-condensed font-800 text-[#00205B] text-4xl md:text-5xl mb-12 text-center">
             What to Expect
           </h2>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-5">
             {EXPECT_ITEMS.map((item) => (
               <div key={item.title} className="glass rounded-2xl p-7">
-                <h3 className="font-condensed font-700 text-white text-xl mb-2">{item.title}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-condensed font-700 text-[#00205B] text-xl mb-2">{item.title}</h3>
+                <p className="text-[#00205B]/60 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -155,63 +156,60 @@ export default function VisitPage() {
       </section>
 
       {/* Child care */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6" style={{ background: "#f4f6f9" }}>
         <div className="max-w-5xl mx-auto">
-          <div className="glass-md rounded-2xl p-10">
-            <h2 className="font-condensed font-800 text-white text-3xl mb-2">
-              Child Care
-            </h2>
-            <div className="gold-divider mb-6" />
-            <div className="grid sm:grid-cols-2 gap-4">
-              {CHILD_CARE.map((c) => (
-                <div key={c.age} className="glass rounded-xl p-5">
-                  <p className="font-semibold text-white mb-1">{c.age}</p>
-                  <p className="text-white/55 text-sm">{c.times}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-white/40 text-sm mt-6">
-              Our children&apos;s volunteers are background-checked and trained. Check-in opens
-              30 minutes before each service.
-            </p>
+          <p className="eyebrow text-center mb-3">Kids Welcome</p>
+          <h2 className="font-condensed font-800 text-[#00205B] text-4xl md:text-5xl mb-12 text-center">
+            Child Care
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            {CHILD_CARE.map((c) => (
+              <div key={c.age} className="bg-white rounded-xl p-6 border border-[#00205B]/08 shadow-sm">
+                <p className="font-condensed font-700 text-[#00205B] text-lg mb-1">{c.age}</p>
+                <p className="text-[#00205B]/60 text-sm">{c.times}</p>
+              </div>
+            ))}
           </div>
+          <p className="text-[#00205B]/45 text-sm text-center">
+            Our children&apos;s volunteers are background-checked and trained. Check-in opens
+            30 minutes before each service.
+          </p>
         </div>
       </section>
 
       {/* Location */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
-          <h2 className="font-condensed font-800 text-white text-3xl mb-8 text-center">
+          <p className="eyebrow text-center mb-3">Getting Here</p>
+          <h2 className="font-condensed font-800 text-[#00205B] text-4xl md:text-5xl mb-12 text-center">
             Find Us
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Main */}
-            <div className="glass rounded-2xl p-7">
-              <p className="text-white font-semibold text-lg mb-1">Brainerd Baptist Church</p>
-              <p className="text-white/55 text-sm leading-relaxed mb-4">
+            {/* Main campus */}
+            <div className="glass rounded-2xl p-8">
+              <p className="font-condensed font-700 text-[#00205B] text-xl mb-1">Brainerd Baptist Church</p>
+              <p className="text-[#00205B]/55 text-sm leading-relaxed mb-5">
                 300 Brookfield Ave<br />Chattanooga, TN 37411
               </p>
               <a
                 href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-condensed font-700 tracking-wide uppercase text-sm bg-gold hover:bg-gold-light text-navy px-5 py-2.5 rounded-full transition-colors inline-block"
+                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-[#00abc9] hover:bg-[#0090a8] text-white px-5 py-2.5 rounded-full transition-colors"
               >
                 Get Directions
               </a>
             </div>
 
-            {/* Hispanic */}
-            <div className="glass rounded-2xl p-7 border-t-4 border-gold">
-              <p className="eyebrow mb-3" style={{ color: "var(--gold)" }}>
-                Ministerio Hispano · Hispanic Ministry
-              </p>
-              <p className="text-white font-semibold text-lg mb-1">Servicio en Español</p>
-              <p className="text-white/55 text-sm leading-relaxed mb-1">
+            {/* Hispanic ministry */}
+            <div className="glass rounded-2xl p-8 border-t-4 border-[#00abc9]">
+              <p className="eyebrow mb-3">Ministerio Hispano · Hispanic Ministry</p>
+              <p className="font-condensed font-700 text-[#00205B] text-xl mb-1">Servicio en Español</p>
+              <p className="text-[#00205B]/55 text-sm leading-relaxed mb-1">
                 {HISPANIC_MINISTRY.address}
               </p>
-              <p className="text-white/55 text-sm mb-4">{HISPANIC_MINISTRY.serviceTime}</p>
-              <p className="text-white/40 text-sm italic">
+              <p className="text-[#00205B]/55 text-sm mb-4">{HISPANIC_MINISTRY.serviceTime}</p>
+              <p className="text-[#00205B]/40 text-sm italic">
                 Bienvenidos a nuestra familia. Un servicio de adoración en español — todos son bienvenidos.
               </p>
             </div>
@@ -219,18 +217,18 @@ export default function VisitPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 px-6 text-center">
+      {/* CTA — navy close */}
+      <section className="py-20 px-6 text-center" style={{ background: "#00205B" }}>
         <div className="max-w-xl mx-auto">
-          <h2 className="font-condensed font-800 text-white text-3xl mb-4">
+          <h2 className="font-condensed font-800 text-white text-4xl md:text-5xl mb-4">
             Ready to Visit?
           </h2>
-          <p className="text-white/55 mb-8">
+          <p className="text-white/60 mb-8">
             Let us know you&apos;re coming — we&apos;d love to welcome you personally.
           </p>
           <Link
             href="/connect"
-            className="font-condensed font-700 tracking-wide uppercase text-sm bg-gold hover:bg-gold-light text-navy px-8 py-3.5 rounded-full transition-colors"
+            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-[#00abc9] hover:bg-[#0090a8] text-white px-8 py-3.5 rounded-full transition-colors"
           >
             Send Us a Note
           </Link>

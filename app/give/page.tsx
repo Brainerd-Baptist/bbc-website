@@ -26,7 +26,7 @@ const FUNDS = [
 
 export default function GivePage() {
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
@@ -35,23 +35,23 @@ export default function GivePage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white mb-4"
+            className="font-condensed font-800 text-[#00205B] mb-4"
             style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)" }}
           >
             Give
           </h1>
-          <p className="font-serif italic text-white/65 text-lg leading-relaxed max-w-xl mx-auto">
+          <p className="font-serif italic text-[#00205B]/65 text-lg leading-relaxed max-w-xl mx-auto">
             &ldquo;Each one must give as he has decided in his heart, not reluctantly or under compulsion,
             for God loves a cheerful giver.&rdquo;
           </p>
-          <p className="text-white/35 text-xs mt-2 tracking-wide">— 2 Corinthians 9:7</p>
+          <p className="text-[#00205B]/40 text-xs mt-2 tracking-wide">— 2 Corinthians 9:7</p>
         </div>
       </div>
 
       {/* Giving options */}
       <section className="pb-12 px-6">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-condensed font-800 text-white text-2xl mb-6">Ways to Give</h2>
+          <h2 className="font-condensed font-800 text-[#00205B] text-2xl mb-6">Ways to Give</h2>
           <div className="grid md:grid-cols-3 gap-5 mb-8">
             {FUNDS.map((f) => (
               <div
@@ -61,8 +61,8 @@ export default function GivePage() {
                 {f.primary && (
                   <p className="eyebrow mb-2 text-xs">Primary</p>
                 )}
-                <h3 className="font-condensed font-700 text-white text-xl mb-2">{f.name}</h3>
-                <p className="text-white/55 text-sm leading-relaxed mb-5">{f.desc}</p>
+                <h3 className="font-condensed font-800 text-[#00205B] text-xl mb-2">{f.name}</h3>
+                <p className="text-[#00205B]/60 text-sm leading-relaxed mb-5">{f.desc}</p>
                 <a
                   href="https://giving.planningcenter.com/brainerdbaptist"
                   target="_blank"
@@ -70,7 +70,7 @@ export default function GivePage() {
                   className={`block text-center font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full transition-colors ${
                     f.primary
                       ? "bg-gold hover:bg-gold-light text-navy"
-                      : "border border-white/20 hover:border-white/40 text-white glass"
+                      : "border border-white/20 hover:border-white/40 text-[#00205B] glass"
                   }`}
                 >
                   Give Online
@@ -81,30 +81,30 @@ export default function GivePage() {
 
           {/* Other methods */}
           <div className="glass-md rounded-2xl p-8">
-            <h3 className="font-condensed font-700 text-white text-xl mb-5">Other Ways to Give</h3>
+            <h3 className="font-condensed font-800 text-[#00205B] text-xl mb-5">Other Ways to Give</h3>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="glass rounded-xl p-5">
-                <p className="font-semibold text-white mb-1">In Person</p>
-                <p className="text-white/55 text-sm">
+                <p className="font-semibold text-[#00205B] mb-1">In Person</p>
+                <p className="text-[#00205B]/60 text-sm">
                   Offering plates are passed during each Sunday service. Checks can be made payable to
                   &ldquo;Brainerd Baptist Church.&rdquo;
                 </p>
               </div>
               <div className="glass rounded-xl p-5">
-                <p className="font-semibold text-white mb-1">Mail a Check</p>
-                <p className="text-white/55 text-sm">
+                <p className="font-semibold text-[#00205B] mb-1">Mail a Check</p>
+                <p className="text-[#00205B]/60 text-sm">
                   300 Brookfield Ave<br />Chattanooga, TN 37411
                 </p>
               </div>
               <div className="glass rounded-xl p-5">
-                <p className="font-semibold text-white mb-1">Recurring Gifts</p>
-                <p className="text-white/55 text-sm">
+                <p className="font-semibold text-[#00205B] mb-1">Recurring Gifts</p>
+                <p className="text-[#00205B]/60 text-sm">
                   Set up automatic giving through our online portal — weekly, bi-weekly, or monthly.
                 </p>
               </div>
               <div className="glass rounded-xl p-5">
-                <p className="font-semibold text-white mb-1">Stock & Non-Cash</p>
-                <p className="text-white/55 text-sm">
+                <p className="font-semibold text-[#00205B] mb-1">Stock & Non-Cash</p>
+                <p className="text-[#00205B]/60 text-sm">
                   For gifts of stock, real estate, or other non-cash assets, please{" "}
                   <Link href="/connect" className="text-gold hover:text-gold-light underline underline-offset-2">
                     contact us
@@ -120,7 +120,7 @@ export default function GivePage() {
       {/* Stewardship note */}
       <section className="py-16 px-6 text-center">
         <div className="max-w-xl mx-auto">
-          <p className="text-white/35 text-sm leading-relaxed">
+          <p className="text-[#00205B]/40 text-sm leading-relaxed">
             Brainerd Baptist Church is a 501(c)(3) nonprofit organization. All gifts are
             tax-deductible to the extent permitted by law. Annual giving statements are
             available through our online portal.

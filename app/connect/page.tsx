@@ -37,7 +37,7 @@ export default function ConnectPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
+    <div className="min-h-screen bg-white">
       {/* Page header */}
       <div className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
@@ -46,12 +46,12 @@ export default function ConnectPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white mb-4"
+            className="font-condensed font-800 text-[#00205B] mb-4"
             style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)" }}
           >
             Connect With Us
           </h1>
-          <p className="text-white/55 text-lg leading-relaxed">
+          <p className="text-[#00205B]/60 text-lg leading-relaxed">
             Whether you are visiting for the first time, looking for community, or
             simply have a question — we want to hear from you.
           </p>
@@ -72,23 +72,23 @@ export default function ConnectPage() {
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
-                <h2 className="font-condensed font-800 text-white text-2xl mb-3">
+                <h2 className="font-condensed font-800 text-[#00205B] text-2xl mb-3">
                   We got your message
                 </h2>
-                <p className="text-white/55 leading-relaxed max-w-sm">
+                <p className="text-[#00205B]/60 leading-relaxed max-w-sm">
                   Thank you for reaching out. Someone from our team will be in touch
                   within a couple of days.
                 </p>
               </div>
             ) : (
               <>
-                <h2 className="font-condensed font-800 text-white text-2xl mb-6">
+                <h2 className="font-condensed font-800 text-[#00205B] text-2xl mb-6">
                   Send Us a Note
                 </h2>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="name" className="block text-xs font-semibold tracking-widest uppercase text-white/40 mb-2">
+                      <label htmlFor="name" className="block text-xs font-semibold tracking-widest uppercase text-[#00205B]/45 mb-2">
                         Full Name
                       </label>
                       <input
@@ -99,11 +99,11 @@ export default function ConnectPage() {
                         value={form.name}
                         onChange={handleChange}
                         placeholder="Jane Smith"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#00205B] placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-xs font-semibold tracking-widest uppercase text-white/40 mb-2">
+                      <label htmlFor="email" className="block text-xs font-semibold tracking-widest uppercase text-[#00205B]/45 mb-2">
                         Email
                       </label>
                       <input
@@ -114,14 +114,14 @@ export default function ConnectPage() {
                         value={form.email}
                         onChange={handleChange}
                         placeholder="jane@example.com"
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#00205B] placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="phone" className="block text-xs font-semibold tracking-widest uppercase text-white/40 mb-2">
-                      Phone <span className="normal-case text-white/25">(optional)</span>
+                    <label htmlFor="phone" className="block text-xs font-semibold tracking-widest uppercase text-[#00205B]/45 mb-2">
+                      Phone <span className="normal-case text-[#00205B]/25">(optional)</span>
                     </label>
                     <input
                       id="phone"
@@ -130,12 +130,12 @@ export default function ConnectPage() {
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="(423) 555-0100"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#00205B] placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="interest" className="block text-xs font-semibold tracking-widest uppercase text-white/40 mb-2">
+                    <label htmlFor="interest" className="block text-xs font-semibold tracking-widest uppercase text-[#00205B]/45 mb-2">
                       What best describes you?
                     </label>
                     <select
@@ -143,7 +143,7 @@ export default function ConnectPage() {
                       name="interest"
                       value={form.interest}
                       onChange={handleChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-gold/50 transition-colors appearance-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#00205B] text-sm focus:outline-none focus:border-gold/50 transition-colors appearance-none"
                       style={{ color: form.interest ? "white" : "rgba(255,255,255,0.25)" }}
                     >
                       <option value="" style={{ background: "#0a1628" }}>Select one…</option>
@@ -154,8 +154,8 @@ export default function ConnectPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-xs font-semibold tracking-widest uppercase text-white/40 mb-2">
-                      Message <span className="normal-case text-white/25">(optional)</span>
+                    <label htmlFor="message" className="block text-xs font-semibold tracking-widest uppercase text-[#00205B]/45 mb-2">
+                      Message <span className="normal-case text-[#00205B]/25">(optional)</span>
                     </label>
                     <textarea
                       id="message"
@@ -164,7 +164,7 @@ export default function ConnectPage() {
                       value={form.message}
                       onChange={handleChange}
                       placeholder="Anything else you'd like us to know…"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors resize-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#00205B] placeholder-white/25 text-sm focus:outline-none focus:border-gold/50 transition-colors resize-none"
                     />
                   </div>
 
@@ -184,8 +184,8 @@ export default function ConnectPage() {
             {/* Address */}
             <div className="glass rounded-2xl p-6">
               <p className="eyebrow mb-3">Address</p>
-              <p className="text-white font-semibold mb-1">Brainerd Baptist Church</p>
-              <p className="text-white/55 text-sm leading-relaxed">
+              <p className="font-semibold text-[#00205B] mb-1">Brainerd Baptist Church</p>
+              <p className="text-[#00205B]/60 text-sm leading-relaxed">
                 300 Brookfield Ave<br />Chattanooga, TN 37411
               </p>
               <a
@@ -209,7 +209,7 @@ export default function ConnectPage() {
                   href={SITE.social.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-white/55 hover:text-white transition-colors text-sm"
+                  className="flex items-center gap-3 text-[#00205B]/60 hover:text-[#00abc9] transition-colors text-sm"
                 >
                   <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -220,7 +220,7 @@ export default function ConnectPage() {
                   href={SITE.social.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-white/55 hover:text-white transition-colors text-sm"
+                  className="flex items-center gap-3 text-[#00205B]/60 hover:text-[#00abc9] transition-colors text-sm"
                 >
                   <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -231,7 +231,7 @@ export default function ConnectPage() {
                   href={SITE.social.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-white/55 hover:text-white transition-colors text-sm"
+                  className="flex items-center gap-3 text-[#00205B]/60 hover:text-[#00abc9] transition-colors text-sm"
                 >
                   <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" /><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white" />
@@ -244,8 +244,8 @@ export default function ConnectPage() {
             {/* Give */}
             <div className="glass rounded-2xl p-6 border border-gold/20">
               <p className="eyebrow mb-2">Generosity</p>
-              <p className="text-white font-semibold mb-2">Give Online</p>
-              <p className="text-white/55 text-xs leading-relaxed mb-4">
+              <p className="font-semibold text-[#00205B] mb-2">Give Online</p>
+              <p className="text-[#00205B]/60 text-xs leading-relaxed mb-4">
                 Your generosity funds the gospel work at Brainerd and around the world.
               </p>
               <a

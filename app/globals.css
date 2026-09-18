@@ -8,8 +8,9 @@
   --bbc-navy: #00205B;
   --bbc-navy-light: #0a2d6e;
   --black: #111111;
-  --gray-100: #f7f7f7;
-  --gray-200: #efefef;
+  --gray-50: #fafafa;
+  --gray-100: #f4f6f9;
+  --gray-200: #e8ecf2;
   --gray-600: #6b7280;
   --gray-800: #1f2937;
   --white: #ffffff;
@@ -19,8 +20,8 @@
   --navy-deep: #001340;
   --gold: #00abc9;
   --gold-light: #33c1d9;
-  --glass-border: rgba(0,171,201,0.15);
-  --glass-bg: rgba(0,171,201,0.06);
+  --glass-border: rgba(0,32,91,0.10);
+  --glass-bg: rgba(0,32,91,0.04);
   --text-muted: rgba(0,32,91,0.55);
 }
 
@@ -35,7 +36,7 @@ html {
 
 body {
   background: #ffffff;
-  color: var(--black);
+  color: var(--bbc-navy);
   font-family: var(--font-barlow), sans-serif;
   overflow-x: hidden;
 }
@@ -51,17 +52,28 @@ body {
   transform: translateY(0);
 }
 
-/* ── Glass utility ─────────────────────────────────────── */
+/* ── Card / glass utility (light-mode) ─────────────────── */
 .glass {
+  background: #ffffff;
+  border: 1px solid rgba(0,32,91,0.10);
+  box-shadow: 0 1px 4px rgba(0,32,91,0.06);
+}
+.glass-md {
+  background: var(--gray-100);
+  border: 1px solid rgba(0,32,91,0.08);
+  box-shadow: 0 2px 8px rgba(0,32,91,0.06);
+}
+.glass-light {
+  background: rgba(0,171,201,0.06);
+  border: 1px solid rgba(0,171,201,0.18);
+}
+
+/* Cards on dark sections stay dark */
+.glass-dark {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
-.glass-light {
-  background: rgba(0,171,201,0.06);
-  border: 1px solid rgba(0,171,201,0.15);
-  backdrop-filter: blur(8px);
 }
 
 /* ── Eyebrow ───────────────────────────────────────────── */
@@ -71,7 +83,15 @@ body {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: var(--bbc-blue);
+}
+.eyebrow-muted {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,32,91,0.45);
 }
 .eyebrow-white {
   font-family: var(--font-inter), sans-serif;
@@ -165,36 +185,37 @@ body {
 }
 
 /* ── Typography ─────────────────────────────────────────── */
-.font-condensed { font-family: var(--font-inter), sans-serif; }
+/* IMPORTANT: uses Barlow Condensed loaded via next/font/google */
+.font-condensed { font-family: var(--font-barlow-condensed), sans-serif; }
 .font-serif { font-family: Georgia, 'Times New Roman', serif; }
 
 /* Headline sizes */
 .h-display {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow-condensed), sans-serif;
   font-weight: 800;
   font-size: clamp(3rem, 7vw, 5.5rem);
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
 }
 .h-hero {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow-condensed), sans-serif;
   font-weight: 800;
   font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 1.0;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 .h-section {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow-condensed), sans-serif;
   font-weight: 700;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
 }
 
 /* ── Frosted glass nav ─────────────────────────────────── */
 .nav-glass {
-  background: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(0,32,91,0.08);
 }

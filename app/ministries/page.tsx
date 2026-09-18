@@ -70,7 +70,7 @@ const DETAIL: Record<string, { tagline: string; body: string }> = {
 
 export default function MinistriesPage() {
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
+    <div className="min-h-screen bg-white">
       {/* Page header */}
       <div className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
