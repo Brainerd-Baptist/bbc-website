@@ -33,18 +33,31 @@ export default function VideoHero() {
     });
   }, []);
 
+  // Portrait thumbnail — Cloudflare auto-gravity picks a face-friendly frame
+  const PORTRAIT_POSTER = `https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID}/thumbnails/thumbnail.jpg?width=800&height=1200&fit=cover&gravity=auto&time=4s`;
+  const LANDSCAPE_POSTER = `https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID}/thumbnails/thumbnail.jpg?width=1920&height=1080&time=4s`;
+
   return (
     <section className="relative w-full overflow-hidden" style={{ height: "100svh" }}>
-      {/* ── Video background ── */}
+      {/* ── Mobile: static portrait image (video crops awkwardly on portrait screens) ── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={PORTRAIT_POSTER}
+        alt="Brainerd Baptist Church congregation"
+        className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
+        aria-hidden="true"
+      />
+
+      {/* ── Desktop: video background ── */}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover hidden md:block"
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
-        poster={`https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID}/thumbnails/thumbnail.jpg?width=1920&height=1080`}
+        poster={LANDSCAPE_POSTER}
       >
         {/* MP4 direct download as universal fallback */}
         <source src={MP4_URL} type="video/mp4" />
