@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getAllSermons, getAllSeries, FALLBACK_SERMONS } from "@/lib/sanity";
 import { ALL_SERIES as FALLBACK_SERIES } from "@/lib/sermons";
 import SermonGrid from "@/components/sermons/SermonGrid";
@@ -89,13 +90,60 @@ export default async function SermonsPage() {
         </div>
       </div>
 
+      {/* ── Series cards ──────────────────────────────────────────────── */}
+      <section className="px-5 md:px-8 mb-14">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-white/30 text-[10px] font-semibold tracking-widest uppercase mb-5">Current &amp; Recent Series</p>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory">
+            {allSeries.map((sr) => {
+              const count = sermons.filter((s) => s.seriesId === sr.id).length;
+              const accent = (sermons.find((s) => s.seriesId === sr.id) as { seriesAccent?: string } | undefined)?.seriesAccent;
+              const COLORS: Record<string, { bg: string; accent: string }> = {
+                "behind-the-scenes":    { bg: "#1a0d2e", accent: "#a78bfa" },
+                "prayer-that-shapes-us":{ bg: "#0f2040", accent: "#00abc9" },
+                "ot-revisited":         { bg: "#1c1209", accent: "#f59e0b" },
+                "complete-in-christ":   { bg: "#0d2618", accent: "#34d399" },
+                "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9" },
+              };
+              const color = COLORS[sr.id] ?? { bg: "#00205B", accent: accent ?? "#00abc9" };
+              return (
+                <a
+                  key={sr.id}
+                  href={`/sermons?series=${sr.id}`}
+                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-white/8 hover:border-white/18 transition-all"
+                  style={{ background: color.bg }}
+                >
+                  <div className="p-5 h-full flex flex-col justify-between min-h-[120px]">
+                    <div
+                      className="w-6 h-0.5 mb-3 rounded-full"
+                      style={{ background: color.accent }}
+                    />
+                    <div>
+                      <p
+                        className="text-white font-bold text-sm leading-snug mb-1.5"
+                        style={{ letterSpacing: "-0.02em" }}
+                      >
+                        {sr.name}
+                      </p>
+                      <p className="text-white/35 text-[11px]">{count} sermon{count !== 1 ? "s" : ""}</p>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ── Filter + grid (client component) ─────────────────────────── */}
-      <SermonGrid
-        sermons={sermons}
-        allSeries={allSeries}
-        allSpeakers={allSpeakers}
-        allYears={allYears}
-      />
+      <Suspense fallback={null}>
+        <SermonGrid
+          sermons={sermons}
+          allSeries={allSeries}
+          allSpeakers={allSpeakers}
+          allYears={allYears}
+        />
+      </Suspense>
 
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}
       <section

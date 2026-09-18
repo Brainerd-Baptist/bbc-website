@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { formatDate } from "@/lib/sermons";
 
@@ -56,10 +57,17 @@ function seriesColor(seriesId: string) {
 }
 
 export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }: Props) {
+  const searchParams = useSearchParams();
   const [query, setQuery]           = useState("");
-  const [series, setSeries]         = useState("all");
+  const [series, setSeries]         = useState(() => searchParams.get("series") ?? "all");
   const [speaker, setSpeaker]       = useState("all");
   const [year, setYear]             = useState("all");
+
+  // Sync if user navigates to ?series=... (e.g. from a series card)
+  useEffect(() => {
+    const s = searchParams.get("series");
+    if (s) setSeries(s);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();

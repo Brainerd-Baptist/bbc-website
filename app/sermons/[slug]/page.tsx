@@ -6,6 +6,8 @@ import {
   formatDate,
 } from "@/lib/sanity";
 import { SERMONS, formatDate as staticFormatDate } from "@/lib/sermons";
+import ShareButton from "@/components/sermons/ShareButton";
+import RelatedSermons from "@/components/sermons/RelatedSermons";
 
 export const revalidate = 300;
 
@@ -253,9 +255,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                 Download Audio
               </a>
             )}
+            <ShareButton title={s.title} speaker={s.speaker} />
           </div>
         </div>
       </div>
+
+      {/* ── More from this series ──────────────────────────────────────── */}
+      <RelatedSermons currentId={slug} seriesId={sanitySermon ? (sanitySermon.series?.slug?.current ?? "") : (SERMONS.find((x) => x.id === slug)?.seriesId ?? "")} accentColor={accentColor} />
 
       {/* ── Outline + Notes (two-column on desktop, Sanity-only) ──────── */}
       {(s.outline || s.notes) && (
