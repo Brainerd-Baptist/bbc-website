@@ -8,6 +8,7 @@ import {
 import { SERMONS, formatDate as staticFormatDate } from "@/lib/sermons";
 import ShareButton from "@/components/sermons/ShareButton";
 import RelatedSermons from "@/components/sermons/RelatedSermons";
+import SermonPlayer from "@/components/sermons/SermonPlayer";
 
 export const revalidate = 300;
 
@@ -170,22 +171,11 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
-      {/* ── Video embed ────────────────────────────────────────────────── */}
+      {/* ── Video player ───────────────────────────────────────────────── */}
       {s.youtubeId && (
         <div className="px-5 md:px-8 mb-10">
           <div className="max-w-4xl mx-auto">
-            <div
-              className="relative w-full rounded-2xl overflow-hidden border border-white/8"
-              style={{ paddingBottom: "56.25%" }}
-            >
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${s.youtubeId}?rel=0&modestbranding=1&color=white`}
-                title={s.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full"
-              />
-            </div>
+            <SermonPlayer youtubeId={s.youtubeId} title={s.title} />
           </div>
         </div>
       )}
