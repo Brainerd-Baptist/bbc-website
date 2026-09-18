@@ -109,6 +109,7 @@ export const NAV_LINKS = [
   { label: "Ministries", href: "/ministries" },
   { label: "Life Groups", href: "/life-groups" },
   { label: "Give", href: "/give" },
+  { label: "Staff", href: "/staff" },
   { label: "Connect", href: "/connect" },
 ];
 
@@ -132,6 +133,7 @@ export const FOOTER_LINKS = {
     { label: "Give", href: "/give" },
     { label: "Events", href: "/events" },
     { label: "Prayer", href: "/prayer" },
-    { label: "Connect", href: "/connect" },
+    { label: "Staff", href: "/staff" },
+  { label: "Connect", href: "/connect" },
   ],
 };

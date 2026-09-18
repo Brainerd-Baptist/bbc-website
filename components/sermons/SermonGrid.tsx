@@ -201,12 +201,22 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
   // Always internal — static sermons use id-based route, Sanity uses slug
   const isInternal = !!(sermon.slug || sermon.id);
 
+  // Read playback progress from localStorage (saved by AudioPlayer)
+  const [progress, setProgress] = useState<number | null>(null);
+  useEffect(() => {
+    try {
+      const key = `bbc-ap-${sermon.slug || sermon.id}`;
+      const saved = localStorage.getItem(key);
+      if (saved) setProgress(parseFloat(saved));
+    } catch {}
+  }, [sermon.slug, sermon.id]);
+
   return (
     <a
       href={url}
       target={isInternal ? undefined : "_blank"}
       rel={isInternal ? undefined : "noopener noreferrer"}
-      className="group flex gap-0 rounded-2xl overflow-hidden border border-white/6 hover:border-white/12 bg-white/4 hover:bg-white/7 transition-all duration-200 block"
+      className="group relative flex gap-0 rounded-2xl overflow-hidden border border-white/6 hover:border-white/12 bg-white/4 hover:bg-white/7 transition-all duration-200 block"
       style={{ animationDelay: `${index * 30}ms` }}
     >
       {/* Thumbnail */}
@@ -282,6 +292,13 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
           </svg>
         </div>
       </div>
+      {/* Progress bar */}
+      {progress !== null && progress > 5 && (
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+          <div className="h-full rounded-b-2xl transition-[width] duration-500"
+            style={{ width: `${Math.min(100, (progress / 3600) * 100)}%`, background: color.accent }} />
+        </div>
+      )}
     </a>
   );
 }

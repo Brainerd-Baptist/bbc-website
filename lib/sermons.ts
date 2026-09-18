@@ -15,6 +15,7 @@ export interface Sermon {
   book: string;
   duration?: string;
   description?: string;
+  passages?: string[];  // additional scripture references from sermon notes
 }
 
 export const SERMONS: Sermon[] = [
@@ -40,6 +41,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-09-07",
     passage: "Esther 9–10",
+    passages: ["Esther 9", "1 Corinthians 2:2", "1 Corinthians 15:3-4", "Galatians 6:14", "Hebrews 12:3"],
     book: "Esther",
   },
   {
@@ -51,6 +53,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-08-31",
     passage: "Esther 7–8",
+    passages: ["Esther 7", "Daniel 4:37", "Psalm 30:11-12", "Exodus 15:1-3", "1 Samuel 2:4-6"],
     book: "Esther",
   },
   {
@@ -62,6 +65,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-08-24",
     passage: "Esther 5–6",
+    passages: ["Esther 4", "Psalm 7:14-16", "Romans 3:11-12", "Ephesians 2", "Titus 3:3"],
     book: "Esther",
   },
   {
@@ -73,6 +77,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-08-17",
     passage: "Esther 4",
+    passages: ["Esther 4", "Joel 2"],
     book: "Esther",
   },
   {
@@ -84,6 +89,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-08-10",
     passage: "Esther 2–3",
+    passages: ["Esther 2:21-3", "Esther 3", "1 Samuel 30", "Judges 3", "1 Samuel 15"],
     book: "Esther",
   },
   {
@@ -95,6 +101,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-08-03",
     passage: "Esther 2",
+    passages: ["Psalm 46:1-3", "Proverbs 21:1", "Daniel 2:21", "Psalm 135:6", "Exodus 2:23-25"],
     book: "Esther",
   },
   {
@@ -106,6 +113,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-07-27",
     passage: "Esther 1",
+    passages: ["James 1:21", "Psalm 2"],
     book: "Esther",
   },
 
@@ -141,6 +149,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-07-06",
     passage: "Matthew 6",
+    passages: ["Exodus 3", "Ezekiel 36", "Matthew 3", "Romans 14:17", "Matthew 26:39"],
     book: "Matthew",
   },
 
@@ -154,6 +163,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-06-29",
     passage: "Selected Scriptures from 1 Samuel",
+    passages: ["1 Samuel 13", "1 Samuel 16", "Philippians 3:4-14", "1 Corinthians 15:9-10", "Galatians 2:20"],
     book: "1 Samuel",
   },
   {
@@ -165,6 +175,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-06-22",
     passage: "2 Kings 18–20",
+    passages: ["2 Kings 18-20", "2 Chronicles 29-32", "Isaiah 36-39", "2 Chronicles 29:2", "2 Chronicles 31:20-21"],
     book: "2 Kings",
   },
   {
@@ -176,6 +187,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-06-08",
     passage: "1 Kings 19",
+    passages: ["Psalm 13", "Psalm 42:8", "Psalm 145", "Psalm 62", "Psalm 42"],
     book: "1 Kings",
   },
 
@@ -189,6 +201,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-06-01",
     passage: "Colossians 4:7–18",
+    passages: ["Acts 13", "Acts 15", "Acts 19-20", "Acts 28:31", "2 Timothy 4:11"],
     book: "Colossians",
   },
   {
@@ -222,6 +235,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-05-11",
     passage: "Colossians 3:12–17",
+    passages: ["Colossians 3:12-17", "Colossians 3"],
     book: "Colossians",
   },
   {
@@ -233,6 +247,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-05-04",
     passage: "Colossians 3:1–11",
+    passages: ["Colossians 3:1-11"],
     book: "Colossians",
   },
   {
@@ -244,6 +259,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-04-27",
     passage: "Colossians 2:16–23",
+    passages: ["Colossians 2:16-23", "Colossians 1-2"],
     book: "Colossians",
   },
   {
@@ -266,6 +282,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-04-13",
     passage: "Colossians 1:24–2:3",
+    passages: ["Colossians 1:24-2", "Colossians 2:2-3"],
     book: "Colossians",
   },
   {
@@ -288,6 +305,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-03-29",
     passage: "Colossians 1:15–23",
+    passages: ["Colossians 1:15-20", "John 1:18", "Hebrews 1:3", "Psalm 89 - 20", "2 Corinthians 5"],
     book: "Colossians",
   },
   {
@@ -299,6 +317,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-03-22",
     passage: "Colossians 1:9–14",
+    passages: ["Colossians 1", "Colossians 1:9-14", "Philippians 3", "Psalm 13:20"],
     book: "Colossians",
   },
   {
@@ -310,6 +329,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-03-15",
     passage: "Colossians 1:1–8",
+    passages: ["Colossians 1:1-8"],
     book: "Colossians",
   },
 
@@ -323,6 +343,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-03-08",
     passage: "Psalm 90",
+    passages: ["Psalm 90", "Matthew 25:14-28"],
     book: "Psalms",
   },
   {
@@ -334,6 +355,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-03-01",
     passage: "1 Thessalonians 1",
+    passages: ["Romans 5:8", "2 Corinthians 5:14-15", "1 Peter 2:9", "Acts 16", "Acts 2:47"],
     book: "1 Thessalonians",
   },
   {
@@ -356,6 +378,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-02-15",
     passage: "Nehemiah 3; Romans 16",
+    passages: ["Nehemiah 3", "Romans 16", "Nehemiah 4:6", "Ephesians 2:8-10", "Ephesians 4:29"],
     book: "Nehemiah",
   },
   {
@@ -367,6 +390,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-02-08",
     passage: "Philippians 1:1–11",
+    passages: ["John 13:1", "John 15", "Mark 10:21", "John 21", "1 Thessalonians 3:12"],
     book: "Philippians",
   },
   {
@@ -378,6 +402,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2026-01-25",
     passage: "Luke 10:38–42",
+    passages: ["Luke 10:38-42"],
     book: "Luke",
   },
   {

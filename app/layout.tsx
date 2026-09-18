@@ -3,6 +3,8 @@ import { Inter, Barlow } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/nav/Navbar";
 import Footer from "@/components/footer/Footer";
+import { AudioProvider } from "@/lib/audio-context";
+import GlobalAudioPlayer from "@/components/audio/GlobalAudioPlayer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,12 +39,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${barlow.variable} antialiased`}
-      >
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+      <body className={`${inter.variable} ${barlow.variable} antialiased`}>
+        <AudioProvider>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <GlobalAudioPlayer />
+        </AudioProvider>
       </body>
     </html>
   );

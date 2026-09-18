@@ -90,6 +90,70 @@ export default async function SermonsPage() {
         </div>
       </div>
 
+      {/* ── Featured Hero Sermon ──────────────────────────────────────── */}
+      {sermons.length > 0 && (() => {
+        const hero = sermons[0];
+        const slug = hero.slug || hero.id;
+        const thumbUrl = `https://img.youtube.com/vi/${hero.youtubeId}/maxresdefault.jpg`;
+        return (
+          <section className="px-5 md:px-8 pb-12">
+            <div className="max-w-5xl mx-auto">
+              <a
+                href={`/sermons/${slug}`}
+                className="group relative block rounded-3xl overflow-hidden"
+                style={{ background: "#0f1e38" }}
+              >
+                {/* Background thumbnail */}
+                <div className="absolute inset-0">
+                  <img src={thumbUrl} alt="" className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500" />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(7,16,30,0.97) 0%, rgba(7,16,30,0.75) 50%, rgba(7,16,30,0.3) 100%)" }} />
+                </div>
+
+                <div className="relative z-10 flex items-center justify-between gap-6 p-7 md:p-10">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase rounded-full px-2.5 py-1"
+                        style={{ background: `${hero.seriesAccent ?? "#00abc9"}22`, color: hero.seriesAccent ?? "#00abc9" }}>
+                        <span className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
+                          style={{ background: hero.seriesAccent ?? "#00abc9" }} />
+                        Latest Sermon
+                      </span>
+                      <span className="text-white/30 text-[10px]">·</span>
+                      <span className="text-white/35 text-[10px] font-medium">{hero.series}</span>
+                    </div>
+
+                    <h2 className="text-white mb-2"
+                      style={{ fontFamily: "var(--font-inter), sans-serif", fontWeight: 800,
+                        fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+                      {hero.title}
+                    </h2>
+
+                    <p className="text-white/45 text-sm mb-5">
+                      {hero.speaker} · {hero.passage}
+                    </p>
+
+                    <div className="inline-flex items-center gap-2 text-xs font-semibold text-white/80 group-hover:text-white transition-colors">
+                      <span className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+                        style={{ background: hero.seriesAccent ?? "#00abc9" }}>
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="white" style={{ marginLeft: 1 }}>
+                          <path d="M2 1l7 4-7 4z"/>
+                        </svg>
+                      </span>
+                      Listen now
+                    </div>
+                  </div>
+
+                  {/* Right: thumbnail on desktop */}
+                  <div className="hidden md:block w-44 h-28 rounded-xl overflow-hidden flex-shrink-0 shadow-2xl">
+                    <img src={thumbUrl} alt={hero.title} className="w-full h-full object-cover" />
+                  </div>
+                </div>
+              </a>
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ── Series cards ──────────────────────────────────────────────── */}
       <section className="px-5 md:px-8 mb-14">
         <div className="max-w-5xl mx-auto">
