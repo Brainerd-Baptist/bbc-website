@@ -26,7 +26,6 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
       if (!div) return;
 
       playerRef.current = new Plyr(div, {
-        provider: "youtube",
         youtube: {
           noCookie: true,
           rel: 0,
