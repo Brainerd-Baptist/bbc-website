@@ -388,7 +388,7 @@ export const SERMONS: Sermon[] = [
     series: "God's Work | Our Work",
     seriesId: "gods-work-our-work",
     speaker: "Curtis Hill",
-    date: "2026-02-02",
+    date: "2026-01-19",
     passage: "Psalm 90:12–17",
     passages: ["Psalm 90:12-17", "Acts 2", "Acts 9"],
     book: "Psalms",
