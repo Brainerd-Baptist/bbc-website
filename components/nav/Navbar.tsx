@@ -20,9 +20,10 @@ const NAV_GROUPS = [
       { label: "All Ministries", href: "/ministries" },
       { label: "Kids Ministry", href: "/ministries/kids" },
       { label: "Students", href: "/ministries/students" },
-      { label: "Life Groups", href: "/life-groups" },
-      { label: "Wednesday Night", href: "/wednesday" },
       { label: "College & Young Adults", href: "/ministries/college" },
+      { label: "Life Groups", href: "/life-groups" },
+      { label: "Missions", href: "/connect" },
+      { label: "Wednesday Night", href: "/wednesday" },
     ],
   },
   {
