@@ -30,13 +30,13 @@ function IconCross() {
 }
 
 function IconTrinity() {
-  // Three overlapping circles arranged in a triangle — classic Venn-trinity
-  // Radius 8, centers offset so each pair overlaps by ~4px
+  // Classic Trinity symbol — three circles with heavy overlap (Borromean rings style)
+  // r=12, centers ~10.5 apart so each pair overlaps by ~13.5px (>half diameter)
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="20" cy="13" r="8" />
-      <circle cx="13" cy="27" r="8" />
-      <circle cx="27" cy="27" r="8" />
+      <circle cx="20" cy="15" r="12" />
+      <circle cx="14.5" cy="24" r="12" />
+      <circle cx="25.5" cy="24" r="12" />
     </svg>
   );
 }
