@@ -36,8 +36,8 @@ type VB = [number,number,number,number];
 const VIEWBOXES: Record<string,VB> = {
   brokenness: [206, 22, 200, 200],
   design:     [ 22, 36, 360, 178],
-  sin:        [ 22,  6, 360, 208],
-  coping:     [ 22,  6, 374, 258],
+  sin:        [ 22,  6, 360, 190],
+  coping:     [ 22,  6, 374, 240],
   gospel:     [ 22,  6, 360, 368],
   repent:     [ 22,  6, 360, 368],
   recover:    [ 22,  6, 360, 368],
