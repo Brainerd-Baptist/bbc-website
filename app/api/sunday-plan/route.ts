@@ -78,18 +78,24 @@ export async function POST(req: NextRequest) {
 
   const userMessage = `Who is coming: ${whoLabel}. Preferred service time: ${timeLabel}.`;
 
-  const client = new Anthropic({ apiKey });
+  const workspaceId = process.env.ANTHROPIC_WORKSPACE_ID;
+  const client = new Anthropic({
+    apiKey,
+    ...(workspaceId ? { defaultHeaders: { "anthropic-workspace-id": workspaceId } } : {}),
+  });
 
   try {
     const message = await client.messages.create({
-      model: "claude-haiku-4-5",
+      model: "claude-3-5-haiku-20241022",
       max_tokens: 600,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userMessage }],
     });
 
     const raw = message.content[0].type === "text" ? message.content[0].text : "";
-    const parsed = JSON.parse(raw);
+    // Strip markdown fences if present
+    const cleaned = raw.replace(/^```(?:json)?\n?/m, "").replace(/\n?```$/m, "").trim();
+    const parsed = JSON.parse(cleaned);
     return NextResponse.json(parsed);
   } catch (err) {
     console.error("sunday-plan error:", err);
