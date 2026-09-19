@@ -400,7 +400,7 @@ export default function BXPage() {
         style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
       >
         <div className="max-w-3xl mx-auto text-center">
-          <p className="eyebrow mb-3" style={{ color: "#00abc9" }}>Every Month</p>
+          <p className="eyebrow mb-3" style={{ color: "#00abc9" }}>3rd Wednesday · 10:00 AM – 12:00 PM</p>
           <h2
             className="font-condensed font-800 text-white mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}

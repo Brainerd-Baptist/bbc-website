@@ -193,9 +193,14 @@ export default function CommunityPage() {
                   anyone in the neighborhood who needs it. No membership, no
                   paperwork — just show up.
                 </p>
-                <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#00abc9" }}>
-                  Location: The BX · 4011 Austin St.
-                </p>
+                <div className="space-y-1">
+                  <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#00abc9" }}>
+                    3rd Wednesday · 10:00 AM – 12:00 PM
+                  </p>
+                  <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#00abc9" }}>
+                    The BX · 4011 Austin St.
+                  </p>
+                </div>
               </div>
             </div>
 
