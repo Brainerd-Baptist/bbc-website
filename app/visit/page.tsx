@@ -3,6 +3,7 @@ import Image from "next/image";
 import { CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
 import SundayWalkthrough from "@/components/visit/SundayWalkthrough";
+import SundayPlanner from "@/components/visit/SundayPlanner";
 
 export const metadata = {
   title: "Visit — Brainerd Baptist Church",
@@ -132,6 +133,9 @@ export default function VisitPage() {
           <Image src="/carousel/life-groups-1.jpg" alt="Community at BBC" fill className="object-cover object-top" sizes="25vw" />
         </div>
       </div>
+
+      {/* ── Sunday Planner ─────────────────────────────────── */}
+      <SundayPlanner />
 
       {/* ── Sunday walkthrough ─────────────────────────────── */}
       <SundayWalkthrough />
