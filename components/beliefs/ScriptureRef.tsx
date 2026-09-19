@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 
 type PopupData = {
   text: string;
+  translation: string;
   loading: boolean;
   error: boolean;
 };
@@ -29,11 +30,12 @@ export default function ScriptureRef({ reference }: { reference: string }) {
 
     // Return cached result instantly
     if (cache.current[reference]) {
-      setPopup({ text: cache.current[reference], loading: false, error: false });
+      const [text, translation] = cache.current[reference].split("\0");
+      setPopup({ text, translation, loading: false, error: false });
       return;
     }
 
-    setPopup({ text: "", loading: true, error: false });
+    setPopup({ text: "", translation: "", loading: true, error: false });
 
     try {
       // Convert en/em dashes to hyphens for the API
@@ -52,10 +54,11 @@ export default function ScriptureRef({ reference }: { reference: string }) {
         "";
 
       if (!text) throw new Error("empty");
-      cache.current[reference] = text;
-      setPopup({ text, loading: false, error: false });
+      const translation = (data.translation_id as string)?.toUpperCase() || "WEB";
+      cache.current[reference] = `${text}\0${translation}`;
+      setPopup({ text, translation, loading: false, error: false });
     } catch {
-      setPopup({ text: "", loading: false, error: true });
+      setPopup({ text: "", translation: "", loading: false, error: true });
     }
   }
 
@@ -125,7 +128,7 @@ export default function ScriptureRef({ reference }: { reference: string }) {
             className="block text-xs font-semibold tracking-widest uppercase mb-3"
             style={{ color: "#00abc9" }}
           >
-            {reference} · CSB
+            {reference}{popup.translation ? ` · ${popup.translation}` : ""}
           </span>
 
           {popup.loading ? (

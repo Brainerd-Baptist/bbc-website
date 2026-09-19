@@ -109,14 +109,20 @@ export async function GET(req: NextRequest) {
   }
 
   // Fallback: WEB via bible-api.com
+  // Note: bible-api.com expects spaces encoded but colons/hyphens raw
   try {
+    const encoded = passage.trim().replace(/ /g, "%20");
     const res = await fetch(
-      `https://bible-api.com/${encodeURIComponent(passage)}?translation=web`,
+      `https://bible-api.com/${encoded}?translation=web`,
       { next: { revalidate: 86400 } }
     );
     if (!res.ok) return NextResponse.json({ error: "not found" }, { status: 404 });
     const data = await res.json();
-    return NextResponse.json(data, { headers: { "Cache-Control": CACHE } });
+    // Normalize response to always include translation label
+    return NextResponse.json(
+      { ...data, translation_id: "web", translation_name: "World English Bible" },
+      { headers: { "Cache-Control": CACHE } }
+    );
   } catch {
     return NextResponse.json({ error: "fetch failed" }, { status: 500 });
   }
