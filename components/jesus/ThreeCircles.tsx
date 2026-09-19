@@ -226,7 +226,7 @@ export default function ThreeCircles() {
         {/* White card wrapping the SVG */}
         <div
           className="w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0 rounded-2xl"
-          style={{ background:"#ffffff", padding:"20px 16px 16px", boxShadow:"0 4px 28px rgba(0,20,60,0.13)" }}
+          style={{ background:"#faf8f4", padding:"20px 16px 16px", boxShadow:"0 4px 28px rgba(0,20,60,0.13)" }}
         >
           {idx===0 && (
             <p className="text-center text-xs mb-3 lg:hidden font-condensed tracking-widest"
@@ -284,9 +284,11 @@ export default function ThreeCircles() {
             </Fade>
 
             {/* ═══ SIN arrow ═══ */}
-            <AnimPath
-              d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
-              stroke={RED} sw={2.5} show={vis(v,"sin-arrow")} len={240}/>
+            <g filter="url(#sk)">
+              <AnimPath
+                d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
+                stroke={RED} sw={2.5} show={vis(v,"sin-arrow")} len={240}/>
+            </g>
             {vis(v,"sin-arrow") && (
               <path d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arrr)" strokeWidth="2.5"/>
@@ -296,14 +298,15 @@ export default function ThreeCircles() {
             </Fade>
 
             {/* ═══ REPENT & BELIEVE: B → GP ═══ */}
-            <AnimPath
-              d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
-              stroke={TEAL} sw={2.8} show={vis(v,"repent-arrow")} len={270}/>
+            <g filter="url(#sk)">
+              <AnimPath
+                d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
+                stroke={TEAL} sw={2.8} show={vis(v,"repent-arrow")} len={270}/>
+            </g>
             {vis(v,"repent-arrow") && (
               <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
-            {/* No backing rect needed — teal on white reads cleanly */}
             <Fade show={vis(v,"repent-arrow")}>
               <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
                 fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
@@ -314,9 +317,11 @@ export default function ThreeCircles() {
             </Fade>
 
             {/* ═══ RECOVER & PURSUE: GP → GD ═══ */}
-            <AnimPath
-              d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
-              stroke={TEAL} sw={2.8} show={vis(v,"recover-arrow")} len={270} delay={300}/>
+            <g filter="url(#sk)">
+              <AnimPath
+                d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
+                stroke={TEAL} sw={2.8} show={vis(v,"recover-arrow")} len={270} delay={300}/>
+            </g>
             {vis(v,"recover-arrow") && (
               <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
