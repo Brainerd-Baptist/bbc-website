@@ -80,10 +80,9 @@ function IconCup() {
 function IconPeople() {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="14" cy="13" r="4" />
-      <circle cx="26" cy="13" r="4" />
-      <path d="M6 34c0-6 3.6-10 8-10h12c4.4 0 8 4 8 10" />
-      <circle cx="20" cy="11" r="4" />
+      <circle cx="14" cy="12" r="4" />
+      <circle cx="26" cy="12" r="4" />
+      <path d="M4 34c0-7 4-12 10-12h12c6 0 10 5 10 12" />
     </svg>
   );
 }
