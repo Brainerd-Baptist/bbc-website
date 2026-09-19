@@ -44,16 +44,10 @@ export default function VisitPage() {
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Sunday Mornings</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] text-center mb-2"
+            className="font-condensed font-900 text-[#00205B] text-center mb-4"
             style={{ fontSize: "clamp(3rem, 8vw, 5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
-            Two Services.
-          </h2>
-          <h2
-            className="font-condensed font-900 text-center mb-4"
-            style={{ fontSize: "clamp(3rem, 8vw, 5rem)", letterSpacing: "-0.02em", lineHeight: 1, color: "#00abc9" }}
-          >
-            One Family.
+            Sunday Services
           </h2>
           <p className="text-[#00205B]/50 text-center mb-14 max-w-sm mx-auto">
             Both at 300 Brookfield Ave — Life Groups meet between services at 9:45.
@@ -123,21 +117,19 @@ export default function VisitPage() {
         </div>
       </section>
 
-      {/* ── Full-bleed congregation photo ──────────────────── */}
-      <div className="relative w-full overflow-hidden" style={{ height: "clamp(260px, 40vw, 480px)" }}>
-        <Image
-          src="/visit/congregation-hero.jpg"
-          alt="Congregation worshipping together on Sunday morning"
-          fill
-          className="object-cover object-center"
-          sizes="100vw"
-          priority
-        />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(7,16,30,0.5) 0%, rgba(7,16,30,0.1) 40%, rgba(7,16,30,0.1) 60%, rgba(7,16,30,0.7) 100%)" }} />
-        <div className="absolute inset-0 flex items-center justify-center text-center px-6">
-          <p className="font-condensed font-900 text-white" style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", letterSpacing: "-0.01em", textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}>
-            This is what Sunday looks like.
-          </p>
+      {/* ── Photo collage ──────────────────────────────────── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-1" style={{ height: "clamp(260px, 36vw, 440px)" }}>
+        <div className="relative overflow-hidden">
+          <Image src="/visit/congregation-hero.jpg" alt="Congregation on Sunday morning" fill className="object-cover object-center" sizes="25vw" />
+        </div>
+        <div className="relative overflow-hidden">
+          <Image src="/carousel/students-1.jpg" alt="Student ministry worship" fill className="object-cover object-center" sizes="25vw" />
+        </div>
+        <div className="relative overflow-hidden">
+          <Image src="/carousel/music-camp-2.jpg" alt="Brainerd Kids" fill className="object-cover object-center" sizes="25vw" />
+        </div>
+        <div className="relative overflow-hidden">
+          <Image src="/carousel/life-groups-1.jpg" alt="Community at BBC" fill className="object-cover object-top" sizes="25vw" />
         </div>
       </div>
 
