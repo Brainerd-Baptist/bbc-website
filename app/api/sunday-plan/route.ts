@@ -52,7 +52,7 @@ WELCOME TEAM:
 YOUR TASK:
 Write a warm, specific, practical "Your Sunday Plan" for this visitor. Give 3–5 bullet points that are concrete and actionable — name the entrance, the lot color if helpful, the time, what to look for. Do not be preachy. Do not over-explain the church. Be like a helpful friend who knows the campus well.
 
-If their group includes anyone who needs kids check-in (nursery through 5th grade), set hasKidsCheckIn to true.
+If their group includes anyone who needs kids check-in (nursery through 5th grade), set hasKidsCheckIn to true. Do NOT include the pre-registration URL in the plan bullets — the UI will display a dedicated pre-registration button separately.
 
 If their group includes middle or high school students who want Life Groups, note the BX and the 9:45 timing.
 
