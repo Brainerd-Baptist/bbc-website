@@ -9,10 +9,13 @@ export const metadata = {
 
 export default function WhoIsJesusPage() {
   return (
-    <div className="min-h-screen" style={{ background: "#00142a" }}>
+    <div className="min-h-screen bg-white">
 
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="pt-32 pb-20 px-6 text-center">
+      {/* ── Dark gradient hero strip ────────────────────────────── */}
+      <section
+        className="pt-32 pb-20 px-6 text-center"
+        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+      >
         <div className="max-w-2xl mx-auto">
           <p className="eyebrow-white mb-6">The Central Question</p>
           <h1
@@ -26,7 +29,7 @@ export default function WhoIsJesusPage() {
             Who Is{" "}
             <span style={{ color: "#00abc9" }}>Jesus?</span>
           </h1>
-          <p className="text-white/55 leading-relaxed max-w-lg mx-auto mb-10" style={{ fontSize: "1.1rem" }}>
+          <p className="text-white/60 leading-relaxed max-w-lg mx-auto mb-10" style={{ fontSize: "1.1rem" }}>
             Everyone is asking the same questions — just in different words. Here's a way to make sense of them. Walk through the story below and see where you land.
           </p>
           <a
@@ -39,27 +42,21 @@ export default function WhoIsJesusPage() {
         </div>
       </section>
 
-      {/* ── Three Circles Interactive ──────────────────────────────── */}
-      <section id="three-circles" className="px-6 pb-24">
+      {/* ── Three Circles Interactive ───────────────────────────── */}
+      <section id="three-circles" className="px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <div
-            className="rounded-3xl p-8 md:p-12"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
+          <div className="rounded-3xl p-8 md:p-12 border border-[#00205B]/08 shadow-sm">
             <ThreeCircles />
           </div>
         </div>
       </section>
 
-      {/* ── Who Is Jesus (theology) ────────────────────────────────── */}
-      <section className="px-6 pb-24">
-        <div className="max-w-5xl mx-auto">
-          <p className="eyebrow-white text-center mb-4">More on Jesus</p>
+      {/* ── Who Is Jesus (theology) ─────────────────────────────── */}
+      <section className="px-6 pb-20" style={{ background: "#f4f6f9" }}>
+        <div className="max-w-5xl mx-auto pt-16">
+          <p className="eyebrow-muted text-center mb-4">More on Jesus</p>
           <h2
-            className="font-condensed font-900 text-white text-center mb-16"
+            className="font-condensed font-900 text-[#00205B] text-center mb-14"
             style={{
               fontSize: "clamp(2.5rem, 6vw, 4rem)",
               letterSpacing: "-0.02em",
@@ -89,39 +86,34 @@ export default function WhoIsJesusPage() {
             ].map((item) => (
               <div
                 key={item.num}
-                className="rounded-2xl p-7"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}
+                className="bg-white rounded-2xl p-7 border border-[#00205B]/06 shadow-sm"
               >
                 <span
                   className="font-condensed font-900 block mb-4"
-                  style={{ fontSize: "2.5rem", color: "#00abc9", opacity: 0.3, letterSpacing: "-0.03em", lineHeight: 1 }}
+                  style={{ fontSize: "2.5rem", color: "#00abc9", opacity: 0.4, letterSpacing: "-0.03em", lineHeight: 1 }}
                 >
                   {item.num}
                 </span>
                 <h3
-                  className="font-condensed font-800 text-white mb-3"
+                  className="font-condensed font-800 text-[#00205B] mb-3"
                   style={{ fontSize: "1.4rem", letterSpacing: "-0.01em" }}
                 >
                   {item.title}
                 </h3>
-                <p className="text-white/50 text-sm leading-relaxed">{item.body}</p>
+                <p className="text-[#00205B]/55 text-sm leading-relaxed">{item.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Honest questions ──────────────────────────────────────────── */}
-      <section className="px-6 pb-24">
+      {/* ── Still working through it? ───────────────────────────── */}
+      <section className="px-6 py-20">
         <div className="max-w-3xl mx-auto">
           <div
             className="rounded-3xl p-10 md:p-14 text-center"
             style={{
-              background: "rgba(0,171,201,0.08)",
-              border: "1px solid rgba(0,171,201,0.2)",
+              background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
             }}
           >
             <h2
@@ -130,7 +122,7 @@ export default function WhoIsJesusPage() {
             >
               Still working through it?
             </h2>
-            <p className="text-white/55 leading-relaxed mb-10 max-w-md mx-auto">
+            <p className="text-white/60 leading-relaxed mb-10 max-w-md mx-auto">
               Honest questions are welcome here. Our pastors and staff would love to sit down with you — no pressure, no agenda, just a real conversation.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -143,7 +135,7 @@ export default function WhoIsJesusPage() {
               </Link>
               <Link
                 href="/visit"
-                className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full border border-white/20 text-white hover:border-white/40 transition-colors inline-block"
+                className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full border border-white/25 text-white hover:border-white/50 transition-colors inline-block"
               >
                 Visit on Sunday
               </Link>

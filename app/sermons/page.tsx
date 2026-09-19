@@ -62,28 +62,25 @@ export default async function SermonsPage() {
   ).sort((a, b) => Number(b) - Number(a));
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
+    <div className="min-h-screen bg-white">
 
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="pt-32 pb-14 px-6 text-center">
+      <div
+        className="pt-32 pb-14 px-6 text-center"
+        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+      >
         <div className="max-w-2xl mx-auto">
           <p className="eyebrow-white mb-4">Hear from God&apos;s Word</p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h1
-            className="text-white mb-4"
-            style={{
-              fontFamily: "var(--font-inter), sans-serif",
-              fontWeight: 800,
-              fontSize: "clamp(2.5rem, 6vw, 4rem)",
-              letterSpacing: "-0.04em",
-              lineHeight: 0.95,
-            }}
+            className="font-condensed font-900 text-white mb-4"
+            style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em", lineHeight: 0.95 }}
           >
             Sermons
           </h1>
-          <p className="text-white/45 text-base md:text-lg leading-relaxed mt-5">
+          <p className="text-white/60 text-base md:text-lg leading-relaxed mt-5">
             Every sermon works through a book of the Bible verse by verse.
             Search by passage, series, or speaker to find what you need.
           </p>
@@ -155,9 +152,9 @@ export default async function SermonsPage() {
       })()}
 
       {/* ── Series cards ──────────────────────────────────────────────── */}
-      <section className="px-5 md:px-8 mb-14">
+      <section className="px-5 md:px-8 mb-14 pt-12">
         <div className="max-w-5xl mx-auto">
-          <p className="text-white/30 text-[10px] font-semibold tracking-widest uppercase mb-5">Current &amp; Recent Series</p>
+          <p className="eyebrow-muted mb-5">Current &amp; Recent Series</p>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory">
             {allSeries.map((sr) => {
               const count = sermons.filter((s) => s.seriesId === sr.id).length;
@@ -205,22 +202,18 @@ export default async function SermonsPage() {
 
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}
       <section
-        className="py-16 px-6 border-t border-white/6"
-        style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
+        className="py-16 px-6 border-t border-[#00205B]/06"
+        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
           <p className="eyebrow-white mb-3">Subscribe</p>
           <h2
-            className="text-white text-2xl md:text-3xl mb-4"
-            style={{
-              fontFamily: "var(--font-inter), sans-serif",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-            }}
+            className="font-condensed font-800 text-white mb-4"
+            style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em" }}
           >
             Listen Anywhere
           </h2>
-          <p className="text-white/45 text-sm mb-7">
+          <p className="text-white/55 text-sm mb-7">
             The Brainerd Baptist sermon podcast is available wherever you listen.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -232,7 +225,7 @@ export default async function SermonsPage() {
               <a
                 key={p.label}
                 href={p.href}
-                className="text-xs font-semibold text-white/60 hover:text-white border border-white/12 hover:border-white/25 px-5 py-2.5 rounded-full transition-all"
+                className="text-xs font-semibold text-white/60 hover:text-white border border-white/20 hover:border-white/40 px-5 py-2.5 rounded-full transition-all"
                 style={{ letterSpacing: "0.01em" }}
               >
                 {p.label}

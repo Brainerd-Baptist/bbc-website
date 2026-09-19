@@ -32,10 +32,8 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
   // Collect sermons — Sanity first, then fill in static ones not already covered
   const sanityAll = await getAllSermons().catch(() => []);
   const sanityBySpeaker = sanityAll.filter((s) => s.speaker === name);
-
   const staticBySpeaker = SERMONS.filter((s) => s.speaker === name);
 
-  // Normalise to a common shape
   type SermonRow = {
     slug: string;
     title: string;
@@ -80,33 +78,31 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
   const hasSermons = sermons.length > 0;
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}
-    >
-      {/* ── Back link ─────────────────────────────────────────────────── */}
-      <div className="pt-24 pb-0 px-5 md:px-8">
+    <div className="min-h-screen bg-white">
+
+      {/* ── Dark gradient hero strip ───────────────────────────────────── */}
+      <div
+        className="pt-28 pb-16 px-5 md:px-8"
+        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+      >
         <div className="max-w-4xl mx-auto">
+
+          {/* Back link */}
           <a
-            href="/sermons"
-            className="inline-flex items-center gap-2 text-white/35 hover:text-white/60 text-sm transition-colors mb-10"
+            href="/staff"
+            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors mb-10"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M11 7H3M6 4L3 7l3 3"/>
             </svg>
-            All Sermons
+            Our Team
           </a>
-        </div>
-      </div>
 
-      {/* ── Speaker header ────────────────────────────────────────────── */}
-      <div className="px-5 md:px-8 pb-12">
-        <div className="max-w-4xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start gap-7 md:gap-10">
 
             {/* Photo */}
             {info.photo ? (
-              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex-shrink-0 shadow-2xl">
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex-shrink-0 shadow-2xl ring-2 ring-white/10">
                 <Image
                   src={`/staff/${info.photo}.jpg`}
                   alt={name}
@@ -119,82 +115,94 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
             ) : (
               <div
                 className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl font-bold"
-                style={{ background: "rgba(0,171,201,0.12)", color: "#00abc9" }}
+                style={{ background: "rgba(0,171,201,0.15)", color: "#00abc9" }}
               >
                 {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
               </div>
             )}
 
-            {/* Name / title / bio */}
+            {/* Name / title */}
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold tracking-widest uppercase text-[#00abc9] mb-2">
+              <p className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: "#00abc9" }}>
                 {info.title}
               </p>
               <h1
                 className="text-white mb-1"
                 style={{
-                  fontFamily: "var(--font-inter), sans-serif",
+                  fontFamily: "var(--font-barlow-condensed), sans-serif",
                   fontWeight: 800,
-                  fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-                  letterSpacing: "-0.03em",
-                  lineHeight: 1.05,
+                  fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.0,
                 }}
               >
                 {name}
               </h1>
-              <p className="text-white/30 text-sm mb-4">Brainerd Baptist Church</p>
+              <p className="text-white/40 text-sm">Brainerd Baptist Church</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      {/* ── White content area ────────────────────────────────────────── */}
+      <div className="px-5 md:px-8 py-14">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-10">
+
+            {/* Bio column */}
+            <div className="md:col-span-2 space-y-6">
               {info.email && (
-                <div className="mb-5">
+                <div>
                   <EmailButton email={info.email} name={name} />
                 </div>
               )}
 
               {info.bio && info.bio.length > 0 && (
-                <div className="space-y-3 max-w-2xl">
+                <div className="space-y-4">
                   {info.bio.map((para, i) => (
-                    <p key={i} className="text-white/60 text-sm leading-relaxed">
+                    <p key={i} className="text-[#00205B]/65 leading-relaxed">
                       {para}
                     </p>
                   ))}
                 </div>
               )}
 
-              {hasSermons && (
-                <p className="text-white/25 text-xs mt-5 font-medium">
-                  {sermons.length} sermon{sermons.length !== 1 ? "s" : ""} at Brainerd Baptist
+              {!info.bio && (
+                <p className="text-[#00205B]/40 leading-relaxed">
+                  Bio coming soon.
                 </p>
               )}
             </div>
+
+            {/* Family photo sidebar */}
+            {info.familyPhoto && (
+              <div>
+                <p className="eyebrow-muted mb-3">Family</p>
+                <div className="rounded-2xl overflow-hidden shadow-lg border border-[#00205B]/06">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={info.familyPhoto}
+                    alt={info.familyPhotoAlt ?? `${name}'s family`}
+                    className="w-full object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Family photo */}
-          {info.familyPhoto && (
-            <div className="mt-10 max-w-2xl">
-              <p className="text-[10px] font-semibold tracking-widest uppercase text-white/25 mb-4">
-                Family
-              </p>
-              <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ maxHeight: "420px" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={info.familyPhoto}
-                  alt={info.familyPhotoAlt ?? `${name}'s family`}
-                  className="w-full object-cover object-center"
-                  style={{ maxHeight: "420px" }}
-                />
-              </div>
-            </div>
+          {hasSermons && (
+            <p className="text-[#00205B]/30 text-xs mt-8 font-medium">
+              {sermons.length} sermon{sermons.length !== 1 ? "s" : ""} at Brainerd Baptist
+            </p>
           )}
         </div>
       </div>
 
       {/* ── Sermons ───────────────────────────────────────────────────── */}
       {hasSermons && (
-        <div className="px-5 md:px-8 pb-24 border-t border-white/6 pt-10">
+        <div className="px-5 md:px-8 pb-24 border-t border-[#00205B]/06 pt-10" style={{ background: "#f4f6f9" }}>
           <div className="max-w-4xl mx-auto">
-            <p className="text-[10px] font-semibold tracking-widest uppercase text-white/30 mb-6">
-              Sermons
-            </p>
+            <p className="eyebrow-muted mb-6">Sermons</p>
 
             <div className="space-y-2">
               {sermons.map((s) => {
@@ -206,10 +214,10 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                   <a
                     key={s.slug || s.date}
                     href={s.slug ? `/sermons/${s.slug}` : "#"}
-                    className="group flex items-center gap-4 p-3 rounded-xl border border-white/5 hover:border-white/12 hover:bg-white/3 transition-all"
+                    className="group flex items-center gap-4 p-3 rounded-xl bg-white border border-[#00205B]/06 hover:border-[#00abc9]/30 hover:shadow-sm transition-all"
                   >
                     {/* Thumbnail */}
-                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#00205B]/06">
                       {thumbUrl && (
                         <img
                           src={thumbUrl}
@@ -222,26 +230,26 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                     {/* Meta */}
                     <div className="flex-1 min-w-0">
                       <p
-                        className="text-white text-sm font-semibold leading-snug truncate group-hover:text-white transition-colors"
+                        className="text-[#00205B] text-sm font-semibold leading-snug truncate group-hover:text-[#00abc9] transition-colors"
                         style={{ letterSpacing: "-0.01em" }}
                       >
                         {s.title}
                       </p>
-                      <p className="text-white/35 text-xs mt-0.5 truncate">
-                        {s.series && <span style={{ color: s.accentColor + "cc" }}>{s.series}</span>}
-                        {s.series && s.passage && <span className="text-white/20 mx-1.5">·</span>}
+                      <p className="text-[#00205B]/40 text-xs mt-0.5 truncate">
+                        {s.series && <span style={{ color: s.accentColor }}>{s.series}</span>}
+                        {s.series && s.passage && <span className="text-[#00205B]/20 mx-1.5">·</span>}
                         {s.passage}
                       </p>
                     </div>
 
                     {/* Date + arrow */}
                     <div className="flex items-center gap-3 flex-shrink-0">
-                      <span className="text-white/25 text-xs hidden sm:block">
+                      <span className="text-[#00205B]/30 text-xs hidden sm:block">
                         {s.date ? formatDate(s.date) : ""}
                       </span>
                       <svg
                         width="12" height="12" viewBox="0 0 12 12" fill="none"
-                        className="text-white/15 group-hover:text-white/40 transition-colors"
+                        className="text-[#00205B]/20 group-hover:text-[#00abc9] transition-colors"
                         stroke="currentColor" strokeWidth="1.5"
                       >
                         <path d="M2 6h8M7 3l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -255,11 +263,10 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
         </div>
       )}
 
-      {/* No-sermons state */}
       {!hasSermons && (
         <div className="px-5 md:px-8 pb-24">
           <div className="max-w-4xl mx-auto">
-            <p className="text-white/25 text-sm">No sermons on record yet.</p>
+            <p className="text-[#00205B]/30 text-sm">No sermons on record yet.</p>
           </div>
         </div>
       )}

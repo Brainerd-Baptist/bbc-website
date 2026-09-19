@@ -39,7 +39,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Josiah King":       { title: "Operations Pastor",      photo: "king_josiah_operationspastor",         email: "jking@brainerdbaptist.org" },
   "Paul Christensen":  { title: "Students Pastor",        photo: "christensen_paul_studentspastor",      email: "pchristensen@brainerdbaptist.org" },
   "Micah Frink":       { title: "Young Adults Pastor",    photo: "frink_micah_youngadultspastor",        email: "mfrink@brainerdbaptist.org" },
-  "Abigail Frink":     { title: "Worship Director",       photo: "frink_abigail_worshipdirector",        email: "afriink@brainerdbaptist.org" },
+  "Abigail Frink":     { title: "Worship Director",       photo: "frink_abigail_worshipdirector",        email: "afrink@brainerdbaptist.org" },
   "Bryan Skinner":     { title: "Worship Pastor",         photo: "skinner_bryan_worshippastor",          email: "bskinner@brainerdbaptist.org" },
   "Ethan Speicher":    { title: "Member Care Director",   photo: "speicher_ethan_membercaredirector",    email: "espeicher@brainerdbaptist.org" },
   "Barry Wilks":       { title: "Missions Pastor",        photo: "wilks_barry_missionspastor",           email: "bwilks@brainerdbaptist.org" },

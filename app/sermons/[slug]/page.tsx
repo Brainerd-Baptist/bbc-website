@@ -69,34 +69,34 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-// ── Portable Text components ──────────────────────────────────────────────────
+// ── Portable Text components (light theme) ────────────────────────────────────
 
 const ptComponents = {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
-      <p className="text-white/70 leading-relaxed mb-4">{children}</p>
+      <p className="text-[#00205B]/65 leading-relaxed mb-4">{children}</p>
     ),
     h3: ({ children }: { children?: React.ReactNode }) => (
-      <h3 className="text-white font-bold text-lg mt-8 mb-3" style={{ letterSpacing: "-0.02em" }}>{children}</h3>
+      <h3 className="text-[#00205B] font-bold text-lg mt-8 mb-3" style={{ letterSpacing: "-0.02em" }}>{children}</h3>
     ),
     h4: ({ children }: { children?: React.ReactNode }) => (
-      <h4 className="text-white/90 font-semibold mt-5 mb-2">{children}</h4>
+      <h4 className="text-[#00205B]/85 font-semibold mt-5 mb-2">{children}</h4>
     ),
     blockquote: ({ children }: { children?: React.ReactNode }) => (
-      <blockquote className="border-l-2 border-[#00abc9] pl-5 my-5 text-white/60 italic">{children}</blockquote>
+      <blockquote className="border-l-2 border-[#00abc9] pl-5 my-5 text-[#00205B]/55 italic">{children}</blockquote>
     ),
   },
   list: {
     bullet: ({ children }: { children?: React.ReactNode }) => (
-      <ul className="list-disc list-inside space-y-1.5 text-white/70 mb-4 pl-1">{children}</ul>
+      <ul className="list-disc list-inside space-y-1.5 text-[#00205B]/65 mb-4 pl-1">{children}</ul>
     ),
     number: ({ children }: { children?: React.ReactNode }) => (
-      <ol className="list-decimal list-inside space-y-1.5 text-white/70 mb-4 pl-1">{children}</ol>
+      <ol className="list-decimal list-inside space-y-1.5 text-[#00205B]/65 mb-4 pl-1">{children}</ol>
     ),
   },
   marks: {
     strong: ({ children }: { children?: React.ReactNode }) => (
-      <strong className="text-white font-semibold">{children}</strong>
+      <strong className="text-[#00205B] font-semibold">{children}</strong>
     ),
     em: ({ children }: { children?: React.ReactNode }) => (
       <em className="italic">{children}</em>
@@ -126,7 +126,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     title: string;
     series: string;
     passage: string;
-    passages?: string[];   // additional scripture passages from sermon notes
+    passages?: string[];
     speaker: string;
     date: string;
     duration?: string;
@@ -171,9 +171,6 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
 
   const accentColor = s.accentColor;
 
-  // Auto-populate audio from podcast feed when not set manually
-  // Libsyn filenames use the Sunday the sermon was preached; some dates in
-  // lib/sermons.ts were entered as the following Monday — try both.
   if (!s.audioUrl && s.date) {
     const podcastMap = await getPodcastAudioMap();
     const key = dateToKey(s.date);
@@ -187,7 +184,6 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     }
   }
 
-  // Build AudioTrack for the audio player
   const audioTrack = s.audioUrl ? {
     title:      s.title,
     speaker:    s.speaker,
@@ -199,20 +195,20 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     duration:   s.duration,
   } : null;
 
-  // Load manuscript notes for Curtis Hill sermons only
   const sermonNotes = isCurtisHill(s.speaker) && s.date
     ? await loadSermonNotes(s.date)
     : null;
 
-  // Determine all scripture passages to show inline
-  // Primary passage always shown; additional passages from Sanity "passages" field
   const allPassages = [s.passage, ...(s.passages ?? [])].filter(Boolean);
 
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0a1628 0%, #07101e 100%)" }}>
+    <div className="min-h-screen bg-white">
 
-      {/* ── Back link ──────────────────────────────────────────────────── */}
-      <div className="pt-24 pb-0 px-5 md:px-8">
+      {/* ── Dark gradient hero strip ────────────────────────────────── */}
+      <div
+        className="pt-28 pb-12 px-5 md:px-8"
+        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+      >
         <div className="max-w-4xl mx-auto">
           <a href="/sermons"
             className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors mb-8">
@@ -221,12 +217,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             </svg>
             All Sermons
           </a>
-        </div>
-      </div>
 
-      {/* ── Sermon header ──────────────────────────────────────────────── */}
-      <div className="px-5 md:px-8 mb-8">
-        <div className="max-w-4xl mx-auto">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: accentColor }}>
               {s.series}
@@ -246,12 +237,12 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
           </div>
 
           <h1 className="text-white mb-4"
-            style={{ fontFamily: "var(--font-inter), sans-serif", fontWeight: 800,
+            style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800,
               fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.03em", lineHeight: 1.05 }}>
             {s.title}
           </h1>
 
-          <div className="flex flex-wrap gap-x-5 gap-y-1 text-white/40 text-sm mb-6">
+          <div className="flex flex-wrap gap-x-5 gap-y-1 text-white/45 text-sm">
             <span>{s.speaker}</span>
             <span>{s.date ? (sanitySermon ? formatDate(s.date) : staticFormatDate(s.date)) : ""}</span>
             {s.duration && <span>{s.duration}</span>}
@@ -259,154 +250,146 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
-      {/* ── AUDIO PLAYER (primary) ─────────────────────────────────────── */}
-      {audioTrack && (
-        <div className="px-5 md:px-8 mb-8">
-          <div className="max-w-4xl mx-auto">
+      {/* ── White content body ───────────────────────────────────────── */}
+      <div className="px-5 md:px-8 py-10">
+        <div className="max-w-4xl mx-auto space-y-8">
+
+          {/* AUDIO PLAYER */}
+          {audioTrack && (
             <AudioPlayer track={audioTrack} accentColor={accentColor} />
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* ── SCRIPTURE PASSAGES (inline read-along) ─────────────────────── */}
-      {allPassages.length > 0 && (
-        <div className="px-5 md:px-8 mb-8">
-          <div className="max-w-4xl mx-auto space-y-3">
-            {allPassages.map((p) => (
-              <ScriptureInline key={p} passage={p} accentColor={accentColor} />
-            ))}
-          </div>
-        </div>
-      )}
+          {/* SCRIPTURE PASSAGES */}
+          {allPassages.length > 0 && (
+            <div className="space-y-3">
+              {allPassages.map((p) => (
+                <ScriptureInline key={p} passage={p} accentColor={accentColor} />
+              ))}
+            </div>
+          )}
 
-      {/* ── VIDEO (secondary / collapsible) ────────────────────────────── */}
-      {s.youtubeId && (
-        <div className="px-5 md:px-8 mb-10">
-          <div className="max-w-4xl mx-auto">
-            <details className="group">
-              <summary className="flex items-center gap-2.5 cursor-pointer select-none list-none mb-4
-                text-white/35 hover:text-white/60 transition-colors">
-                <span className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(255,255,255,0.06)" }}>
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-                    <path d="M2 1.5l6 3.5-6 3.5z"/>
+          {/* VIDEO — collapsible */}
+          {s.youtubeId && (
+            <div>
+              <details className="group">
+                <summary className="flex items-center gap-2.5 cursor-pointer select-none list-none mb-4
+                  text-[#00205B]/40 hover:text-[#00205B]/70 transition-colors">
+                  <span className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(0,32,91,0.06)" }}>
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                      <path d="M2 1.5l6 3.5-6 3.5z"/>
+                    </svg>
+                  </span>
+                  <span className="text-xs font-semibold tracking-wide">Watch the video</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                    className="ml-auto transition-transform group-open:rotate-180"
+                    stroke="currentColor" strokeWidth="1.5">
+                    <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </span>
-                <span className="text-xs font-semibold tracking-wide">Watch the video</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                  className="ml-auto transition-transform group-open:rotate-180"
-                  stroke="currentColor" strokeWidth="1.5">
-                  <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </summary>
-              <SermonPlayer youtubeId={s.youtubeId} title={s.title} />
-            </details>
-          </div>
-        </div>
-      )}
+                </summary>
+                <SermonPlayer youtubeId={s.youtubeId} title={s.title} />
+              </details>
+            </div>
+          )}
 
-      {/* ── Action row ─────────────────────────────────────────────────── */}
-      <div className="px-5 md:px-8 mb-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap gap-3 mb-8">
-            {s.youtubeId && (
-              <a href={`https://www.youtube.com/watch?v=${s.youtubeId}`}
-                target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/25 px-4 py-2 rounded-full transition-all">
-                Watch on YouTube
-              </a>
+          {/* Action row */}
+          <div>
+            <div className="flex flex-wrap gap-3 mb-8">
+              {s.youtubeId && (
+                <a href={`https://www.youtube.com/watch?v=${s.youtubeId}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#00205B]/50 hover:text-[#00205B] border border-[#00205B]/12 hover:border-[#00205B]/30 px-4 py-2 rounded-full transition-all">
+                  Watch on YouTube
+                </a>
+              )}
+              {s.audioUrl && (
+                <a href={s.audioUrl} download
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#00205B]/50 hover:text-[#00205B] border border-[#00205B]/12 hover:border-[#00205B]/30 px-4 py-2 rounded-full transition-all">
+                  Download Audio
+                </a>
+              )}
+              <ShareButton title={s.title} speaker={s.speaker} />
+            </div>
+
+            {/* Speaker card */}
+            {s.speaker && (
+              <div className="max-w-xs">
+                <SpeakerCard name={s.speaker} accentColor={accentColor} />
+              </div>
             )}
-            {s.audioUrl && (
-              <a href={s.audioUrl} download
-                className="inline-flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/25 px-4 py-2 rounded-full transition-all">
-                Download Audio
-              </a>
-            )}
-            <ShareButton title={s.title} speaker={s.speaker} />
           </div>
 
-          {/* Speaker card */}
-          {s.speaker && (
-            <div className="max-w-xs">
-              <SpeakerCard name={s.speaker} accentColor={accentColor} />
+          {/* Sermon Notes — Curtis Hill only */}
+          {sermonNotes && (
+            <div>
+              <details className="group">
+                <summary className="flex items-center gap-2.5 cursor-pointer select-none list-none mb-4
+                  text-[#00205B]/40 hover:text-[#00205B]/70 transition-colors">
+                  <span className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(0,32,91,0.06)" }}>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M2 3h8M2 6h6M2 9h4" strokeLinecap="round"/>
+                    </svg>
+                  </span>
+                  <span className="text-xs font-semibold tracking-wide">Sermon Notes</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                    className="ml-auto transition-transform group-open:rotate-180"
+                    stroke="currentColor" strokeWidth="1.5">
+                    <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </summary>
+
+                <div className="rounded-2xl border border-[#00205B]/08 p-6 md:p-8 bg-[#f4f6f9]">
+                  <div className="prose prose-sm max-w-none">
+                    {sermonNotes.split(/\n{2,}/).map((para, i) => {
+                      const trimmed = para.trim();
+                      if (!trimmed) return null;
+                      const isHeading = trimmed.length <= 80 && (
+                        /^[A-Z][A-Z\s\d:,'.!?–-]{3,}$/.test(trimmed) ||
+                        /^[A-Z].{0,60}:$/.test(trimmed)
+                      );
+                      if (isHeading) {
+                        return (
+                          <h3 key={i} className="font-bold text-sm mt-7 mb-2"
+                            style={{ letterSpacing: "-0.01em", color: accentColor }}>
+                            {trimmed}
+                          </h3>
+                        );
+                      }
+                      return (
+                        <p key={i} className="text-[#00205B]/65 text-sm leading-relaxed mb-4">
+                          {trimmed.split(/\n/).map((line, j) => (
+                            <span key={j}>
+                              {line}
+                              {j < trimmed.split(/\n/).length - 1 && <br />}
+                            </span>
+                          ))}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </div>
+              </details>
             </div>
           )}
         </div>
       </div>
 
-      {/* ── Sermon Notes (Curtis Hill only, from manuscript) ──────────── */}
-      {sermonNotes && (
-        <div className="px-5 md:px-8 mb-10">
-          <div className="max-w-4xl mx-auto">
-            <details className="group">
-              <summary className="flex items-center gap-2.5 cursor-pointer select-none list-none mb-4
-                text-white/35 hover:text-white/60 transition-colors">
-                <span className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: "rgba(255,255,255,0.06)" }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 3h8M2 6h6M2 9h4" strokeLinecap="round"/>
-                  </svg>
-                </span>
-                <span className="text-xs font-semibold tracking-wide">Sermon Notes</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                  className="ml-auto transition-transform group-open:rotate-180"
-                  stroke="currentColor" strokeWidth="1.5">
-                  <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </summary>
-
-              <div className="rounded-2xl border border-white/8 p-6 md:p-8"
-                style={{ background: "rgba(255,255,255,0.03)" }}>
-                <div className="prose prose-sm max-w-none">
-                  {sermonNotes.split(/\n{2,}/).map((para, i) => {
-                    const trimmed = para.trim();
-                    if (!trimmed) return null;
-                    // Detect headings: short lines (≤80 chars) that are all-caps or end with a colon
-                    const isHeading = trimmed.length <= 80 && (
-                      /^[A-Z][A-Z\s\d:,'.!?–-]{3,}$/.test(trimmed) ||
-                      /^[A-Z].{0,60}:$/.test(trimmed)
-                    );
-                    if (isHeading) {
-                      return (
-                        <h3 key={i} className="text-white font-bold text-sm mt-7 mb-2"
-                          style={{ letterSpacing: "-0.01em", color: accentColor }}>
-                          {trimmed}
-                        </h3>
-                      );
-                    }
-                    return (
-                      <p key={i} className="text-white/65 text-sm leading-relaxed mb-4">
-                        {trimmed.split(/\n/).map((line, j) => (
-                          <span key={j}>
-                            {line}
-                            {j < trimmed.split(/\n/).length - 1 && <br />}
-                          </span>
-                        ))}
-                      </p>
-                    );
-                  })}
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
-      )}
-
-      {/* ── More from this series ──────────────────────────────────────── */}
+      {/* ── More from this series ──────────────────────────────────── */}
       <RelatedSermons
         currentId={slug}
         seriesId={sanitySermon ? (sanitySermon.series?.slug?.current ?? "") : (SERMONS.find((x) => x.id === slug)?.seriesId ?? "")}
         accentColor={accentColor}
       />
 
-      {/* ── Outline + Notes (Sanity-only) ──────────────────────────────── */}
+      {/* ── Outline + Notes (Sanity-only) ──────────────────────────── */}
       {(s.outline || s.notes) && (
         <div className="px-5 md:px-8 pb-10">
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-[280px_1fr] gap-8 md:gap-12">
               {s.outline && (s.outline as unknown[]).length > 0 && (
                 <div>
-                  <h2 className="text-white text-xs font-semibold tracking-widest uppercase mb-5"
+                  <h2 className="text-xs font-semibold tracking-widest uppercase mb-5"
                     style={{ color: accentColor }}>Outline</h2>
                   <div className="text-sm">
                     <PortableText value={s.outline} components={ptComponents} />
@@ -415,7 +398,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               )}
               {s.notes && (s.notes as unknown[]).length > 0 && (
                 <div>
-                  <h2 className="text-white text-xs font-semibold tracking-widest uppercase mb-5"
+                  <h2 className="text-xs font-semibold tracking-widest uppercase mb-5"
                     style={{ color: accentColor }}>Notes</h2>
                   <div className="prose-sm">
                     <PortableText value={s.notes} components={ptComponents} />
@@ -427,7 +410,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
         </div>
       )}
 
-      {/* ── Give CTA ───────────────────────────────────────────────────── */}
+      {/* ── Give CTA ───────────────────────────────────────────────── */}
       <div className="px-5 md:px-8 pb-24">
         <div className="max-w-4xl mx-auto">
           <GiveCTA />
