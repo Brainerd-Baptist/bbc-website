@@ -22,6 +22,7 @@ const PROGRAMS: Program[] = [
     color: "#00abc9",
     location: "Kids Area — enter from Albemarle Ave, Purple Lot",
     href: "/ministries/kids",
+    photo: "/carousel/kids-midweek.jpg",
     body:
       "Bible stories, worship, games, and small group time for kids from preschool through 5th grade. A mid-week anchor for families during the school year.",
     icon: (
@@ -38,6 +39,7 @@ const PROGRAMS: Program[] = [
     color: "#4a7fcb",
     location: "The BX — enter from the soccer field",
     href: "/ministries/students",
+    photo: "/carousel/students-1.jpg",
     body:
       "Games, worship, teaching, and small groups for middle and high school students. Known, loved, and prayed for — led by Paul Christensen and Caroline Bell.",
     icon: (
@@ -54,6 +56,7 @@ const PROGRAMS: Program[] = [
     color: "#00205B",
     location: "Main Worship Center",
     href: null,
+    photo: "/carousel/adult-bible-study.jpg",
     body:
       "Mid-week teaching straight from Scripture. Open to all adults — come expecting to open your Bible, ask questions, and leave with something to chew on the rest of the week.",
     icon: (
