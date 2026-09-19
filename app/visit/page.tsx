@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
+import SundayWalkthrough from "@/components/visit/SundayWalkthrough";
 
 export const metadata = {
   title: "Visit — Brainerd Baptist Church",
@@ -139,6 +140,9 @@ export default function VisitPage() {
           </p>
         </div>
       </div>
+
+      {/* ── Sunday walkthrough ─────────────────────────────── */}
+      <SundayWalkthrough />
 
       {/* ── What to expect ─────────────────────────────────── */}
       <section className="py-24 px-6 bg-white">
