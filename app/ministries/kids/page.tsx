@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "BBC Kids — Brainerd Baptist Church",
+  title: "Kids — Brainerd Baptist Church",
   description:
     "From the nursery through 5th grade, your kids are cared for and taught God's Word every Sunday at Brainerd Baptist Church.",
 };
@@ -68,7 +68,7 @@ const AGE_GROUPS = [
   {
     icon: <IconHeart />,
     label: "Nursery",
-    ages: "Birth – 24 months",
+    ages: "6 weeks – 24 months",
     body: "Your baby is held, loved, and cared for by the same volunteers week after week. We know consistency matters at this age — so do you.",
     note: "Parent pagers available",
   },
@@ -142,7 +142,7 @@ export default function KidsPage() {
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
-          <p className="eyebrow-white mb-4">BBC Kids</p>
+          <p className="eyebrow-white mb-4">Kids</p>
           <h1
             className="font-condensed font-900 text-white leading-none mb-5"
             style={{
@@ -273,11 +273,16 @@ export default function KidsPage() {
                 ever work with a child. We use a secure check-in and matching
                 label system — your child doesn&apos;t leave without it.
               </p>
-              <p className="text-[#00205B]/55 leading-relaxed mb-8">
+              <p className="text-[#00205B]/55 leading-relaxed mb-4">
                 If this is your first Sunday, arrive 10–15 minutes early. A
                 team member will meet you at the kiosk and walk you through
                 everything, including a quick look at the room your child will
                 be in.
+              </p>
+              <p className="text-[#00205B]/55 leading-relaxed mb-8">
+                <span className="font-medium text-[#00205B]/75">Getting here:</span>{" "}
+                Enter from Albemarle Ave and park in the Purple Lot — the Kids
+                entrance is just inside.
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
@@ -382,12 +387,120 @@ export default function KidsPage() {
             ))}
           </div>
 
-          <p className="text-white/45 text-sm max-w-xl mx-auto leading-relaxed">
-            We use the{" "}
-            <span className="text-white/70">Gospel Project curriculum</span>{" "}
-            from LifeWay, which takes kids through the whole Bible every three years —
-            starting from Genesis and showing how every story points to Jesus.
-          </p>
+        </div>
+      </section>
+
+      {/* ── Wednesday Midweek ─────────────────────────────── */}
+      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="eyebrow mb-3">Wednesday nights</p>
+              <h2
+                className="font-condensed font-900 text-[#00205B] mb-5"
+                style={{
+                  fontSize: "clamp(2rem, 5vw, 3rem)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.05,
+                }}
+              >
+                Kids midweek.
+              </h2>
+              <p className="text-[#00205B]/55 leading-relaxed mb-4">
+                We meet Wednesday evenings for Bible stories, worship, games,
+                and small group time — a mid-week anchor for your kids during
+                the school year.
+              </p>
+              <div
+                className="inline-flex items-center gap-3 rounded-xl px-5 py-3"
+                style={{ background: "white", border: "1px solid rgba(0,32,91,0.10)" }}
+              >
+                <span className="font-condensed font-800 text-[#00abc9]" style={{ fontSize: "1.2rem" }}>
+                  Wednesday
+                </span>
+                <span className="text-[#00205B]/50 text-sm">6:00 – 7:30 PM</span>
+                <span
+                  className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                  style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
+                >
+                  Ages 2 – 5th grade
+                </span>
+              </div>
+            </div>
+            <div className="rounded-2xl overflow-hidden" style={{ height: "300px" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/carousel/music-camp-2.jpg"
+                alt="Kids midweek"
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Staff ─────────────────────────────────────────── */}
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-12 text-center">
+            <p className="eyebrow mb-3">Our Team</p>
+            <h2
+              className="font-condensed font-900 text-[#00205B]"
+              style={{
+                fontSize: "clamp(2rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              The people who love your kids.
+            </h2>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8">
+            {[
+              {
+                name: "Brittany Kelly",
+                title: "Director",
+                photo: "/staff/kelly_brittany_kidsdirector.jpg",
+              },
+              {
+                name: "Abbie Bateman",
+                title: "Coordinator",
+                photo: null,
+              },
+            ].map(({ name, title, photo }) => (
+              <div key={name} className="text-center" style={{ width: "180px" }}>
+                <div
+                  className="w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden"
+                  style={{ background: "#f4f6f9" }}
+                >
+                  {photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={photo}
+                      alt={name}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75">
+                        <circle cx="20" cy="14" r="6" />
+                        <path d="M8 36c0-8 5.4-13 12-13s12 5 12 13" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <h3
+                  className="font-condensed font-800 text-[#00205B]"
+                  style={{ fontSize: "1.1rem" }}
+                >
+                  {name}
+                </h3>
+                <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mt-1">
+                  {title}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

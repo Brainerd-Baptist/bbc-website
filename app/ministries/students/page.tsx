@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "BBC Students — Brainerd Baptist Church",
+  title: "Students — Brainerd Baptist Church",
   description:
     "Middle and high school students growing in faith, community, and God's Word at Brainerd Baptist Church.",
 };
@@ -35,7 +35,7 @@ const SCHEDULE = [
     day: "Wednesday",
     time: "6:30 PM",
     label: "Midweek",
-    body: "Games, worship, teaching, and small group time. This is the heartbeat of the week for most students. [Add location and any cost detail here.]",
+    body: "Games, worship, teaching, and small group time at the BX — enter from the soccer field side. This is the heartbeat of the week for most students.",
   },
 ];
 
@@ -64,7 +64,7 @@ export default function StudentsPage() {
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
-          <p className="eyebrow-white mb-4">BBC Students</p>
+          <p className="eyebrow-white mb-4">Students</p>
           <h1
             className="font-condensed font-900 text-white leading-none mb-5"
             style={{
@@ -79,8 +79,9 @@ export default function StudentsPage() {
             className="text-white/65 leading-relaxed mb-8 max-w-lg"
             style={{ fontSize: "1.05rem" }}
           >
-            Middle and high school students — a community where teenagers are
-            known, taught, and sent back out into their schools changed.
+            Middle and high school students — known, loved, and prayed for.
+            A community where teenagers belong and go back out into their
+            schools changed.
           </p>
           <div className="flex flex-wrap gap-4">
             <a
@@ -178,6 +179,71 @@ export default function StudentsPage() {
                   {label}
                 </h3>
                 <p className="text-[#00205B]/55 text-sm leading-relaxed">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Staff ─────────────────────────────────────────── */}
+      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-12 text-center">
+            <p className="eyebrow mb-3">Our Team</p>
+            <h2
+              className="font-condensed font-900 text-[#00205B]"
+              style={{
+                fontSize: "clamp(2rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              The people behind it.
+            </h2>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8">
+            {[
+              {
+                name: "Paul Christensen",
+                title: "Student Pastor",
+                photo: "/staff/christensen_paul_studentspastor.jpg",
+              },
+              {
+                name: "Caroline Bell",
+                title: "Coordinator",
+                photo: null,
+              },
+            ].map(({ name, title, photo }) => (
+              <div key={name} className="text-center" style={{ width: "180px" }}>
+                <div
+                  className="w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden"
+                  style={{ background: "white", border: "1px solid rgba(0,32,91,0.08)" }}
+                >
+                  {photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={photo}
+                      alt={name}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#4a7fcb" strokeWidth="1.75">
+                        <circle cx="20" cy="14" r="6" />
+                        <path d="M8 36c0-8 5.4-13 12-13s12 5 12 13" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <h3
+                  className="font-condensed font-800 text-[#00205B]"
+                  style={{ fontSize: "1.1rem" }}
+                >
+                  {name}
+                </h3>
+                <p className="text-xs font-semibold tracking-widest uppercase mt-1" style={{ color: "#4a7fcb" }}>
+                  {title}
+                </p>
               </div>
             ))}
           </div>
