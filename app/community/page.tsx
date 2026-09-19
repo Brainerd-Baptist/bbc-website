@@ -64,7 +64,7 @@ export default function CommunityPage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSeKiTsMOeUMVXhV0nXiyZLVg-PvjmSgGebU0JvoViqreq0FVg/viewform"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSeFrVGqjuNxP0mwbFfGOmXmwGsFPziNnNu985bRY5iXd6rVyg/viewform"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors"
