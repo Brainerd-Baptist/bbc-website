@@ -43,7 +43,7 @@ const PROGRAMS = [
   },
   {
     key: "adults",
-    time: "6:30 PM",
+    time: "6:15 PM",
     label: "Adult Bible Study",
     ages: "Adults",
     color: "#00205B",
@@ -79,7 +79,7 @@ const PROGRAMS = [
   },
   {
     key: "choir",
-    time: "7:30 PM",
+    time: "6:00 PM",
     label: "Choir & Orchestra",
     ages: "All ages welcome",
     color: "#8b6fae",
@@ -125,10 +125,21 @@ export default function WednesdayPage() {
             Wednesday Night{" "}
             <span style={{ color: "#00abc9" }}>at BBC.</span>
           </h1>
-          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
             From kids to college to choir, Wednesday evening is when the whole
             church fills the building. Find your night below.
           </p>
+          <div
+            className="inline-flex items-center gap-3 rounded-full px-6 py-3"
+            style={{ background: "rgba(0,171,201,0.12)", border: "1px solid rgba(0,171,201,0.25)" }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round">
+              <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
+            </svg>
+            <span className="text-white/80 text-sm font-medium">
+              Most programs start between <span style={{ color: "#00abc9" }}>6:00 – 6:15 PM</span>
+            </span>
+          </div>
         </div>
       </div>
 
