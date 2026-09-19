@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const CSB_BIBLE_ID = "06125adad2d5898a-01";
+const CSB_BIBLE_ID = "a556c5305ee15c3f-01";
 const API_BIBLE_BASE = "https://rest.api.bible/v1";
 
 const BOOK_MAP: Record<string, string> = {
