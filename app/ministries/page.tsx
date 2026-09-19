@@ -1,146 +1,213 @@
 import Link from "next/link";
-import { MINISTRIES } from "@/lib/constants";
+import type { Metadata } from "next";
 
-// Ministry-specific dedicated pages (others fall back to /connect)
-const MINISTRY_PAGES: Record<string, string> = {
-  kids: "/ministries/kids",
-  students: "/ministries/students",
-};
-
-export const metadata = {
+export const metadata: Metadata = {
   title: "Ministries — Brainerd Baptist Church",
   description:
-    "Explore the ministries of Brainerd Baptist Church — Kids, Students, Life Groups, Missions, College & Young Adults, and Adults.",
+    "There is a place for every person, at every stage of life. Explore the ministries of Brainerd Baptist Church.",
 };
 
+// ── Ministry definitions ─────────────────────────────────────
+const MINISTRIES = [
+  {
+    key: "kids",
+    name: "Kids Ministry",
+    ages: "Nursery – 5th Grade",
+    color: "#c9a84c",
+    photo: "/carousel/kids-midweek.jpg",
+    href: "/ministries/kids",
+    body: "The gospel, taught clearly and creatively. Children through 5th grade participate in age-appropriate environments every Sunday. Midweek ministry runs every Wednesday night during the school year.",
+    detail: "Sunday mornings · Wednesday 6:00 PM",
+  },
+  {
+    key: "students",
+    name: "Students",
+    ages: "Middle & High School",
+    color: "#4a7fcb",
+    photo: "/carousel/students-1.jpg",
+    href: "/ministries/students",
+    body: "Known, loved, and prayed for. Middle and high schoolers gather Sunday mornings and Wednesday evenings for real community, Scripture, and a faith that holds up under pressure.",
+    detail: "Sunday 9:45 AM · Wednesday 6:30 PM at The BX",
+  },
+  {
+    key: "lifegroups",
+    name: "Life Groups",
+    ages: "All Ages",
+    color: "#00abc9",
+    photo: "/carousel/life-groups-1.jpg",
+    href: "/life-groups",
+    body: "The local church is best experienced in a smaller circle. Life Groups meet weekly — in homes and around tables — for Bible study, prayer, and the kind of community you can't get on Sunday morning alone.",
+    detail: "Sunday 9:45 AM · Groups throughout the week",
+  },
+  {
+    key: "missions",
+    name: "Missions",
+    ages: "Church-wide",
+    color: "#e07b54",
+    photo: "/carousel/missions-1.jpg",
+    href: "/connect",
+    body: "From East Ridge to East Africa. Brainerd Baptist partners with missionaries and church-planting networks globally, and engages the Brainerd community locally every week.",
+    detail: "Local + global partnerships",
+  },
+  {
+    key: "college",
+    name: "College & Young Adults",
+    ages: "Ages 18–30",
+    color: "#9b6ecc",
+    photo: null,
+    href: "/connect",
+    body: "College and young adult years carry enormous spiritual weight. Groups meet throughout the week around Chattanooga for Scripture, friendship, and figuring out the next chapter together.",
+    detail: "Various off-campus locations",
+  },
+  {
+    key: "adults",
+    name: "Adults",
+    ages: "Adults",
+    color: "#4ab8c4",
+    photo: "/carousel/adult-bible-study.jpg",
+    href: "/connect",
+    body: "Whether you are newly married, raising teenagers, navigating an empty nest, or entering retirement — there is a place for you. Adult ministries include Bible studies, Sunday classes, and men's and women's events.",
+    detail: "Sunday mornings · Wednesday 6:15 PM",
+  },
+];
+
+// ── Icons ─────────────────────────────────────────────────────
 const ICONS: Record<string, React.ReactNode> = {
   kids: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-      <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 34s-14-8.5-14-18a8 8 0 0 1 14-5.3A8 8 0 0 1 34 16c0 9.5-14 18-14 18z" />
     </svg>
   ),
   students: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 20l16-8 16 8-16 8z" /><path d="M12 24v7c4 3.5 12 3.5 16 0v-7" /><path d="M36 20v7" />
     </svg>
   ),
   lifegroups: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="14" cy="14" r="5" /><circle cx="28" cy="14" r="5" /><path d="M4 34c0-6 4.5-10 10-10h12c5.5 0 10 4 10 10" />
     </svg>
   ),
   missions: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-      <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="20" cy="20" r="16" /><line x1="4" y1="20" x2="36" y2="20" />
+      <path d="M20 4a24 24 0 0 1 6 16 24 24 0 0 1-6 16 24 24 0 0 1-6-16 24 24 0 0 1 6-16z" />
     </svg>
   ),
   college: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 32V16l12-6 12 6v16" /><path d="M4 20l16-8 16 8" /><path d="M14 22v8M26 22v8M8 32h24" />
     </svg>
   ),
   adults: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 32V10a2 2 0 0 1 2-2h10v24H10a2 2 0 0 1-2-2Z" />
+      <path d="M20 8h10a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H20V8Z" />
+      <path d="M12 15h4M12 19h4M24 15h4M24 19h4" />
     </svg>
   ),
-};
-
-// Extended detail copy per ministry
-const DETAIL: Record<string, { tagline: string; body: string }> = {
-  kids: {
-    tagline: "Loving children well, from the nursery through elementary.",
-    body: "Our Children's Ministry is committed to teaching the gospel clearly and creatively. Children through 5th grade participate in age-appropriate environments every Sunday. K and older join their families for congregational worship.",
-  },
-  students: {
-    tagline: "Equipping teenagers to know and love Christ.",
-    body: "Middle and high school students gather on Sunday mornings and throughout the week for discipleship, community, and genuine worship. We believe in teaching God's Word directly to the next generation.",
-  },
-  lifegroups: {
-    tagline: "Doing life together in smaller circles.",
-    body: "Life Groups meet weekly — in homes and around tables — for Bible study, prayer, and honest community. Sunday mornings at 9:45 AM. We believe the local church is best experienced in a smaller circle where people know your name.",
-  },
-  missions: {
-    tagline: "Carrying the gospel to every corner of the world.",
-    body: "Brainerd Baptist partners with missionaries and church-planting networks globally, and engages locally in Chattanooga. From East Ridge to East Africa, we are committed to the spread of the gospel.",
-  },
-  college: {
-    tagline: "Investing in young adults during the formative years.",
-    body: "College and young adult years carry enormous spiritual weight. Our College & Young Adults ministry creates space for those 18–30 to study Scripture together, build friendships, and discern the next decade of their lives.",
-  },
-  adults: {
-    tagline: "Serving and encouraging men and women across all seasons.",
-    body: "Whether you are newly married, raising teenagers, navigating an empty nest, or entering retirement — there is a community for you at Brainerd Baptist. Adult ministries include men's and women's Bible study, Sunday classes, and seasonal events.",
-  },
 };
 
 export default function MinistriesPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Page header */}
-      <div className="pt-32 pb-16 px-6 text-center" style={{ background: "#00205B" }}>
-        <div className="max-w-3xl mx-auto">
-          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>At Brainerd Baptist</p>
+
+      {/* ── Hero ─────────────────────────────────────────────── */}
+      <div
+        className="pt-32 pb-20 px-6"
+        style={{
+          background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
+        }}
+      >
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
+            At Brainerd Baptist
+          </p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white mb-4"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", letterSpacing: "-0.02em" }}
+            className="font-condensed font-900 text-white leading-none mb-5"
+            style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
           >
             Ministries
           </h1>
-          <p className="text-white/55 text-lg leading-relaxed">
+          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto">
             There is a place for every person, at every stage of life. Explore
             the ministries that make up the life of our church.
           </p>
         </div>
       </div>
 
-      {/* Ministry cards — full detail view */}
-      <section className="pb-24 px-6">
-        <div className="max-w-5xl mx-auto space-y-8">
-          {MINISTRIES.map((m, i) => (
-            <div
-              key={m.key}
-              className="glass-md rounded-2xl overflow-hidden"
-            >
-              {/* Colored top bar */}
-              <div className="h-1.5 w-full" style={{ background: m.color }} />
+      {/* ── Ministry cards ───────────────────────────────────── */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto space-y-6">
+          {MINISTRIES.map(({ key, name, ages, color, photo, href, body, detail }) => (
+            <div key={key} className="glass-md rounded-2xl overflow-hidden">
 
-              <div className="p-8 md:p-10 grid md:grid-cols-[auto_1fr] gap-8 items-start">
-                {/* Icon column */}
+              {/* Color bar */}
+              <div className="h-1" style={{ background: color }} />
+
+              {/* Optional photo banner */}
+              {photo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={photo}
+                  alt={name}
+                  className="w-full object-cover"
+                  style={{ height: "200px", objectPosition: "center 35%" }}
+                />
+              )}
+
+              <div className="p-8 md:p-10 grid md:grid-cols-[auto_1fr_auto] gap-6 md:gap-10 items-start">
+
+                {/* Icon */}
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: `${m.color}22`, color: m.color }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+                  style={{ background: `${color}18`, color }}
                 >
-                  {ICONS[m.icon]}
+                  {ICONS[key]}
                 </div>
 
-                {/* Content column */}
+                {/* Content */}
                 <div>
-                  <div className="flex flex-wrap items-baseline gap-3 mb-2">
-                    <h2 className="font-condensed font-800 text-[#00205B] text-2xl md:text-3xl">
-                      {m.name}
+                  <div className="flex flex-wrap items-baseline gap-3 mb-1">
+                    <h2
+                      className="font-condensed font-800 text-[#00205B]"
+                      style={{ fontSize: "1.6rem", letterSpacing: "-0.01em" }}
+                    >
+                      {name}
                     </h2>
                     <span
                       className="text-xs font-semibold tracking-widest uppercase"
-                      style={{ color: m.color }}
+                      style={{ color }}
                     >
-                      0{i + 1}
+                      {ages}
                     </span>
                   </div>
-                  <p className="font-serif italic text-[#00205B]/65 mb-4 text-lg leading-snug">
-                    {DETAIL[m.key].tagline}
-                  </p>
-                  <p className="text-[#00205B]/55 text-sm leading-relaxed mb-6">
-                    {DETAIL[m.key].body}
-                  </p>
-                  <Link
-                    href={MINISTRY_PAGES[m.key] ?? "/connect"}
-                    className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border border-[#00205B]/20 hover:border-[#00abc9]/50 text-[#00205B] hover:text-[#00abc9] px-5 py-2.5 rounded-full transition-all"
+
+                  <p
+                    className="text-xs font-semibold tracking-widest uppercase mb-4"
+                    style={{ color: "rgba(0,32,91,0.4)" }}
                   >
-                    {MINISTRY_PAGES[m.key] ? "Learn More" : "Get Connected"}
+                    {detail}
+                  </p>
+
+                  <p className="text-[#00205B]/55 text-sm leading-relaxed">
+                    {body}
+                  </p>
+                </div>
+
+                {/* CTA */}
+                <div className="shrink-0 self-center">
+                  <Link
+                    href={href}
+                    className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80"
+                    style={{ borderColor: `${color}50`, color }}
+                  >
+                    {href.startsWith("/ministries/") || href === "/life-groups"
+                      ? "Learn More"
+                      : "Get Connected"}
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M2.5 6h7M6.5 3l3 3-3 3" />
                     </svg>
@@ -152,13 +219,13 @@ export default function MinistriesPage() {
         </div>
       </section>
 
-      {/* CTA band */}
+      {/* ── CTA band ─────────────────────────────────────────── */}
       <section
         className="py-20 px-6"
         style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
-          <p className="eyebrow mb-4">Not Sure Where to Start?</p>
+          <p className="eyebrow mb-4">New Here?</p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
@@ -166,7 +233,7 @@ export default function MinistriesPage() {
             className="font-condensed font-800 text-white mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)" }}
           >
-            Let Us Help You Find Your Place
+            Not sure where to start?
           </h2>
           <p className="text-white/55 mb-8 leading-relaxed">
             Fill out a connect card and someone from our team will reach out —
@@ -181,13 +248,14 @@ export default function MinistriesPage() {
             </Link>
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/20 hover:border-white/40 text-white px-8 py-3.5 rounded-full transition-colors glass"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/20 hover:border-white/40 text-white px-8 py-3.5 rounded-full transition-colors"
             >
               Plan Your Visit
             </Link>
           </div>
         </div>
       </section>
+
     </div>
   );
 }
