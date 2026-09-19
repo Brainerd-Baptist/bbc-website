@@ -42,7 +42,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
     email: "jking@brainerdbaptist.org",
     bio: [
       "Josiah was born and raised in Chattanooga, and he and his family have called Brainerd home since 2010. While exploring God's calling for ministry, the Lord opened the door for him to serve in the Missions Office beginning in 2015. After several years in Missions, he had the opportunity to serve as the interim Kids Pastor before stepping into his current role as Operations Pastor in 2023.",
-      "Josiah and his wife, Chelsey, have been married since 2015 and have three children: Liam, Brayana, and Eliyah. They love being part of the Brainerd family and are grateful to raise their family in the Chattanooga area.",
+      "Josiah and his wife, Chelsey, have been married since 2009 and have three children: Liam, Brayana, and Eliyah. They love being part of the Brainerd family and are grateful to raise their family in the Chattanooga area.",
       "Outside of church, Josiah loves coffee, camping, and spending time with his family. He is also known to overthink just about everything and has a tendency to ask a few (or several) more questions than necessary—especially when it comes to the details. He would probably tell you that the details matter. His family and coworkers might suggest he could occasionally let a few of them go.",
     ],
   },
