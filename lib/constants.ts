@@ -109,6 +109,7 @@ export const NAV_LINKS = [
   { label: "Ministries", href: "/ministries" },
   { label: "Midweek", href: "/wednesday" },
   { label: "Life Groups", href: "/life-groups" },
+  { label: "Community", href: "/community" },
   { label: "Who Is Jesus?", href: "/who-is-jesus" },
   { label: "Give", href: "/give" },
   { label: "Staff", href: "/staff" },
@@ -129,6 +130,7 @@ export const FOOTER_LINKS = {
     { label: "Missions", href: "/ministries/missions" },
     { label: "College + Young Adults", href: "/ministries/college" },
     { label: "Adults", href: "/ministries/adults" },
+    { label: "Community", href: "/community" },
   ],
   Resources: [
     { label: "Sermons", href: "/sermons" },
