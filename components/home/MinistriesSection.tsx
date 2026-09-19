@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
-// ── Photo cards (real church photos) ──────────────────────────────
-const PHOTO_CARDS = [
+// ── All ministry photo cards ───────────────────────────────────────
+const TOP_CARDS = [
   {
     key: "kids",
     label: "Brainerd Kids",
@@ -24,31 +24,27 @@ const PHOTO_CARDS = [
   },
 ];
 
-// ── Gradient cards (ministries without dedicated photos yet) ───────
-const GRADIENT_CARDS = [
+const BOTTOM_CARDS = [
   {
     key: "students",
     label: "Students",
     sub: "Middle & High School",
     href: "/ministries/students",
-    bg: "linear-gradient(135deg, #00205B 0%, #001540 100%)",
-    accent: "#00abc9",
+    photo: "/ministries/students.jpg",
   },
   {
     key: "lifegroups",
     label: "Life Groups",
     sub: "Every age · All week",
     href: "/life-groups",
-    bg: "linear-gradient(135deg, #003f6b 0%, #00205B 100%)",
-    accent: "#00abc9",
+    photo: "/ministries/life-groups.jpg",
   },
   {
     key: "missions",
     label: "Missions",
     sub: "Local & Global",
     href: "/ministries/missions",
-    bg: "linear-gradient(135deg, #00142a 0%, #00205B 100%)",
-    accent: "#00abc9",
+    photo: "/ministries/missions.jpg",
   },
 ];
 
@@ -88,9 +84,9 @@ export default function MinistriesSection() {
           </div>
         </ScrollReveal>
 
-        {/* ── Photo cards (top row) ── */}
+        {/* ── Top row photo cards ── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-          {PHOTO_CARDS.map((card, i) => (
+          {TOP_CARDS.map((card, i) => (
             <ScrollReveal key={card.key} delay={i * 80} className={card.span}>
               <Link href={card.href} className="group block relative overflow-hidden rounded-2xl"
                 style={{ minHeight: "340px" }}>
@@ -101,7 +97,6 @@ export default function MinistriesSection() {
                   sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 66vw, 800px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                {/* Gradient overlay */}
                 <div
                   className="absolute inset-0"
                   style={{
@@ -109,7 +104,6 @@ export default function MinistriesSection() {
                       "linear-gradient(to top, rgba(0,20,42,0.88) 0%, rgba(0,20,42,0.30) 50%, transparent 100%)",
                   }}
                 />
-                {/* Label */}
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <p
                     className="font-condensed font-900 text-white mb-1 leading-tight"
@@ -130,51 +124,47 @@ export default function MinistriesSection() {
           ))}
         </div>
 
-        {/* ── Gradient cards (bottom row) ── */}
+        {/* ── Bottom row photo cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {GRADIENT_CARDS.map((card, i) => (
+          {BOTTOM_CARDS.map((card, i) => (
             <ScrollReveal key={card.key} delay={160 + i * 60}>
-              <Link
-                href={card.href}
-                className="group block relative rounded-2xl overflow-hidden p-7 transition-all duration-300 hover:-translate-y-0.5"
-                style={{ background: card.bg, minHeight: "190px" }}
-              >
-                {/* Subtle teal glow on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none"
-                  style={{ boxShadow: "inset 0 0 0 1px rgba(0,171,201,0.3)" }}
+              <Link href={card.href} className="group block relative overflow-hidden rounded-2xl"
+                style={{ minHeight: "220px" }}>
+                <Image
+                  src={card.photo}
+                  alt={card.label}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 33vw, 400px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-
-                {/* Large faint number */}
-                <span
-                  className="absolute bottom-4 right-5 font-condensed font-900 select-none pointer-events-none"
-                  style={{
-                    fontSize: "5rem",
-                    lineHeight: 1,
-                    color: "rgba(0,171,201,0.07)",
-                    letterSpacing: "-0.04em",
-                  }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-
-                <p
-                  className="font-condensed font-900 text-white mb-1 leading-tight relative"
-                  style={{ fontSize: "1.5rem", letterSpacing: "-0.02em" }}
-                >
-                  {card.label}
-                </p>
-                <p className="text-white/45 text-sm mb-5 relative">{card.sub}</p>
-
+                {/* Stronger gradient for smaller cards */}
                 <div
-                  className="flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase relative"
-                  style={{ color: card.accent }}
-                >
-                  Learn more
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2"
-                    className="transition-transform duration-200 group-hover:translate-x-0.5">
-                    <path d="M2.5 6h7M6.5 3l3 3-3 3"/>
-                  </svg>
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(0,20,42,0.92) 0%, rgba(0,20,42,0.45) 55%, rgba(0,20,42,0.15) 100%)",
+                  }}
+                />
+                {/* Hover ring */}
+                <div
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={{ boxShadow: "inset 0 0 0 1.5px rgba(0,171,201,0.45)" }}
+                />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <p
+                    className="font-condensed font-900 text-white mb-0.5 leading-tight"
+                    style={{ fontSize: "1.4rem", letterSpacing: "-0.02em" }}
+                  >
+                    {card.label}
+                  </p>
+                  <p className="text-white/50 text-sm font-medium tracking-wide mb-3">{card.sub}</p>
+                  <div className="flex items-center gap-1.5 text-[#00abc9] text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    Learn more
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2"
+                      className="transition-transform duration-200 group-hover:translate-x-0.5">
+                      <path d="M2.5 6h7M6.5 3l3 3-3 3"/>
+                    </svg>
+                  </div>
                 </div>
               </Link>
             </ScrollReveal>
