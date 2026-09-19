@@ -1,28 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
-import { getLatestSermon, formatSermonDate } from "@/lib/youtube";
+import { SERMONS } from "@/lib/sermons";
 
-// Fallback shown when the API key is missing or the request fails
-const FALLBACK = {
-  videoId: "",
-  title: "The God Who Keeps His Promises",
-  publishedAt: new Date().toISOString(),
-  thumbnail: "",
-  channelTitle: "Brainerd Baptist Church",
-  description: "",
-  series: "God's Work / Our Work",
-  passage: "Romans 8:28–39",
-};
+export default function SermonBand() {
+  // Use the first (most recent) entry from the static sermon library as the
+  // source of truth — YouTube uploads are full services, not titled sermons.
+  const latest = SERMONS[0];
 
-export default async function SermonBand() {
-  const sermon = await getLatestSermon();
-
-  const title     = sermon?.title     ?? FALLBACK.title;
-  const videoId   = sermon?.videoId   ?? FALLBACK.videoId;
-  const thumbnail = sermon?.thumbnail ?? FALLBACK.thumbnail;
-  const date      = sermon ? formatSermonDate(sermon.publishedAt) : "Recent";
-  const watchUrl  = videoId ? `https://www.youtube.com/watch?v=${videoId}` : "/sermons";
+  const title     = latest.title;
+  const videoId   = latest.youtubeId;
+  const thumbnail = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+  const date      = new Date(latest.date).toLocaleDateString("en-US", {
+    year: "numeric", month: "long", day: "numeric", timeZone: "America/New_York",
+  });
+  const watchUrl  = `https://www.youtube.com/watch?v=${videoId}`;
 
   return (
     <section className="bg-white section-pad border-b border-gray-100">
@@ -120,14 +112,12 @@ export default async function SermonBand() {
                     </svg>
                     {date}
                   </span>
-                  {sermon && (
-                    <span className="flex items-center gap-1.5 text-[#00abc9]">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
-                      </svg>
-                      YouTube
-                    </span>
-                  )}
+                  <span className="flex items-center gap-1.5 text-[#00abc9]">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+                    </svg>
+                    {latest.passage}
+                  </span>
                 </div>
                 <div className="flex gap-3 flex-wrap">
                   <a
