@@ -5,14 +5,13 @@ const STRIP_H = 300;
 
 // Curated selection — mix of landscape and portrait
 const PHOTOS = [
-  { src: "/carousel/congregation-worship.jpg", w: 6048, h: 4024, alt: "Congregation worshiping at Brainerd Baptist" },
-  { src: "/carousel/students-1.jpg",           w: 6048, h: 4024, alt: "BBC Students in community" },
-  { src: "/carousel/music-camp-2.jpg",         w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
+  { src: "/carousel/kids-midweek.jpg",         w: 1400, h:  931, alt: "Kids active in midweek ministry at Brainerd Baptist" },
+  { src: "/carousel/students-1.jpg",           w: 1400, h:  931, alt: "BBC Students in community" },
+  { src: "/carousel/adult-bible-study.jpg",    w: 1400, h:  931, alt: "Adults in small group Bible study" },
   { src: "/carousel/life-groups-1.jpg",        w: 1400, h:  931, alt: "Community at Brainerd Baptist" },
-  { src: "/carousel/choir-orchestra.jpg",      w: 6048, h: 4024, alt: "BBC Choir and Orchestra in the sanctuary" },
-  { src: "/carousel/music-camp-5.jpg",         w: 1400, h: 2104, alt: "Kids performing in the sanctuary" },
+  { src: "/carousel/choir-orchestra.jpg",      w: 1400, h:  931, alt: "BBC Choir and Orchestra in the sanctuary" },
+  { src: "/carousel/music-camp-2.jpg",         w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
   { src: "/carousel/missions-1.jpg",           w: 1400, h:  787, alt: "BBC Ecuador missions trip 2026" },
-  { src: "/carousel/music-camp-4.jpg",         w: 1400, h:  931, alt: "Brainerd Kids on stage" },
   { src: "/carousel/missions-2.jpg",           w:  960, h:  482, alt: "BBC Ecuador group photo 2026" },
 ];
 
