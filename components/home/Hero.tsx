@@ -23,18 +23,6 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Triangle accent (brand motif) ── */}
-      <div
-        className="absolute top-0 right-0 opacity-10 pointer-events-none"
-        style={{ width: "55vw", maxWidth: 700, aspectRatio: "1 / 1" }}
-      >
-        <svg viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="300,40 580,520 20,520" fill="#00abc9" />
-          {/* Inner white triangle for the BBC "A" motif */}
-          <polygon points="300,120 480,460 120,460" fill="#ffffff" />
-          <polygon points="300,200 400,390 200,390" fill="#00abc9" />
-        </svg>
-      </div>
 
       {/* ── Content ── */}
       <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
