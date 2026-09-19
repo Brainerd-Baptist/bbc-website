@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { MINISTRIES } from "@/lib/constants";
 
+// Ministry-specific dedicated pages (others fall back to /connect)
+const MINISTRY_PAGES: Record<string, string> = {
+  kids: "/ministries/kids",
+};
+
 export const metadata = {
   title: "Ministries — Brainerd Baptist Church",
   description:
@@ -72,15 +77,15 @@ export default function MinistriesPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Page header */}
-      <div className="pt-32 pb-16 px-6 text-center">
+      <div className="pt-32 pb-16 px-6 text-center" style={{ background: "#00205B" }}>
         <div className="max-w-3xl mx-auto">
-          <p className="eyebrow mb-4">At Brainerd Baptist</p>
+          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>At Brainerd Baptist</p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h1
             className="font-condensed font-900 text-white mb-4"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)" }}
+            style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)", letterSpacing: "-0.02em" }}
           >
             Ministries
           </h1>
@@ -114,7 +119,7 @@ export default function MinistriesPage() {
                 {/* Content column */}
                 <div>
                   <div className="flex flex-wrap items-baseline gap-3 mb-2">
-                    <h2 className="font-condensed font-800 text-white text-2xl md:text-3xl">
+                    <h2 className="font-condensed font-800 text-[#00205B] text-2xl md:text-3xl">
                       {m.name}
                     </h2>
                     <span
@@ -124,17 +129,17 @@ export default function MinistriesPage() {
                       0{i + 1}
                     </span>
                   </div>
-                  <p className="font-serif italic text-white/70 mb-4 text-lg leading-snug">
+                  <p className="font-serif italic text-[#00205B]/65 mb-4 text-lg leading-snug">
                     {DETAIL[m.key].tagline}
                   </p>
-                  <p className="text-white/55 text-sm leading-relaxed mb-6">
+                  <p className="text-[#00205B]/55 text-sm leading-relaxed mb-6">
                     {DETAIL[m.key].body}
                   </p>
                   <Link
-                    href="/connect"
-                    className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border border-white/20 hover:border-gold/50 text-white hover:text-gold px-5 py-2.5 rounded-full transition-all"
+                    href={MINISTRY_PAGES[m.key] ?? "/connect"}
+                    className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border border-[#00205B]/20 hover:border-[#00abc9]/50 text-[#00205B] hover:text-[#00abc9] px-5 py-2.5 rounded-full transition-all"
                   >
-                    Get Connected
+                    {MINISTRY_PAGES[m.key] ? "Learn More" : "Get Connected"}
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
                       <path d="M2.5 6h7M6.5 3l3 3-3 3" />
                     </svg>
