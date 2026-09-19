@@ -15,14 +15,15 @@ const STEPS = [
 
 type Elem = "broken-circle"|"broken-inner"|"design-circle"|"design-inner"|"sin-arrow"|"cope-labels"|"gospel-circle"|"gospel-inner"|"repent-arrow"|"restore-arrow"|"recover-arrow";
 
+/* Fix #3: remove "cope-labels" from steps 5-7 so they fade out when Gospel appears */
 const VISIBLE: Record<string,Elem[]> = {
   brokenness: ["broken-circle","broken-inner"],
   design:     ["broken-circle","broken-inner","design-circle","design-inner"],
   sin:        ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow"],
   coping:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","cope-labels"],
-  gospel:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","cope-labels","gospel-circle","gospel-inner"],
-  repent:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","cope-labels","gospel-circle","gospel-inner","repent-arrow","restore-arrow"],
-  recover:    ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","cope-labels","gospel-circle","gospel-inner","repent-arrow","restore-arrow","recover-arrow"],
+  gospel:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner"],
+  repent:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner","repent-arrow","restore-arrow"],
+  recover:    ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner","repent-arrow","restore-arrow","recover-arrow"],
 };
 const vis = (step: string, e: Elem) => VISIBLE[step]?.includes(e) ?? false;
 
@@ -39,13 +40,13 @@ const GPX=209, GPY=300;          // Gospel       (bottom)
 /* ─── Per-step viewBox "camera" ─────────────────────────────────────── */
 type VB = [number,number,number,number];
 const VIEWBOXES: Record<string,VB> = {
-  brokenness: [226, 36, 166, 166],   // tight around Brokenness circle
-  design:     [ 22, 36, 360, 178],   // both top circles, tight
-  sin:        [ 22,  6, 360, 208],   // + space for SIN arc above
-  coping:     [ 22,  6, 360, 254],   // + coping labels below Brokenness
-  gospel:     [ 22,  6, 360, 382],   // full diagram, tight
-  repent:     [ 22,  6, 360, 382],
-  recover:    [ 22,  6, 360, 382],
+  brokenness: [206, 22, 200, 200],   // Fix #7: pulled back to show jagged marks
+  design:     [ 22, 36, 360, 178],
+  sin:        [ 22,  6, 360, 208],
+  coping:     [ 22,  6, 360, 254],
+  gospel:     [ 22,  6, 360, 388],
+  repent:     [ 22,  6, 360, 388],
+  recover:    [ 22,  6, 360, 388],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -139,7 +140,10 @@ function BrokenCircle({show}:{show:boolean}) {
     `M ${BX+48},${BY+49} A ${R},${R} 0 0 1 ${BX+R},${BY}`,
   ];
   return (
+    /* Fix #2 + #6: no filter wrapper here; dark fill added inside */
     <g style={{opacity:show?1:0}}>
+      {/* Fix #6: faint dark fill for visual depth and to anchor the label */}
+      <circle cx={BX} cy={BY} r={R} fill="rgba(0,20,42,0.40)" stroke="none"/>
       {segs.map((d,i)=>(
         <path key={i} d={d} fill="none" stroke="rgba(255,255,255,0.62)" strokeWidth={3}
           strokeLinecap="round" strokeDasharray={65} strokeDashoffset={on?0:65}
@@ -255,25 +259,25 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GDX} cy={GDY} r={R} stroke={TEAL} sw={3} show={vis(v,"design-circle")}/>
             </g>
-            {/* Cross inside */}
-            <line x1={GDX} y1={GDY-30} x2={GDX} y2={GDY+30} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
+            {/* Fix #1: cross moved to upper portion of circle, clear of label text */}
+            <line x1={GDX} y1={GDY-40} x2={GDX} y2={GDY-6} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
               style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
-            <line x1={GDX-22} y1={GDY-8} x2={GDX+22} y2={GDY-8} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
+            <line x1={GDX-20} y1={GDY-25} x2={GDX+20} y2={GDY-25} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
               style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
-            {/* Label inside */}
+            {/* Label in lower half of circle */}
             <Fade show={vis(v,"design-inner")}>
-              <MLText x={GDX} y={GDY-4} lines={["God's","Design"]} fill={TEAL} size={15}/>
+              <MLText x={GDX} y={GDY+10} lines={["God's","Design"]} fill={TEAL} size={15}/>
             </Fade>
 
-            {/* ═══ BROKENNESS (top-right) ═══ */}
-            <g filter="url(#sk)">
-              <BrokenCircle show={vis(v,"broken-circle")}/>
-            </g>
-            {/* Label inside + words */}
+            {/* ═══ BROKENNESS (top-right) ═══
+                Fix #2: BrokenCircle no longer wrapped in filter — the dark
+                fill circle inside it anchors the label cleanly at BX,BY */}
+            <BrokenCircle show={vis(v,"broken-circle")}/>
+            {/* Label inside */}
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={WHITE} size={13}/>
             </Fade>
-            {/* Coping labels — float below Brokenness (Gospel not visible yet on step 4) */}
+            {/* Coping labels — only shown on step 4, fade out when Gospel appears */}
             <Fade show={vis(v,"cope-labels")} delay={0}>
               <MLText x={BX-70} y={BY+108} lines={["Money"]}   fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
               <MLText x={BX+4}  y={BY+108} lines={["Success"]} fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
@@ -284,13 +288,13 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={WHITE} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Cross inside */}
-            <line x1={GPX} y1={GPY-32} x2={GPX} y2={GPY+32} stroke={WHITE} strokeWidth="3" strokeLinecap="round"
+            {/* Fix #4: cross shifted up — crossbar at GPY-20, vertical stays centered in upper half */}
+            <line x1={GPX} y1={GPY-38} x2={GPX} y2={GPY-2} stroke={WHITE} strokeWidth="3" strokeLinecap="round"
               style={{opacity:vis(v,"gospel-circle")?.82:0,transition:"opacity .5s ease 1s"}}/>
-            <line x1={GPX-24} y1={GPY-10} x2={GPX+24} y2={GPY-10} stroke={WHITE} strokeWidth="3" strokeLinecap="round"
+            <line x1={GPX-22} y1={GPY-22} x2={GPX+22} y2={GPY-22} stroke={WHITE} strokeWidth="3" strokeLinecap="round"
               style={{opacity:vis(v,"gospel-circle")?.82:0,transition:"opacity .5s ease 1s"}}/>
             <Fade show={vis(v,"gospel-inner")}>
-              <MLText x={GPX} y={GPY+4} lines={["Gospel"]} fill={WHITE} size={17}/>
+              <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={WHITE} size={17}/>
             </Fade>
 
             {/* ═══ SIN arrow: GD → B over top ═══ */}
@@ -315,14 +319,16 @@ export default function ThreeCircles() {
               <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
-            {/* Label rotated to follow the right side curve */}
+            {/* Fix #5: label with dark backing rect for legibility */}
             <Fade show={vis(v,"repent-arrow")}>
-              <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
-                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
-                transform={`translate(${repMid.x+22},${repMid.y}) rotate(58)`}
-                style={{textTransform:"uppercase"}}>
-                Repent &amp; Believe
-              </text>
+              <g transform={`translate(${repMid.x+26},${repMid.y}) rotate(58)`}>
+                <rect x={-72} y={-17} width={144} height={21} rx={3} fill="rgba(0,20,42,0.60)"/>
+                <text textAnchor="middle" y={0} fill={TEAL} fontSize={13} fontWeight={700}
+                  fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
+                  style={{textTransform:"uppercase"}}>
+                  Repent &amp; Believe
+                </text>
+              </g>
             </Fade>
 
             {/* ═══ RECOVER & PURSUE: GP → GD, left side ═══ */}
@@ -333,13 +339,16 @@ export default function ThreeCircles() {
               <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
+            {/* Fix #5: label with dark backing rect for legibility */}
             <Fade show={vis(v,"recover-arrow")} delay={300}>
-              <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
-                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
-                transform={`translate(${recMid.x-22},${recMid.y}) rotate(-58)`}
-                style={{textTransform:"uppercase"}}>
-                Recover &amp; Pursue
-              </text>
+              <g transform={`translate(${recMid.x-26},${recMid.y}) rotate(-58)`}>
+                <rect x={-76} y={-17} width={152} height={21} rx={3} fill="rgba(0,20,42,0.60)"/>
+                <text textAnchor="middle" y={0} fill={TEAL} fontSize={13} fontWeight={700}
+                  fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
+                  style={{textTransform:"uppercase"}}>
+                  Recover &amp; Pursue
+                </text>
+              </g>
             </Fade>
 
 
