@@ -4,6 +4,10 @@ export interface SpeakerInfo {
   photo?: string
   /** Short bio paragraphs */
   bio?: string[]
+  /** Optional family/secondary photo path under /public (e.g. /carousel/curtis-family.webp) */
+  familyPhoto?: string
+  /** Alt text for the family photo */
+  familyPhotoAlt?: string
 }
 
 /** Convert a speaker's display name to a URL slug */
@@ -20,6 +24,8 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Curtis Hill": {
     title: "Lead Pastor",
     photo: "hill_curtis_leadpastor",
+    familyPhoto: "/carousel/curtis-family.webp",
+    familyPhotoAlt: "Curtis Hill with his family",
     bio: [
       "Curtis Hill grew up in Augusta, Georgia — which means he has strong opinions about The Masters — and was born in Oklahoma, which means he'll always pull for the Sooners.",
       "He earned his master's degree from Temple Baptist Seminary in Chattanooga and completed his doctorate in Expositional Preaching at The Southern Baptist Theological Seminary in Louisville, Kentucky.",

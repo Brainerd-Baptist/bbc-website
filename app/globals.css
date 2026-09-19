@@ -231,3 +231,127 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0,32,91,0.08);
 }
+
+/* ── Card hover lift ───────────────────────────────────── */
+.card-hover {
+  transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94),
+              box-shadow 0.25s cubic-bezier(0.25,0.46,0.45,0.94);
+  will-change: transform;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,32,91,0.12), 0 4px 12px rgba(0,32,91,0.08);
+}
+.card-hover-sm {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover-sm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,32,91,0.10);
+}
+
+/* ── Image zoom on hover ───────────────────────────────── */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img {
+  transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  will-change: transform;
+}
+.img-zoom:hover img {
+  transform: scale(1.04);
+}
+
+/* ── Gradient text ─────────────────────────────────────── */
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #00abc9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-navy {
+  background: linear-gradient(135deg, #00205B 0%, #00abc9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-gold {
+  background: linear-gradient(135deg, #00abc9 0%, #33c1d9 60%, #7dd8ea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Shimmer button ────────────────────────────────────── */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.btn-shimmer:hover::after {
+  transform: translateX(100%);
+}
+
+/* ── Enhanced glass (more pronounced) ─────────────────── */
+.glass-deep {
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 4px 24px rgba(0,32,91,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.glass-dark-deep {
+  background: rgba(0,20,42,0.65);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── Glow effects ──────────────────────────────────────── */
+.glow-teal {
+  box-shadow: 0 0 40px rgba(0,171,201,0.25), 0 0 80px rgba(0,171,201,0.10);
+}
+.glow-navy {
+  box-shadow: 0 0 40px rgba(0,32,91,0.20);
+}
+
+/* ── Pulse ring (for CTAs) ─────────────────────────────── */
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(0,171,201,0.5); }
+  70%  { box-shadow: 0 0 0 12px rgba(0,171,201,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,171,201,0); }
+}
+.btn-pulse {
+  animation: pulse-ring 2.5s ease infinite;
+}
+
+/* ── Floating animation ────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* ── Subtle gradient orbs (background accents) ─────────── */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.orb-teal {
+  background: radial-gradient(circle, rgba(0,171,201,0.18) 0%, transparent 70%);
+}
+.orb-navy {
+  background: radial-gradient(circle, rgba(0,32,91,0.15) 0%, transparent 70%);
+}

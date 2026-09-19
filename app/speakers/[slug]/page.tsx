@@ -160,6 +160,24 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               )}
             </div>
           </div>
+
+          {/* Family photo */}
+          {info.familyPhoto && (
+            <div className="mt-10 max-w-2xl">
+              <p className="text-[10px] font-semibold tracking-widest uppercase text-white/25 mb-4">
+                Family
+              </p>
+              <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ maxHeight: "420px" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={info.familyPhoto}
+                  alt={info.familyPhotoAlt ?? `${name}'s family`}
+                  className="w-full object-cover object-center"
+                  style={{ maxHeight: "420px" }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
