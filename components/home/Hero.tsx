@@ -52,11 +52,11 @@ export default function Hero() {
           <div className="flex flex-wrap gap-4 mb-8">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#00abc9]" />
-              <span className="text-white/80 text-sm">8:30 AM · Choir & Orchestra</span>
+              <span className="text-white/80 text-sm">8:30 AM</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#00abc9]" />
-              <span className="text-white/80 text-sm">11:00 AM · Band-Led</span>
+              <span className="text-white/80 text-sm">11:00 AM</span>
             </div>
           </div>
 
@@ -75,7 +75,7 @@ export default function Hero() {
               </svg>
             </Link>
             <Link href="/sermons" className="btn-outline-white">
-              Watch Sermons
+              Sermons
             </Link>
           </div>
 
