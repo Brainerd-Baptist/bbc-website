@@ -7,20 +7,20 @@ import ScrollReveal from "./ScrollReveal";
 // ── All ministry photo cards ───────────────────────────────────────
 const TOP_CARDS = [
   {
-    key: "kids",
-    label: "Brainerd Kids",
-    sub: "Nursery · Preschool · K–5th",
-    href: "/ministries/kids",
-    photo: "/ministries/kids.jpg",
-    span: "lg:col-span-2",
-  },
-  {
     key: "nursery",
     label: "Little Ones",
-    sub: "Nursery & Preschool",
+    sub: "Birth – Preschool",
     href: "/ministries/kids",
     photo: "/ministries/nursery.jpg",
     span: "lg:col-span-1",
+  },
+  {
+    key: "kids",
+    label: "Brainerd Kids",
+    sub: "Elementary · K–5th",
+    href: "/ministries/kids",
+    photo: "/ministries/kids.jpg",
+    span: "lg:col-span-2",
   },
 ];
 
