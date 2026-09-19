@@ -40,13 +40,13 @@ const GPX=209, GPY=300;          // Gospel       (bottom)
 /* ─── Per-step viewBox "camera" ─────────────────────────────────────── */
 type VB = [number,number,number,number];
 const VIEWBOXES: Record<string,VB> = {
-  brokenness: [206, 22, 200, 200],   // Fix #7: pulled back to show jagged marks
+  brokenness: [206, 22, 200, 200],
   design:     [ 22, 36, 360, 178],
   sin:        [ 22,  6, 360, 208],
-  coping:     [ 22,  6, 360, 254],
-  gospel:     [ 22,  6, 360, 388],
-  repent:     [ 22,  6, 360, 388],
-  recover:    [ 22,  6, 360, 388],
+  coping:     [ 22,  6, 374, 258],   // Fix #1: wider to prevent "RELIGION" clipping
+  gospel:     [ 22,  6, 360, 368],   // Fix #5: tighter bottom (was 388)
+  repent:     [ 22,  6, 360, 368],
+  recover:    [ 22,  6, 360, 368],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -142,8 +142,8 @@ function BrokenCircle({show}:{show:boolean}) {
   return (
     /* Fix #2 + #6: no filter wrapper here; dark fill added inside */
     <g style={{opacity:show?1:0}}>
-      {/* Fix #6: faint dark fill for visual depth and to anchor the label */}
-      <circle cx={BX} cy={BY} r={R} fill="rgba(0,20,42,0.40)" stroke="none"/>
+      {/* Fix #2: visible dark fill — cooler blue tint distinguishable from the navy background */}
+      <circle cx={BX} cy={BY} r={R} fill="rgba(5,30,68,0.62)" stroke="none"/>
       {segs.map((d,i)=>(
         <path key={i} d={d} fill="none" stroke="rgba(255,255,255,0.62)" strokeWidth={3}
           strokeLinecap="round" strokeDasharray={65} strokeDashoffset={on?0:65}
@@ -259,14 +259,14 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GDX} cy={GDY} r={R} stroke={TEAL} sw={3} show={vis(v,"design-circle")}/>
             </g>
-            {/* Fix #1: cross moved to upper portion of circle, clear of label text */}
-            <line x1={GDX} y1={GDY-40} x2={GDX} y2={GDY-6} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
+                  {/* Fix #3: compact cross centered just above the label, feels integrated not floating */}
+            <line x1={GDX} y1={GDY-28} x2={GDX} y2={GDY-4} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
               style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
-            <line x1={GDX-20} y1={GDY-25} x2={GDX+20} y2={GDY-25} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
+            <line x1={GDX-14} y1={GDY-18} x2={GDX+14} y2={GDY-18} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
               style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
-            {/* Label in lower half of circle */}
+            {/* Label sits just below the cross */}
             <Fade show={vis(v,"design-inner")}>
-              <MLText x={GDX} y={GDY+10} lines={["God's","Design"]} fill={TEAL} size={15}/>
+              <MLText x={GDX} y={GDY+8} lines={["God's","Design"]} fill={TEAL} size={15}/>
             </Fade>
 
             {/* ═══ BROKENNESS (top-right) ═══
@@ -277,11 +277,12 @@ export default function ThreeCircles() {
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={WHITE} size={13}/>
             </Fade>
-            {/* Coping labels — only shown on step 4, fade out when Gospel appears */}
+            {/* Coping labels — only shown on step 4, fade out when Gospel appears.
+                Fix #1: tighter spacing so "RELIGION" stays inside viewBox */}
             <Fade show={vis(v,"cope-labels")} delay={0}>
-              <MLText x={BX-70} y={BY+108} lines={["Money"]}   fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
-              <MLText x={BX+4}  y={BY+108} lines={["Success"]} fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
-              <MLText x={BX+78} y={BY+108} lines={["Religion"]}fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
+              <MLText x={BX-62} y={BY+108} lines={["Money"]}   fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
+              <MLText x={BX+6}  y={BY+108} lines={["Success"]} fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
+              <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
             </Fade>
 
             {/* ═══ GOSPEL (bottom-center) ═══ */}
@@ -319,10 +320,10 @@ export default function ThreeCircles() {
               <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
-            {/* Fix #5: label with dark backing rect for legibility */}
+            {/* Fix #4: nudged outward +6px from center to reduce crowding between circles */}
             <Fade show={vis(v,"repent-arrow")}>
-              <g transform={`translate(${repMid.x+26},${repMid.y}) rotate(58)`}>
-                <rect x={-72} y={-17} width={144} height={21} rx={3} fill="rgba(0,20,42,0.60)"/>
+              <g transform={`translate(${repMid.x+32},${repMid.y}) rotate(58)`}>
+                <rect x={-72} y={-17} width={144} height={21} rx={3} fill="rgba(0,20,42,0.65)"/>
                 <text textAnchor="middle" y={0} fill={TEAL} fontSize={13} fontWeight={700}
                   fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
                   style={{textTransform:"uppercase"}}>
@@ -339,10 +340,10 @@ export default function ThreeCircles() {
               <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
-            {/* Fix #5: label with dark backing rect for legibility */}
+            {/* Fix #4: nudged outward -6px from center to reduce crowding between circles */}
             <Fade show={vis(v,"recover-arrow")} delay={300}>
-              <g transform={`translate(${recMid.x-26},${recMid.y}) rotate(-58)`}>
-                <rect x={-76} y={-17} width={152} height={21} rx={3} fill="rgba(0,20,42,0.60)"/>
+              <g transform={`translate(${recMid.x-32},${recMid.y}) rotate(-58)`}>
+                <rect x={-76} y={-17} width={152} height={21} rx={3} fill="rgba(0,20,42,0.65)"/>
                 <text textAnchor="middle" y={0} fill={TEAL} fontSize={13} fontWeight={700}
                   fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
                   style={{textTransform:"uppercase"}}>
