@@ -224,20 +224,19 @@ export default function AboutPage() {
                   lineHeight: 1.05,
                 }}
               >
-                Big enough to be excellent. Small enough to know your name.
+                A church where people actually know each other.
               </h2>
               <p className="text-[#00205B]/60 leading-relaxed mb-4">
-                Brainerd Baptist is large enough to invest in excellent
-                programming — strong preaching, full children's ministry, a
-                well-resourced student ministry, and global missions
-                partnerships. But it's sized so that people don't fall through
-                the cracks.
+                Sunday is the anchor — but the community doesn't stop there.
+                Life Groups meet throughout the week across the city. The BX
+                is a gathering place for fitness, meetings, and just showing
+                up. People here tend to do life together in the ordinary,
+                unremarkable ways that actually form community over time.
               </p>
               <p className="text-[#00205B]/60 leading-relaxed">
-                The BX gives our community a home for gathering outside of
-                Sunday — fitness, meeting space, and a place to just show up.
-                The goal is gospel community: raising families together,
-                navigating life's hard seasons together, for the long haul.
+                The goal isn't a great church experience. It's gospel
+                community — raising families, navigating hard seasons, and
+                staying in it for the long haul.
               </p>
             </div>
 
