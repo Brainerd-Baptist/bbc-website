@@ -15,7 +15,6 @@ const STEPS = [
 
 type Elem = "broken-circle"|"broken-inner"|"design-circle"|"design-inner"|"sin-arrow"|"cope-labels"|"gospel-circle"|"gospel-inner"|"repent-arrow"|"restore-arrow"|"recover-arrow";
 
-/* Fix #3: remove "cope-labels" from steps 5-7 so they fade out when Gospel appears */
 const VISIBLE: Record<string,Elem[]> = {
   brokenness: ["broken-circle","broken-inner"],
   design:     ["broken-circle","broken-inner","design-circle","design-inner"],
@@ -27,24 +26,19 @@ const VISIBLE: Record<string,Elem[]> = {
 };
 const vis = (step: string, e: Elem) => VISIBLE[step]?.includes(e) ?? false;
 
-/* ─── Geometry — matches the official Three Circles layout ──────────
-   God's Design  ← top-left
-   Brokenness    ← top-right  (arrow: SIN goes over the top GD→B)
-   Gospel        ← bottom-center
-   Flow: GD→B (sin) → B→G (repent & believe) → G→GD (recover & pursue)
-*/
-const GDX=108, GDY=120, R=72;   // God's Design (top-left)
-const BX =310, BY =120;          // Brokenness   (top-right)
-const GPX=209, GPY=300;          // Gospel       (bottom)
+/* ─── Geometry ───────────────────────────────────────────────────────── */
+const GDX=108, GDY=120, R=72;
+const BX =310, BY =120;
+const GPX=209, GPY=300;
 
-/* ─── Per-step viewBox "camera" ─────────────────────────────────────── */
+/* ─── Per-step viewBox ───────────────────────────────────────────────── */
 type VB = [number,number,number,number];
 const VIEWBOXES: Record<string,VB> = {
   brokenness: [206, 22, 200, 200],
   design:     [ 22, 36, 360, 178],
   sin:        [ 22,  6, 360, 208],
-  coping:     [ 22,  6, 374, 258],   // Fix #1: wider to prevent "RELIGION" clipping
-  gospel:     [ 22,  6, 360, 368],   // Fix #5: tighter bottom (was 388)
+  coping:     [ 22,  6, 374, 258],
+  gospel:     [ 22,  6, 360, 368],
   repent:     [ 22,  6, 360, 368],
   recover:    [ 22,  6, 360, 368],
 };
@@ -86,7 +80,7 @@ function useDrawOn(show: boolean, delay=0) {
   return on;
 }
 
-/* ─── Animated circle (draws itself on) ─────────────────────────────── */
+/* ─── Animated circle ────────────────────────────────────────────────── */
 function AnimCircle({cx,cy,r,stroke,sw=2.8,show,delay=0}:{cx:number;cy:number;r:number;stroke:string;sw?:number;show:boolean;delay?:number}) {
   const on = useDrawOn(show,delay);
   const c  = 2*Math.PI*r;
@@ -95,7 +89,7 @@ function AnimCircle({cx,cy,r,stroke,sw=2.8,show,delay=0}:{cx:number;cy:number;r:
     style={{transition:on?`stroke-dashoffset .9s cubic-bezier(.4,0,.2,1)`:undefined, opacity:show?1:0}}/>;
 }
 
-/* ─── Animated path ─────────────────────────────────────────────────── */
+/* ─── Animated path ──────────────────────────────────────────────────── */
 function AnimPath({d,stroke,sw=2.6,show,delay=0,len=280}:{d:string;stroke:string;sw?:number;show:boolean;delay?:number;len?:number}) {
   const on = useDrawOn(show,delay);
   return <path d={d} fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round"
@@ -104,14 +98,14 @@ function AnimPath({d,stroke,sw=2.6,show,delay=0,len=280}:{d:string;stroke:string
 }
 
 /* ─── Fading label ───────────────────────────────────────────────────── */
-function Fade({show,delay=0,children,style}:{show:boolean;delay?:number;children:React.ReactNode;style?:React.CSSProperties}) {
+function Fade({show,delay=0,children}:{show:boolean;delay?:number;children:React.ReactNode}) {
   const [op,setOp] = useState(0);
   const prev = useRef(false);
   useEffect(()=>{
     if(show && !prev.current){ setOp(0); const t=setTimeout(()=>setOp(1),delay+300); return ()=>clearTimeout(t); }
     prev.current=show;
   },[show,delay]);
-  return <g style={{opacity:show?op:0,transition:`opacity .35s ease`,...style}}>{children}</g>;
+  return <g style={{opacity:show?op:0,transition:`opacity .35s ease`}}>{children}</g>;
 }
 
 /* ─── Multi-line text helper ─────────────────────────────────────────── */
@@ -127,8 +121,8 @@ function MLText({x,y,lines,fill,size=15,weight=800,anchor="middle",ls="0.06em"}:
   );
 }
 
-/* ─── Broken circle (fragmented arcs = brokenness) ──────────────────── */
-function BrokenCircle({show}:{show:boolean}) {
+/* ─── Broken circle ──────────────────────────────────────────────────── */
+function BrokenCircle({show, navy}:{show:boolean; navy:string}) {
   const on = useDrawOn(show,0);
   const segs=[
     `M ${BX+R},${BY} A ${R},${R} 0 0 1 ${BX+48},${BY-49}`,
@@ -139,21 +133,18 @@ function BrokenCircle({show}:{show:boolean}) {
     `M ${BX-14},${BY+66} A ${R},${R} 0 0 1 ${BX+41},${BY+55}`,
     `M ${BX+48},${BY+49} A ${R},${R} 0 0 1 ${BX+R},${BY}`,
   ];
+  /* On white: dark navy arcs, no fill needed — they read perfectly */
   return (
-    /* Fix #2 + #6: no filter wrapper here; dark fill added inside */
     <g style={{opacity:show?1:0}}>
-      {/* Fix #2: visible dark fill — cooler blue tint distinguishable from the navy background */}
-      <circle cx={BX} cy={BY} r={R} fill="rgba(5,30,68,0.62)" stroke="none"/>
       {segs.map((d,i)=>(
-        <path key={i} d={d} fill="none" stroke="rgba(255,255,255,0.62)" strokeWidth={3}
+        <path key={i} d={d} fill="none" stroke={navy} strokeWidth={3} strokeOpacity={0.75}
           strokeLinecap="round" strokeDasharray={65} strokeDashoffset={on?0:65}
           style={{transition:on?`stroke-dashoffset .45s cubic-bezier(.4,0,.2,1) ${i*60}ms`:undefined}}/>
       ))}
-      {/* Jagged lightning marks radiating from brokenness */}
       {on && <>
-        <path d={`M ${BX+74},${BY-46} l 12,-8 l -6,12 l 10,-4`} stroke="rgba(255,255,255,0.4)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-        <path d={`M ${BX+74},${BY+46} l 10,8 l -4,-12 l 8,6`}   stroke="rgba(255,255,255,0.4)" strokeWidth="2" fill="none" strokeLinecap="round"/>
-        <path d={`M ${BX+20},${BY-76} l 6,-12 l 6,10 l 8,-6`}   stroke="rgba(255,255,255,0.4)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <path d={`M ${BX+74},${BY-46} l 12,-8 l -6,12 l 10,-4`} stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <path d={`M ${BX+74},${BY+46} l 10,8 l -4,-12 l 8,6`}   stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <path d={`M ${BX+20},${BY-76} l 6,-12 l 6,10 l 8,-6`}   stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
       </>}
     </g>
   );
@@ -167,9 +158,10 @@ export default function ThreeCircles() {
   const canNext = idx < STEPS.length-1;
   const canPrev = idx > 0;
 
+  /* White-card palette */
   const TEAL  = "#00abc9";
-  const RED   = "rgba(255,90,50,0.92)";
-  const WHITE = "rgba(255,255,255,0.90)";
+  const NAVY  = "#00205B";          // replaces "WHITE" — dark elements on white card
+  const RED   = "#e04428";          // slightly deeper red reads better on white
 
   const viewBox = useAnimVB(VIEWBOXES[v]);
 
@@ -187,22 +179,18 @@ export default function ThreeCircles() {
   };
 
   // Arrow geometry
-  // SIN: GD upper-right → B upper-left, arc over top
   const sinStart = {x: GDX+50, y: GDY-52};
   const sinCtrl  = {x: 209, y: 22};
   const sinEnd   = {x: BX-50, y: BY-52};
 
-  // REPENT & BELIEVE: B lower-left → GP upper-right, curves down-right side
   const repStart = {x: BX-48, y: BY+54};
   const repCtrl  = {x: 292, y: 212};
   const repEnd   = {x: GPX+50, y: GPY-52};
 
-  // RECOVER & PURSUE: GP upper-left → GD lower-right, curves up-left side
   const recStart = {x: GPX-50, y: GPY-52};
   const recCtrl  = {x: 118, y: 212};
   const recEnd   = {x: GDX+48, y: GDY+54};
 
-  // Midpoints of arrows (t=0.5 on quadratic bezier)
   const sinMid  = { x:(sinStart.x+2*sinCtrl.x+sinEnd.x)/4,  y:(sinStart.y+2*sinCtrl.y+sinEnd.y)/4  };
   const repMid  = { x:(repStart.x+2*repCtrl.x+repEnd.x)/4,  y:(repStart.y+2*repCtrl.y+repEnd.y)/4  };
   const recMid  = { x:(recStart.x+2*recCtrl.x+recEnd.x)/4,  y:(recStart.y+2*recCtrl.y+recEnd.y)/4  };
@@ -210,7 +198,7 @@ export default function ThreeCircles() {
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
 
-      {/* ── Nav (always visible above diagram on mobile) ── */}
+      {/* ── Nav — stays dark, floats above the white card ── */}
       <div className="flex items-center justify-between mb-5">
         <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
           className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
@@ -226,27 +214,31 @@ export default function ThreeCircles() {
         {canNext
           ? <button onClick={()=>setIdx(i=>Math.min(STEPS.length-1,i+1))}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-colors"
-              style={{ background:TEAL, color:"#00142a", cursor:"pointer" }}>Next →</button>
+              style={{ background:TEAL, color:"#fff", cursor:"pointer" }}>Next →</button>
           : <a href="/connect" className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full inline-block"
-              style={{ background:TEAL, color:"#00142a" }}>Talk →</a>
+              style={{ background:TEAL, color:"#fff" }}>Talk →</a>
         }
       </div>
 
-      {/* ── Layout: SVG left, text right on lg; stacked on mobile ── */}
+      {/* ── Layout: white card left, dark text right on lg; stacked on mobile ── */}
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-start">
 
-        {/* SVG */}
-        <div className="w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0">
-          {idx===0 && <p className="text-center text-xs mb-2 lg:hidden" style={{color:"rgba(255,255,255,0.22)",letterSpacing:"0.08em"}}>SWIPE TO CONTINUE</p>}
+        {/* White card wrapping the SVG */}
+        <div
+          className="w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0 rounded-2xl"
+          style={{ background:"#ffffff", padding:"20px 16px 16px", boxShadow:"0 4px 28px rgba(0,20,60,0.13)" }}
+        >
+          {idx===0 && (
+            <p className="text-center text-xs mb-3 lg:hidden font-condensed tracking-widest"
+              style={{color:"rgba(0,32,91,0.28)"}}>SWIPE TO CONTINUE</p>
+          )}
           <svg viewBox={viewBox} className="w-full h-auto" style={{overflow:"visible"}}>
             <defs>
               <filter id="sk" x="-8%" y="-8%" width="116%" height="116%">
                 <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="5" result="n"/>
                 <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
               </filter>
-              <marker id="arh" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-                <path d="M 0 0 L 10 5 L 0 10 Z" fill="white"/>
-              </marker>
+              {/* Arrowheads — teal for flow arrows, red for sin */}
               <marker id="arht" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
                 <path d="M 0 0 L 10 5 L 0 10 Z" fill={TEAL}/>
               </marker>
@@ -255,64 +247,55 @@ export default function ThreeCircles() {
               </marker>
             </defs>
 
-            {/* ═══ GOD'S DESIGN (top-left) ═══ */}
+            {/* ═══ GOD'S DESIGN (top-left) — teal on white ═══ */}
             <g filter="url(#sk)">
               <AnimCircle cx={GDX} cy={GDY} r={R} stroke={TEAL} sw={3} show={vis(v,"design-circle")}/>
             </g>
-                  {/* Fix #3: compact cross centered just above the label, feels integrated not floating */}
             <line x1={GDX} y1={GDY-28} x2={GDX} y2={GDY-4} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
-              style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
+              style={{opacity:vis(v,"design-circle")?.65:0,transition:"opacity .5s ease 1s"}}/>
             <line x1={GDX-14} y1={GDY-18} x2={GDX+14} y2={GDY-18} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
-              style={{opacity:vis(v,"design-circle")?.5:0,transition:"opacity .5s ease 1s"}}/>
-            {/* Label sits just below the cross */}
+              style={{opacity:vis(v,"design-circle")?.65:0,transition:"opacity .5s ease 1s"}}/>
             <Fade show={vis(v,"design-inner")}>
               <MLText x={GDX} y={GDY+8} lines={["God's","Design"]} fill={TEAL} size={15}/>
             </Fade>
 
-            {/* ═══ BROKENNESS (top-right) ═══
-                Fix #2: BrokenCircle no longer wrapped in filter — the dark
-                fill circle inside it anchors the label cleanly at BX,BY */}
-            <BrokenCircle show={vis(v,"broken-circle")}/>
-            {/* Label inside */}
+            {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed ═══ */}
+            <BrokenCircle show={vis(v,"broken-circle")} navy={NAVY}/>
             <Fade show={vis(v,"broken-inner")}>
-              <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={WHITE} size={13}/>
+              <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={NAVY} size={13}/>
             </Fade>
-            {/* Coping labels — only shown on step 4, fade out when Gospel appears.
-                Fix #1: tighter spacing so "RELIGION" stays inside viewBox */}
-            <Fade show={vis(v,"cope-labels")} delay={0}>
-              <MLText x={BX-62} y={BY+108} lines={["Money"]}   fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
-              <MLText x={BX+6}  y={BY+108} lines={["Success"]} fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
-              <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill="rgba(255,255,255,0.30)" size={12} weight={500}/>
+            {/* Coping labels — only step 4 */}
+            <Fade show={vis(v,"cope-labels")}>
+              <MLText x={BX-62} y={BY+108} lines={["Money"]}   fill={`rgba(0,32,91,0.35)`} size={12} weight={500}/>
+              <MLText x={BX+6}  y={BY+108} lines={["Success"]} fill={`rgba(0,32,91,0.35)`} size={12} weight={500}/>
+              <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill={`rgba(0,32,91,0.35)`} size={12} weight={500}/>
             </Fade>
 
-            {/* ═══ GOSPEL (bottom-center) ═══ */}
+            {/* ═══ GOSPEL (bottom-center) — navy on white ═══ */}
             <g filter="url(#sk)">
-              <AnimCircle cx={GPX} cy={GPY} r={R} stroke={WHITE} sw={3.2} show={vis(v,"gospel-circle")}/>
+              <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Fix #4: cross shifted up — crossbar at GPY-20, vertical stays centered in upper half */}
-            <line x1={GPX} y1={GPY-38} x2={GPX} y2={GPY-2} stroke={WHITE} strokeWidth="3" strokeLinecap="round"
-              style={{opacity:vis(v,"gospel-circle")?.82:0,transition:"opacity .5s ease 1s"}}/>
-            <line x1={GPX-22} y1={GPY-22} x2={GPX+22} y2={GPY-22} stroke={WHITE} strokeWidth="3" strokeLinecap="round"
-              style={{opacity:vis(v,"gospel-circle")?.82:0,transition:"opacity .5s ease 1s"}}/>
+            <line x1={GPX} y1={GPY-38} x2={GPX} y2={GPY-2} stroke={NAVY} strokeWidth="3" strokeLinecap="round"
+              style={{opacity:vis(v,"gospel-circle")?.75:0,transition:"opacity .5s ease 1s"}}/>
+            <line x1={GPX-22} y1={GPY-22} x2={GPX+22} y2={GPY-22} stroke={NAVY} strokeWidth="3" strokeLinecap="round"
+              style={{opacity:vis(v,"gospel-circle")?.75:0,transition:"opacity .5s ease 1s"}}/>
             <Fade show={vis(v,"gospel-inner")}>
-              <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={WHITE} size={17}/>
+              <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={NAVY} size={17}/>
             </Fade>
 
-            {/* ═══ SIN arrow: GD → B over top ═══ */}
+            {/* ═══ SIN arrow ═══ */}
             <AnimPath
               d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
               stroke={RED} sw={2.5} show={vis(v,"sin-arrow")} len={240}/>
             {vis(v,"sin-arrow") && (
               <path d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
-                fill="none" stroke="none" markerEnd="url(#arrr)" strokeWidth="2.5"
-                style={{opacity:1}}/>
+                fill="none" stroke="none" markerEnd="url(#arrr)" strokeWidth="2.5"/>
             )}
-            {/* SIN label — horizontal, above the arc */}
             <Fade show={vis(v,"sin-arrow")}>
               <MLText x={sinMid.x} y={sinMid.y-6} lines={["Sin"]} fill={RED} size={14} weight={700} ls="0.12em"/>
             </Fade>
 
-            {/* ═══ REPENT & BELIEVE: B → GP, right side ═══ */}
+            {/* ═══ REPENT & BELIEVE: B → GP ═══ */}
             <AnimPath
               d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
               stroke={TEAL} sw={2.8} show={vis(v,"repent-arrow")} len={270}/>
@@ -320,19 +303,17 @@ export default function ThreeCircles() {
               <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
-            {/* Fix #4: nudged outward +6px from center to reduce crowding between circles */}
+            {/* No backing rect needed — teal on white reads cleanly */}
             <Fade show={vis(v,"repent-arrow")}>
-              <g transform={`translate(${repMid.x+32},${repMid.y}) rotate(58)`}>
-                <rect x={-72} y={-17} width={144} height={21} rx={3} fill="rgba(0,20,42,0.65)"/>
-                <text textAnchor="middle" y={0} fill={TEAL} fontSize={13} fontWeight={700}
-                  fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
-                  style={{textTransform:"uppercase"}}>
-                  Repent &amp; Believe
-                </text>
-              </g>
+              <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
+                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
+                transform={`translate(${repMid.x+32},${repMid.y}) rotate(58)`}
+                style={{textTransform:"uppercase"}}>
+                Repent &amp; Believe
+              </text>
             </Fade>
 
-            {/* ═══ RECOVER & PURSUE: GP → GD, left side ═══ */}
+            {/* ═══ RECOVER & PURSUE: GP → GD ═══ */}
             <AnimPath
               d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
               stroke={TEAL} sw={2.8} show={vis(v,"recover-arrow")} len={270} delay={300}/>
@@ -340,23 +321,19 @@ export default function ThreeCircles() {
               <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="2.8"/>
             )}
-            {/* Fix #4: nudged outward -6px from center to reduce crowding between circles */}
             <Fade show={vis(v,"recover-arrow")} delay={300}>
-              <g transform={`translate(${recMid.x-32},${recMid.y}) rotate(-58)`}>
-                <rect x={-76} y={-17} width={152} height={21} rx={3} fill="rgba(0,20,42,0.65)"/>
-                <text textAnchor="middle" y={0} fill={TEAL} fontSize={13} fontWeight={700}
-                  fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
-                  style={{textTransform:"uppercase"}}>
-                  Recover &amp; Pursue
-                </text>
-              </g>
+              <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
+                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
+                transform={`translate(${recMid.x-32},${recMid.y}) rotate(-58)`}
+                style={{textTransform:"uppercase"}}>
+                Recover &amp; Pursue
+              </text>
             </Fade>
-
 
           </svg>
         </div>
 
-        {/* Text panel */}
+        {/* Text panel — stays dark */}
         <div className="flex-1 flex flex-col justify-center lg:pt-6 px-1 lg:px-0">
           <p className="font-condensed font-900 mb-2" style={{fontSize:"5rem",lineHeight:1,color:TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
             0{step.num}
@@ -373,7 +350,7 @@ export default function ThreeCircles() {
               {step.cta}
             </p>
           )}
-          {/* Desktop nav buttons (mobile uses top row) */}
+          {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-4">
             <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
@@ -383,9 +360,9 @@ export default function ThreeCircles() {
             {canNext
               ? <button onClick={()=>setIdx(i=>Math.min(STEPS.length-1,i+1))}
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-2.5 rounded-full transition-colors"
-                  style={{background:TEAL,color:"#00142a",cursor:"pointer"}}>Next →</button>
+                  style={{background:TEAL,color:"#fff",cursor:"pointer"}}>Next →</button>
               : <a href="/connect" className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-2.5 rounded-full inline-block"
-                  style={{background:TEAL,color:"#00142a"}}>Talk to Someone</a>
+                  style={{background:TEAL,color:"#fff"}}>Talk to Someone</a>
             }
             <span className="text-white/22 text-sm font-condensed">{idx+1} / {STEPS.length}</span>
           </div>
