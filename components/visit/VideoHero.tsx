@@ -39,10 +39,10 @@ export default function VideoHero() {
 
   return (
     <section className="relative w-full overflow-hidden" style={{ height: "100svh" }}>
-      {/* ── Mobile: static portrait image (video crops awkwardly on portrait screens) ── */}
+      {/* ── Mobile: local photo (Cloudflare thumbnail unavailable until video is uploaded) ── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={PORTRAIT_POSTER}
+        src="/visit/congregation-hero.jpg"
         alt="Brainerd Baptist Church congregation"
         className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
         aria-hidden="true"
