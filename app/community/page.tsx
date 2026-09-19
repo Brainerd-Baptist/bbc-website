@@ -29,7 +29,7 @@ export default function CommunityPage() {
             className="font-condensed font-900 text-white leading-none mb-5"
             style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
           >
-            BBC in the{" "}
+            Brainerd Baptist in the{" "}
             <span style={{ color: "#00abc9" }}>Community.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto">

@@ -132,7 +132,7 @@ export default function WednesdayPage() {
             }}
           >
             Wednesday Night{" "}
-            <span style={{ color: "#00abc9" }}>at BBC.</span>
+            <span style={{ color: "#00abc9" }}>at Brainerd.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
             From kids to college to choir, Wednesday evening is when the whole

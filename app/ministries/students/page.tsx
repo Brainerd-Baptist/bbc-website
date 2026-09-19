@@ -52,7 +52,7 @@ export default function StudentsPage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/carousel/students-1.jpg"
-          alt="BBC Students"
+          alt="Brainerd Baptist Students"
           className="absolute inset-0 w-full h-full object-cover object-center"
           aria-hidden="true"
         />

@@ -126,7 +126,7 @@ export default function KidsPage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/carousel/music-camp-3.jpg"
-          alt="BBC Kids"
+          alt="Brainerd Baptist Kids Ministry"
           className="absolute inset-0 w-full h-full object-cover object-center"
           aria-hidden="true"
         />

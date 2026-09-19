@@ -130,7 +130,7 @@ export default function VisitPage() {
           <Image src="/carousel/music-camp-2.jpg" alt="Brainerd Kids" fill className="object-cover object-center" sizes="25vw" />
         </div>
         <div className="relative overflow-hidden">
-          <Image src="/carousel/life-groups-1.jpg" alt="Community at BBC" fill className="object-cover object-top" sizes="25vw" />
+          <Image src="/carousel/life-groups-1.jpg" alt="Community at Brainerd Baptist" fill className="object-cover object-top" sizes="25vw" />
         </div>
       </div>
 

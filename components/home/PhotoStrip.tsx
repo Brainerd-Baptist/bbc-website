@@ -6,13 +6,13 @@ const STRIP_H = 300;
 // Curated selection — mix of landscape and portrait
 const PHOTOS = [
   { src: "/carousel/kids-midweek.jpg",         w: 1400, h:  931, alt: "Kids active in midweek ministry at Brainerd Baptist" },
-  { src: "/carousel/students-1.jpg",           w: 1400, h:  931, alt: "BBC Students in community" },
+  { src: "/carousel/students-1.jpg",           w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
   { src: "/carousel/adult-bible-study.jpg",    w: 1400, h:  931, alt: "Adults in small group Bible study" },
   { src: "/carousel/life-groups-1.jpg",        w: 1400, h:  931, alt: "Community at Brainerd Baptist" },
-  { src: "/carousel/choir-orchestra.jpg",      w: 1400, h:  931, alt: "BBC Choir and Orchestra in the sanctuary" },
+  { src: "/carousel/choir-orchestra.jpg",      w: 1400, h:  931, alt: "Choir and Orchestra in the sanctuary at Brainerd Baptist" },
   { src: "/carousel/music-camp-2.jpg",         w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
-  { src: "/carousel/missions-1.jpg",           w: 1400, h:  787, alt: "BBC Ecuador missions trip 2026" },
-  { src: "/carousel/missions-2.jpg",           w:  960, h:  482, alt: "BBC Ecuador group photo 2026" },
+  { src: "/carousel/missions-1.jpg",           w: 1400, h:  787, alt: "Brainerd Baptist Ecuador missions trip 2026" },
+  { src: "/carousel/missions-2.jpg",           w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
 ];
 
 function PhotoItem({ photo, priority = false }: { photo: (typeof PHOTOS)[0]; priority?: boolean }) {
