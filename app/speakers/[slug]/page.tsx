@@ -3,7 +3,10 @@ import Image from "next/image";
 import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS, formatDate } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
-import EmailButton from "@/components/ui/EmailButton";
+import dynamic from "next/dynamic";
+// ssr: false ensures the email address never appears in server-rendered HTML —
+// it is injected by the browser only, invisible to scrapers and crawlers.
+const EmailButton = dynamic(() => import("@/components/ui/EmailButton"), { ssr: false });
 
 export const revalidate = 300;
 
