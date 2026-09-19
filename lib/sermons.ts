@@ -382,6 +382,18 @@ export const SERMONS: Sermon[] = [
     book: "Nehemiah",
   },
   {
+    id: "gw-1",
+    youtubeId: "mswliqGNPBI",
+    title: "Burdens and a Big Prayer",
+    series: "God's Work | Our Work",
+    seriesId: "gods-work-our-work",
+    speaker: "Curtis Hill",
+    date: "2026-02-02",
+    passage: "Psalm 90:12–17",
+    passages: ["Psalm 90:12-17", "Acts 2", "Acts 9"],
+    book: "Psalms",
+  },
+  {
     id: "gw-2",
     youtubeId: "VLzTn8WEdAA",
     title: "Growing in Our Closeness",
