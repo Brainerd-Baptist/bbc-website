@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BeliefQuestion from "@/components/beliefs/BeliefQuestion";
+import ScriptureRef from "@/components/beliefs/ScriptureRef";
 
 export const metadata = {
   title: "What We Believe — Brainerd Baptist Church",
@@ -161,6 +162,7 @@ function BeliefCard({ icon, title, body, verse }: {
   body: string;
   verse: string;
 }) {
+  const refs = verse.split(" · ");
   return (
     <div className="flex gap-6 p-7 rounded-2xl border border-[#00205B]/08 bg-white hover:border-[#00abc9]/25 transition-colors">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
@@ -172,12 +174,16 @@ function BeliefCard({ icon, title, body, verse }: {
           {title}
         </h3>
         <p className="text-[#00205B]/60 text-sm leading-relaxed mb-3">{body}</p>
-        <span
-          className="inline-block text-xs font-semibold tracking-wide"
-          style={{ color: "#00abc9" }}
-        >
-          {verse}
-        </span>
+        <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
+          {refs.map((ref, i) => (
+            <span key={ref} className="flex items-center gap-3">
+              <ScriptureRef reference={ref} />
+              {i < refs.length - 1 && (
+                <span className="text-[#00205B]/20 text-xs select-none">·</span>
+              )}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
