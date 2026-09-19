@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS, formatDate } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
+import EmailButton from "@/components/ui/EmailButton";
 
 export const revalidate = 300;
 
@@ -141,7 +142,13 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               >
                 {name}
               </h1>
-              <p className="text-white/30 text-sm mb-5">Brainerd Baptist Church</p>
+              <p className="text-white/30 text-sm mb-4">Brainerd Baptist Church</p>
+
+              {info.email && (
+                <div className="mb-5">
+                  <EmailButton email={info.email} name={name} />
+                </div>
+              )}
 
               {info.bio && info.bio.length > 0 && (
                 <div className="space-y-3 max-w-2xl">
