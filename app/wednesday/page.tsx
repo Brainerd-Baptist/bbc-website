@@ -8,7 +8,12 @@ export const metadata: Metadata = {
 };
 
 // ── Wednesday ministries ─────────────────────────────────────
-const PROGRAMS = [
+type Program = {
+  key: string; time: string; label: string; ages: string; color: string;
+  location: string; href: string | null; body: string; photo?: string;
+  icon: React.ReactNode;
+};
+const PROGRAMS: Program[] = [
   {
     key: "kids",
     time: "6:00 – 7:30 PM",
@@ -85,6 +90,7 @@ const PROGRAMS = [
     color: "#8b6fae",
     location: "Choir Room / Worship Center",
     href: null,
+    photo: "/carousel/choir-orchestra.jpg",
     body:
       "Our choir and orchestra rehearse together on Wednesday evenings. If you sing or play an instrument, this is how you plug into the music ministry of Brainerd Baptist.",
     icon: (
@@ -166,13 +172,24 @@ export default function WednesdayPage() {
       {/* ── Program cards ─────────────────────────────────── */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto space-y-6">
-          {PROGRAMS.map(({ key, time, label, ages, color, location, href, body, icon }) => (
+          {PROGRAMS.map(({ key, time, label, ages, color, location, href, body, icon, photo }) => (
             <div
               key={key}
               className="glass-md rounded-2xl overflow-hidden"
             >
               {/* Color bar */}
               <div className="h-1" style={{ background: color }} />
+
+              {/* Optional photo banner */}
+              {photo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={photo}
+                  alt={label}
+                  className="w-full object-cover"
+                  style={{ height: "220px", objectPosition: "center 30%" }}
+                />
+              )}
 
               <div className="p-8 md:p-10 grid md:grid-cols-[auto_1fr_auto] gap-6 md:gap-10 items-start">
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Countdown from "./Countdown";
 import ScrollReveal from "./ScrollReveal";
@@ -6,20 +7,19 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col justify-end overflow-hidden">
       {/* ── Background: photo + gradient overlay ── */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(160deg, #00205B 0%, #001840 50%, #00abc9 200%)",
-        }}
+      <Image
+        src="/photos/hero.jpg"
+        alt="Congregation worshiping at Brainerd Baptist Church"
+        fill
+        className="object-cover"
+        style={{ objectPosition: "center 40%" }}
+        priority
       />
-      {/* Photo will go here once loaded — swap the div above for:
-          <Image src="/photos/hero.jpg" alt="Worship at Brainerd Baptist" fill className="object-cover" priority />
-          and keep the overlay div below */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to top, rgba(0,20,60,0.92) 0%, rgba(0,20,60,0.55) 50%, rgba(0,20,60,0.20) 100%)",
+            "linear-gradient(to top, rgba(0,20,60,0.95) 0%, rgba(0,20,60,0.65) 40%, rgba(0,20,60,0.25) 100%)",
         }}
       />
 
