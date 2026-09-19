@@ -4,6 +4,7 @@ import { MINISTRIES } from "@/lib/constants";
 // Ministry-specific dedicated pages (others fall back to /connect)
 const MINISTRY_PAGES: Record<string, string> = {
   kids: "/ministries/kids",
+  students: "/ministries/students",
 };
 
 export const metadata = {
