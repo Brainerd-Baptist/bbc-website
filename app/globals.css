@@ -212,6 +212,18 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* ── Photo strip auto-scroll ───────────────────────────── */
+@keyframes photo-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.photo-strip-track {
+  animation: photo-scroll 48s linear infinite;
+}
+.photo-strip-track:hover {
+  animation-play-state: paused;
+}
+
 /* ── Frosted glass nav ─────────────────────────────────── */
 .nav-glass {
   background: rgba(255,255,255,0.92);
