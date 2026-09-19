@@ -23,7 +23,7 @@ export default function ServiceInfo() {
                   <div className="text-[#00abc9] font-condensed font-900 text-3xl mb-1">8:30 AM</div>
                   <div className="font-semibold text-[#00205B] mb-2">Choir & Orchestra</div>
                   <p className="text-gray-500 text-sm leading-relaxed">
-                    Traditional worship with BBC&apos;s full choir and orchestra.
+                    Traditional worship with our full choir and orchestra.
                     Congregational singing is always central.
                   </p>
                 </div>
