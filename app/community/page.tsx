@@ -173,6 +173,8 @@ export default function CommunityPage() {
             {/* Food Pantry */}
             <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/08">
               <div className="h-1" style={{ background: "#00abc9" }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/carousel/food-pantry-checkin.jpg" alt="Food pantry volunteers helping community members" className="w-full object-cover" style={{ height: "200px", objectPosition: "center 30%" }} />
               <div className="p-8">
                 <div
                   className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"

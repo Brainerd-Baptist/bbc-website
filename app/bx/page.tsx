@@ -396,10 +396,19 @@ export default function BXPage() {
 
       {/* ── Food Pantry callout ───────────────────────────────── */}
       <section
-        className="py-20 px-6"
-        style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
+        className="py-20 px-6 relative overflow-hidden"
+        style={{ background: "#0a1628" }}
       >
-        <div className="max-w-3xl mx-auto text-center">
+        {/* Background photo */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/carousel/food-pantry-wide.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: "center 40%", opacity: 0.22 }}
+        />
+        <div className="relative max-w-3xl mx-auto text-center">
           <p className="eyebrow mb-3" style={{ color: "#00abc9" }}>3rd Wednesday · 10:00 AM – 12:00 PM</p>
           <h2
             className="font-condensed font-800 text-white mb-4"
