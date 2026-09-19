@@ -65,10 +65,13 @@ function IconWater() {
 function IconCup() {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M13 8h14l-3 16H16L13 8Z" />
-      <path d="M16 24l-2 6h12l-2-6" />
-      <path d="M14 34h12" />
-      <path d="M27 10h4a3 3 0 0 1 0 6h-4" />
+      {/* Chalice */}
+      <path d="M3 9h16" />
+      <path d="M3 9c1 12 4 16 8 16s7-4 8-16" />
+      <path d="M11 25v7M7 32h8" />
+      {/* Bread piece */}
+      <rect x="21" y="11" width="16" height="14" rx="4" />
+      <path d="M25 14v8M29 11v14" />
     </svg>
   );
 }
