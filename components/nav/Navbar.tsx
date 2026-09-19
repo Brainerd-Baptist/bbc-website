@@ -131,14 +131,14 @@ export default function Navbar() {
           </div>
 
           {/* Links */}
-          <nav className="flex flex-col gap-5 flex-1">
+          <nav className="flex flex-col gap-3 flex-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="font-bold text-4xl text-white hover:text-[#00abc9] transition-colors tracking-tight"
-                style={{ letterSpacing: "-0.03em" }}
+                className="font-bold text-2xl text-white hover:text-[#00abc9] transition-colors tracking-tight"
+                style={{ letterSpacing: "-0.02em" }}
               >
                 {link.label}
               </Link>
