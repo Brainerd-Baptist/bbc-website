@@ -107,6 +107,7 @@ export const NAV_LINKS = [
   { label: "Visit", href: "/visit" },
   { label: "Sermons", href: "/sermons" },
   { label: "Ministries", href: "/ministries" },
+  { label: "Midweek", href: "/wednesday" },
   { label: "Life Groups", href: "/life-groups" },
   { label: "Who Is Jesus?", href: "/who-is-jesus" },
   { label: "Give", href: "/give" },
