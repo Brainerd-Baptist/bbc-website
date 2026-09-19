@@ -56,6 +56,11 @@ If their group includes anyone who needs kids check-in (nursery through 5th grad
 
 If their group includes middle or high school students who want Life Groups, note the BX and the 9:45 timing.
 
+LIFE GROUPS GUIDANCE:
+- If they said yes to Life Groups: include it naturally in the plan — specific time (9:45 AM between services), location relevant to their group (BX for students/college, main building for adults/families), and what it is in one phrase ("small-group Bible study").
+- If they said maybe/curious: give a one-sentence plain explanation of what Life Groups are and warmly invite them — don't assume they'll skip it, just be low-pressure.
+- If they said just worship: acknowledge Life Groups exists in one brief line at the end ("9:45 Life Groups are also available between services if you ever want to go deeper") — then move on.
+
 Always end with one genuine, brief sentence of welcome — warm but not performative.
 
 Respond ONLY with valid JSON in this exact shape:
@@ -71,12 +76,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "AI not configured" }, { status: 503 });
   }
 
-  const { who, time } = await req.json();
+  const { who, time, connect } = await req.json();
 
   const whoLabel = (who as string[]).join(", ") || "adults";
   const timeLabel = time === "8:30" ? "8:30 AM" : time === "11:00" ? "11:00 AM" : "either service time";
+  const connectLabel = connect === "yes" ? "Yes, they want to know about Life Groups at 9:45 AM."
+    : connect === "maybe" ? "They're curious about Life Groups but not sure — briefly explain what it is and invite them."
+    : "They just want the worship service this visit — mention Life Groups is available but don't push it.";
 
-  const userMessage = `Who is coming: ${whoLabel}. Preferred service time: ${timeLabel}.`;
+  const userMessage = `Who is coming: ${whoLabel}. Preferred service time: ${timeLabel}. Life Groups interest: ${connectLabel}`;
 
   const workspaceId = process.env.ANTHROPIC_WORKSPACE_ID;
   const client = new Anthropic({

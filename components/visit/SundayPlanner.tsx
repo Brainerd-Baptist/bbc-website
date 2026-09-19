@@ -31,6 +31,12 @@ const TIME_OPTIONS = [
   { id: "either",label: "Not sure", sub: "Either works for us" },
 ];
 
+const CONNECT_OPTIONS = [
+  { id: "yes",   label: "Yes — tell me about Life Groups", sub: "Small-group Bible study at 9:45 AM between services" },
+  { id: "maybe", label: "Maybe — what is that?",           sub: "I'm curious but not sure it's for me" },
+  { id: "no",    label: "Just the worship service for now", sub: "We'll keep it simple this visit" },
+];
+
 // ── Small UI pieces ──────────────────────────────────────────
 function Chip({
   selected,
@@ -77,6 +83,7 @@ function StepLabel({ num, label }: { num: number; label: string }) {
 export default function SundayPlanner() {
   const [who, setWho] = useState<string[]>([]);
   const [time, setTime] = useState<string>("");
+  const [connect, setConnect] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PlanResult | null>(null);
   const [error, setError] = useState<string>("");
@@ -104,7 +111,7 @@ export default function SundayPlanner() {
       const res = await fetch("/api/sunday-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ who: whoLabels, time }),
+        body: JSON.stringify({ who: whoLabels, time, connect }),
       });
       if (!res.ok) throw new Error("Request failed");
       const data: PlanResult = await res.json();
@@ -119,6 +126,7 @@ export default function SundayPlanner() {
   function handleReset() {
     setWho([]);
     setTime("");
+    setConnect("");
     setResult(null);
     setError("");
     setEmail("");
@@ -140,7 +148,7 @@ export default function SundayPlanner() {
     setEmailSent(true);
   }
 
-  const canSubmit = who.length > 0 && time !== "";
+  const canSubmit = who.length > 0 && time !== "" && connect !== "";
 
   return (
     <section className="py-20 px-6" style={{ background: "#f4f6f9" }}>
@@ -274,6 +282,25 @@ export default function SundayPlanner() {
                     key={opt.id}
                     selected={time === opt.id}
                     onClick={() => setTime(opt.id)}
+                  >
+                    <span className="font-condensed font-700 text-[#00205B]" style={{ fontSize: "1.05rem" }}>
+                      {opt.label}
+                    </span>
+                    <span className="block text-[#00205B]/45 text-xs mt-0.5">{opt.sub}</span>
+                  </Chip>
+                ))}
+              </div>
+            </div>
+
+            {/* Q3 */}
+            <div>
+              <StepLabel num={3} label="Want to connect beyond Sunday worship?" />
+              <div className="space-y-2">
+                {CONNECT_OPTIONS.map((opt) => (
+                  <Chip
+                    key={opt.id}
+                    selected={connect === opt.id}
+                    onClick={() => setConnect(opt.id)}
                   >
                     <span className="font-condensed font-700 text-[#00205B]" style={{ fontSize: "1.05rem" }}>
                       {opt.label}
