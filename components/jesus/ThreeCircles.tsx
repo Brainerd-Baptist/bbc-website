@@ -39,13 +39,13 @@ const GPX=209, GPY=300;          // Gospel       (bottom)
 /* ─── Per-step viewBox "camera" ─────────────────────────────────────── */
 type VB = [number,number,number,number];
 const VIEWBOXES: Record<string,VB> = {
-  brokenness: [184,  8, 242, 242],   // zoom into Brokenness circle
-  design:     [  8,  8, 400, 220],   // both top circles
-  sin:        [  8,  2, 400, 228],   // + sin arc above
-  coping:     [  8,  2, 400, 270],   // + coping labels below Brokenness
-  gospel:     [  8,  2, 408, 398],   // all three circles
-  repent:     [  8,  2, 408, 398],
-  recover:    [  8,  2, 408, 398],
+  brokenness: [226, 36, 166, 166],   // tight around Brokenness circle
+  design:     [ 22, 36, 360, 178],   // both top circles, tight
+  sin:        [ 22,  6, 360, 208],   // + space for SIN arc above
+  coping:     [ 22,  6, 360, 254],   // + coping labels below Brokenness
+  gospel:     [ 22,  6, 360, 382],   // full diagram, tight
+  repent:     [ 22,  6, 360, 382],
+  recover:    [ 22,  6, 360, 382],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -271,7 +271,7 @@ export default function ThreeCircles() {
             </g>
             {/* Label inside + words */}
             <Fade show={vis(v,"broken-inner")}>
-              <MLText x={BX} y={BY-4} lines={["Broken","ness"] } fill={WHITE} size={14}/>
+              <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={WHITE} size={13}/>
             </Fade>
             {/* Coping labels — float below Brokenness (Gospel not visible yet on step 4) */}
             <Fade show={vis(v,"cope-labels")} delay={0}>
@@ -342,10 +342,6 @@ export default function ThreeCircles() {
               </text>
             </Fade>
 
-            {/* RESTORE label (center-top of restore arc) */}
-            <Fade show={vis(v,"restore-arrow")}>
-              <MLText x={209} y={54} lines={["Restored"]} fill={TEAL} size={12} weight={600}/>
-            </Fade>
 
           </svg>
         </div>
