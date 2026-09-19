@@ -94,54 +94,63 @@ function IconGlobe() {
 }
 
 // ── Belief data ──────────────────────────────────────────────
+// Order follows BF&M 2000: I Scripture · II God · IV Salvation · VI Church · VII Ordinances · XI Missions
 const BELIEFS = [
   {
     icon: <IconBook />,
     title: "Scripture",
+    // BF&M Article I — 2 Timothy 3:15–17; 2 Peter 1:20–21
     body: "The Bible is God's Word — fully true, fully sufficient, and the final authority for everything we believe and do. Every sermon works through a book of the Bible because we believe every word of it matters.",
-    verse: "2 Timothy 3:16–17",
-  },
-  {
-    icon: <IconCross />,
-    title: "The Gospel",
-    body: "Jesus Christ — fully God, fully man — lived a sinless life, died on the cross for our sin, and rose from the dead. Salvation is by grace through faith in him alone. Nothing we do earns it.",
-    verse: "Ephesians 2:8–9",
+    verse: "2 Timothy 3:15–17 · 2 Peter 1:20–21",
   },
   {
     icon: <IconTrinity />,
     title: "God",
-    body: "We believe in one God who exists in three persons — Father, Son, and Holy Spirit — equal in nature, distinct in person, unified in purpose.",
-    verse: "Matthew 28:19",
+    // BF&M Article II — 2 Corinthians 13:14; Matthew 28:19; Genesis 1:1
+    body: "We believe in one God who exists in three persons — Father, Son, and Holy Spirit — equal in nature, distinct in person, unified in purpose. He is the creator and sustainer of all things.",
+    verse: "Genesis 1:1 · Matthew 28:19 · 2 Corinthians 13:14",
+  },
+  {
+    icon: <IconCross />,
+    title: "Salvation",
+    // BF&M Article IV — John 3:16; Romans 3:23; Romans 5:8; Ephesians 2:8–9
+    body: "Every person is made in God's image and fallen by sin, in need of rescue. Jesus Christ — fully God, fully man — lived without sin, died in our place, and rose from the dead. Salvation is by grace through faith in him alone. Nothing we do earns it.",
+    verse: "John 3:16 · Romans 3:23 · Ephesians 2:8–9",
   },
   {
     icon: <IconWorship />,
     title: "Sunday Worship",
+    // BF&M Article VI (The Church) + Article VIII (The Lord's Day) — Hebrews 10:24–25; Acts 20:7
     body: "Sunday is when the church gathers — not to watch a performance, but to be the body of Christ together. We sing, we pray for one another, and we sit under the teaching of God's Word. The whole congregation worships, not just the stage.",
-    verse: "Hebrews 10:24–25",
+    verse: "Hebrews 10:24–25 · Acts 20:7",
   },
   {
     icon: <IconWater />,
     title: "Baptism",
+    // BF&M Article VII — Romans 6:3–5; Matthew 28:19–20
     body: "Baptism is for the believer — someone who has trusted Jesus and wants to publicly declare it. We baptize by immersion as a picture of death to the old life and resurrection to the new.",
-    verse: "Romans 6:3–4",
+    verse: "Romans 6:3–5 · Matthew 28:19–20",
   },
   {
     icon: <IconCup />,
     title: "The Lord's Supper",
+    // BF&M Article VII — 1 Corinthians 11:23–29; Matthew 26:26–30
     body: "Communion is a regular part of our worship. We take it together as a church, remembering what Jesus did on the cross. It's open to anyone in the room who has committed their life to him.",
-    verse: "1 Corinthians 11:23–26",
+    verse: "1 Corinthians 11:23–29 · Matthew 26:26–30",
   },
   {
     icon: <IconPeople />,
     title: "Life Together",
+    // BF&M Article VI (The Church) — Acts 2:41–47; Ephesians 4:11–16
     body: "Following Jesus is meant to be done together, not alone. Life Groups are how we do that — small circles of people who study Scripture, pray for one another, and show up for each other's lives.",
-    verse: "Acts 2:42–47",
+    verse: "Acts 2:41–47 · Ephesians 4:11–16",
   },
   {
     icon: <IconGlobe />,
     title: "Missions",
+    // BF&M Article XI — Matthew 28:18–20; Acts 1:8; Romans 10:13–15
     body: "Jesus told his disciples to take the gospel to the nations — and we take that seriously. We send people and resources to plant churches and share the gospel across Chattanooga and around the world.",
-    verse: "Matthew 28:18–20",
+    verse: "Matthew 28:18–20 · Acts 1:8",
   },
 ];
 
