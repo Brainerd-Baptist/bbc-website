@@ -30,12 +30,13 @@ function IconCross() {
 }
 
 function IconTrinity() {
+  // Three overlapping circles arranged in a triangle — classic Venn-trinity
+  // Radius 8, centers offset so each pair overlaps by ~4px
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="20" cy="12" r="6" />
-      <circle cx="12" cy="28" r="6" />
-      <circle cx="28" cy="28" r="6" />
-      <path d="M20 18l-5.5 4M20 18l5.5 4M14.5 28h11" strokeWidth="1.25" opacity="0.5" />
+      <circle cx="20" cy="13" r="8" />
+      <circle cx="13" cy="27" r="8" />
+      <circle cx="27" cy="27" r="8" />
     </svg>
   );
 }
