@@ -16,7 +16,7 @@ const ROW_ONE = [
   {
     key: "kids",
     label: "Brainerd Kids",
-    sub: "Bible classes for K through 5th grade",
+    sub: "Bible classes for elementary students",
     href: "/ministries/kids",
     photo: "/ministries/kids.jpg",
   },

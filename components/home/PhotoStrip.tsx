@@ -3,16 +3,20 @@ import Image from "next/image";
 // Height of each photo in the strip
 const STRIP_H = 300;
 
-// Curated selection — mix of landscape and portrait
+// Curated selection — mix of ministry contexts and life stages
 const PHOTOS = [
-  { src: "/carousel/kids-midweek.jpg",         w: 1400, h:  931, alt: "Kids active in midweek ministry at Brainerd Baptist" },
-  { src: "/carousel/students-1.jpg",           w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
-  { src: "/carousel/adult-bible-study.jpg",    w: 1400, h:  931, alt: "Adults in small group Bible study" },
-  { src: "/carousel/life-groups-1.jpg",        w: 1400, h:  931, alt: "Community at Brainerd Baptist" },
-  { src: "/carousel/choir-orchestra.jpg",      w: 1400, h:  931, alt: "Choir and Orchestra in the sanctuary at Brainerd Baptist" },
-  { src: "/carousel/music-camp-2.jpg",         w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
-  { src: "/carousel/missions-1.jpg",           w: 1400, h:  787, alt: "Brainerd Baptist Ecuador missions trip 2026" },
-  { src: "/carousel/missions-2.jpg",           w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
+  { src: "/carousel/congregation-worship.jpg",  w: 1400, h:  931, alt: "Congregation in worship at Brainerd Baptist" },
+  { src: "/carousel/kids-midweek.jpg",          w: 1400, h:  931, alt: "Kids active in midweek ministry at Brainerd Baptist" },
+  { src: "/carousel/students-1.jpg",            w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
+  { src: "/carousel/life-groups-1.jpg",         w: 1400, h:  931, alt: "Community at Brainerd Baptist" },
+  { src: "/carousel/food-pantry-wide.jpg",      w: 1400, h:  931, alt: "Brainerd Baptist food pantry serving the community" },
+  { src: "/carousel/choir-orchestra.jpg",       w: 1400, h:  931, alt: "Choir and Orchestra in the sanctuary at Brainerd Baptist" },
+  { src: "/carousel/music-camp-3.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
+  { src: "/carousel/adult-bible-study.jpg",     w: 1400, h:  931, alt: "Adults in small group Bible study" },
+  { src: "/carousel/missions-1.jpg",            w: 1400, h:  787, alt: "Brainerd Baptist Ecuador missions trip 2026" },
+  { src: "/carousel/food-pantry-checkin.jpg",   w: 1400, h:  931, alt: "Volunteers at the Brainerd Baptist food pantry" },
+  { src: "/carousel/music-camp-5.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer camp" },
+  { src: "/carousel/missions-2.jpg",            w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
 ];
 
 function PhotoItem({ photo, priority = false }: { photo: (typeof PHOTOS)[0]; priority?: boolean }) {
