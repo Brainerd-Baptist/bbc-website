@@ -50,7 +50,7 @@ export default function Countdown() {
       {units.map(({ value, label }) => (
         <div
           key={label}
-          className="flex flex-col items-center glass rounded-xl px-4 py-3 min-w-[56px]"
+          className="flex flex-col items-center glass-dark rounded-xl px-4 py-3 min-w-[56px]"
         >
           <span
             className="font-condensed font-900 text-white tabular-nums"
