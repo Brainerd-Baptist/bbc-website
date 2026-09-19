@@ -9,21 +9,21 @@ const ROW_ONE = [
   {
     key: "nursery",
     label: "Little Ones",
-    sub: "Birth – Preschool",
+    sub: "Nursery care during both services",
     href: "/ministries/kids",
     photo: "/ministries/nursery.jpg",
   },
   {
     key: "kids",
     label: "Brainerd Kids",
-    sub: "Elementary · K–5th",
+    sub: "Bible classes for K through 5th grade",
     href: "/ministries/kids",
     photo: "/ministries/kids.jpg",
   },
   {
     key: "students",
     label: "Students",
-    sub: "Middle & High School",
+    sub: "Middle & high school — Sundays and midweek",
     href: "/ministries/students",
     photo: "/ministries/students.jpg",
   },
@@ -33,21 +33,21 @@ const ROW_TWO = [
   {
     key: "college",
     label: "College & Young Adults",
-    sub: "18 – 30s",
+    sub: "Community for the 18–30 crowd",
     href: "/ministries/college",
     photo: "/ministries/college.jpg",
   },
   {
     key: "lifegroups",
     label: "Life Groups",
-    sub: "Every age · All week",
+    sub: "How most people actually get connected here",
     href: "/life-groups",
     photo: "/ministries/life-groups.jpg",
   },
   {
     key: "missions",
     label: "Missions",
-    sub: "Local & Global",
+    sub: "Local outreach and international partnerships",
     href: "/ministries/missions",
     photo: "/ministries/missions.jpg",
   },
@@ -127,26 +127,13 @@ export default function MinistriesSection() {
 
         {/* ── Header ── */}
         <ScrollReveal>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-            <div>
-              <p
-                className="font-condensed font-700 tracking-widest uppercase text-xs mb-3"
-                style={{ color: "#00abc9" }}
-              >
-                Get Involved
-              </p>
-              <h2
-                className="font-condensed font-900 text-white"
-                style={{
-                  fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                  letterSpacing: "-0.025em",
-                  lineHeight: 1,
-                }}
-              >
-                There&apos;s a place{" "}
-                <span style={{ color: "#00abc9" }}>for everyone.</span>
-              </h2>
-            </div>
+          <div className="flex items-center justify-between mb-12">
+            <p
+              className="font-condensed font-700 tracking-widest uppercase text-xs"
+              style={{ color: "#00abc9" }}
+            >
+              Ministries
+            </p>
             <Link
               href="/ministries"
               className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-white/20 text-white/70 hover:border-[#00abc9]/60 hover:text-[#00abc9] transition-all shrink-0"
@@ -187,15 +174,8 @@ export default function MinistriesSection() {
             {/* Caption */}
             <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
               <div>
-                <p
-                  className="font-condensed font-900 text-white leading-tight"
-                  style={{ fontSize: "clamp(1.4rem, 3vw, 2rem)", letterSpacing: "-0.02em" }}
-                >
-                  One church.{" "}
-                  <span style={{ color: "#00abc9" }}>Every generation.</span>
-                </p>
-                <p className="text-white/50 text-sm mt-1">
-                  From nursery to seniors — all worshipping together on Sunday.
+                <p className="text-white/80 text-sm">
+                  From nursery to seniors, all in the same building on Sunday morning.
                 </p>
               </div>
               <div className="flex items-center gap-1.5 text-[#00abc9] text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">

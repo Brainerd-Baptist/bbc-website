@@ -35,8 +35,8 @@ export default function Hero() {
             className="font-condensed font-900 text-white leading-none mb-5"
             style={{ fontSize: "clamp(3.2rem, 8vw, 5.5rem)", letterSpacing: "-0.01em" }}
           >
-            A place for{" "}
-            <span className="text-[#00abc9]">every person.</span>
+            Brainerd{" "}
+            <span className="text-[#00abc9]">Baptist Church.</span>
           </h1>
 
           {/* Supporting text */}

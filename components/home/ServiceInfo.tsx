@@ -11,28 +11,21 @@ export default function ServiceInfo() {
             {/* Sunday Services */}
             <div className="md:col-span-2">
               <p className="eyebrow mb-3">Sunday Services</p>
-              <h2
-                className="font-condensed font-900 text-[#00205B] leading-tight mb-6"
-                style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)" }}
-              >
-                Two ways to worship.<br />
-                One community.
-              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="rounded-2xl bg-[#f4fcfe] border border-[#00abc9]/15 p-6">
                   <div className="text-[#00abc9] font-condensed font-900 text-3xl mb-1">8:30 AM</div>
                   <div className="font-semibold text-[#00205B] mb-2">Choir & Orchestra</div>
                   <p className="text-gray-500 text-sm leading-relaxed">
-                    Traditional worship with our full choir and orchestra.
-                    Congregational singing is always central.
+                    Full choir and orchestra. If you grew up singing hymns out of a book,
+                    this one will feel familiar.
                   </p>
                 </div>
                 <div className="rounded-2xl bg-[#f4fcfe] border border-[#00abc9]/15 p-6">
                   <div className="text-[#00abc9] font-condensed font-900 text-3xl mb-1">11:00 AM</div>
                   <div className="font-semibold text-[#00205B] mb-2">Band-Led</div>
                   <p className="text-gray-500 text-sm leading-relaxed">
-                    Contemporary band-led worship. Same message and heart —
-                    different style.
+                    Contemporary band leading worship. Same sermon, same church —
+                    different sound.
                   </p>
                 </div>
               </div>
