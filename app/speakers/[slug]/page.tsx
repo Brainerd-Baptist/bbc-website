@@ -3,10 +3,11 @@ import Image from "next/image";
 import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS, formatDate } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
-import dynamic from "next/dynamic";
-// ssr: false ensures the email address never appears in server-rendered HTML —
-// it is injected by the browser only, invisible to scrapers and crawlers.
-const EmailButton = dynamic(() => import("@/components/ui/EmailButton"), { ssr: false });
+// ClientEmailButton is a "use client" wrapper around EmailButton — it handles the
+// dynamic(ssr:false) import internally, which is required because ssr:false is not
+// allowed in Server Components. The email address only renders after JS runs in
+// the browser, keeping it invisible to scrapers and crawlers.
+import ClientEmailButton from "@/components/ui/ClientEmailButton";
 
 export const revalidate = 300;
 
@@ -156,7 +157,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
             <div className="md:col-span-2 space-y-6">
               {info.email && (
                 <div>
-                  <EmailButton email={info.email} name={name} />
+                  <ClientEmailButton email={info.email} name={name} />
                 </div>
               )}
 
