@@ -56,8 +56,9 @@ function IconWorship() {
 function IconWater() {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 6C20 6 10 18 10 25a10 10 0 0 0 20 0C30 18 20 6 20 6Z" />
-      <path d="M14 28c1 2 3.5 4 6 4" />
+      <path d="M4 14c5-5 10 5 16 0s11-5 16 0" />
+      <path d="M4 22c5-5 10 5 16 0s11-5 16 0" />
+      <path d="M4 30c5-5 10 5 16 0s11-5 16 0" />
     </svg>
   );
 }
