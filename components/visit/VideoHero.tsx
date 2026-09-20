@@ -39,18 +39,24 @@ export default function VideoHero() {
 
   return (
     <section className="relative w-full overflow-hidden" style={{ height: "100svh" }}>
-      {/* ── Video background — all screen sizes ── */}
-      {/* muted + playsInline enables autoplay on iOS Safari */}
-      {/* Cloudflare Stream HLS = adaptive bitrate, so mobile gets a
-          lower-quality encode automatically on slower connections */}
+      {/* ── Mobile: still photo — landscape video crops badly on portrait screens ── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/visit/congregation-hero.jpg"
+        alt="Brainerd Baptist Church congregation"
+        className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
+        aria-hidden="true"
+      />
+
+      {/* ── Desktop: video background ── */}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover hidden md:block"
         autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster={LANDSCAPE_POSTER}
       >
         {/* MP4 direct download as universal fallback */}
