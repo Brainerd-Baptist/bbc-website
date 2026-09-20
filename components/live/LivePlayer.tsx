@@ -222,8 +222,21 @@ function PostService({
           Thanks for worshipping with us today. The full service recording
           typically appears on YouTube within a few minutes.
         </p>
-        <a href="/sermons" className="btn-primary inline-block">
-          Browse All Sermons
+        {sermon.youtubeId && (
+          <a
+            href={sermon.watchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary inline-block"
+          >
+            Watch on YouTube
+          </a>
+        )}
+        <a
+          href="/sermons"
+          className="inline-block mt-3 text-sm font-semibold text-[#00abc9] hover:text-white transition-colors"
+        >
+          Edited sermon uploads available Monday–Tuesday →
         </a>
       </div>
     </div>
