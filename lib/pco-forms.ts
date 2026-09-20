@@ -85,19 +85,26 @@ function toFormSubmissionValue(a: FieldAnswer): object {
 
   switch (a.kind) {
     case "phone":
-      return { ...base, attributes: { value: a.number, number: a.number, location: a.location ?? "Mobile" } };
+      // PCO expects value as a nested object: { number, location }
+      return { ...base, attributes: { value: { number: a.number, location: a.location ?? "Mobile" } } };
 
     case "address":
+      // PCO expects value as a nested object matching the address shape
       return {
         ...base,
         attributes: {
-          value: `${a.street}, ${a.city}, ${a.state} ${a.zip}`,
-          street: a.street, city: a.city, state: a.state, zip: a.zip,
-          location: a.location ?? "Home",
+          value: {
+            location: a.location ?? "Home",
+            street: a.street,
+            city: a.city,
+            state: a.state,
+            zip: a.zip,
+          },
         },
       };
 
     case "option":
+      // Checkbox/dropdown: string option ID + form_field_option relationship
       return {
         ...base,
         attributes: { value: a.optionId },
