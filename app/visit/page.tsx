@@ -4,6 +4,7 @@ import { CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
 import SundayWalkthrough from "@/components/visit/SundayWalkthrough";
 import SundayPlanner from "@/components/visit/SundayPlanner";
+import ConnectForm from "@/components/connect/ConnectForm";
 
 export const metadata = {
   title: "Visit — Brainerd Baptist Church",
@@ -234,6 +235,25 @@ export default function VisitPage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── Connect form ───────────────────────────────────── */}
+      <section id="connect" className="py-24 px-6 bg-white">
+        <div className="max-w-5xl mx-auto text-center mb-12">
+          <p className="eyebrow mb-4">Questions? Reach Out.</p>
+          <h2
+            className="font-condensed font-900 text-[#00205B] mb-4"
+            style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+          >
+            We'd love to hear from you.
+          </h2>
+          <p className="text-[#00205B]/55 max-w-md mx-auto">
+            First-time visitor, longtime member, or somewhere in between — our team wants to connect with you.
+          </p>
+        </div>
+        <div className="max-w-2xl mx-auto">
+          <ConnectForm />
         </div>
       </section>
 
