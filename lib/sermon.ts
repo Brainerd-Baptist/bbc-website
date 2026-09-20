@@ -235,6 +235,51 @@ async function getLatestYouTubeId(): Promise<string | null> {
   }
 }
 
+// ── Notes by date (sermon detail page) ───────────────────────────────────────
+
+/**
+ * Look up Curtis's notes for a specific sermon date.
+ * Searches Drive for a doc whose filename starts with "YYYY MM DD".
+ * Returns outline, outlineType, and full rawText for the Notes tab.
+ */
+export async function getSermonNotesByDate(date: string): Promise<{
+  outline: string[];
+  outlineType: "structured" | "scripture" | "none";
+  rawText: string;
+} | null> {
+  const key = process.env.GOOGLE_API_KEY;
+  if (!key) return null;
+
+  // "2026-09-20" → "2026 09 20"
+  const datePart = date.replace(/-/g, " ");
+
+  try {
+    const q = encodeURIComponent(
+      `'${DRIVE_FOLDER_ID}' in parents and name contains '${datePart}' and mimeType='application/vnd.google-apps.document' and trashed=false`,
+    );
+    const fields = encodeURIComponent("files(id,name)");
+    const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=1&fields=${fields}&key=${key}`;
+
+    const listRes = await fetch(listUrl, { next: { revalidate: 3600 } });
+    if (!listRes.ok) return null;
+
+    const files: Array<{ id: string; name: string }> = (await listRes.json()).files ?? [];
+    if (files.length === 0) return null;
+
+    const exportUrl = `https://www.googleapis.com/drive/v3/files/${files[0].id}/export?mimeType=text%2Fplain&key=${key}`;
+    const exportRes = await fetch(exportUrl, { next: { revalidate: 3600 } });
+    if (!exportRes.ok) return null;
+
+    const rawText = await exportRes.text();
+    const { items: outline, type: outlineType } = parseOutline(rawText);
+
+    return { outline, outlineType, rawText };
+  } catch (err) {
+    console.error("[sermon] getSermonNotesByDate error:", err);
+    return null;
+  }
+}
+
 // ── Primary export ────────────────────────────────────────────────────────────
 
 export async function getLatestSermon(overrideFileId?: string): Promise<SermonData> {

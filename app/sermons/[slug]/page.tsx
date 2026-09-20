@@ -10,19 +10,29 @@ import {
 import { SERMONS, formatDate as staticFormatDate } from "@/lib/sermons";
 import ShareButton from "@/components/sermons/ShareButton";
 import RelatedSermons from "@/components/sermons/RelatedSermons";
-import SermonPlayer from "@/components/sermons/SermonPlayer";
+import SermonTabPlayer from "@/components/sermons/SermonTabPlayer";
 import SpeakerCard from "@/components/sermons/SpeakerCard";
 import GiveCTA from "@/components/sermons/GiveCTA";
 import AudioPlayer from "@/components/sermons/AudioPlayer";
 import ScriptureInline from "@/components/sermons/ScriptureInline";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
+import { getSermonNotesByDate } from "@/lib/sermon";
 
 // ── Sermon notes helpers ──────────────────────────────────────────────────────
 
 const NOTES_DIR = path.join(process.cwd(), "content", "sermon-notes");
 
-/** Try date, then date-minus-one-day (same off-by-one that exists in audio). */
-async function loadSermonNotes(date: string): Promise<string | null> {
+/** Load notes: Drive first, then local .txt fallback (tries date and date-1). */
+async function loadSermonNotes(date: string): Promise<{
+  outline: string[];
+  outlineType: "structured" | "scripture" | "none";
+  rawText: string | null;
+}> {
+  // 1. Try Drive
+  const drive = await getSermonNotesByDate(date);
+  if (drive) return drive;
+
+  // 2. Fall back to local .txt file
   const candidates = [date];
   const d = new Date(date + "T12:00:00Z");
   d.setUTCDate(d.getUTCDate() - 1);
@@ -31,12 +41,16 @@ async function loadSermonNotes(date: string): Promise<string | null> {
   for (const candidate of candidates) {
     try {
       const text = await fs.readFile(path.join(NOTES_DIR, `${candidate}.txt`), "utf-8");
-      if (text.trim()) return text.trim();
+      if (text.trim()) {
+        // Return the raw text; outline will be empty (local files predate Drive parsing)
+        return { outline: [], outlineType: "none" as const, rawText: text.trim() };
+      }
     } catch {
-      // file not found, try next candidate
+      // file not found, try next
     }
   }
-  return null;
+
+  return { outline: [], outlineType: "none" as const, rawText: null };
 }
 
 function isCurtisHill(speaker: string): boolean {
@@ -197,7 +211,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
 
   const sermonNotes = isCurtisHill(s.speaker) && s.date
     ? await loadSermonNotes(s.date)
-    : null;
+    : { outline: [], outlineType: "none" as const, rawText: null };
 
   const allPassages = [s.passage, ...(s.passages ?? [])].filter(Boolean);
 
@@ -268,28 +282,16 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             </div>
           )}
 
-          {/* VIDEO — collapsible */}
+          {/* TABBED PLAYER — Video / Outline / Notes */}
           {s.youtubeId && (
-            <div>
-              <details className="group">
-                <summary className="flex items-center gap-2.5 cursor-pointer select-none list-none mb-4
-                  text-[#00205B]/40 hover:text-[#00205B]/70 transition-colors">
-                  <span className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(0,32,91,0.06)" }}>
-                    <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-                      <path d="M2 1.5l6 3.5-6 3.5z"/>
-                    </svg>
-                  </span>
-                  <span className="text-xs font-semibold tracking-wide">Watch the video</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                    className="ml-auto transition-transform group-open:rotate-180"
-                    stroke="currentColor" strokeWidth="1.5">
-                    <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </summary>
-                <SermonPlayer youtubeId={s.youtubeId} title={s.title} />
-              </details>
-            </div>
+            <SermonTabPlayer
+              youtubeId={s.youtubeId}
+              title={s.title}
+              outline={sermonNotes.outline}
+              outlineType={sermonNotes.outlineType}
+              rawText={sermonNotes.rawText}
+              accentColor={accentColor}
+            />
           )}
 
           {/* Action row */}
@@ -319,59 +321,6 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             )}
           </div>
 
-          {/* Sermon Notes — Curtis Hill only */}
-          {sermonNotes && (
-            <div>
-              <details className="group">
-                <summary className="flex items-center gap-2.5 cursor-pointer select-none list-none mb-4
-                  text-[#00205B]/40 hover:text-[#00205B]/70 transition-colors">
-                  <span className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(0,32,91,0.06)" }}>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M2 3h8M2 6h6M2 9h4" strokeLinecap="round"/>
-                    </svg>
-                  </span>
-                  <span className="text-xs font-semibold tracking-wide">Sermon Notes</span>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                    className="ml-auto transition-transform group-open:rotate-180"
-                    stroke="currentColor" strokeWidth="1.5">
-                    <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </summary>
-
-                <div className="rounded-2xl border border-[#00205B]/08 p-6 md:p-8 bg-[#f4f6f9]">
-                  <div className="prose prose-sm max-w-none">
-                    {sermonNotes.split(/\n{2,}/).map((para, i) => {
-                      const trimmed = para.trim();
-                      if (!trimmed) return null;
-                      const isHeading = trimmed.length <= 80 && (
-                        /^[A-Z][A-Z\s\d:,'.!?–-]{3,}$/.test(trimmed) ||
-                        /^[A-Z].{0,60}:$/.test(trimmed)
-                      );
-                      if (isHeading) {
-                        return (
-                          <h3 key={i} className="font-bold text-sm mt-7 mb-2"
-                            style={{ letterSpacing: "-0.01em", color: accentColor }}>
-                            {trimmed}
-                          </h3>
-                        );
-                      }
-                      return (
-                        <p key={i} className="text-[#00205B]/65 text-sm leading-relaxed mb-4">
-                          {trimmed.split(/\n/).map((line, j) => (
-                            <span key={j}>
-                              {line}
-                              {j < trimmed.split(/\n/).length - 1 && <br />}
-                            </span>
-                          ))}
-                        </p>
-                      );
-                    })}
-                  </div>
-                </div>
-              </details>
-            </div>
-          )}
         </div>
       </div>
 
