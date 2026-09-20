@@ -180,7 +180,14 @@ export default function LivePlayer({ sermon }: Props) {
   const [info, setInfo]       = useState<StateInfo>({ state: "off", service: null, minutesUntil: 0 });
   const intervalRef           = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // ?preview=post|live|pre forces the active view (dev/QA testing only)
+  const [previewState, setPreviewState] = useState<LiveState | null>(null);
+
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get("preview");
+    if (p === "live" || p === "post" || p === "pre") setPreviewState(p);
+
     setMounted(true);
     setInfo(getEasternState(new Date()));
     intervalRef.current = setInterval(() => setInfo(getEasternState(new Date())), 30_000);
@@ -190,9 +197,10 @@ export default function LivePlayer({ sermon }: Props) {
   if (!mounted) return <OffHours sermon={sermon} />;
 
   const { state, service, minutesUntil } = info;
+  const effectiveState = previewState ?? state;
 
-  if (state === "live" || state === "pre" || state === "post") {
-    return <ActiveView sermon={sermon} state={state} service={service} minutesUntil={minutesUntil} />;
+  if (effectiveState === "live" || effectiveState === "pre" || effectiveState === "post") {
+    return <ActiveView sermon={sermon} state={effectiveState} service={service} minutesUntil={minutesUntil} />;
   }
   return <OffHours sermon={sermon} />;
 }
