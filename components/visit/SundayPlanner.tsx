@@ -26,8 +26,8 @@ const WHO_OPTIONS: WhoOption[] = [
 ];
 
 const TIME_OPTIONS = [
-  { id: "8:30",  label: "8:30 AM",  sub: "Choir & Orchestra" },
-  { id: "11:00", label: "11:00 AM", sub: "Band-led worship" },
+  { id: "8:30",  label: "8:30 AM",  sub: "Full Choir & Orchestra" },
+  { id: "11:00", label: "11:00 AM", sub: "Contemporary Worship" },
   { id: "either",label: "Not sure", sub: "Either works for us" },
 ];
 

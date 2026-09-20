@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// TODO: Validate exact payload format against PCO API docs once creds are live
+import {
+  pcoAuth,
+  findOrCreatePerson,
+  submitForm,
+  type FieldAnswer,
+} from "@/lib/pco-forms";
 
 interface RegistrationBody {
   parentFirstName: string;
@@ -16,6 +20,17 @@ interface RegistrationBody {
   consentToText: boolean;
   parentalRightsNotes?: string;
 }
+
+// PCO form 376960 field IDs
+const FIELD = {
+  phone:     "2717360",
+  consent:   "5876472",
+  address:   "2716232",
+  gender:    "2716233",
+  birthdate: "2716237",
+  service:   "2719110",
+  notes:     "2750017",
+} as const;
 
 export async function POST(req: NextRequest) {
   const appId = process.env.PCO_APP_ID;
@@ -50,176 +65,89 @@ export async function POST(req: NextRequest) {
     parentalRightsNotes,
   } = body;
 
-  // Build included array of form field submissions
-  const included: object[] = [
-    {
-      type: "Person",
-      id: "person-1",
-      attributes: {
-        first_name: parentFirstName,
-        last_name: parentLastName,
-        email_addresses: [{ address: parentEmail, primary: true }],
-      },
-    },
-    // Phone number (2717360)
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-phone",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "2717360" } },
-        form_field_option: { data: null },
-      },
-      meta: {
-        responses: [{ value: { number: phone, location: "Mobile" } }],
-      },
-    },
-    // Consent to Text (5876472)
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-consent",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "5876472" } },
-        form_field_option: { data: null },
-      },
-      meta: {
-        responses: [{ value: consentToText ? "true" : "false" }],
-      },
-    },
-    // Address (2716232)
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-address",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "2716232" } },
-        form_field_option: { data: null },
-      },
-      meta: {
-        responses: [
-          {
-            value: {
-              location: "Home",
-              street: address.street,
-              city: address.city,
-              state: address.state,
-              zip: address.zip,
-            },
-          },
-        ],
-      },
-    },
-    // Gender of child (2716233)
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-gender",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "2716233" } },
-        form_field_option: { data: null },
-      },
-      meta: {
-        responses: [{ value: childGender }],
-      },
-    },
-    // Birthdate of child (2716237)
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-birthdate",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "2716237" } },
-        form_field_option: { data: null },
-      },
-      meta: {
-        responses: [{ value: childBirthdate }],
-      },
-    },
-    // What Service (2719110) — value is the option ID
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-service",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "2719110" } },
-        form_field_option: { data: { type: "FormFieldOption", id: service } },
-      },
-      meta: {
-        responses: [{ value: service }],
-      },
-    },
-  ];
+  // Basic validation
+  if (!parentFirstName || !parentLastName || !parentEmail || !phone) {
+    return NextResponse.json(
+      { error: "Parent name, email, and phone are required" },
+      { status: 400 }
+    );
+  }
+  if (!childFirstName || !childLastName || !childBirthdate || !service) {
+    return NextResponse.json(
+      { error: "Child name, birthdate, and service are required" },
+      { status: 400 }
+    );
+  }
 
-  // Child name fields — submitted as the form person's child info via notes or
-  // as an additional name field. PCO forms don't natively support child names
-  // as a separate person without a relationship; we include them in notes if
-  // no dedicated field exists, or you can add a text field for child name.
-  // For now we prepend child info to parental rights notes.
-  const childInfo = `Child: ${childFirstName} ${childLastName}`;
-  const notesValue = parentalRightsNotes
-    ? `${childInfo}\n${parentalRightsNotes}`
-    : childInfo;
+  const auth = pcoAuth(appId, secret);
 
-  // Parental Rights/notes (2750017)
-  included.push({
-    type: "FormFieldSubmission",
-    id: "ffs-notes",
-    attributes: {},
-    relationships: {
-      form_field: { data: { type: "FormField", id: "2750017" } },
-      form_field_option: { data: null },
-    },
-    meta: {
-      responses: [{ value: notesValue }],
-    },
-  });
-
-  const payload = {
-    data: {
-      type: "FormSubmission",
-      attributes: {},
-      relationships: {
-        person: { data: { type: "Person", id: null } },
-      },
-    },
-    included,
-  };
-
-  const credentials = Buffer.from(`${appId}:${secret}`).toString("base64");
-
-  let pcoRes: Response;
+  // Step 1: find or create the parent in PCO People
+  let personId: string;
   try {
-    pcoRes = await fetch(
-      "https://api.planningcenteronline.com/people/v2/forms/376960/form_submissions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${credentials}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      }
+    personId = await findOrCreatePerson(
+      auth,
+      parentFirstName,
+      parentLastName,
+      parentEmail
     );
   } catch (err) {
-    console.error("PCO fetch error:", err);
+    console.error("PCO person lookup/create failed:", err);
     return NextResponse.json(
-      { error: "Failed to reach Planning Center" },
+      { error: "Failed to identify submitter in Planning Center" },
       { status: 502 }
     );
   }
 
-  if (!pcoRes.ok) {
-    let detail = "";
-    try {
-      const errBody = await pcoRes.json();
-      detail = JSON.stringify(errBody);
-    } catch {
-      detail = await pcoRes.text();
-    }
-    console.error("PCO error response:", pcoRes.status, detail);
+  // Step 2: build field answers
+  const answers: FieldAnswer[] = [];
+
+  // Phone
+  answers.push({
+    fieldId: FIELD.phone,
+    value: { number: phone, location: "Mobile" },
+  });
+
+  // Consent to text
+  answers.push({
+    fieldId: FIELD.consent,
+    value: consentToText ? "true" : "false",
+  });
+
+  // Address
+  answers.push({
+    fieldId: FIELD.address,
+    value: {
+      location: "Home",
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      zip: address.zip,
+    },
+  });
+
+  // Child gender
+  answers.push({ fieldId: FIELD.gender, value: childGender });
+
+  // Child birthdate
+  answers.push({ fieldId: FIELD.birthdate, value: childBirthdate });
+
+  // Service selection (option ID)
+  answers.push({ fieldId: FIELD.service, value: service });
+
+  // Child name + optional parental rights notes
+  const childLine = `Child: ${childFirstName} ${childLastName}`;
+  const notesValue = parentalRightsNotes?.trim()
+    ? `${childLine}\n${parentalRightsNotes.trim()}`
+    : childLine;
+  answers.push({ fieldId: FIELD.notes, value: notesValue });
+
+  // Step 3: submit the form
+  try {
+    await submitForm(auth, "376960", personId, answers);
+  } catch (err) {
+    console.error("PCO form submission error:", err);
     return NextResponse.json(
-      { error: `Planning Center returned ${pcoRes.status}` },
+      { error: "Failed to submit to Planning Center" },
       { status: 502 }
     );
   }

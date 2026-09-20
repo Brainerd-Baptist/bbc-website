@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  pcoAuth,
+  findOrCreatePerson,
+  submitForm,
+  type FieldAnswer,
+} from "@/lib/pco-forms";
 
 interface ConnectBody {
   firstName: string;
@@ -9,6 +15,14 @@ interface ConnectBody {
   interests: string[]; // array of option IDs (optional)
   notes?: string;
 }
+
+// PCO form 1326026 field IDs
+const FIELD = {
+  phone:     "10599346",
+  howHeard:  "10599355",
+  interests: "10599352",
+  notes:     "10599358",
+} as const;
 
 export async function POST(req: NextRequest) {
   const appId = process.env.PCO_APP_ID;
@@ -30,7 +44,6 @@ export async function POST(req: NextRequest) {
 
   const { firstName, lastName, email, phone, howHeard, interests, notes } = body;
 
-  // Basic validation
   if (!firstName || !lastName || !email || !phone) {
     return NextResponse.json(
       { error: "First name, last name, email, and phone are required" },
@@ -45,117 +58,53 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const included: object[] = [
-    {
-      type: "Person",
-      id: "person-1",
-      attributes: {
-        first_name: firstName,
-        last_name: lastName,
-        email_addresses: [{ address: email, primary: true }],
-      },
-    },
-    // Phone number (10599346)
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-phone",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "10599346" } },
-      },
-      meta: {
-        responses: [{ value: { number: phone, location: "Mobile" } }],
-      },
-    },
-    // How did you hear about Brainerd? (10599355) — one entry per selected option ID
-    {
-      type: "FormFieldSubmission",
-      id: "ffs-how-heard",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "10599355" } },
-      },
-      meta: {
-        responses: howHeard.map((id) => ({ value: id })),
-      },
-    },
-  ];
+  const auth = pcoAuth(appId, secret);
 
-  // I'm interested in… (10599352) — optional, only include if at least one selected
-  if (interests && interests.length > 0) {
-    included.push({
-      type: "FormFieldSubmission",
-      id: "ffs-interests",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "10599352" } },
-      },
-      meta: {
-        responses: interests.map((id) => ({ value: id })),
-      },
-    });
-  }
-
-  // Anything else? (10599358) — optional
-  if (notes && notes.trim()) {
-    included.push({
-      type: "FormFieldSubmission",
-      id: "ffs-notes",
-      attributes: {},
-      relationships: {
-        form_field: { data: { type: "FormField", id: "10599358" } },
-      },
-      meta: {
-        responses: [{ value: notes.trim() }],
-      },
-    });
-  }
-
-  const payload = {
-    data: {
-      type: "FormSubmission",
-      attributes: {},
-      relationships: {
-        person: { data: { type: "Person", id: null } },
-      },
-    },
-    included,
-  };
-
-  const credentials = Buffer.from(`${appId}:${secret}`).toString("base64");
-
-  let pcoRes: Response;
+  // Step 1: find or create the submitter in PCO People
+  let personId: string;
   try {
-    pcoRes = await fetch(
-      "https://api.planningcenteronline.com/people/v2/forms/1326026/form_submissions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${credentials}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      }
-    );
+    personId = await findOrCreatePerson(auth, firstName, lastName, email);
   } catch (err) {
-    console.error("PCO fetch error:", err);
+    console.error("PCO person lookup/create failed:", err);
     return NextResponse.json(
-      { error: "Failed to reach Planning Center" },
+      { error: "Failed to identify submitter in Planning Center" },
       { status: 502 }
     );
   }
 
-  if (!pcoRes.ok) {
-    let detail = "";
-    try {
-      const errBody = await pcoRes.json();
-      detail = JSON.stringify(errBody);
-    } catch {
-      detail = await pcoRes.text();
+  // Step 2: build field answers
+  const answers: FieldAnswer[] = [];
+
+  // Phone
+  answers.push({
+    fieldId: FIELD.phone,
+    value: { number: phone, location: "Mobile" },
+  });
+
+  // How heard — one entry per selected option
+  for (const optionId of howHeard) {
+    answers.push({ fieldId: FIELD.howHeard, value: optionId });
+  }
+
+  // Interests — one entry per selected option (optional)
+  if (interests && interests.length > 0) {
+    for (const optionId of interests) {
+      answers.push({ fieldId: FIELD.interests, value: optionId });
     }
-    console.error("PCO error response:", pcoRes.status, detail);
+  }
+
+  // Additional notes (optional)
+  if (notes && notes.trim()) {
+    answers.push({ fieldId: FIELD.notes, value: notes.trim() });
+  }
+
+  // Step 3: submit the form
+  try {
+    await submitForm(auth, "1326026", personId, answers);
+  } catch (err) {
+    console.error("PCO form submission error:", err);
     return NextResponse.json(
-      { error: `Planning Center returned ${pcoRes.status}` },
+      { error: "Failed to submit to Planning Center" },
       { status: 502 }
     );
   }
