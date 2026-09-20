@@ -18,15 +18,38 @@ interface HeroContent {
   showCountdown: boolean;
 }
 
+// ── Eastern-time helpers ───────────────────────────────────────────
+// Uses Intl.DateTimeFormat with America/New_York so DST is handled
+// automatically year-round. Never uses getHours()/getDay() which
+// would reflect the visitor's local timezone instead.
+
+function getEasternParts(date: Date) {
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    weekday: "short",   // "Sun", "Mon", …
+    hour: "numeric",    // 0–23
+    minute: "numeric",  // 0–59
+    hour12: false,
+  });
+  const parts = Object.fromEntries(
+    fmt.formatToParts(date).map((p) => [p.type, p.value])
+  );
+  const day = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(parts.weekday);
+  const hour = parseInt(parts.hour, 10);   // 0–23
+  const minute = parseInt(parts.minute, 10);
+  return { day, hour, minute };
+}
+
 function getHeroContent(): HeroContent {
   const now = new Date();
-  const day = now.getDay(); // 0=Sun, 6=Sat
-  const hour = now.getHours();
+  const { day, hour, minute } = getEasternParts(now);
+  // day: 0=Sun … 6=Sat, hour: 0–23 in Eastern time (ET), DST-aware
 
-  // Sunday morning — service is happening or imminent (7am–1pm)
+  // Sunday morning — service is happening or imminent (7am–1pm ET)
   if (day === 0 && hour >= 7 && hour < 13) {
-    const minutesUntil830 = (8 * 60 + 30) - (hour * 60 + now.getMinutes());
-    const minutesUntil1100 = (11 * 60) - (hour * 60 + now.getMinutes());
+    const totalMinutes = hour * 60 + minute;
+    const minutesUntil830 = (8 * 60 + 30) - totalMinutes;
+    const minutesUntil1100 = (11 * 60) - totalMinutes;
     let serviceMsg = "Services at 8:30 and 11:00 this morning.";
     if (minutesUntil830 > 0 && minutesUntil830 <= 90) {
       serviceMsg = `8:30 service starts in ${minutesUntil830} minutes.`;
@@ -47,7 +70,7 @@ function getHeroContent(): HeroContent {
     };
   }
 
-  // Saturday evening — build anticipation (4pm–midnight)
+  // Saturday evening — build anticipation (4pm–midnight ET)
   if (day === 6 && hour >= 16) {
     return {
       eyebrow: "See you tomorrow",
@@ -126,9 +149,10 @@ export default function Hero() {
   };
 
   const isSundayMorning = content
-    ? new Date().getDay() === 0 &&
-      new Date().getHours() >= 7 &&
-      new Date().getHours() < 13
+    ? (() => {
+        const { day, hour } = getEasternParts(new Date());
+        return day === 0 && hour >= 7 && hour < 13;
+      })()
     : false;
 
   return (

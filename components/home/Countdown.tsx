@@ -2,14 +2,59 @@
 
 import { useState, useEffect } from "react";
 
-function getNextSunday830(): Date {
+// Returns the UTC timestamp for the next Sunday 8:30 AM Eastern time.
+// Uses Intl to find what "Sunday 8:30 AM America/New_York" means in UTC,
+// so DST transitions (March and November) are handled automatically.
+function getNextSunday830ET(): number {
   const now = new Date();
-  const day = now.getDay(); // 0=Sun
-  const daysUntilSunday = day === 0 ? 7 : 7 - day;
-  const next = new Date(now);
-  next.setDate(now.getDate() + daysUntilSunday);
-  next.setHours(8, 30, 0, 0);
-  return next;
+
+  // Get today's date parts in Eastern time
+  const etFmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  });
+  const parts = Object.fromEntries(etFmt.formatToParts(now).map((p) => [p.type, p.value]));
+  const etDay = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(parts.weekday);
+  const daysUntilSunday = etDay === 0 ? 7 : 7 - etDay;
+
+  // Build the target date string: next Sunday in ET, at 08:30:00
+  const [month, day, year] = [parts.month, parts.day, parts.year];
+  const targetDate = new Date(`${year}-${month}-${day}`);
+  targetDate.setDate(targetDate.getDate() + daysUntilSunday);
+
+  const yyyy = targetDate.getFullYear();
+  const mm = String(targetDate.getMonth() + 1).padStart(2, "0");
+  const dd = String(targetDate.getDate()).padStart(2, "0");
+
+  // "2026-09-21T08:30:00" interpreted as Eastern by converting via Intl
+  // Trick: parse the wall-clock string as if it were UTC, then correct for
+  // the ET offset at that moment using a known-good offset calculation.
+  const wallClockStr = `${yyyy}-${mm}-${dd}T08:30:00`;
+
+  // Find the UTC offset for that ET wall-clock moment by formatting a UTC
+  // date and comparing. We iterate: start with a UTC guess, measure the
+  // ET representation of that guess, adjust.
+  let utcGuess = new Date(wallClockStr + "Z"); // treat as UTC first
+  for (let i = 0; i < 3; i++) {
+    const etRepr = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: false,
+    }).format(utcGuess);
+    // etRepr looks like "09/21/2026, 04:30:00" — parse it
+    const m = etRepr.match(/(\d+)\/(\d+)\/(\d+),\s+(\d+):(\d+):(\d+)/);
+    if (!m) break;
+    const etDate = new Date(Date.UTC(+m[3], +m[1]-1, +m[2], +m[4], +m[5], +m[6]));
+    const target = new Date(wallClockStr + "Z");
+    const diff = target.getTime() - etDate.getTime();
+    utcGuess = new Date(utcGuess.getTime() + diff);
+  }
+
+  return utcGuess.getTime();
 }
 
 interface TimeUnit {
@@ -27,12 +72,12 @@ export default function Countdown() {
 
   useEffect(() => {
     const tick = () => {
-      const diff = getNextSunday830().getTime() - Date.now();
+      const diff = getNextSunday830ET() - Date.now();
       if (diff <= 0) return;
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
+      const d = Math.floor(diff / 86_400_000);
+      const h = Math.floor((diff % 86_400_000) / 3_600_000);
+      const m = Math.floor((diff % 3_600_000) / 60_000);
+      const s = Math.floor((diff % 60_000) / 1_000);
       setUnits([
         { value: d, label: "Days" },
         { value: h, label: "Hours" },
