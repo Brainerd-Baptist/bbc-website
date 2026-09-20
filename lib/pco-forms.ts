@@ -1,14 +1,15 @@
 /**
  * PCO form submission helpers — server-side only.
  *
- * PCO does NOT accept FormFieldSubmission objects in the `included` sidepost
- * of a FormSubmission POST — it rejects them with "form_field_submissions_attributes
- * cannot be assigned".
+ * PCO accepts FormSubmissionValue objects in the `included` array of a
+ * FormSubmission POST. The correct type is "FormSubmissionValue" (NOT
+ * "FormFieldSubmission"), and values use flat attributes — not a `responses`
+ * array. Field type shapes:
  *
- * Correct approach (3 steps):
- *  1. Find an existing person by email, or create a new one.
- *  2. POST the FormSubmission (person relationship only) → get submission ID.
- *  3. POST each field answer individually to the nested form_field_submissions endpoint.
+ *   phone:    { value, number, location }
+ *   checkbox: { value: optionId }  + relationships.form_field_option
+ *   text/etc: { value }
+ *   address:  { value, street, city, state, zip, location }
  */
 
 const PCO_BASE = "https://api.planningcenteronline.com";
@@ -17,95 +18,107 @@ export function pcoAuth(appId: string, secret: string) {
   return `Basic ${Buffer.from(`${appId}:${secret}`).toString("base64")}`;
 }
 
-/** Search PCO for a person by email; return their ID, or null if not found. */
-async function findPersonByEmail(
-  auth: string,
-  email: string
-): Promise<string | null> {
+// ── Person helpers ────────────────────────────────────────────────────────
+
+async function findPersonByEmail(auth: string, email: string): Promise<string | null> {
   const res = await fetch(
     `${PCO_BASE}/people/v2/people?where[search_name_or_email]=${encodeURIComponent(email)}&per_page=5`,
     { headers: { Authorization: auth, "Content-Type": "application/json" } }
   );
   if (!res.ok) return null;
   const data = await res.json();
-  // Match by email address precisely (search is fuzzy)
-  const people: Array<{ id: string; attributes: { name?: string } }> =
-    data.data ?? [];
-  if (people.length === 0) return null;
-  // If only one result, use it. Otherwise return the first match.
-  return people[0].id;
+  const people: Array<{ id: string }> = data.data ?? [];
+  return people.length > 0 ? people[0].id : null;
 }
 
-/** Create a new PCO person; return their ID. */
-async function createPerson(
-  auth: string,
-  firstName: string,
-  lastName: string,
-  email: string
-): Promise<string> {
-  const createRes = await fetch(`${PCO_BASE}/people/v2/people`, {
+async function createPerson(auth: string, firstName: string, lastName: string, email: string): Promise<string> {
+  const res = await fetch(`${PCO_BASE}/people/v2/people`, {
     method: "POST",
     headers: { Authorization: auth, "Content-Type": "application/json" },
     body: JSON.stringify({
-      data: {
-        type: "Person",
-        attributes: { first_name: firstName, last_name: lastName },
-      },
+      data: { type: "Person", attributes: { first_name: firstName, last_name: lastName } },
     }),
   });
+  if (!res.ok) throw new Error(`PCO create person: ${res.status} ${await res.text()}`);
+  const personId: string = (await res.json()).data.id;
 
-  if (!createRes.ok) {
-    const err = await createRes.text();
-    throw new Error(`PCO create person failed: ${createRes.status} ${err}`);
-  }
-
-  const createData = await createRes.json();
-  const personId: string = createData.data.id;
-
-  // Add email address
+  // Add email
   await fetch(`${PCO_BASE}/people/v2/people/${personId}/emails`, {
     method: "POST",
     headers: { Authorization: auth, "Content-Type": "application/json" },
     body: JSON.stringify({
-      data: {
-        type: "Email",
-        attributes: { address: email, location: "Home", primary: true },
-      },
+      data: { type: "Email", attributes: { address: email, location: "Home", primary: true } },
     }),
   });
 
   return personId;
 }
 
-/**
- * Find an existing PCO person by email, or create a new one.
- * Returns the person's PCO ID.
- */
 export async function findOrCreatePerson(
-  auth: string,
-  firstName: string,
-  lastName: string,
-  email: string
+  auth: string, firstName: string, lastName: string, email: string
 ): Promise<string> {
-  const existing = await findPersonByEmail(auth, email);
-  if (existing) return existing;
-  return createPerson(auth, firstName, lastName, email);
+  return (await findPersonByEmail(auth, email)) ?? (await createPerson(auth, firstName, lastName, email));
 }
 
-/** A single answer to one form field. */
-export interface FieldAnswer {
-  fieldId: string;
-  /** Raw value — string, option ID, phone object, address object, etc. */
-  value: unknown;
+// ── Field answer types ────────────────────────────────────────────────────
+
+/** Plain text / date / boolean field. */
+export type TextAnswer   = { kind: "text";     fieldId: string; value: string };
+/** Phone number field. */
+export type PhoneAnswer  = { kind: "phone";    fieldId: string; number: string; location?: string };
+/** Address field. */
+export type AddressAnswer= { kind: "address";  fieldId: string; street: string; city: string; state: string; zip: string; location?: string };
+/** Checkbox / dropdown field — one answer per selected option. */
+export type OptionAnswer = { kind: "option";   fieldId: string; optionId: string };
+
+export type FieldAnswer = TextAnswer | PhoneAnswer | AddressAnswer | OptionAnswer;
+
+/** Build a FormSubmissionValue `included` entry for a given answer. */
+function toFormSubmissionValue(a: FieldAnswer): object {
+  const base = {
+    type: "FormSubmissionValue",
+    relationships: {
+      form_field: { data: { type: "FormField", id: a.fieldId } },
+      form_field_option: { data: null as { type: string; id: string } | null },
+    },
+  };
+
+  switch (a.kind) {
+    case "phone":
+      return { ...base, attributes: { value: a.number, number: a.number, location: a.location ?? "Mobile" } };
+
+    case "address":
+      return {
+        ...base,
+        attributes: {
+          value: `${a.street}, ${a.city}, ${a.state} ${a.zip}`,
+          street: a.street, city: a.city, state: a.state, zip: a.zip,
+          location: a.location ?? "Home",
+        },
+      };
+
+    case "option":
+      return {
+        ...base,
+        attributes: { value: a.optionId },
+        relationships: {
+          form_field: { data: { type: "FormField", id: a.fieldId } },
+          form_field_option: { data: { type: "FormFieldOption", id: a.optionId } },
+        },
+      };
+
+    case "text":
+    default:
+      return { ...base, attributes: { value: a.value } };
+  }
 }
+
+// ── Form submission ───────────────────────────────────────────────────────
 
 /**
  * Submit a PCO form on behalf of a known person.
- *
- * Step A: POST FormSubmission with person relationship — receives submission ID.
- * Step B: POST each FieldAnswer to the nested form_field_submissions endpoint.
- *
- * For checkbox / multi-select fields, pass one FieldAnswer per selected option.
+ * Field values are passed as FormSubmissionValue objects in the `included`
+ * array of the initial FormSubmission POST.
  */
 export async function submitForm(
   auth: string,
@@ -115,62 +128,25 @@ export async function submitForm(
 ): Promise<void> {
   const headers = { Authorization: auth, "Content-Type": "application/json" };
 
-  // ── Step A: create the FormSubmission ───────────────────────────────────
-  const submissionRes = await fetch(
+  const payload = {
+    data: {
+      type: "FormSubmission",
+      attributes: {},
+      relationships: {
+        person: { data: { type: "Person", id: personId } },
+      },
+    },
+    included: answers.map(toFormSubmissionValue),
+  };
+
+  const res = await fetch(
     `${PCO_BASE}/people/v2/forms/${formId}/form_submissions`,
-    {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        data: {
-          type: "FormSubmission",
-          attributes: {},
-          relationships: {
-            person: { data: { type: "Person", id: personId } },
-          },
-        },
-      }),
-    }
+    { method: "POST", headers, body: JSON.stringify(payload) }
   );
 
-  if (!submissionRes.ok) {
+  if (!res.ok) {
     let detail = "";
-    try { detail = JSON.stringify(await submissionRes.json()); }
-    catch { detail = await submissionRes.text(); }
-    throw new Error(`PCO create submission failed: ${submissionRes.status} ${detail}`);
-  }
-
-  const submissionData = await submissionRes.json();
-  const submissionId: string = submissionData.data.id;
-
-  // ── Step B: post each field answer individually ─────────────────────────
-  const fieldBase = `${PCO_BASE}/people/v2/forms/${formId}/form_submissions/${submissionId}/form_field_submissions`;
-
-  for (const answer of answers) {
-    const fieldRes = await fetch(fieldBase, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        data: {
-          type: "FormFieldSubmission",
-          attributes: {
-            responses: [{ value: answer.value }],
-          },
-          relationships: {
-            form_field: { data: { type: "FormField", id: answer.fieldId } },
-          },
-        },
-      }),
-    });
-
-    if (!fieldRes.ok) {
-      let detail = "";
-      try { detail = JSON.stringify(await fieldRes.json()); }
-      catch { detail = await fieldRes.text(); }
-      // Log and continue — don't abort the whole submission over one field
-      console.error(
-        `PCO field ${answer.fieldId} failed: ${fieldRes.status} ${detail}`
-      );
-    }
+    try { detail = JSON.stringify(await res.json()); } catch { detail = await res.text(); }
+    throw new Error(`PCO form submission failed: ${res.status} ${detail}`);
   }
 }

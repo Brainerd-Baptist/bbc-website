@@ -60,7 +60,6 @@ export async function POST(req: NextRequest) {
 
   const auth = pcoAuth(appId, secret);
 
-  // Step 1: find or create the submitter in PCO People
   let personId: string;
   try {
     personId = await findOrCreatePerson(auth, firstName, lastName, email);
@@ -72,33 +71,28 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Step 2: build field answers
   const answers: FieldAnswer[] = [];
 
-  // Phone
-  answers.push({
-    fieldId: FIELD.phone,
-    value: { number: phone, location: "Mobile" },
-  });
+  // Phone — use phone kind for flat number/location attributes
+  answers.push({ kind: "phone", fieldId: FIELD.phone, number: phone, location: "Mobile" });
 
-  // How heard — one entry per selected option
+  // How heard — one option entry per selected checkbox
   for (const optionId of howHeard) {
-    answers.push({ fieldId: FIELD.howHeard, value: optionId });
+    answers.push({ kind: "option", fieldId: FIELD.howHeard, optionId });
   }
 
-  // Interests — one entry per selected option (optional)
+  // Interests — one option entry per selected checkbox
   if (interests && interests.length > 0) {
     for (const optionId of interests) {
-      answers.push({ fieldId: FIELD.interests, value: optionId });
+      answers.push({ kind: "option", fieldId: FIELD.interests, optionId });
     }
   }
 
-  // Additional notes (optional)
+  // Notes (optional free text)
   if (notes && notes.trim()) {
-    answers.push({ fieldId: FIELD.notes, value: notes.trim() });
+    answers.push({ kind: "text", fieldId: FIELD.notes, value: notes.trim() });
   }
 
-  // Step 3: submit the form
   try {
     await submitForm(auth, "1326026", personId, answers);
   } catch (err) {

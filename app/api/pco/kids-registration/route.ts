@@ -13,7 +13,7 @@ interface RegistrationBody {
   phone: string;
   childFirstName: string;
   childLastName: string;
-  childGender: "M" | "F";
+  childGender: string;
   childBirthdate: string; // YYYY-MM-DD
   address: { street: string; city: string; state: string; zip: string };
   service: string; // option ID
@@ -65,7 +65,6 @@ export async function POST(req: NextRequest) {
     parentalRightsNotes,
   } = body;
 
-  // Basic validation
   if (!parentFirstName || !parentLastName || !parentEmail || !phone) {
     return NextResponse.json(
       { error: "Parent name, email, and phone are required" },
@@ -81,15 +80,9 @@ export async function POST(req: NextRequest) {
 
   const auth = pcoAuth(appId, secret);
 
-  // Step 1: find or create the parent in PCO People
   let personId: string;
   try {
-    personId = await findOrCreatePerson(
-      auth,
-      parentFirstName,
-      parentLastName,
-      parentEmail
-    );
+    personId = await findOrCreatePerson(auth, parentFirstName, parentLastName, parentEmail);
   } catch (err) {
     console.error("PCO person lookup/create failed:", err);
     return NextResponse.json(
@@ -98,50 +91,43 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Step 2: build field answers
-  const answers: FieldAnswer[] = [];
+  const answers: FieldAnswer[] = [
+    // Phone — flat number/location attributes
+    { kind: "phone", fieldId: FIELD.phone, number: phone, location: "Mobile" },
 
-  // Phone
-  answers.push({
-    fieldId: FIELD.phone,
-    value: { number: phone, location: "Mobile" },
-  });
+    // Consent to text — plain text boolean
+    { kind: "text", fieldId: FIELD.consent, value: consentToText ? "true" : "false" },
 
-  // Consent to text
-  answers.push({
-    fieldId: FIELD.consent,
-    value: consentToText ? "true" : "false",
-  });
-
-  // Address
-  answers.push({
-    fieldId: FIELD.address,
-    value: {
-      location: "Home",
+    // Address
+    {
+      kind: "address",
+      fieldId: FIELD.address,
       street: address.street,
       city: address.city,
       state: address.state,
       zip: address.zip,
+      location: "Home",
     },
-  });
 
-  // Child gender
-  answers.push({ fieldId: FIELD.gender, value: childGender });
+    // Child gender
+    { kind: "text", fieldId: FIELD.gender, value: childGender },
 
-  // Child birthdate
-  answers.push({ fieldId: FIELD.birthdate, value: childBirthdate });
+    // Child birthdate (YYYY-MM-DD)
+    { kind: "text", fieldId: FIELD.birthdate, value: childBirthdate },
 
-  // Service selection (option ID)
-  answers.push({ fieldId: FIELD.service, value: service });
+    // Service selection — option field
+    { kind: "option", fieldId: FIELD.service, optionId: service },
 
-  // Child name + optional parental rights notes
-  const childLine = `Child: ${childFirstName} ${childLastName}`;
-  const notesValue = parentalRightsNotes?.trim()
-    ? `${childLine}\n${parentalRightsNotes.trim()}`
-    : childLine;
-  answers.push({ fieldId: FIELD.notes, value: notesValue });
+    // Notes: child name + optional parental rights note
+    {
+      kind: "text",
+      fieldId: FIELD.notes,
+      value: parentalRightsNotes?.trim()
+        ? `Child: ${childFirstName} ${childLastName}\n${parentalRightsNotes.trim()}`
+        : `Child: ${childFirstName} ${childLastName}`,
+    },
+  ];
 
-  // Step 3: submit the form
   try {
     await submitForm(auth, "376960", personId, answers);
   } catch (err) {
