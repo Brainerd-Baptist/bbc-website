@@ -17,12 +17,29 @@ const FIELD = {
 // Service option: BX 11:00
 const TEST_SERVICE_OPTION = "2971214";
 
+async function fetchGenderOptions(auth: string) {
+  // Try several PCO endpoints to find valid gender options
+  const endpoints = [
+    `${PCO_BASE}/people/v2/forms/376960/fields/2716233/options`,
+    `${PCO_BASE}/people/v2/form_field_options?where[form_field_id]=2716233`,
+    `${PCO_BASE}/people/v2/forms/376960/fields/2716233`,
+  ];
+  const results: Record<string, unknown> = {};
+  for (const url of endpoints) {
+    const r = await fetch(url, { headers: { Authorization: auth } });
+    try { results[url] = await r.json(); } catch { results[url] = { status: r.status }; }
+  }
+  return results;
+}
+
 async function runDebug() {
   const appId = process.env.PCO_APP_ID;
   const secret = process.env.PCO_SECRET;
   if (!appId || !secret) return { error: "PCO credentials not configured" };
 
   const auth = pcoAuth(appId, secret);
+
+  const genderOptions = await fetchGenderOptions(auth);
 
   let personId: string;
   try {
@@ -101,6 +118,7 @@ async function runDebug() {
     status: res.status,
     ok: res.ok,
     personId,
+    genderOptions,
     payload,
     response: responseBody,
   };
