@@ -13,8 +13,6 @@ import RelatedSermons from "@/components/sermons/RelatedSermons";
 import SermonTabPlayer from "@/components/sermons/SermonTabPlayer";
 import SpeakerCard from "@/components/sermons/SpeakerCard";
 import GiveCTA from "@/components/sermons/GiveCTA";
-import AudioPlayer from "@/components/sermons/AudioPlayer";
-import ScriptureInline from "@/components/sermons/ScriptureInline";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { getSermonNotesByDate, parseOutline } from "@/lib/sermon";
 
@@ -27,6 +25,7 @@ async function loadSermonNotes(date: string): Promise<{
   outline: string[];
   outlineType: "structured" | "scripture" | "none";
   rawText: string | null;
+  highlights: string[];
 }> {
   // 1. Try Drive
   const drive = await getSermonNotesByDate(date);
@@ -43,14 +42,14 @@ async function loadSermonNotes(date: string): Promise<{
       const text = await fs.readFile(path.join(NOTES_DIR, `${candidate}.txt`), "utf-8");
       if (text.trim()) {
         const { items: outline, type: outlineType } = parseOutline(text);
-        return { outline, outlineType, rawText: text.trim() };
+        return { outline, outlineType, rawText: text.trim(), highlights: [] };
       }
     } catch {
       // file not found, try next
     }
   }
 
-  return { outline: [], outlineType: "none" as const, rawText: null };
+  return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
 }
 
 function isCurtisHill(speaker: string): boolean {
@@ -268,31 +267,18 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       <div className="px-5 md:px-8 py-10">
         <div className="max-w-4xl mx-auto space-y-8">
 
-          {/* AUDIO PLAYER */}
-          {audioTrack && (
-            <AudioPlayer track={audioTrack} accentColor={accentColor} theme="light" />
-          )}
-
-          {/* SCRIPTURE PASSAGES */}
-          {allPassages.length > 0 && (
-            <div className="space-y-3">
-              {allPassages.map((p) => (
-                <ScriptureInline key={p} passage={p} accentColor={accentColor} theme="light" />
-              ))}
-            </div>
-          )}
-
-          {/* TABBED PLAYER — Video / Outline / Notes */}
-          {s.youtubeId && (
-            <SermonTabPlayer
-              youtubeId={s.youtubeId}
-              title={s.title}
-              outline={sermonNotes.outline}
-              outlineType={sermonNotes.outlineType}
-              rawText={sermonNotes.rawText}
-              accentColor={accentColor}
-            />
-          )}
+          {/* UNIFIED MEDIA + CONTENT PLAYER */}
+          <SermonTabPlayer
+            youtubeId={s.youtubeId}
+            title={s.title}
+            audioTrack={audioTrack}
+            passages={allPassages}
+            accentColor={accentColor}
+            outline={sermonNotes.outline}
+            outlineType={sermonNotes.outlineType}
+            rawText={sermonNotes.rawText}
+            highlights={sermonNotes.highlights}
+          />
 
           {/* Action row */}
           <div>

@@ -238,14 +238,43 @@ async function getLatestYouTubeId(): Promise<string | null> {
 // ── Notes by date (sermon detail page) ───────────────────────────────────────
 
 /**
+ * Strip HTML tags from a string, returning plain text.
+ */
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"');
+}
+
+/**
+ * Parse yellow-highlighted spans from Google Docs HTML export.
+ * Matches background-color: #ffff00, #ffff02, rgb(255,255,0), rgb(255,255,2), yellow.
+ */
+function parseHighlights(html: string): string[] {
+  const HIGHLIGHT_RE = /<span[^>]*style="[^"]*background-color\s*:\s*(?:#ffff0[02]|rgb\(255\s*,\s*255\s*,\s*[02]\)|yellow)[^"]*"[^>]*>([\s\S]*?)<\/span>/gi;
+  const seen = new Set<string>();
+  const results: string[] = [];
+
+  let match: RegExpExecArray | null;
+  while ((match = HIGHLIGHT_RE.exec(html)) !== null) {
+    const text = stripHtml(match[1]).trim();
+    if (text.length >= 4 && !seen.has(text)) {
+      seen.add(text);
+      results.push(text);
+    }
+  }
+
+  return results;
+}
+
+/**
  * Look up Curtis's notes for a specific sermon date.
  * Searches Drive for a doc whose filename starts with "YYYY MM DD".
- * Returns outline, outlineType, and full rawText for the Notes tab.
+ * Returns outline, outlineType, rawText, and highlights for the Notes tab.
  */
 export async function getSermonNotesByDate(date: string): Promise<{
   outline: string[];
   outlineType: "structured" | "scripture" | "none";
   rawText: string;
+  highlights: string[];
 } | null> {
   const key = process.env.GOOGLE_API_KEY;
   if (!key) return null;
@@ -266,14 +295,16 @@ export async function getSermonNotesByDate(date: string): Promise<{
     const files: Array<{ id: string; name: string }> = (await listRes.json()).files ?? [];
     if (files.length === 0) return null;
 
-    const exportUrl = `https://www.googleapis.com/drive/v3/files/${files[0].id}/export?mimeType=text%2Fplain&key=${key}`;
+    const exportUrl = `https://www.googleapis.com/drive/v3/files/${files[0].id}/export?mimeType=text%2Fhtml&key=${key}`;
     const exportRes = await fetch(exportUrl, { next: { revalidate: 3600 } });
     if (!exportRes.ok) return null;
 
-    const rawText = await exportRes.text();
+    const html = await exportRes.text();
+    const highlights = parseHighlights(html);
+    const rawText = stripHtml(html);
     const { items: outline, type: outlineType } = parseOutline(rawText);
 
-    return { outline, outlineType, rawText };
+    return { outline, outlineType, rawText, highlights };
   } catch (err) {
     console.error("[sermon] getSermonNotesByDate error:", err);
     return null;
