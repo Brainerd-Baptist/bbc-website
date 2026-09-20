@@ -346,7 +346,8 @@ export default function KidsRegistrationForm() {
                     />
                   </Field>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 min-w-0">
+                  <div className="min-w-0">
                   <Field label="Gender" required>
                     <select
                       className={inputCls}
@@ -363,15 +364,18 @@ export default function KidsRegistrationForm() {
                       ))}
                     </select>
                   </Field>
+                  </div>
+                  <div className="min-w-0">
                   <Field label="Birthday" required>
                     <input
                       type="date"
-                      className={inputCls}
+                      className={`${inputCls} overflow-hidden`}
                       value={child.birthdate}
                       onChange={(e) => setChild(idx, "birthdate", e.target.value)}
                       max={new Date().toISOString().split("T")[0]}
                     />
                   </Field>
+                  </div>
                 </div>
               </div>
             ))}
