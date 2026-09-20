@@ -16,7 +16,8 @@ export default function SpeakerCard({ name, accentColor }: Props) {
   return (
     <a
       href={`/speakers/${slug}`}
-      className="group flex items-center gap-4 p-4 rounded-xl border border-white/6 bg-white/3 hover:border-white/15 hover:bg-white/5 transition-all"
+      className="group flex items-center gap-4 p-4 rounded-xl transition-all"
+      style={{ border: "1px solid rgba(0,32,91,0.08)", background: "#f4f6f9" }}
     >
       {/* Avatar — photo if available, else initials */}
       <div
@@ -45,15 +46,15 @@ export default function SpeakerCard({ name, accentColor }: Props) {
       {/* Info */}
       <div className="flex-1 min-w-0">
         <p
-          className="text-white font-semibold text-sm leading-snug"
-          style={{ letterSpacing: "-0.01em" }}
+          className="font-semibold text-sm leading-snug"
+          style={{ color: "#00205B", letterSpacing: "-0.01em" }}
         >
           {name}
         </p>
-        <p className="text-white/35 text-xs mt-0.5">
+        <p className="text-xs mt-0.5" style={{ color: "rgba(0,32,91,0.4)" }}>
           {info.title}
           {sermonCount > 0 && (
-            <span className="text-white/20 ml-2">
+            <span className="ml-2" style={{ color: "rgba(0,32,91,0.25)" }}>
               · {sermonCount} sermon{sermonCount !== 1 ? "s" : ""}
             </span>
           )}
@@ -63,7 +64,8 @@ export default function SpeakerCard({ name, accentColor }: Props) {
       {/* Arrow hint */}
       <svg
         width="14" height="14" viewBox="0 0 14 14" fill="none"
-        className="flex-shrink-0 text-white/15 group-hover:text-white/40 transition-colors"
+        className="flex-shrink-0 transition-colors"
+        style={{ color: "rgba(0,32,91,0.2)" }}
         stroke="currentColor" strokeWidth="1.5"
       >
         <path d="M3 7h8M8 4l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
