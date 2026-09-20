@@ -8,11 +8,10 @@
 const PCO_BASE_URL = "https://api.planningcenteronline.com";
 
 /**
- * The giving embed URL for the church's online giving page.
- * TODO: Confirm the actual org slug with the PCO account owner.
+ * Online giving URL — SecureGive (not PCO Giving).
  */
-export const PCO_GIVING_EMBED_URL =
-  "https://give.planningcenteronline.com/give/bbc";
+export const GIVING_URL =
+  "https://app.securegive.com/brainerdbaptist/auth/login/sms";
 
 // ---------------------------------------------------------------------------
 // Core fetch wrapper

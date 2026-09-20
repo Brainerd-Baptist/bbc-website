@@ -64,7 +64,7 @@ export default function GivePage() {
                 <h3 className="font-condensed font-800 text-[#00205B] text-xl mb-2">{f.name}</h3>
                 <p className="text-[#00205B]/60 text-sm leading-relaxed mb-5">{f.desc}</p>
                 <a
-                  href="https://giving.planningcenter.com/brainerdbaptist"
+                  href="https://app.securegive.com/brainerdbaptist/auth/login/sms"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`block text-center font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full transition-colors ${
