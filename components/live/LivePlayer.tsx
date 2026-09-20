@@ -392,15 +392,27 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
   if (!sermon.outline.length) {
     return (
       <div className="px-5 py-10 text-center text-[#6b7f9e] text-sm">
-        Outline will appear when Curtis&apos;s notes are available.
+        {sermon.passage
+          ? "Outline will appear closer to the service."
+          : "Outline will appear when Curtis’s notes are available."}
       </div>
     );
   }
 
+  const isScripture = sermon.outlineType === "scripture";
+
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-1">Sermon Outline</p>
-      <h3 className="text-lg font-bold text-white mb-5">{sermon.title}</h3>
+      <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-1">
+        {isScripture ? "Scripture Journey" : "Sermon Outline"}
+      </p>
+      <h3 className="text-lg font-bold text-white mb-1">{sermon.title}</h3>
+      {isScripture && (
+        <p className="text-[#6b7f9e] text-xs mb-5">
+          This week&apos;s sermon visits multiple passages. Follow along below.
+        </p>
+      )}
+      {!isScripture && <div className="mb-5" />}
 
       <ol className="space-y-3">
         {sermon.outline.map((point, i) => (

@@ -27,7 +27,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function LivePage() {
-  const sermon = await getLatestSermon();
+export default async function LivePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ fileId?: string }>;
+}) {
+  const { fileId } = await searchParams;
+  const sermon = await getLatestSermon(fileId);
   return <LivePlayer sermon={sermon} />;
 }
