@@ -130,7 +130,7 @@ function parseScriptureJourney(text: string): string[] {
 /**
  * Main outline parser — tries structured first, falls back to scripture journey.
  */
-function parseOutline(text: string): { items: string[]; type: "structured" | "scripture" | "none" } {
+export function parseOutline(text: string): { items: string[]; type: "structured" | "scripture" | "none" } {
   const structured = parseStructuredOutline(text);
   if (structured.length >= 2) return { items: structured, type: "structured" };
 

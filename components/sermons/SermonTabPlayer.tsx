@@ -16,8 +16,11 @@ interface Props {
 
 function NotesContent({ rawText, accentColor }: { rawText: string; accentColor: string }) {
   return (
-    <div className="rounded-2xl border border-[#00205B]/08 p-6 md:p-8 bg-[#f4f6f9]">
-      <div className="prose prose-sm max-w-none">
+    <div
+      className="rounded-2xl p-6 md:p-8"
+      style={{ background: "#f4f6f9", border: "1px solid rgba(0,32,91,0.08)" }}
+    >
+      <div className="max-w-none">
         {rawText.split(/\n{2,}/).map((para, i) => {
           const trimmed = para.trim();
           if (!trimmed) return null;
@@ -29,15 +32,29 @@ function NotesContent({ rawText, accentColor }: { rawText: string; accentColor: 
             return (
               <h3
                 key={i}
-                className="font-bold text-sm mt-7 mb-2"
-                style={{ letterSpacing: "-0.01em", color: accentColor }}
+                style={{
+                  fontWeight: 700,
+                  fontSize: "0.875rem",
+                  marginTop: "1.75rem",
+                  marginBottom: "0.5rem",
+                  letterSpacing: "-0.01em",
+                  color: accentColor,
+                }}
               >
                 {trimmed}
               </h3>
             );
           }
           return (
-            <p key={i} className="text-[#00205B]/65 text-sm leading-relaxed mb-4">
+            <p
+              key={i}
+              style={{
+                color: "rgba(0,32,91,0.65)",
+                fontSize: "0.875rem",
+                lineHeight: "1.625",
+                marginBottom: "1rem",
+              }}
+            >
               {trimmed.split(/\n/).map((line, j, arr) => (
                 <span key={j}>
                   {line}
@@ -101,7 +118,10 @@ export default function SermonTabPlayer({
         youtubeId
           ? <SermonPlayer youtubeId={youtubeId} title={title} />
           : (
-            <div className="rounded-2xl border border-[#00205B]/08 p-10 bg-[#f4f6f9] text-center">
+            <div
+              className="rounded-2xl p-10 text-center"
+              style={{ background: "#f4f6f9", border: "1px solid rgba(0,32,91,0.08)" }}
+            >
               <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.875rem" }}>
                 Video not yet available for this sermon.
               </p>
@@ -111,9 +131,12 @@ export default function SermonTabPlayer({
 
       {/* Outline tab */}
       {active === "outline" && outline.length > 0 && (
-        <div className="rounded-2xl border border-[#00205B]/08 p-6 md:p-8 bg-[#f4f6f9]">
+        <div
+          className="rounded-2xl p-6 md:p-8"
+          style={{ background: "#f4f6f9", border: "1px solid rgba(0,32,91,0.08)" }}
+        >
           {outlineType === "scripture" && (
-            <p className="text-xs text-[#00205B]/40 mb-5 leading-relaxed">
+            <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.75rem", marginBottom: "1.25rem", lineHeight: "1.625" }}>
               Scripture passages from this message
             </p>
           )}

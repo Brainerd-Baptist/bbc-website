@@ -16,7 +16,7 @@ import GiveCTA from "@/components/sermons/GiveCTA";
 import AudioPlayer from "@/components/sermons/AudioPlayer";
 import ScriptureInline from "@/components/sermons/ScriptureInline";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
-import { getSermonNotesByDate } from "@/lib/sermon";
+import { getSermonNotesByDate, parseOutline } from "@/lib/sermon";
 
 // ── Sermon notes helpers ──────────────────────────────────────────────────────
 
@@ -42,8 +42,8 @@ async function loadSermonNotes(date: string): Promise<{
     try {
       const text = await fs.readFile(path.join(NOTES_DIR, `${candidate}.txt`), "utf-8");
       if (text.trim()) {
-        // Return the raw text; outline will be empty (local files predate Drive parsing)
-        return { outline: [], outlineType: "none" as const, rawText: text.trim() };
+        const { items: outline, type: outlineType } = parseOutline(text);
+        return { outline, outlineType, rawText: text.trim() };
       }
     } catch {
       // file not found, try next
