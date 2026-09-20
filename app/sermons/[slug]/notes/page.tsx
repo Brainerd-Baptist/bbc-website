@@ -64,19 +64,12 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
   const formattedDate = date ? formatDate(date) : "";
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-        <style>{`
+    <>
+      <style>{`
           *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-          body {
-            font-family: 'Inter', system-ui, sans-serif;
+          .notes-root {
+            font-family: var(--font-inter), system-ui, sans-serif;
             background: #d6dce5;
             min-height: 100vh;
             padding: 2.5rem 1rem 3rem;
@@ -110,7 +103,7 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
           }
 
           .church-name {
-            font-family: 'Barlow Condensed', sans-serif;
+            font-family: var(--font-barlow-condensed), sans-serif;
             font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 0.18em;
@@ -120,7 +113,7 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
           }
 
           .sermon-title {
-            font-family: 'Barlow Condensed', sans-serif;
+            font-family: var(--font-barlow-condensed), sans-serif;
             font-size: 2.5rem;
             font-weight: 800;
             color: #fff;
@@ -315,7 +308,7 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
             gap: 0.2rem;
           }
           .footer-church {
-            font-family: 'Barlow Condensed', sans-serif;
+            font-family: var(--font-barlow-condensed), sans-serif;
             font-size: 0.85rem;
             font-weight: 700;
             letter-spacing: 0.05em;
@@ -356,7 +349,8 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
           /* ── Print styles ── */
           @media print {
             .no-print { display: none !important; }
-            html, body { font-size: 12pt; background: #fff; padding: 0; }
+            html, body, .notes-root { font-size: 12pt; background: #fff; padding: 0; }
+            .notes-root { min-height: unset; }
             .page {
               box-shadow: none;
               border-radius: 0;
@@ -375,9 +369,8 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
             print-color-adjust: exact;
           }
         `}</style>
-      </head>
-      <body>
 
+      <div className="notes-root">
         {/* ── Paper sheet ── */}
         <div className="page">
 
@@ -506,8 +499,7 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
             </a>
           )}
         </div>
-
-      </body>
-    </html>
+      </div>
+    </>
   );
 }

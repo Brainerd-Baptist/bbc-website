@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/nav/Navbar";
-import Footer from "@/components/footer/Footer";
 import { AudioProvider } from "@/lib/audio-context";
-import GlobalAudioPlayer from "@/components/audio/GlobalAudioPlayer";
 import PageTransition from "@/components/PageTransition";
 import ThemeProvider from "@/components/ThemeProvider";
+import ConditionalLayout from "@/components/ConditionalLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -52,10 +50,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AudioProvider>
             <PageTransition />
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <GlobalAudioPlayer />
+            <ConditionalLayout>{children}</ConditionalLayout>
           </AudioProvider>
         </ThemeProvider>
       </body>

@@ -78,23 +78,22 @@ export default function SermonTabPlayer({
             padding: "1.5rem 1.75rem",
           }}
         >
-          {/* ── Key passages ── */}
-          {passages.length > 0 && (
-            <div style={{ marginBottom: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.5rem 1rem" }}>
-              {passages.map((p) => (
-                <div key={p} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,32,91,0.3)" }}>
-                    Scripture
-                  </span>
-                  <a
-                    href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(p)}&version=CSB`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.6)", textDecoration: "none", fontWeight: 500 }}
-                  >
-                    {p}
-                  </a>
-                </div>
+          {/* ── Key passage chip — only when we have a real structured outline below ── */}
+          {passages.length > 0 && outlineType !== "scripture" && (
+            <div style={{ marginBottom: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.375rem 0.625rem", alignItems: "center" }}>
+              <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,32,91,0.3)", marginRight: "0.25rem" }}>
+                Scripture
+              </span>
+              {passages.slice(0, 2).map((p) => (
+                <a
+                  key={p}
+                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(p)}&version=CSB`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.6)", textDecoration: "none", fontWeight: 500 }}
+                >
+                  {p}
+                </a>
               ))}
             </div>
           )}
