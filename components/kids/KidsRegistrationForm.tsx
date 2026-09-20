@@ -17,10 +17,16 @@ const US_STATES = [
   "VA","WA","WV","WI","WY",
 ];
 
+// PCO Gender resource IDs for this organization
+const GENDER_OPTIONS = [
+  { id: "6707858", label: "Male" },
+  { id: "6707882", label: "Female" },
+];
+
 type ChildInfo = {
   firstName: string;
   lastName: string;
-  gender: "M" | "F" | "";
+  gender: string; // PCO Gender resource ID
   birthdate: string;
 };
 
@@ -352,8 +358,9 @@ export default function KidsRegistrationForm() {
                       <option value="" disabled>
                         Select gender
                       </option>
-                      <option value="M">Male</option>
-                      <option value="F">Female</option>
+                      {GENDER_OPTIONS.map((g) => (
+                        <option key={g.id} value={g.id}>{g.label}</option>
+                      ))}
                     </select>
                   </Field>
                   <Field label="Birthday" required>

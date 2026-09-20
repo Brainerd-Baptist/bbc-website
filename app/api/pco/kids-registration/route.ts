@@ -9,7 +9,7 @@ import {
 interface ChildInfo {
   firstName: string;
   lastName: string;
-  gender: "M" | "F" | "";
+  gender: string; // PCO Gender resource ID (e.g. "6707858" = Male, "6707882" = Female)
   birthdate: string; // YYYY-MM-DD
 }
 

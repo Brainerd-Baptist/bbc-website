@@ -82,7 +82,7 @@ async function runDebug() {
       {
         type: "FormSubmissionValue",
         relationships: { form_field: { data: { type: "FormField", id: FIELD.gender } } },
-        attributes: { value: "male" },
+        attributes: { value: "6707858" }, // Gender resource ID for Male
       },
       {
         type: "FormSubmissionValue",
