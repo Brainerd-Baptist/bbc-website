@@ -5,8 +5,9 @@
  *
  * Source 1 — Google Drive folder (Curtis drops docs weekly):
  *   Filename format: "YYYY MM DD – Title – Passage"
- *   Exports doc as plain text to parse the sermon outline.
- *   Folder ID: 1DssOoq5Yn9W1nEeHAxasG12kyX4iL05a
+ *   For .docx files: downloads binary, extracts text via mammoth, generates
+ *   outline with Claude API.
+ *   For native Google Docs: exports as plain text and parses outline locally.
  *   Auth: GOOGLE_API_KEY (folder must be "Anyone with link" → viewer)
  *
  * Source 2 — YouTube RSS feed (no API key needed):
@@ -143,6 +144,57 @@ export function parseOutline(text: string): { items: string[]; type: "structured
   return { items: [], type: "none" };
 }
 
+/**
+ * Use Claude API to generate a clean sermon outline from raw text.
+ * Returns 3–5 outline points as concise phrases.
+ * Falls back to empty array if the API key is missing or the call fails.
+ */
+async function generateOutlineWithAI(rawText: string): Promise<string[]> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return [];
+
+  // Trim the text so we don't blow the token budget
+  const excerpt = rawText.slice(0, 6000).trim();
+  if (excerpt.length < 100) return [];
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5",
+        max_tokens: 400,
+        messages: [
+          {
+            role: "user",
+            content: `You are summarizing a pastor's sermon notes. Extract 3–5 main outline points as short, clear phrases (not full sentences). Each point should capture a key idea or movement in the sermon. Return ONLY the points, one per line, no numbering, no bullets, no explanation.
+
+Sermon notes:
+${excerpt}`,
+          },
+        ],
+      }),
+      next: { revalidate: 86400 }, // cache for 24h — sermon notes don't change
+    } as RequestInit);
+
+    if (!res.ok) return [];
+
+    const json = await res.json();
+    const text: string = json?.content?.[0]?.text ?? "";
+    return text
+      .split(/\r?\n/)
+      .map((l: string) => l.trim())
+      .filter((l: string) => l.length > 0 && l.length < 120)
+      .slice(0, 5);
+  } catch {
+    return [];
+  }
+}
+
 // ── Drive API ─────────────────────────────────────────────────────────────────
 
 interface DriveResult {
@@ -207,8 +259,6 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
     }
 
     // 2. Try to get doc content for outline parsing
-    // Native Google Docs: export as plain text
-    // .docx files: export fails; outline parsing not supported yet
     const cache = overrideFileId ? "no-store" : undefined;
     let outline: string[] = [];
     let outlineType: "structured" | "scripture" | "none" = "none";
@@ -220,8 +270,27 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
         const result = parseOutline(await exportRes.text());
         outline = result.items;
         outlineType = result.type;
+      } else {
+        // Not a native Google Doc — try downloading as .docx binary
+        const downloadUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${key}`;
+        const dlRes = await fetch(downloadUrl, cache ? { cache } : { next: { revalidate: 3600 } });
+        if (dlRes.ok) {
+          const buffer = await dlRes.arrayBuffer();
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const mammoth = require("mammoth");
+          const { value: rawText } = await mammoth.extractRawText({ buffer });
+          if (rawText && rawText.trim().length >= 50) {
+            const parsed = parseOutline(rawText);
+            if (parsed.items.length >= 2) {
+              outline = parsed.items;
+              outlineType = parsed.type;
+            } else {
+              const aiItems = await generateOutlineWithAI(rawText);
+              if (aiItems.length > 0) { outline = aiItems; outlineType = "structured"; }
+            }
+          }
+        }
       }
-      // .docx binary download isn't parsed here — title/passage come from the filename
     } catch {
       // Outline parsing failed; title/date/passage still come from the filename
     }
@@ -321,10 +390,38 @@ export async function getSermonNotesByDate(date: string): Promise<{
     const file = files[0];
     const isGoogleDoc = file.mimeType === "application/vnd.google-apps.document";
 
-    // Google Docs can be exported as HTML; .docx files need binary download (not yet parsed)
+    // ── .docx path: download binary → mammoth → AI outline ───────────────────
     if (!isGoogleDoc) {
-      // Filename gives us the outline-type data via title/passage; no rich outline available
-      return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
+      try {
+        const downloadUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${key}`;
+        const dlRes = await fetch(downloadUrl, { next: { revalidate: 3600 } });
+        if (!dlRes.ok) return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
+
+        const buffer = await dlRes.arrayBuffer();
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const mammoth = require("mammoth");
+        const { value: rawText } = await mammoth.extractRawText({ buffer });
+
+        if (!rawText || rawText.trim().length < 50) {
+          return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
+        }
+
+        // Try regex-based parse first, then AI
+        const parsed = parseOutline(rawText);
+        if (parsed.items.length >= 2) {
+          return { outline: parsed.items, outlineType: parsed.type, rawText: rawText.trim(), highlights: [] };
+        }
+
+        // Fall back to AI-generated outline
+        const aiOutline = await generateOutlineWithAI(rawText);
+        if (aiOutline.length > 0) {
+          return { outline: aiOutline, outlineType: "structured" as const, rawText: rawText.trim(), highlights: [] };
+        }
+
+        return { outline: [], outlineType: "none" as const, rawText: rawText.trim(), highlights: [] };
+      } catch {
+        return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
+      }
     }
 
     const exportUrl = `https://www.googleapis.com/drive/v3/files/${file.id}/export?mimeType=text%2Fhtml&key=${key}`;

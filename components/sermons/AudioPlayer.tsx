@@ -221,8 +221,8 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
                 <rect x="11" y="1" width="5" height="16" rx="2"/>
               </svg>
             ) : (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="white" style={{ marginLeft: 3 }}>
-                <path d="M3 1.5l13 7.5-13 7.5z"/>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="white" style={{ marginLeft: 2 }}>
+                <path d="M4 2l10 6-10 6z"/>
               </svg>
             )}
           </button>
