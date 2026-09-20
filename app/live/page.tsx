@@ -25,7 +25,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Page is dynamic (uses searchParams); data caching handled per-fetch in lib/sermon.ts
+// Never cache this page at the CDN — fileId param must always reach the server
+export const dynamic = "force-dynamic";
 
 export default async function LivePage({
   searchParams,
