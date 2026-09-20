@@ -88,29 +88,29 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 const ptComponents = {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
-      <p className="text-[#00205B]/65 leading-relaxed mb-4">{children}</p>
+      <p className="leading-relaxed mb-4" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</p>
     ),
     h3: ({ children }: { children?: React.ReactNode }) => (
-      <h3 className="text-[#00205B] font-bold text-lg mt-8 mb-3" style={{ letterSpacing: "-0.02em" }}>{children}</h3>
+      <h3 className="font-bold text-lg mt-8 mb-3" style={{ color: "#00205B", letterSpacing: "-0.02em" }}>{children}</h3>
     ),
     h4: ({ children }: { children?: React.ReactNode }) => (
-      <h4 className="text-[#00205B]/85 font-semibold mt-5 mb-2">{children}</h4>
+      <h4 className="font-semibold mt-5 mb-2" style={{ color: "rgba(0,32,91,0.85)" }}>{children}</h4>
     ),
     blockquote: ({ children }: { children?: React.ReactNode }) => (
-      <blockquote className="border-l-2 border-[#00abc9] pl-5 my-5 text-[#00205B]/55 italic">{children}</blockquote>
+      <blockquote className="border-l-2 pl-5 my-5 italic" style={{ borderColor: "#00abc9", color: "rgba(0,32,91,0.55)" }}>{children}</blockquote>
     ),
   },
   list: {
     bullet: ({ children }: { children?: React.ReactNode }) => (
-      <ul className="list-disc list-inside space-y-1.5 text-[#00205B]/65 mb-4 pl-1">{children}</ul>
+      <ul className="list-disc list-inside space-y-1.5 mb-4 pl-1" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</ul>
     ),
     number: ({ children }: { children?: React.ReactNode }) => (
-      <ol className="list-decimal list-inside space-y-1.5 text-[#00205B]/65 mb-4 pl-1">{children}</ol>
+      <ol className="list-decimal list-inside space-y-1.5 mb-4 pl-1" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</ol>
     ),
   },
   marks: {
     strong: ({ children }: { children?: React.ReactNode }) => (
-      <strong className="text-[#00205B] font-semibold">{children}</strong>
+      <strong className="font-semibold" style={{ color: "#00205B" }}>{children}</strong>
     ),
     em: ({ children }: { children?: React.ReactNode }) => (
       <em className="italic">{children}</em>
@@ -270,7 +270,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
 
           {/* AUDIO PLAYER */}
           {audioTrack && (
-            <AudioPlayer track={audioTrack} accentColor={accentColor} />
+            <AudioPlayer track={audioTrack} accentColor={accentColor} theme="light" />
           )}
 
           {/* SCRIPTURE PASSAGES */}

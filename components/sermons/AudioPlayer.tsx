@@ -14,9 +14,12 @@ const SPEEDS = [0.75, 1, 1.25, 1.5, 1.75, 2];
 interface Props {
   track: AudioTrack;
   accentColor?: string;
+  /** "dark" = for dark/navy backgrounds (default). "light" = for white/light backgrounds. */
+  theme?: "dark" | "light";
 }
 
-export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
+export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "dark" }: Props) {
+  const light = theme === "light";
   const { track: activeTrack, isPlaying, currentTime, duration, speed, bufferedEnd, loadTrack, togglePlay, seek, setSpeed } = useAudio();
   const barRef   = useRef<HTMLDivElement>(null);
   const [dragging, setDragging]   = useState(false);
@@ -94,16 +97,24 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
     return () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
   }, [dragging, dur, isActive, seek]);
 
+  const bg     = light ? "#f4f6f9"              : "rgba(255,255,255,0.04)";
+  const border = light ? "rgba(0,32,91,0.08)"   : "rgba(255,255,255,0.07)";
+  const muted  = light ? "rgba(0,32,91,0.35)"   : "rgba(255,255,255,0.35)";
+  const dim    = light ? "rgba(0,32,91,0.25)"   : "rgba(255,255,255,0.25)";
+  const track_ = light ? "rgba(0,32,91,0.08)"   : "rgba(255,255,255,0.08)";
+  const buf    = light ? "rgba(0,32,91,0.12)"   : "rgba(255,255,255,0.14)";
+  const strong = light ? "rgba(0,32,91,0.70)"   : "rgba(255,255,255,0.70)";
+
   return (
     <div
       className="w-full rounded-2xl overflow-hidden"
-      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+      style={{ background: bg, border: `1px solid ${border}` }}
     >
       {/* Resume banner */}
       {showResume && resumed !== null && !isActive && (
-        <div className="flex items-center justify-between gap-3 px-5 py-2.5 text-xs border-b border-white/6"
-          style={{ background: `${accentColor}11` }}>
-          <span className="text-white/60">Saved position: <span className="font-semibold text-white/80">{fmt(resumed)}</span></span>
+        <div className="flex items-center justify-between gap-3 px-5 py-2.5 text-xs"
+          style={{ background: `${accentColor}11`, borderBottom: `1px solid ${border}` }}>
+          <span style={{ color: muted }}>Saved position: <span style={{ fontWeight: 600, color: strong }}>{fmt(resumed)}</span></span>
           <div className="flex gap-3">
             <button onClick={() => { loadTrack(track); setShowResume(false); }}
               className="font-semibold transition-colors" style={{ color: accentColor }}>Resume</button>
@@ -111,7 +122,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
               try { localStorage.removeItem(`bbc-ap-${track.slug}`); } catch {}
               setShowResume(false);
               loadTrack({ ...track });
-            }} className="text-white/35 hover:text-white/60 transition-colors">Start over</button>
+            }} style={{ color: muted }} className="transition-colors">Start over</button>
           </div>
         </div>
       )}
@@ -134,10 +145,10 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
                 />
               ))}
             </div>
-            <span className="text-white/35 text-[10px] font-semibold tracking-widest uppercase">Audio</span>
+            <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: muted }}>Audio</span>
           </div>
-          <div className="tabular-nums text-xs text-white/35">
-            <span className="text-white/70">{fmt(ct)}</span>
+          <div className="tabular-nums text-xs" style={{ color: muted }}>
+            <span style={{ color: strong }}>{fmt(ct)}</span>
             <span className="mx-1">/</span>
             <span>{fmt(dur) !== "0:00" ? fmt(dur) : (track.duration ?? "—")}</span>
           </div>
@@ -147,13 +158,13 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
         <div
           ref={barRef}
           className="w-full h-1.5 rounded-full cursor-pointer relative mb-5 group"
-          style={{ background: "rgba(255,255,255,0.08)" }}
+          style={{ background: track_ }}
           onClick={handleBarClick}
           onMouseDown={onMouseDown}
         >
           {/* buffered */}
           <div className="absolute top-0 left-0 h-full rounded-full transition-[width] duration-300"
-            style={{ width: `${bufPct * 100}%`, background: "rgba(255,255,255,0.14)" }} />
+            style={{ width: `${bufPct * 100}%`, background: buf }} />
           {/* played */}
           <div className="absolute top-0 left-0 h-full rounded-full"
             style={{ width: `${displayPct * 100}%`, background: accentColor }} />
@@ -166,7 +177,8 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
         <div className="flex items-center gap-1 md:gap-2">
           {/* Skip back */}
           <button onClick={() => isActive && seek(Math.max(0, ct - 15))}
-            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-white/40 hover:text-white/70 transition-colors"
+            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors"
+            style={{ color: dim }}
             aria-label="Back 15 seconds">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M9.5 3A8.5 8.5 0 1 0 18 9.5"/><path d="M9.5 3L7 6l3.5.5"/>
@@ -195,7 +207,8 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
 
           {/* Skip fwd */}
           <button onClick={() => isActive && seek(Math.min(dur, ct + 15))}
-            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-white/40 hover:text-white/70 transition-colors"
+            className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors"
+            style={{ color: dim }}
             aria-label="Forward 15 seconds">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <path d="M14.5 3A8.5 8.5 0 1 1 6 9.5"/><path d="M14.5 3L17 6l-3.5.5"/>
@@ -214,7 +227,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9" }: Props) {
                 onClick={() => isActive && setSpeed(s)}
                 className="text-[10px] font-bold px-1.5 py-1 rounded-lg transition-all"
                 style={{
-                  color: (isActive ? spd : 1) === s ? accentColor : "rgba(255,255,255,0.25)",
+                  color: (isActive ? spd : 1) === s ? accentColor : dim,
                   background: (isActive ? spd : 1) === s ? `${accentColor}18` : "transparent",
                 }}
               >
