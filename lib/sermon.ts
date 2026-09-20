@@ -84,6 +84,9 @@ function parseStructuredOutline(text: string): string[] {
       continue;
     }
 
+    // Skip stage directions: (SERIES SLIDE), (VIDEO), (TRANSITION), etc.
+    if (/^\(.*\)$/.test(line)) continue;
+
     const alpha = line.replace(/[^A-Za-z]/g, "");
     if (
       line.length >= 4 &&
@@ -171,7 +174,12 @@ async function generateOutlineWithAI(rawText: string): Promise<string[]> {
         messages: [
           {
             role: "user",
-            content: `You are summarizing a pastor's sermon notes. Extract 3–5 main outline points as short, clear phrases (not full sentences). Each point should capture a key idea or movement in the sermon. Return ONLY the points, one per line, no numbering, no bullets, no explanation.
+            content: `You are summarizing a pastor's sermon notes. Extract 3–5 main outline points as short, clear phrases (not full sentences). Each point should capture a key idea or movement in the sermon.
+
+Rules:
+- Skip stage directions like (SERIES SLIDE), (VIDEO), (TRANSITION), (OPEN), (CLOSE), or any line in parentheses
+- Skip tech/production cues, announcements, or anything not a sermon content point
+- Return ONLY the sermon content points, one per line, no numbering, no bullets, no explanation
 
 Sermon notes:
 ${excerpt}`,
