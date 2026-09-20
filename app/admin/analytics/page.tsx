@@ -9,8 +9,8 @@
 
 import { SERMONS } from "@/lib/sermons";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
 
 export const revalidate = 300; // refresh every 5 min
 
@@ -155,8 +155,8 @@ export default async function AnalyticsPage() {
               Play tracking is live — data will appear here as sermons are played.
             </p>
             <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.75rem", marginTop: "1.5rem" }}>
-              Make sure <code style={{ background: "rgba(0,32,91,0.07)", padding: "2px 6px", borderRadius: "4px" }}>NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
-              <code style={{ background: "rgba(0,32,91,0.07)", padding: "2px 6px", borderRadius: "4px" }}>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> are set in Vercel.
+              Make sure <code style={{ background: "rgba(0,32,91,0.07)", padding: "2px 6px", borderRadius: "4px" }}>SUPABASE_URL</code> and{" "}
+              <code style={{ background: "rgba(0,32,91,0.07)", padding: "2px 6px", borderRadius: "4px" }}>SUPABASE_ANON_KEY</code> are set in Vercel.
             </p>
           </div>
         )}
@@ -235,8 +235,8 @@ export default async function AnalyticsPage() {
           <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1rem" }}>Setup Checklist</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.8rem" }}>
             {[
-              { done: !!SUPABASE_URL, label: "NEXT_PUBLIC_SUPABASE_URL set in Vercel" },
-              { done: !!SUPABASE_KEY, label: "NEXT_PUBLIC_SUPABASE_ANON_KEY set in Vercel" },
+              { done: !!SUPABASE_URL, label: "SUPABASE_URL set in Vercel" },
+              { done: !!SUPABASE_KEY, label: "SUPABASE_ANON_KEY set in Vercel" },
               { done: all.length > 0,  label: "Sermon play events flowing to Supabase" },
             ].map(({ done, label }) => (
               <div key={label} style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
@@ -248,8 +248,8 @@ export default async function AnalyticsPage() {
           {(!SUPABASE_URL || !SUPABASE_KEY) && (
             <div style={{ marginTop: "1rem", padding: "0.875rem 1rem", background: "rgba(0,32,91,0.04)", borderRadius: "0.5rem", fontSize: "0.75rem", color: "rgba(0,32,91,0.5)" }}>
               Add these to Vercel → Project → Settings → Environment Variables:<br />
-              <code style={{ display: "block", marginTop: "0.5rem", color: navy }}>NEXT_PUBLIC_SUPABASE_URL = https://brbfutiayugxwkgozouc.supabase.co</code>
-              <code style={{ display: "block", marginTop: "0.25rem", color: navy }}>NEXT_PUBLIC_SUPABASE_ANON_KEY = sb_publishable_hcbWoNBCDTKdkLxOGtC9gw_TWhveChV</code>
+              <code style={{ display: "block", marginTop: "0.5rem", color: navy }}>SUPABASE_URL = https://brbfutiayugxwkgozouc.supabase.co</code>
+              <code style={{ display: "block", marginTop: "0.25rem", color: navy }}>SUPABASE_ANON_KEY = eyJhbGci...</code>
             </div>
           )}
         </div>
