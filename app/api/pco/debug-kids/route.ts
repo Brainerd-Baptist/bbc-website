@@ -18,11 +18,11 @@ const FIELD = {
 const TEST_SERVICE_OPTION = "2971214";
 
 async function fetchGenderOptions(auth: string) {
-  // Try several PCO endpoints to find valid gender options
+  // Try org-level gender endpoints since the field itself has no options
   const endpoints = [
-    `${PCO_BASE}/people/v2/forms/376960/fields/2716233/options`,
-    `${PCO_BASE}/people/v2/form_field_options?where[form_field_id]=2716233`,
-    `${PCO_BASE}/people/v2/forms/376960/fields/2716233`,
+    `${PCO_BASE}/people/v2/genders`,
+    `${PCO_BASE}/people/v2/gender_options`,
+    `${PCO_BASE}/people/v2/current_organization`,
   ];
   const results: Record<string, unknown> = {};
   for (const url of endpoints) {
@@ -82,7 +82,7 @@ async function runDebug() {
       {
         type: "FormSubmissionValue",
         relationships: { form_field: { data: { type: "FormField", id: FIELD.gender } } },
-        attributes: { value: "M" },
+        attributes: { value: "male" },
       },
       {
         type: "FormSubmissionValue",
