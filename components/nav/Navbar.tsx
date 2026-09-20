@@ -76,9 +76,9 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
 
-  // Avoid hydration mismatch — only render theme-aware UI after mount
+  // Avoid hydration mismatch — only render theme-aware icons after mount
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
@@ -92,7 +92,8 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  const isDark = mounted && resolvedTheme === "dark";
+  // Use theme as fallback so isDark is correct even if resolvedTheme hasn't resolved yet
+  const isDark = (resolvedTheme ?? theme) === "dark";
 
   // Logo: white unless scrolled in light mode
   const logoSrc = scrolled && !isDark ? "/logo-black.png" : "/logo-white.png";
@@ -136,20 +137,18 @@ export default function Navbar() {
               Plan a Visit
             </Link>
 
-            {/* Theme toggle — only render after mount to avoid flash */}
-            {mounted && (
-              <button
-                onClick={toggleTheme}
-                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-                className={`p-2 rounded-lg transition-colors ${
-                  scrolled && !isDark
-                    ? "text-[#00205B] hover:bg-[#00205B]/06"
-                    : "text-white hover:bg-white/10"
-                }`}
-              >
-                {isDark ? <SunIcon /> : <MoonIcon />}
-              </button>
-            )}
+            {/* Theme toggle — always in DOM; only icon is gated on mount */}
+            <button
+              onClick={toggleTheme}
+              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              className={`p-2 rounded-lg transition-colors ${
+                scrolled && !isDark
+                  ? "text-[#00205B] hover:bg-[#00205B]/06"
+                  : "text-white hover:bg-white/10"
+              }`}
+            >
+              {!mounted ? <span className="w-5 h-5 block" /> : isDark ? <SunIcon /> : <MoonIcon />}
+            </button>
 
             {/* Hamburger button */}
             <button
@@ -182,14 +181,14 @@ export default function Navbar() {
         className={`fixed top-0 right-0 bottom-0 z-[100] w-80 max-w-[90vw] flex flex-col transition-transform duration-300 ease-out ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        style={{ background: "#00205B" }}
+        style={{ background: isDark ? "#00205B" : "#ffffff" }}
         aria-label="Site navigation"
       >
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-7 py-5 border-b border-white/10">
+        <div className={`flex items-center justify-between px-7 py-5 border-b ${isDark ? "border-white/10" : "border-[#00205B]/08"}`}>
           <Link href="/" onClick={() => setMenuOpen(false)}>
             <Image
-              src="/logo-white.png"
+              src={isDark ? "/logo-white.png" : "/logo-black.png"}
               alt="Brainerd Baptist Church"
               width={100}
               height={40}
@@ -199,10 +198,10 @@ export default function Navbar() {
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            className={`p-2 rounded-lg transition-colors ${isDark ? "hover:bg-white/10" : "hover:bg-[#00205B]/06"}`}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              <path d="M18 6L6 18M6 6l12 12" stroke={isDark ? "white" : "#00205B"} strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>
@@ -214,7 +213,7 @@ export default function Navbar() {
               {/* Group label */}
               <p
                 className="text-xs font-semibold tracking-widest uppercase mb-3"
-                style={{ color: "rgba(0,171,201,0.7)" }}
+                style={{ color: isDark ? "rgba(0,171,201,0.7)" : "rgba(0,32,91,0.40)" }}
               >
                 {label}
               </p>
@@ -224,10 +223,14 @@ export default function Navbar() {
                     key={href}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-white/08"
+                    className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors ${
+                      isDark ? "hover:bg-white/08" : "hover:bg-[#00205B]/06"
+                    }`}
                   >
                     <span
-                      className="text-sm font-medium text-white/80 group-hover:text-white transition-colors"
+                      className={`text-sm font-medium transition-colors ${
+                        isDark ? "text-white/80 group-hover:text-white" : "text-[#00205B]/70 group-hover:text-[#00205B]"
+                      }`}
                     >
                       {linkLabel}
                     </span>
@@ -236,7 +239,9 @@ export default function Navbar() {
                       height="14"
                       viewBox="0 0 14 14"
                       fill="none"
-                      className="text-white/25 group-hover:text-white/60 transition-colors"
+                      className={`transition-colors ${
+                        isDark ? "text-white/25 group-hover:text-white/60" : "text-[#00205B]/25 group-hover:text-[#00205B]/60"
+                      }`}
                     >
                       <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -248,7 +253,7 @@ export default function Navbar() {
         </nav>
 
         {/* Drawer footer */}
-        <div className="px-7 py-6 border-t border-white/10">
+        <div className={`px-7 py-6 border-t ${isDark ? "border-white/10" : "border-[#00205B]/08"}`}>
           <Link
             href="/visit"
             onClick={() => setMenuOpen(false)}
@@ -257,7 +262,7 @@ export default function Navbar() {
           >
             Plan a Visit
           </Link>
-          <p className="text-white/35 text-xs text-center mt-4 leading-relaxed">
+          <p className={`text-xs text-center mt-4 leading-relaxed ${isDark ? "text-white/35" : "text-[#00205B]/40"}`}>
             300 Brookfield Ave · Chattanooga, TN<br />
             Sundays · 8:30 AM &amp; 11:00 AM
           </p>
