@@ -1,11 +1,14 @@
 /**
  * PCO form submission helpers — server-side only.
  *
- * PCO requires a two-step process for anonymous form submissions:
- *  1. Find an existing person by email, or create a new one.
- *  2. POST the FormSubmission with the person's ID.
+ * PCO does NOT accept FormFieldSubmission objects in the `included` sidepost
+ * of a FormSubmission POST — it rejects them with "form_field_submissions_attributes
+ * cannot be assigned".
  *
- * FormFieldSubmission responses go in `attributes.responses`, NOT `meta`.
+ * Correct approach (3 steps):
+ *  1. Find an existing person by email, or create a new one.
+ *  2. POST the FormSubmission (person relationship only) → get submission ID.
+ *  3. POST each field answer individually to the nested form_field_submissions endpoint.
  */
 
 const PCO_BASE = "https://api.planningcenteronline.com";
@@ -97,32 +100,12 @@ export interface FieldAnswer {
 }
 
 /**
- * Build the `included` array of FormFieldSubmission objects for a PCO form
- * submission payload.
- *
- * Each answer becomes one FormFieldSubmission. For checkbox / multi-select
- * fields, pass one FieldAnswer per selected option.
- */
-export function buildFieldSubmissions(answers: FieldAnswer[]): object[] {
-  return answers.map((a, i) => ({
-    type: "FormFieldSubmission",
-    id: `ffs-${i}`,
-    attributes: {
-      responses: [{ value: a.value }],
-    },
-    relationships: {
-      form_field: { data: { type: "FormField", id: a.fieldId } },
-    },
-  }));
-}
-
-/**
  * Submit a PCO form on behalf of a known person.
  *
- * @param auth   - Basic auth header value (from `pcoAuth()`)
- * @param formId - PCO form ID (numeric string)
- * @param personId - PCO person ID
- * @param answers  - Field answers built with `buildFieldSubmissions` helpers
+ * Step A: POST FormSubmission with person relationship — receives submission ID.
+ * Step B: POST each FieldAnswer to the nested form_field_submissions endpoint.
+ *
+ * For checkbox / multi-select fields, pass one FieldAnswer per selected option.
  */
 export async function submitForm(
   auth: string,
@@ -130,33 +113,64 @@ export async function submitForm(
   personId: string,
   answers: FieldAnswer[]
 ): Promise<void> {
-  const payload = {
-    data: {
-      type: "FormSubmission",
-      attributes: {},
-      relationships: {
-        person: { data: { type: "Person", id: personId } },
-      },
-    },
-    included: buildFieldSubmissions(answers),
-  };
+  const headers = { Authorization: auth, "Content-Type": "application/json" };
 
-  const res = await fetch(
+  // ── Step A: create the FormSubmission ───────────────────────────────────
+  const submissionRes = await fetch(
     `${PCO_BASE}/people/v2/forms/${formId}/form_submissions`,
     {
       method: "POST",
-      headers: { Authorization: auth, "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      headers,
+      body: JSON.stringify({
+        data: {
+          type: "FormSubmission",
+          attributes: {},
+          relationships: {
+            person: { data: { type: "Person", id: personId } },
+          },
+        },
+      }),
     }
   );
 
-  if (!res.ok) {
+  if (!submissionRes.ok) {
     let detail = "";
-    try {
-      detail = JSON.stringify(await res.json());
-    } catch {
-      detail = await res.text();
+    try { detail = JSON.stringify(await submissionRes.json()); }
+    catch { detail = await submissionRes.text(); }
+    throw new Error(`PCO create submission failed: ${submissionRes.status} ${detail}`);
+  }
+
+  const submissionData = await submissionRes.json();
+  const submissionId: string = submissionData.data.id;
+
+  // ── Step B: post each field answer individually ─────────────────────────
+  const fieldBase = `${PCO_BASE}/people/v2/forms/${formId}/form_submissions/${submissionId}/form_field_submissions`;
+
+  for (const answer of answers) {
+    const fieldRes = await fetch(fieldBase, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        data: {
+          type: "FormFieldSubmission",
+          attributes: {
+            responses: [{ value: answer.value }],
+          },
+          relationships: {
+            form_field: { data: { type: "FormField", id: answer.fieldId } },
+          },
+        },
+      }),
+    });
+
+    if (!fieldRes.ok) {
+      let detail = "";
+      try { detail = JSON.stringify(await fieldRes.json()); }
+      catch { detail = await fieldRes.text(); }
+      // Log and continue — don't abort the whole submission over one field
+      console.error(
+        `PCO field ${answer.fieldId} failed: ${fieldRes.status} ${detail}`
+      );
     }
-    throw new Error(`PCO form submission failed: ${res.status} ${detail}`);
   }
 }
