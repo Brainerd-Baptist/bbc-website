@@ -5,6 +5,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Countdown from "./Countdown";
 
+// ── Cloudflare Stream (same asset as Visit page) ───────────────────
+const CF_CUSTOMER = "customer-4oim3t3sdsmhrdq9";
+const CF_STREAM   = "c0a6915dae68d8fa78626b273768e44c";
+const CF_HLS  = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/manifest/video.m3u8`;
+const CF_MP4  = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/downloads/default.mp4`;
+const CF_POSTER = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/thumbnails/thumbnail.jpg?width=1920&height=1080&time=4s`;
+
 // ── Time-aware content ─────────────────────────────────────────────
 
 interface HeroContent {
@@ -127,6 +134,19 @@ function useParallax(speed = 0.35) {
 export default function Hero() {
   const [content, setContent] = useState<HeroContent | null>(null);
   const parallaxRef = useParallax(0.3);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Load video source on desktop only — avoids downloading a large asset on mobile
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    if (!mq.matches) return;
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = CF_HLS; // Safari — native HLS
+    }
+    video.play().catch(() => {}); // autoplay blocked — poster still shows
+  }, []);
 
   // Hydrate content client-side so SSR doesn't mismatch
   useEffect(() => {
@@ -163,14 +183,29 @@ export default function Hero() {
         className="absolute inset-0"
         style={{ top: "-15%", height: "115%" }}
       >
+        {/* Mobile: static photo — landscape video crops badly on portrait screens */}
         <Image
           src="/photos/hero.jpg"
           alt="Congregation worshiping at Brainerd Baptist Church"
           fill
-          className="object-cover"
+          className="object-cover md:hidden"
           style={{ objectPosition: "center 40%" }}
           priority
         />
+
+        {/* Desktop: ambient looping video */}
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover hidden md:block"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
+          poster={CF_POSTER}
+        >
+          <source src={CF_MP4} type="video/mp4" />
+        </video>
       </div>
 
       {/* ── Gradient overlay ── */}
