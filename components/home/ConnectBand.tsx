@@ -5,13 +5,15 @@ import { LEAD_PASTOR } from "@/lib/constants";
 export default function ConnectBand() {
   return (
     <section className="relative overflow-hidden" style={{ background: "#00205B" }}>
-      {/* BBC Triangle watermark — large, top right */}
-      <div className="absolute top-0 right-0 opacity-[0.07] pointer-events-none" style={{ width: "45vw", maxWidth: 500 }}>
-        <svg viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="250,30 470,440 30,440" fill="#00abc9"/>
-          <polygon points="250,100 400,390 100,390" fill="white"/>
-          <polygon points="250,170 345,345 155,345" fill="#00abc9"/>
-        </svg>
+      {/* Logo mark watermark — top right */}
+      {/* mix-blend-mode:screen makes the white background transparent on dark navy,
+          leaving only the white logo lines visible */}
+      <div
+        className="absolute top-0 right-0 pointer-events-none select-none"
+        style={{ width: "40vw", maxWidth: 460, opacity: 0.09, mixBlendMode: "screen" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-a-mark.png" alt="" aria-hidden="true" className="w-full h-auto" />
       </div>
 
       {/* Subtle top border */}
