@@ -77,12 +77,18 @@ export default function SermonTabPlayer({
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
-              className="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer"
-              style={
-                active === tab.id
-                  ? { background: accentColor, color: "#fff" }
-                  : { color: "rgba(0,32,91,0.4)" }
-              }
+              style={{
+                padding: "0.375rem 1rem",
+                borderRadius: "9999px",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                letterSpacing: "0.025em",
+                transition: "all 0.15s",
+                cursor: "pointer",
+                border: "none",
+                background: active === tab.id ? accentColor : "transparent",
+                color: active === tab.id ? "#fff" : "rgba(0,32,91,0.4)",
+              }}
             >
               {tab.label}
             </button>
@@ -91,8 +97,16 @@ export default function SermonTabPlayer({
       )}
 
       {/* Video tab */}
-      {active === "video" && youtubeId && (
-        <SermonPlayer youtubeId={youtubeId} title={title} />
+      {active === "video" && (
+        youtubeId
+          ? <SermonPlayer youtubeId={youtubeId} title={title} />
+          : (
+            <div className="rounded-2xl border border-[#00205B]/08 p-10 bg-[#f4f6f9] text-center">
+              <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.875rem" }}>
+                Video not yet available for this sermon.
+              </p>
+            </div>
+          )
       )}
 
       {/* Outline tab */}
@@ -105,14 +119,14 @@ export default function SermonTabPlayer({
           )}
           <ol className="space-y-3">
             {outline.map((item, i) => (
-              <li key={i} className="flex gap-3 text-sm text-[#00205B]/75">
+              <li key={i} style={{ display: "flex", gap: "0.75rem", fontSize: "0.875rem" }}>
                 <span
-                  className="text-xs font-bold mt-0.5 flex-shrink-0 w-5"
-                  style={{ color: accentColor }}
+                  style={{ color: accentColor, fontWeight: 700, fontSize: "0.75rem",
+                    marginTop: "0.125rem", flexShrink: 0, width: "1.25rem" }}
                 >
                   {outlineType === "scripture" ? "—" : `${i + 1}.`}
                 </span>
-                <span>{item}</span>
+                <span style={{ color: "rgba(0,32,91,0.75)" }}>{item}</span>
               </li>
             ))}
           </ol>
