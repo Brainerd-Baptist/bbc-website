@@ -72,7 +72,7 @@ export default function VisitPage() {
                   8:30 AM
                 </p>
                 <p className="font-condensed font-700 mt-2" style={{ color: "#00abc9", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
-                  Full Choir &amp; Orchestra
+                  Choir &amp; Orchestra
                 </p>
               </div>
             </div>
@@ -92,7 +92,7 @@ export default function VisitPage() {
                   11:00 AM
                 </p>
                 <p className="font-condensed font-700 mt-2" style={{ color: "#00abc9", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
-                  Contemporary Worship
+                  Band Led
                 </p>
               </div>
             </div>

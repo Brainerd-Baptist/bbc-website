@@ -10,7 +10,7 @@ const STEPS = [
     num: "01",
     label: "Choose your service",
     heading: "8:30 or 11:00am",
-    body: "Both services are at the Sanctuary — the main building on Brookfield Ave with the steeple. Our worship services are built around one thing: the congregation singing together. We do that in two ways — if you enjoy a full choir and orchestra, the 8:30 is a natural fit. If your family connects more with band-led worship, the 11:00 might feel like home. The 9:45 slot between them is Life Groups — a great way to get connected, but nothing you need to think about your first Sunday.",
+    body: "Both services are at the Sanctuary — the main building on Brookfield Ave with the steeple. A lot of people simply pick whichever time works better. Both services sing many of the same songs; the difference is who's leading up front — a choir and orchestra at 8:30, a band at 11:00. The 9:45 slot between them is Life Groups — a great way to get connected, but nothing you need to think about your first Sunday.",
     note: null,
   },
   {
