@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import KidsRegistrationForm from "@/components/kids/KidsRegistrationForm";
 
 export const metadata: Metadata = {
   title: "Kids — Brainerd Baptist Church",
@@ -163,9 +164,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap gap-4">
             <a
-              href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#pre-register"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
               style={{ background: "#00abc9", color: "#00142a" }}
             >
@@ -286,9 +285,7 @@ export default function KidsPage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#pre-register"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2"
                   style={{ background: "#00205B", color: "white" }}
                 >
@@ -526,6 +523,30 @@ export default function KidsPage() {
         </div>
       </section>
 
+      {/* ── Pre-Register Form ─────────────────────────────── */}
+      <section id="pre-register" className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-12 text-center">
+            <p className="eyebrow mb-3">Pre-Register Your Family</p>
+            <h2
+              className="font-condensed font-900 text-[#00205B] mb-4"
+              style={{
+                fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              Skip the line on Sunday.
+            </h2>
+            <p className="text-[#00205B]/55 leading-relaxed max-w-md mx-auto">
+              Fill this out once — we&apos;ll have your family in our system before
+              you arrive. First-time check-in takes about 60 seconds.
+            </p>
+          </div>
+          <KidsRegistrationForm />
+        </div>
+      </section>
+
       {/* ── First-time CTA ─────────────────────────────────── */}
       <section className="py-24 px-6 bg-white">
         <div className="max-w-3xl mx-auto text-center">
@@ -546,9 +567,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#pre-register"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
               style={{ background: "#00abc9", color: "#00142a" }}
             >
