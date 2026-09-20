@@ -50,7 +50,6 @@ async function runDebug() {
         attributes: { value: { number: "4235550100", location: "Mobile" } },
         relationships: {
           form_field: { data: { type: "FormField", id: "10599346" } },
-          form_field_option: { data: null },
         },
       },
       {
@@ -58,7 +57,6 @@ async function runDebug() {
         attributes: { value: "11728683" },
         relationships: {
           form_field: { data: { type: "FormField", id: "10599355" } },
-          form_field_option: { data: null },
         },
       },
     ],

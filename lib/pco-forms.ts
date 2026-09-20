@@ -79,7 +79,6 @@ function toFormSubmissionValue(a: FieldAnswer): object {
     type: "FormSubmissionValue",
     relationships: {
       form_field: { data: { type: "FormField", id: a.fieldId } },
-      form_field_option: { data: null as { type: string; id: string } | null },
     },
   };
 
