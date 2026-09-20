@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ── Tailwind v4: enable dark-mode via .dark class on <html> ──── */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   /* Official BBC Brand Colors */
   --bbc-blue: #00abc9;
@@ -457,4 +460,72 @@ body {
   ::view-transition-new(root) {
     animation: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE
+   All overrides live here. Components use dark: Tailwind
+   utilities for bg/text — structural shared classes live below.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Remap CSS custom properties for dark theme ─────────────── */
+.dark {
+  --bbc-navy:       #c8d4e8;          /* nav/heading text → light blue-gray  */
+  --gray-50:        #0a1525;
+  --gray-100:       #111d2e;          /* section backgrounds */
+  --gray-200:       #162030;          /* card surfaces */
+  --glass-bg:       rgba(22,32,48,0.8);
+  --glass-border:   rgba(255,255,255,0.08);
+  --text-muted:     rgba(200,212,232,0.5);
+}
+
+/* ── Page background ────────────────────────────────────────── */
+.dark body {
+  background: #0d1525;
+  color: #c8d4e8;
+}
+
+/* ── Frosted nav: go dark ────────────────────────────────────── */
+.dark .nav-glass {
+  background: rgba(10, 18, 35, 0.92);
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Shared card / glass utilities ──────────────────────────── */
+.dark .glass {
+  background: #162030;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.dark .glass-md {
+  background: #111d2e;
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.dark .glass-deep {
+  background: rgba(22, 32, 48, 0.80);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Eyebrow variants ────────────────────────────────────────── */
+.dark .eyebrow-muted {
+  color: rgba(200, 212, 232, 0.45);
+}
+
+/* ── Button overrides ────────────────────────────────────────── */
+.dark .btn-outline-navy {
+  color: #c8d4e8;
+  border-color: rgba(200, 212, 232, 0.25);
+}
+.dark .btn-outline-navy:hover {
+  border-color: var(--bbc-blue);
+  color: var(--bbc-blue);
+}
+
+/* ── Card hover shadows (toned down for dark) ───────────────── */
+.dark .card-hover:hover {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.dark .card-hover-sm:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }

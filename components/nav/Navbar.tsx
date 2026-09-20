@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 // ── Nav groups shown in the drawer ─────────────────────────────
 const NAV_GROUPS = [
@@ -43,9 +44,41 @@ const NAV_GROUPS = [
   },
 ];
 
+// ── Sun icon ────────────────────────────────────────────────────
+function SunIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+  );
+}
+
+// ── Moon icon ───────────────────────────────────────────────────
+function MoonIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  );
+}
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const { resolvedTheme, setTheme } = useTheme();
+
+  // Avoid hydration mismatch — only render theme-aware UI after mount
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
@@ -57,6 +90,18 @@ export default function Navbar() {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
+
+  const isDark = mounted && resolvedTheme === "dark";
+
+  // Logo: white unless scrolled in light mode
+  const logoSrc = scrolled && !isDark ? "/logo-black.png" : "/logo-white.png";
+
+  // Hamburger bar color: dark navy bars only when scrolled in light mode
+  const barColor = scrolled && !isDark ? "bg-[#00205B]" : "bg-white";
+
+  function toggleTheme() {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  }
 
   return (
     <>
@@ -70,29 +115,18 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
-            {scrolled ? (
-              <Image
-                src="/logo-black.png"
-                alt="Brainerd Baptist Church"
-                width={120}
-                height={48}
-                className="h-9 w-auto"
-                priority
-              />
-            ) : (
-              <Image
-                src="/logo-white.png"
-                alt="Brainerd Baptist Church"
-                width={120}
-                height={48}
-                className="h-9 w-auto"
-                priority
-              />
-            )}
+            <Image
+              src={logoSrc}
+              alt="Brainerd Baptist Church"
+              width={120}
+              height={48}
+              className="h-9 w-auto transition-opacity duration-300"
+              priority
+            />
           </Link>
 
-          {/* Right side — Plan a Visit + hamburger */}
-          <div className="flex items-center gap-3">
+          {/* Right side — Plan a Visit + theme toggle + hamburger */}
+          <div className="flex items-center gap-2">
             <Link
               href="/visit"
               className="hidden sm:inline-flex font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5"
@@ -101,17 +135,32 @@ export default function Navbar() {
               Plan a Visit
             </Link>
 
+            {/* Theme toggle — only render after mount to avoid flash */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                className={`p-2 rounded-lg transition-colors ${
+                  scrolled && !isDark
+                    ? "text-[#00205B] hover:bg-[#00205B]/06"
+                    : "text-white hover:bg-white/10"
+                }`}
+              >
+                {isDark ? <SunIcon /> : <MoonIcon />}
+              </button>
+            )}
+
             {/* Hamburger button */}
             <button
               onClick={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
               className={`flex flex-col gap-1.5 p-2 cursor-pointer rounded-lg transition-colors ${
-                scrolled ? "hover:bg-[#00205B]/06" : "hover:bg-white/10"
+                scrolled && !isDark ? "hover:bg-[#00205B]/06" : "hover:bg-white/10"
               }`}
             >
-              <span className={`w-6 h-0.5 rounded-full transition-colors ${scrolled ? "bg-[#00205B]" : "bg-white"}`} />
-              <span className={`w-6 h-0.5 rounded-full transition-colors ${scrolled ? "bg-[#00205B]" : "bg-white"}`} />
-              <span className={`w-4 h-0.5 rounded-full transition-colors ${scrolled ? "bg-[#00205B]" : "bg-white"}`} />
+              <span className={`w-6 h-0.5 rounded-full transition-colors ${barColor}`} />
+              <span className={`w-6 h-0.5 rounded-full transition-colors ${barColor}`} />
+              <span className={`w-4 h-0.5 rounded-full transition-colors ${barColor}`} />
             </button>
           </div>
         </div>

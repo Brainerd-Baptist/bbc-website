@@ -6,6 +6,7 @@ import Footer from "@/components/footer/Footer";
 import { AudioProvider } from "@/lib/audio-context";
 import GlobalAudioPlayer from "@/components/audio/GlobalAudioPlayer";
 import PageTransition from "@/components/PageTransition";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,15 +47,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} antialiased`}>
-        <AudioProvider>
-          <PageTransition />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <GlobalAudioPlayer />
-        </AudioProvider>
+        <ThemeProvider>
+          <AudioProvider>
+            <PageTransition />
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <GlobalAudioPlayer />
+          </AudioProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

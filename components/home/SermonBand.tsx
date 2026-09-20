@@ -17,14 +17,14 @@ export default function SermonBand() {
   const watchUrl  = `https://www.youtube.com/watch?v=${videoId}`;
 
   return (
-    <section className="bg-white section-pad border-b border-gray-100">
+    <section className="bg-white dark:bg-[#0d1525] section-pad border-b border-gray-100 dark:border-white/5">
       <div className="max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
               <p className="eyebrow mb-3">Latest Sermon</p>
               <div className="blue-divider mb-5" />
-              <h2 className="h-section text-[#00205B]">
+              <h2 className="h-section text-[#00205B] dark:text-[#c8d4e8]">
                 Hear from God&apos;s Word
               </h2>
             </div>
@@ -42,7 +42,7 @@ export default function SermonBand() {
 
         {/* Featured sermon card */}
         <ScrollReveal delay={100}>
-          <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-lg shadow-black/5">
+          <div className="rounded-2xl overflow-hidden border border-gray-100 dark:border-white/8 shadow-lg shadow-black/5 dark:shadow-black/30">
             <div className="grid md:grid-cols-5">
 
               {/* Thumbnail / Play */}
@@ -92,14 +92,14 @@ export default function SermonBand() {
               </div>
 
               {/* Info panel */}
-              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center bg-white">
+              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center bg-white dark:bg-[#162030]">
                 <h3
-                  className="font-condensed font-800 text-[#00205B] text-2xl md:text-3xl leading-tight mb-4"
+                  className="font-condensed font-800 text-[#00205B] dark:text-[#c8d4e8] text-2xl md:text-3xl leading-tight mb-4"
                   style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
                 >
                   {title}
                 </h3>
-                <div className="flex flex-wrap gap-x-5 gap-y-2 text-gray-400 text-sm mb-6">
+                <div className="flex flex-wrap gap-x-5 gap-y-2 text-gray-400 dark:text-gray-500 text-sm mb-6">
                   <span className="flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
