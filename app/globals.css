@@ -412,3 +412,49 @@ body {
 .orb-navy {
   background: radial-gradient(circle, rgba(0,32,91,0.15) 0%, transparent 70%);
 }
+
+/* ── Page transitions (View Transitions API) ───────────── */
+/* Browsers without support (Firefox) see nothing — graceful degradation */
+
+@keyframes vt-fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vt-fade-slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+::view-transition-old(root) {
+  animation: vt-fade-slide-out 0.18s ease-out both;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-slide-in 0.24s ease-out both;
+}
+
+/* Navbar stays in place — no flash as it transitions */
+::view-transition-old(navbar),
+::view-transition-new(navbar) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
