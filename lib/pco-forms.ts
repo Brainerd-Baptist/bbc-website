@@ -98,7 +98,7 @@ function toFormSubmissionValue(a: FieldAnswer): object {
             city: a.city,
             state: a.state,
             zip: a.zip,
-            country: a.country ?? "US",
+            country_code: a.country ?? "US",
           },
         },
       };

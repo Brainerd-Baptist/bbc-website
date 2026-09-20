@@ -59,7 +59,7 @@ async function runDebug() {
         type: "FormSubmissionValue",
         relationships: { form_field: { data: { type: "FormField", id: FIELD.address } } },
         attributes: {
-          value: { location: "Home", street: "123 Main St", city: "Chattanooga", state: "TN", zip: "37421", country: "US" },
+          value: { location: "Home", street: "123 Main St", city: "Chattanooga", state: "TN", zip: "37421", country_code: "US" },
         },
       },
       {
