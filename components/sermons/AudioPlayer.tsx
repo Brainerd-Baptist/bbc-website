@@ -22,6 +22,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
   const light = theme === "light";
   const { track: activeTrack, isPlaying, currentTime, duration, speed, bufferedEnd, loadTrack, togglePlay, seek, setSpeed } = useAudio();
   const barRef   = useRef<HTMLDivElement>(null);
+  const firedRef = useRef<Set<string>>(new Set());
   const [dragging, setDragging]   = useState(false);
   const [dragPct, setDragPct]     = useState(0);
   const [resumed, setResumed]     = useState<number | null>(null);
@@ -56,9 +57,30 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
     return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
   }
 
+  function fireEvent(event: "start" | "half" | "complete") {
+    const key = `${track.slug}:${event}`;
+    if (firedRef.current.has(key)) return;
+    firedRef.current.add(key);
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: track.slug, title: track.title, mediaType: "audio", event }),
+    }).catch(() => {/* ignore */});
+  }
+
+  // Fire half/complete events as time progresses
+  useEffect(() => {
+    if (!isActive || !dur) return;
+    const pctPlayed = ct / dur;
+    if (pctPlayed >= 0.5)  fireEvent("half");
+    if (pctPlayed >= 0.95) fireEvent("complete");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ct, dur, isActive]);
+
   function handlePlay() {
     if (!isActive) {
       loadTrack(track);
+      fireEvent("start");
       setShowResume(false);
     } else {
       togglePlay();
