@@ -391,8 +391,32 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
           {/* ── Body ── */}
           <div className="body">
 
-            {/* Print button — screen only */}
-            <div className="no-print" style={{ float: "right", marginLeft: "1.5rem", marginBottom: "0.5rem" }}>
+            {/* Action buttons — screen only */}
+            <div className="no-print" style={{ float: "right", marginLeft: "1.5rem", marginBottom: "0.5rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <a
+                href={`/sermons/${slug}/notes/pdf`}
+                download
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
+                  fontSize: "0.72rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  color: "#fff",
+                  background: "linear-gradient(135deg, #00205B 0%, #0a2d6e 100%)",
+                  padding: "0.6rem 1.1rem",
+                  borderRadius: "9999px",
+                  textDecoration: "none",
+                  boxShadow: "0 2px 8px rgba(0,32,91,0.25)",
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 1v8M4 6l3 3 3-3M2 11h10"/>
+                </svg>
+                Download PDF
+              </a>
               <PrintButton />
             </div>
 
@@ -486,18 +510,30 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
             </svg>
             Back to sermon
           </a>
-          {audioUrl && (
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            {audioUrl && (
+              <a
+                href={audioUrl}
+                download
+                style={{ fontSize: "0.75rem", color: "rgba(0,32,91,0.4)", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.375rem" }}
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 1v8M4 6l3 3 3-3M2 11h10"/>
+                </svg>
+                Audio
+              </a>
+            )}
             <a
-              href={audioUrl}
+              href={`/sermons/${slug}/notes/pdf`}
               download
               style={{ fontSize: "0.75rem", color: "rgba(0,32,91,0.4)", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.375rem" }}
             >
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M7 1v8M4 6l3 3 3-3M2 11h10"/>
               </svg>
-              Download Audio
+              PDF
             </a>
-          )}
+          </div>
         </div>
       </div>
     </>
