@@ -80,7 +80,7 @@ export default function Hero() {
           </div>
 
           {/* Address */}
-          <p className="text-white/35 text-xs mt-8 tracking-wide">
+          <p className="text-white/35 text-xs mt-8 mb-16 tracking-wide">
             300 Brookfield Ave · Chattanooga, TN 37411
           </p>
         </div>
