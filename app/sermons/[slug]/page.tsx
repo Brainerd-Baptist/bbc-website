@@ -210,7 +210,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
 
   const sermonNotes = isCurtisHill(s.speaker) && s.date
     ? await loadSermonNotes(s.date)
-    : { outline: [], outlineType: "none" as const, rawText: null };
+    : { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
 
   const allPassages = [s.passage, ...(s.passages ?? [])].filter(Boolean);
 
