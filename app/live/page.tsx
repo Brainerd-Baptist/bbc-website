@@ -15,8 +15,6 @@ import type { Metadata } from "next";
 import { getLatestSermon } from "@/lib/sermon";
 import LivePlayer from "@/components/live/LivePlayer";
 
-export const revalidate = 3600;
-
 export const metadata: Metadata = {
   title: "Watch Live — Brainerd Baptist Church",
   description:
@@ -26,6 +24,8 @@ export const metadata: Metadata = {
     description: "Live worship every Sunday morning at 8:30 AM and 11:00 AM ET.",
   },
 };
+
+// Page is dynamic (uses searchParams); data caching handled per-fetch in lib/sermon.ts
 
 export default async function LivePage({
   searchParams,

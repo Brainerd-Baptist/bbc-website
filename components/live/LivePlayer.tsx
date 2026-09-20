@@ -238,7 +238,7 @@ function ActiveView({
         )}
         {state === "post" && (
           <><span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-          Service ended — {service?.label}</>
+          {service ? `Service ended — ${service.label}` : "Service ended"}</>
         )}
       </div>
 
