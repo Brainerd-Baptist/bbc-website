@@ -7,7 +7,17 @@ import { pcoAuth, findOrCreatePerson } from "@/lib/pco-forms";
 
 const PCO_BASE = "https://api.planningcenteronline.com";
 
+// GET: accessible from a plain browser visit
+export async function GET() {
+  return runDebug();
+}
+
 export async function POST(req: NextRequest) {
+  void req;
+  return runDebug();
+}
+
+async function runDebug() {
   const appId = process.env.PCO_APP_ID;
   const secret = process.env.PCO_SECRET;
 
