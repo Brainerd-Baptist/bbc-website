@@ -1,9 +1,8 @@
 /**
  * /sermons/[slug]/notes — Printable sermon notes
  *
- * Opens in a new tab. Shows outline points with ruled writing lines,
- * key phrases (highlights), and a print button. Designed to be saved
- * as PDF via Cmd+P / Ctrl+P → "Save as PDF".
+ * Professional branded print resource. Opens in a new tab.
+ * User hits Print → "Save as PDF" in their browser.
  */
 
 import { notFound } from "next/navigation";
@@ -25,28 +24,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-// Ruled lines for note-taking under each outline point
-function RuledLines({ count = 3 }: { count?: number }) {
-  return (
-    <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          style={{
-            height: "1px",
-            background: "rgba(0,32,91,0.13)",
-            borderRadius: "1px",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default async function SermonNotesPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  // Try Sanity first, fall back to static
   const sanitySermon = await getSermonBySlug(slug).catch(() => null);
   let title = "", series = "", passage = "", speaker = "", date = "";
 
@@ -66,176 +46,466 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
     date    = staticS.date;
   }
 
-  // Load notes from Drive (outline + highlights)
   const notes = date ? await getSermonNotesByDate(date) : null;
-  const outline: string[]   = notes?.outline    ?? [];
+  const outline: string[]    = notes?.outline    ?? [];
   const highlights: string[] = notes?.highlights ?? [];
   const outlineType = notes?.outlineType ?? "none";
 
-  // Also check podcast for audio (so notes page can show audio duration context)
-  let audioAvailable = false;
+  let audioUrl = "";
   if (date) {
     const podcastMap: Record<string, string> = await getPodcastAudioMap().catch(() => ({}));
     const key = dateToKey(date);
     const d = new Date(date + "T12:00:00Z");
     d.setUTCDate(d.getUTCDate() - 1);
     const prevKey = dateToKey(d.toISOString().slice(0, 10));
-    audioAvailable = !!(podcastMap[key] || podcastMap[prevKey]);
+    audioUrl = podcastMap[key] || podcastMap[prevKey] || "";
   }
 
   const formattedDate = date ? formatDate(date) : "";
-  const sermonUrl = `https://brainerdbaptist.org/sermons/${slug}`;
-  const hasContent = outline.length > 0 || highlights.length > 0;
 
   return (
-    <>
-      {/* Global print styles */}
-      <style>{`
-        @media print {
-          .no-print { display: none !important; }
-          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          @page { margin: 0.75in; size: letter; }
-        }
-        @media screen {
-          body { background: #e8ecf1; }
-        }
-      `}</style>
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        <style>{`
+          *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      {/* Screen wrapper */}
-      <div style={{ minHeight: "100vh", padding: "2rem 1rem", fontFamily: "Georgia, 'Times New Roman', serif" }}>
+          body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #d6dce5;
+            min-height: 100vh;
+            padding: 2.5rem 1rem 3rem;
+            -webkit-font-smoothing: antialiased;
+          }
 
-        {/* Paper */}
-        <div
-          style={{
-            maxWidth: "680px",
-            margin: "0 auto",
-            background: "#fff",
-            padding: "3rem 3.5rem 4rem",
-            boxShadow: "0 4px 40px rgba(0,0,0,0.12)",
-            borderRadius: "4px",
-            minHeight: "11in",
-          }}
-        >
-          {/* ── Header ── */}
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "2.5rem", paddingBottom: "1.5rem", borderBottom: "2px solid #00205B" }}>
-            <div>
-              {/* Church name */}
-              <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#00abc9", marginBottom: "0.25rem", fontFamily: "system-ui, sans-serif" }}>
-                Brainerd Baptist Church
-              </div>
-              {/* Sermon title */}
-              <h1 style={{ fontSize: "1.75rem", fontWeight: 800, color: "#00205B", margin: 0, lineHeight: 1.1, letterSpacing: "-0.02em", fontFamily: "system-ui, sans-serif" }}>
-                {title}
-              </h1>
-              {/* Meta row */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0 1.25rem", marginTop: "0.5rem" }}>
-                {series && <span style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.5)", fontFamily: "system-ui, sans-serif" }}>{series}</span>}
-                {passage && (
-                  <span style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.5)", fontFamily: "system-ui, sans-serif" }}>
-                    {passage}
-                  </span>
-                )}
-                {formattedDate && <span style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.5)", fontFamily: "system-ui, sans-serif" }}>{formattedDate}</span>}
-                {speaker && <span style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.5)", fontFamily: "system-ui, sans-serif" }}>{speaker}</span>}
-              </div>
+          .page {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 8px 60px rgba(0,20,60,0.18), 0 2px 12px rgba(0,20,60,0.08);
+            border-radius: 3px;
+            overflow: hidden;
+          }
+
+          /* ── Header band ── */
+          .header-band {
+            background: #00205B;
+            padding: 2rem 3rem 1.75rem;
+            position: relative;
+            overflow: hidden;
+          }
+
+          .header-band::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 280px; height: 100%;
+            background: radial-gradient(ellipse at 100% 0%, rgba(0,171,201,0.18) 0%, transparent 65%);
+            pointer-events: none;
+          }
+
+          .church-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #00abc9;
+            margin-bottom: 0.625rem;
+          }
+
+          .sermon-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.0;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+          }
+
+          .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0 1.5rem;
+          }
+
+          .meta-item {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.01em;
+          }
+
+          .meta-item + .meta-item::before {
+            content: '·';
+            margin-right: 1.5rem;
+          }
+
+          /* ── Cyan accent stripe ── */
+          .accent-stripe {
+            height: 4px;
+            background: linear-gradient(90deg, #00abc9 0%, rgba(0,171,201,0.3) 100%);
+          }
+
+          /* ── Body ── */
+          .body {
+            padding: 2.75rem 3rem 3.5rem;
+          }
+
+          /* ── Section label ── */
+          .section-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #00abc9;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+          }
+          .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0,32,91,0.1);
+          }
+
+          /* ── Passage callout ── */
+          .passage-callout {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0,171,201,0.07);
+            border: 1px solid rgba(0,171,201,0.2);
+            border-radius: 6px;
+            padding: 0.5rem 0.875rem;
+            margin-bottom: 2rem;
+          }
+          .passage-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(0,32,91,0.4);
+          }
+          .passage-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #00205B;
+          }
+
+          /* ── Outline points ── */
+          .outline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+          }
+
+          .outline-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+          }
+
+          .outline-number {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: #00205B;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 0.05rem;
+          }
+
+          .outline-number.scripture {
+            background: transparent;
+            border: 1.5px solid rgba(0,32,91,0.2);
+            color: rgba(0,32,91,0.4);
+          }
+
+          .outline-content {
+            flex: 1;
+          }
+
+          .outline-point {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00205B;
+            line-height: 1.4;
+            margin-bottom: 0.875rem;
+          }
+
+          /* ── Ruled lines ── */
+          .ruled-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          .rule {
+            height: 1px;
+            background: rgba(0,32,91,0.11);
+          }
+
+          /* ── Empty state (no outline) ── */
+          .blank-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+
+          /* ── Additional notes ── */
+          .additional-notes {
+            margin-top: 3rem;
+          }
+
+          /* ── Key phrases ── */
+          .key-phrases {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0,32,91,0.08);
+          }
+          .phrase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          .phrase-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+          }
+          .phrase-accent {
+            color: #00abc9;
+            font-size: 1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            line-height: 1.5;
+          }
+          .phrase-text {
+            font-size: 0.875rem;
+            font-style: italic;
+            color: rgba(0,32,91,0.65);
+            line-height: 1.6;
+          }
+
+          /* ── Footer ── */
+          .footer {
+            margin-top: 3.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(0,32,91,0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+          }
+          .footer-church {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #00205B;
+          }
+          .footer-address {
+            font-size: 0.65rem;
+            color: rgba(0,32,91,0.35);
+          }
+          .footer-url {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #00abc9;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+          }
+
+          /* ── Screen-only elements ── */
+          .screen-toolbar {
+            max-width: 720px;
+            margin: 1.25rem auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 0.25rem;
+          }
+          .back-link {
+            font-size: 0.75rem;
+            color: rgba(0,32,91,0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+          }
+          .back-link:hover { color: #00205B; }
+
+          /* ── Print styles ── */
+          @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; padding: 0; }
+            .page {
+              box-shadow: none;
+              border-radius: 0;
+              max-width: 100%;
+            }
+            .body { padding: 2rem 2.5rem 2.5rem; }
+            .header-band { padding: 1.5rem 2.5rem; }
+            .screen-toolbar { display: none !important; }
+            @page {
+              size: letter;
+              margin: 0;
+            }
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+        `}</style>
+      </head>
+      <body>
+
+        {/* ── Paper sheet ── */}
+        <div className="page">
+
+          {/* ── Branded header ── */}
+          <div className="header-band">
+            <div className="church-name">Brainerd Baptist Church</div>
+            <h1 className="sermon-title">{title}</h1>
+            <div className="meta-row">
+              {series   && <span className="meta-item">{series}</span>}
+              {formattedDate && <span className="meta-item">{formattedDate}</span>}
+              {speaker  && <span className="meta-item">{speaker}</span>}
             </div>
+          </div>
 
-            {/* Print button — hidden in print */}
-            <div className="no-print" style={{ marginLeft: "1rem", flexShrink: 0 }}>
+          {/* ── Cyan stripe ── */}
+          <div className="accent-stripe" />
+
+          {/* ── Body ── */}
+          <div className="body">
+
+            {/* Print button — screen only */}
+            <div className="no-print" style={{ float: "right", marginLeft: "1.5rem", marginBottom: "0.5rem" }}>
               <PrintButton />
             </div>
-          </div>
 
-          {/* ── Message Notes heading ── */}
-          <div style={{ marginBottom: "2rem" }}>
-            <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#00abc9", margin: "0 0 0.375rem", fontFamily: "system-ui, sans-serif" }}>
-              Message Notes
-            </p>
-            <div style={{ height: "1px", background: "rgba(0,32,91,0.1)" }} />
-          </div>
+            {/* Passage callout */}
+            {passage && (
+              <div className="passage-callout">
+                <span className="passage-label">Key Passage</span>
+                <span className="passage-text">{passage}</span>
+              </div>
+            )}
 
-          {/* ── Outline points with writing lines ── */}
-          {outline.length > 0 ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "2.25rem" }}>
-              {outline.map((point, i) => (
-                <div key={i}>
-                  <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
-                    <span style={{ color: "#00abc9", fontWeight: 700, fontSize: "0.85rem", flexShrink: 0, marginTop: "0.1rem", fontFamily: "system-ui, sans-serif" }}>
-                      {outlineType === "scripture" ? "—" : `${i + 1}.`}
-                    </span>
-                    <span style={{ fontSize: "1rem", color: "#00205B", fontWeight: 600, lineHeight: 1.4, fontFamily: "system-ui, sans-serif" }}>
-                      {point}
-                    </span>
+            {/* Section label */}
+            <div className="section-label">Message Notes</div>
+
+            {/* Outline points */}
+            {outline.length > 0 ? (
+              <div className="outline-list">
+                {outline.map((point, i) => (
+                  <div className="outline-item" key={i}>
+                    <div className={`outline-number${outlineType === "scripture" ? " scripture" : ""}`}>
+                      {outlineType === "scripture" ? "—" : i + 1}
+                    </div>
+                    <div className="outline-content">
+                      <div className="outline-point">{point}</div>
+                      <div className="ruled-lines">
+                        <div className="rule" />
+                        <div className="rule" />
+                        <div className="rule" />
+                        <div className="rule" />
+                      </div>
+                    </div>
                   </div>
-                  <RuledLines count={4} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            /* No outline — just give blank writing space */
-            <div style={{ display: "flex", flexDirection: "column", gap: "2.25rem" }}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i}>
-                  <RuledLines count={4} />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ── Extra free-write space ── */}
-          <div style={{ marginTop: "3rem" }}>
-            <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(0,32,91,0.3)", margin: "0 0 0.875rem", fontFamily: "system-ui, sans-serif" }}>
-              Additional Notes
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} style={{ height: "1px", background: "rgba(0,32,91,0.1)" }} />
-              ))}
-            </div>
-          </div>
-
-          {/* ── Key phrases (highlights) ── */}
-          {highlights.length > 0 && (
-            <div style={{ marginTop: "3rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(0,32,91,0.1)" }}>
-              <p style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#00abc9", margin: "0 0 1rem", fontFamily: "system-ui, sans-serif" }}>
-                Key Phrases
-              </p>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                {highlights.map((phrase, i) => (
-                  <li key={i} style={{ display: "flex", gap: "0.5rem", fontSize: "0.9rem" }}>
-                    <span style={{ color: "#00abc9", flexShrink: 0 }}>›</span>
-                    <span style={{ color: "rgba(0,32,91,0.7)", fontStyle: "italic", lineHeight: 1.5, fontFamily: "system-ui, sans-serif" }}>{phrase}</span>
-                  </li>
                 ))}
-              </ul>
-            </div>
-          )}
+              </div>
+            ) : (
+              /* No outline — open writing space */
+              <div className="blank-section">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div className="rule" key={i} />
+                ))}
+              </div>
+            )}
 
-          {/* ── Footer ── */}
-          <div style={{ marginTop: "4rem", paddingTop: "1.25rem", borderTop: "1px solid rgba(0,32,91,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "0.65rem", color: "rgba(0,32,91,0.3)", fontFamily: "system-ui, sans-serif" }}>
-              brainerdbaptist.org · 300 Brookfield Ave, Chattanooga, TN
-            </span>
-            <a
-              href={sermonUrl}
-              style={{ fontSize: "0.65rem", color: "rgba(0,32,91,0.3)", textDecoration: "none", fontFamily: "system-ui, sans-serif" }}
-              className="no-print"
-            >
-              {audioAvailable ? "Listen to this message →" : "View this message →"}
-            </a>
+            {/* Additional notes section */}
+            <div className="additional-notes">
+              <div className="section-label">Additional Notes</div>
+              <div className="blank-section">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div className="rule" key={i} />
+                ))}
+              </div>
+            </div>
+
+            {/* Key phrases */}
+            {highlights.length > 0 && (
+              <div className="key-phrases">
+                <div className="section-label">Key Phrases</div>
+                <div className="phrase-list">
+                  {highlights.map((phrase, i) => (
+                    <div className="phrase-item" key={i}>
+                      <span className="phrase-accent">›</span>
+                      <span className="phrase-text">{phrase}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div className="footer">
+              <div className="footer-left">
+                <span className="footer-church">Brainerd Baptist Church</span>
+                <span className="footer-address">300 Brookfield Ave · Chattanooga, TN · Sundays 8:30 & 11:00 AM</span>
+              </div>
+              <a
+                href="https://brainerdbaptist.org"
+                className="footer-url no-print"
+              >
+                brainerdbaptist.org
+              </a>
+              <span className="footer-address" style={{ display: "none" }}>brainerdbaptist.org</span>
+            </div>
           </div>
         </div>
 
-        {/* Screen-only back link */}
-        <div className="no-print" style={{ maxWidth: "680px", margin: "1.25rem auto 0", textAlign: "center" }}>
-          <a
-            href={`/sermons/${slug}`}
-            style={{ fontSize: "0.75rem", color: "rgba(0,32,91,0.4)", textDecoration: "none", fontFamily: "system-ui, sans-serif" }}
-          >
-            ← Back to sermon
+        {/* ── Screen-only toolbar ── */}
+        <div className="screen-toolbar no-print">
+          <a href={`/sermons/${slug}`} className="back-link">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <path d="M11 7H3M6 4L3 7l3 3"/>
+            </svg>
+            Back to sermon
           </a>
+          {audioUrl && (
+            <a
+              href={audioUrl}
+              download
+              style={{ fontSize: "0.75rem", color: "rgba(0,32,91,0.4)", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.375rem" }}
+            >
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M7 1v8M4 6l3 3 3-3M2 11h10"/>
+              </svg>
+              Download Audio
+            </a>
+          )}
         </div>
-      </div>
-    </>
+
+      </body>
+    </html>
   );
 }

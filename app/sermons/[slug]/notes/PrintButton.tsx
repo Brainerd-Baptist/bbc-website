@@ -7,17 +7,28 @@ export default function PrintButton() {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: "0.375rem",
-        fontSize: "0.7rem",
+        gap: "0.5rem",
+        fontSize: "0.72rem",
+        fontFamily: "'Inter', system-ui, sans-serif",
         fontWeight: 600,
-        letterSpacing: "0.03em",
+        letterSpacing: "0.04em",
+        textTransform: "uppercase" as const,
         color: "#fff",
-        background: "#00205B",
+        background: "linear-gradient(135deg, #00205B 0%, #0a2d6e 100%)",
         border: "none",
-        padding: "0.5rem 0.875rem",
+        padding: "0.6rem 1.1rem",
         borderRadius: "9999px",
         cursor: "pointer",
-        fontFamily: "system-ui, sans-serif",
+        boxShadow: "0 2px 8px rgba(0,32,91,0.25)",
+        transition: "opacity 0.15s, box-shadow 0.15s",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.opacity = "0.88";
+        (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 4px 14px rgba(0,32,91,0.35)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.opacity = "1";
+        (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 2px 8px rgba(0,32,91,0.25)";
       }}
       aria-label="Print or save as PDF"
     >
@@ -26,7 +37,7 @@ export default function PrintButton() {
         <path d="M4 5V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
         <path d="M4 9h1M4 11h6"/>
       </svg>
-      Print / Save PDF
+      Print · Save PDF
     </button>
   );
 }
