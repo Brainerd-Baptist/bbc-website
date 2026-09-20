@@ -15,7 +15,10 @@
 
 export const YOUTUBE_CHANNEL_ID = "UCEcu35yHidS8fQVwsoSP3zQ";
 
-const DRIVE_FOLDER_ID = "15eQjQeoGLB2MJ2RxDjLf9fmzN6TlFzSK";
+// Root folder: 15eQjQeoGLB2MJ2RxDjLf9fmzN6TlFzSK
+// 2025 subfolder: 1Lxs7IeOguQNdDF00lA_RvCoJeYddFqdu
+// 2026 subfolder: 164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS
+const DRIVE_FOLDER_ID = "164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS"; // current year
 
 export interface SermonData {
   title: string;
@@ -169,8 +172,9 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
 
     if (!overrideFileId) {
       // 1a. List files sorted by name desc (most recent date first)
+      // Files are .docx (Word format), not native Google Docs
       const q = encodeURIComponent(
-        `'${DRIVE_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.document' and trashed=false`,
+        `'${DRIVE_FOLDER_ID}' in parents and (mimeType='application/vnd.openxmlformats-officedocument.wordprocessingml.document' or mimeType='application/vnd.google-apps.document')`,
       );
       const fields = encodeURIComponent("files(id,name)");
       const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name+desc&pageSize=3&fields=${fields}&key=${key}`;
@@ -202,13 +206,25 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
       if (!parsed) return null;
     }
 
-    // 2. Export the doc as plain text to extract the outline
+    // 2. Try to get doc content for outline parsing
+    // Native Google Docs: export as plain text
+    // .docx files: export fails; outline parsing not supported yet
     const cache = overrideFileId ? "no-store" : undefined;
-    const exportUrl = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text%2Fplain&key=${key}`;
-    const exportRes = await fetch(exportUrl, cache ? { cache } : { next: { revalidate: 3600 } });
-    const { items: outline, type: outlineType } = exportRes.ok
-      ? parseOutline(await exportRes.text())
-      : { items: [], type: "none" as const };
+    let outline: string[] = [];
+    let outlineType: "structured" | "scripture" | "none" = "none";
+    try {
+      // Try Google Docs export first (works if file is native Google Doc)
+      const exportUrl = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text%2Fplain&key=${key}`;
+      const exportRes = await fetch(exportUrl, cache ? { cache } : { next: { revalidate: 3600 } });
+      if (exportRes.ok) {
+        const result = parseOutline(await exportRes.text());
+        outline = result.items;
+        outlineType = result.type;
+      }
+      // .docx binary download isn't parsed here — title/passage come from the filename
+    } catch {
+      // Outline parsing failed; title/date/passage still come from the filename
+    }
 
     return { ...parsed, fileId, outline, outlineType };
   } catch (err) {
@@ -273,7 +289,7 @@ function parseHighlights(html: string): string[] {
 export async function getSermonNotesByDate(date: string): Promise<{
   outline: string[];
   outlineType: "structured" | "scripture" | "none";
-  rawText: string;
+  rawText: string | null;
   highlights: string[];
 } | null> {
   const key = process.env.GOOGLE_API_KEY;
@@ -281,21 +297,37 @@ export async function getSermonNotesByDate(date: string): Promise<{
 
   // "2026-09-20" → "2026 09 20"
   const datePart = date.replace(/-/g, " ");
+  // Determine which subfolder to search based on year
+  const year = date.slice(0, 4);
+  const subfolderMap: Record<string, string> = {
+    "2026": "164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS",
+    "2025": "1Lxs7IeOguQNdDF00lA_RvCoJeYddFqdu",
+  };
+  const subfolderId = subfolderMap[year] ?? DRIVE_FOLDER_ID;
 
   try {
     const q = encodeURIComponent(
-      `'${DRIVE_FOLDER_ID}' in parents and name contains '${datePart}' and mimeType='application/vnd.google-apps.document' and trashed=false`,
+      `'${subfolderId}' in parents and name contains '${datePart}'`,
     );
-    const fields = encodeURIComponent("files(id,name)");
+    const fields = encodeURIComponent("files(id,name,mimeType)");
     const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=1&fields=${fields}&key=${key}`;
 
     const listRes = await fetch(listUrl, { next: { revalidate: 3600 } });
     if (!listRes.ok) return null;
 
-    const files: Array<{ id: string; name: string }> = (await listRes.json()).files ?? [];
+    const files: Array<{ id: string; name: string; mimeType: string }> = (await listRes.json()).files ?? [];
     if (files.length === 0) return null;
 
-    const exportUrl = `https://www.googleapis.com/drive/v3/files/${files[0].id}/export?mimeType=text%2Fhtml&key=${key}`;
+    const file = files[0];
+    const isGoogleDoc = file.mimeType === "application/vnd.google-apps.document";
+
+    // Google Docs can be exported as HTML; .docx files need binary download (not yet parsed)
+    if (!isGoogleDoc) {
+      // Filename gives us the outline-type data via title/passage; no rich outline available
+      return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
+    }
+
+    const exportUrl = `https://www.googleapis.com/drive/v3/files/${file.id}/export?mimeType=text%2Fhtml&key=${key}`;
     const exportRes = await fetch(exportUrl, { next: { revalidate: 3600 } });
     if (!exportRes.ok) return null;
 
