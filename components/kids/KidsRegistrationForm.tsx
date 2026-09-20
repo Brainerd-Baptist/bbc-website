@@ -17,15 +17,18 @@ const US_STATES = [
   "VA","WA","WV","WI","WY",
 ];
 
-type FormData = {
+type ChildInfo = {
+  firstName: string;
+  lastName: string;
+  gender: "Male" | "Female" | "";
+  birthdate: string;
+};
+
+type ParentInfo = {
   parentFirstName: string;
   parentLastName: string;
   parentEmail: string;
   phone: string;
-  childFirstName: string;
-  childLastName: string;
-  childGender: "M" | "F" | "";
-  childBirthdate: string;
   street: string;
   city: string;
   state: string;
@@ -35,15 +38,18 @@ type FormData = {
   parentalRightsNotes: string;
 };
 
-const EMPTY: FormData = {
+const EMPTY_CHILD: ChildInfo = {
+  firstName: "",
+  lastName: "",
+  gender: "",
+  birthdate: "",
+};
+
+const EMPTY_PARENT: ParentInfo = {
   parentFirstName: "",
   parentLastName: "",
   parentEmail: "",
   phone: "",
-  childFirstName: "",
-  childLastName: "",
-  childGender: "",
-  childBirthdate: "",
   street: "",
   city: "",
   state: "",
@@ -81,13 +87,25 @@ function Field({
 
 export default function KidsRegistrationForm() {
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormData>(EMPTY);
+  const [parent, setParent] = useState<ParentInfo>(EMPTY_PARENT);
+  const [children, setChildren] = useState<ChildInfo[]>([{ ...EMPTY_CHILD }]);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const set = (key: keyof FormData, value: string | boolean) =>
-    setForm((f) => ({ ...f, [key]: value }));
+  const setP = (key: keyof ParentInfo, value: string | boolean) =>
+    setParent((p) => ({ ...p, [key]: value }));
+
+  const setChild = (index: number, key: keyof ChildInfo, value: string) =>
+    setChildren((cs) =>
+      cs.map((c, i) => (i === index ? { ...c, [key]: value } : c))
+    );
+
+  const addChild = () =>
+    setChildren((cs) => [...cs, { ...EMPTY_CHILD }]);
+
+  const removeChild = (index: number) =>
+    setChildren((cs) => cs.filter((_, i) => i !== index));
 
   async function handleSubmit() {
     setSubmitting(true);
@@ -97,23 +115,25 @@ export default function KidsRegistrationForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          parentFirstName: form.parentFirstName,
-          parentLastName: form.parentLastName,
-          parentEmail: form.parentEmail,
-          phone: form.phone,
-          childFirstName: form.childFirstName,
-          childLastName: form.childLastName,
-          childGender: form.childGender,
-          childBirthdate: form.childBirthdate,
+          parentFirstName: parent.parentFirstName,
+          parentLastName: parent.parentLastName,
+          parentEmail: parent.parentEmail,
+          phone: parent.phone,
+          children: children.map((c) => ({
+            firstName: c.firstName,
+            lastName: c.lastName,
+            gender: c.gender,
+            birthdate: c.birthdate,
+          })),
           address: {
-            street: form.street,
-            city: form.city,
-            state: form.state,
-            zip: form.zip,
+            street: parent.street,
+            city: parent.city,
+            state: parent.state,
+            zip: parent.zip,
           },
-          service: form.service,
-          consentToText: form.consentToText,
-          parentalRightsNotes: form.parentalRightsNotes || undefined,
+          service: parent.service,
+          consentToText: parent.consentToText,
+          parentalRightsNotes: parent.parentalRightsNotes || undefined,
         }),
       });
       const data = await res.json();
@@ -130,13 +150,15 @@ export default function KidsRegistrationForm() {
   }
 
   function resetForm() {
-    setForm(EMPTY);
+    setParent(EMPTY_PARENT);
+    setChildren([{ ...EMPTY_CHILD }]);
     setStep(1);
     setSubmitted(false);
     setError("");
   }
 
   if (submitted) {
+    const count = children.length;
     return (
       <div className="rounded-2xl bg-white border border-[#00205B]/10 p-10 text-center max-w-xl mx-auto shadow-sm">
         <div
@@ -157,23 +179,30 @@ export default function KidsRegistrationForm() {
           className="font-condensed font-900 text-[#00205B] mb-3"
           style={{ fontSize: "1.75rem", letterSpacing: "-0.01em" }}
         >
-          You&apos;re registered!
+          {count === 1 ? "You're registered!" : `${count} kids registered!`}
         </h3>
         <p className="text-[#00205B]/60 leading-relaxed mb-8">
           We&apos;ll see you Sunday. Look for a welcome text if you opted in.
-          Your family will be in our system before you arrive — first-time
-          check-in takes about 60 seconds.
+          Your {count === 1 ? "child" : "children"} will be in our system before
+          you arrive — first-time check-in takes about 60 seconds.
         </p>
         <button
           onClick={resetForm}
           className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
           style={{ background: "#00205B", color: "white" }}
         >
-          Register Another Child
+          Register Another Family
         </button>
       </div>
     );
   }
+
+  const stepLabel =
+    step === 1
+      ? "Parent Information"
+      : step === 2
+      ? `Children (${children.length})`
+      : "Details & Preferences";
 
   return (
     <div className="max-w-xl mx-auto">
@@ -207,8 +236,7 @@ export default function KidsRegistrationForm() {
                 <div
                   className="flex-1 h-0.5 mx-2 transition-colors"
                   style={{
-                    background:
-                      s < step ? "#00abc9" : "rgba(0,32,91,0.12)",
+                    background: s < step ? "#00abc9" : "rgba(0,32,91,0.12)",
                   }}
                 />
               )}
@@ -216,12 +244,7 @@ export default function KidsRegistrationForm() {
           ))}
         </div>
         <p className="text-[#00205B]/50 text-xs font-condensed font-700 tracking-wide uppercase">
-          Step {step} of 3 &mdash;{" "}
-          {step === 1
-            ? "Parent Information"
-            : step === 2
-            ? "Child Information"
-            : "Details & Preferences"}
+          Step {step} of 3 &mdash; {stepLabel}
         </p>
       </div>
 
@@ -233,8 +256,8 @@ export default function KidsRegistrationForm() {
               <Field label="First Name" required>
                 <input
                   className={inputCls}
-                  value={form.parentFirstName}
-                  onChange={(e) => set("parentFirstName", e.target.value)}
+                  value={parent.parentFirstName}
+                  onChange={(e) => setP("parentFirstName", e.target.value)}
                   placeholder="Jane"
                   autoComplete="given-name"
                 />
@@ -242,8 +265,8 @@ export default function KidsRegistrationForm() {
               <Field label="Last Name" required>
                 <input
                   className={inputCls}
-                  value={form.parentLastName}
-                  onChange={(e) => set("parentLastName", e.target.value)}
+                  value={parent.parentLastName}
+                  onChange={(e) => setP("parentLastName", e.target.value)}
                   placeholder="Smith"
                   autoComplete="family-name"
                 />
@@ -253,8 +276,8 @@ export default function KidsRegistrationForm() {
               <input
                 type="email"
                 className={inputCls}
-                value={form.parentEmail}
-                onChange={(e) => set("parentEmail", e.target.value)}
+                value={parent.parentEmail}
+                onChange={(e) => setP("parentEmail", e.target.value)}
                 placeholder="jane@example.com"
                 autoComplete="email"
               />
@@ -263,8 +286,8 @@ export default function KidsRegistrationForm() {
               <input
                 type="tel"
                 className={inputCls}
-                value={form.phone}
-                onChange={(e) => set("phone", e.target.value)}
+                value={parent.phone}
+                onChange={(e) => setP("phone", e.target.value)}
                 placeholder="(555) 123-4567"
                 autoComplete="tel"
               />
@@ -272,51 +295,88 @@ export default function KidsRegistrationForm() {
           </div>
         )}
 
-        {/* Step 2 — Child Info */}
+        {/* Step 2 — Children */}
         {step === 2 && (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              <Field label="Child First Name" required>
-                <input
-                  className={inputCls}
-                  value={form.childFirstName}
-                  onChange={(e) => set("childFirstName", e.target.value)}
-                  placeholder="Olivia"
-                />
-              </Field>
-              <Field label="Child Last Name" required>
-                <input
-                  className={inputCls}
-                  value={form.childLastName}
-                  onChange={(e) => set("childLastName", e.target.value)}
-                  placeholder="Smith"
-                />
-              </Field>
-            </div>
-            <Field label="Gender" required>
-              <select
-                className={inputCls}
-                value={form.childGender}
-                onChange={(e) =>
-                  set("childGender", e.target.value as "M" | "F" | "")
-                }
+          <div className="space-y-6">
+            {children.map((child, idx) => (
+              <div
+                key={idx}
+                className="rounded-xl border border-[#00205B]/10 p-5 space-y-4 relative"
               >
-                <option value="" disabled>
-                  Select gender
-                </option>
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-              </select>
-            </Field>
-            <Field label="Birthday" required>
-              <input
-                type="date"
-                className={inputCls}
-                value={form.childBirthdate}
-                onChange={(e) => set("childBirthdate", e.target.value)}
-                max={new Date().toISOString().split("T")[0]}
-              />
-            </Field>
+                {children.length > 1 && (
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-condensed font-800 text-[#00205B]/50 text-xs tracking-wide uppercase">
+                      Child {idx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeChild(idx)}
+                      className="text-[#00205B]/35 hover:text-red-500 transition-colors text-xs font-condensed font-700 tracking-wide uppercase"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                {children.length === 1 && (
+                  <p className="font-condensed font-800 text-[#00205B]/50 text-xs tracking-wide uppercase mb-1">
+                    Child Information
+                  </p>
+                )}
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="First Name" required>
+                    <input
+                      className={inputCls}
+                      value={child.firstName}
+                      onChange={(e) => setChild(idx, "firstName", e.target.value)}
+                      placeholder="Olivia"
+                    />
+                  </Field>
+                  <Field label="Last Name" required>
+                    <input
+                      className={inputCls}
+                      value={child.lastName}
+                      onChange={(e) => setChild(idx, "lastName", e.target.value)}
+                      placeholder="Smith"
+                    />
+                  </Field>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Gender" required>
+                    <select
+                      className={inputCls}
+                      value={child.gender}
+                      onChange={(e) =>
+                        setChild(idx, "gender", e.target.value)
+                      }
+                    >
+                      <option value="" disabled>
+                        Select gender
+                      </option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </Field>
+                  <Field label="Birthday" required>
+                    <input
+                      type="date"
+                      className={inputCls}
+                      value={child.birthdate}
+                      onChange={(e) => setChild(idx, "birthdate", e.target.value)}
+                      max={new Date().toISOString().split("T")[0]}
+                    />
+                  </Field>
+                </div>
+              </div>
+            ))}
+
+            {/* Add another child */}
+            <button
+              type="button"
+              onClick={addChild}
+              className="w-full rounded-xl border-2 border-dashed border-[#00205B]/15 py-3 text-sm font-condensed font-700 tracking-wide text-[#00205B]/40 hover:border-[#00abc9]/50 hover:text-[#00abc9] transition-colors"
+            >
+              + Add Another Child
+            </button>
           </div>
         )}
 
@@ -326,8 +386,8 @@ export default function KidsRegistrationForm() {
             <Field label="Street Address" required>
               <input
                 className={inputCls}
-                value={form.street}
-                onChange={(e) => set("street", e.target.value)}
+                value={parent.street}
+                onChange={(e) => setP("street", e.target.value)}
                 placeholder="123 Main St"
                 autoComplete="street-address"
               />
@@ -337,8 +397,8 @@ export default function KidsRegistrationForm() {
                 <Field label="City" required>
                   <input
                     className={inputCls}
-                    value={form.city}
-                    onChange={(e) => set("city", e.target.value)}
+                    value={parent.city}
+                    onChange={(e) => setP("city", e.target.value)}
                     placeholder="Chattanooga"
                     autoComplete="address-level2"
                   />
@@ -348,8 +408,8 @@ export default function KidsRegistrationForm() {
                 <Field label="State" required>
                   <select
                     className={inputCls}
-                    value={form.state}
-                    onChange={(e) => set("state", e.target.value)}
+                    value={parent.state}
+                    onChange={(e) => setP("state", e.target.value)}
                     autoComplete="address-level1"
                   >
                     <option value="" disabled>
@@ -367,8 +427,8 @@ export default function KidsRegistrationForm() {
                 <Field label="ZIP" required>
                   <input
                     className={inputCls}
-                    value={form.zip}
-                    onChange={(e) => set("zip", e.target.value)}
+                    value={parent.zip}
+                    onChange={(e) => setP("zip", e.target.value)}
                     placeholder="37421"
                     maxLength={10}
                     autoComplete="postal-code"
@@ -379,8 +439,8 @@ export default function KidsRegistrationForm() {
             <Field label="Which Service?" required>
               <select
                 className={inputCls}
-                value={form.service}
-                onChange={(e) => set("service", e.target.value)}
+                value={parent.service}
+                onChange={(e) => setP("service", e.target.value)}
               >
                 <option value="" disabled>
                   Select a service
@@ -398,8 +458,8 @@ export default function KidsRegistrationForm() {
               <input
                 id="consent-text"
                 type="checkbox"
-                checked={form.consentToText}
-                onChange={(e) => set("consentToText", e.target.checked)}
+                checked={parent.consentToText}
+                onChange={(e) => setP("consentToText", e.target.checked)}
                 className="mt-0.5 w-4 h-4 rounded border-[#00205B]/30 accent-[#00abc9] cursor-pointer flex-shrink-0"
               />
               <label
@@ -417,8 +477,8 @@ export default function KidsRegistrationForm() {
             <Field label="Parental Rights / Notes">
               <textarea
                 className={`${inputCls} min-h-[96px] resize-y`}
-                value={form.parentalRightsNotes}
-                onChange={(e) => set("parentalRightsNotes", e.target.value)}
+                value={parent.parentalRightsNotes}
+                onChange={(e) => setP("parentalRightsNotes", e.target.value)}
                 placeholder="Any custody, visitation, or support orders we should know about?"
               />
             </Field>
@@ -449,27 +509,30 @@ export default function KidsRegistrationForm() {
         {step < 3 ? (
           <button
             onClick={() => {
-              // Basic per-step validation
               if (step === 1) {
                 if (
-                  !form.parentFirstName ||
-                  !form.parentLastName ||
-                  !form.parentEmail ||
-                  !form.phone
+                  !parent.parentFirstName ||
+                  !parent.parentLastName ||
+                  !parent.parentEmail ||
+                  !parent.phone
                 ) {
                   setError("Please fill in all required fields.");
                   return;
                 }
               }
               if (step === 2) {
-                if (
-                  !form.childFirstName ||
-                  !form.childLastName ||
-                  !form.childGender ||
-                  !form.childBirthdate
-                ) {
-                  setError("Please fill in all required fields.");
-                  return;
+                for (const child of children) {
+                  if (
+                    !child.firstName ||
+                    !child.lastName ||
+                    !child.gender ||
+                    !child.birthdate
+                  ) {
+                    setError(
+                      "Please fill in all required fields for each child."
+                    );
+                    return;
+                  }
                 }
               }
               setError("");
@@ -484,11 +547,11 @@ export default function KidsRegistrationForm() {
           <button
             disabled={
               submitting ||
-              !form.street ||
-              !form.city ||
-              !form.state ||
-              !form.zip ||
-              !form.service
+              !parent.street ||
+              !parent.city ||
+              !parent.state ||
+              !parent.zip ||
+              !parent.service
             }
             onClick={handleSubmit}
             className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

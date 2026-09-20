@@ -6,15 +6,19 @@ import {
   type FieldAnswer,
 } from "@/lib/pco-forms";
 
+interface ChildInfo {
+  firstName: string;
+  lastName: string;
+  gender: "Male" | "Female" | "";
+  birthdate: string; // YYYY-MM-DD
+}
+
 interface RegistrationBody {
   parentFirstName: string;
   parentLastName: string;
   parentEmail: string;
   phone: string;
-  childFirstName: string;
-  childLastName: string;
-  childGender: string;
-  childBirthdate: string; // YYYY-MM-DD
+  children: ChildInfo[];
   address: { street: string; city: string; state: string; zip: string };
   service: string; // option ID
   consentToText: boolean;
@@ -55,10 +59,7 @@ export async function POST(req: NextRequest) {
     parentLastName,
     parentEmail,
     phone,
-    childFirstName,
-    childLastName,
-    childGender,
-    childBirthdate,
+    children,
     address,
     service,
     consentToText,
@@ -71,9 +72,23 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  if (!childFirstName || !childLastName || !childBirthdate || !service) {
+  if (!children || children.length === 0) {
     return NextResponse.json(
-      { error: "Child name, birthdate, and service are required" },
+      { error: "At least one child is required" },
+      { status: 400 }
+    );
+  }
+  for (const child of children) {
+    if (!child.firstName || !child.lastName || !child.gender || !child.birthdate) {
+      return NextResponse.json(
+        { error: "Each child requires a first name, last name, gender, and birthdate" },
+        { status: 400 }
+      );
+    }
+  }
+  if (!service) {
+    return NextResponse.json(
+      { error: "Service selection is required" },
       { status: 400 }
     );
   }
@@ -91,49 +106,57 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const answers: FieldAnswer[] = [
-    // Phone — flat number/location attributes
-    { kind: "phone", fieldId: FIELD.phone, number: phone, location: "Mobile" },
+  // Submit one PCO form per child — shared parent fields on each
+  const errors: string[] = [];
+  for (const child of children) {
+    const answers: FieldAnswer[] = [
+      // Phone
+      { kind: "phone", fieldId: FIELD.phone, number: phone, location: "Mobile" },
 
-    // Consent to text — plain text boolean
-    { kind: "text", fieldId: FIELD.consent, value: consentToText ? "true" : "false" },
+      // Consent to text
+      { kind: "text", fieldId: FIELD.consent, value: consentToText ? "true" : "false" },
 
-    // Address
-    {
-      kind: "address",
-      fieldId: FIELD.address,
-      street: address.street,
-      city: address.city,
-      state: address.state,
-      zip: address.zip,
-      location: "Home",
-    },
+      // Address
+      {
+        kind: "address",
+        fieldId: FIELD.address,
+        street: address.street,
+        city: address.city,
+        state: address.state,
+        zip: address.zip,
+        location: "Home",
+      },
 
-    // Child gender
-    { kind: "text", fieldId: FIELD.gender, value: childGender },
+      // Child gender — PCO gender field expects "Male" or "Female"
+      { kind: "text", fieldId: FIELD.gender, value: child.gender },
 
-    // Child birthdate (YYYY-MM-DD)
-    { kind: "text", fieldId: FIELD.birthdate, value: childBirthdate },
+      // Child birthdate (YYYY-MM-DD)
+      { kind: "text", fieldId: FIELD.birthdate, value: child.birthdate },
 
-    // Service selection — option field
-    { kind: "option", fieldId: FIELD.service, optionId: service },
+      // Service selection — workflow_dropdown option field
+      { kind: "option", fieldId: FIELD.service, optionId: service },
 
-    // Notes: child name + optional parental rights note
-    {
-      kind: "text",
-      fieldId: FIELD.notes,
-      value: parentalRightsNotes?.trim()
-        ? `Child: ${childFirstName} ${childLastName}\n${parentalRightsNotes.trim()}`
-        : `Child: ${childFirstName} ${childLastName}`,
-    },
-  ];
+      // Notes: child name + optional parental rights note
+      {
+        kind: "text",
+        fieldId: FIELD.notes,
+        value: parentalRightsNotes?.trim()
+          ? `Child: ${child.firstName} ${child.lastName}\n${parentalRightsNotes.trim()}`
+          : `Child: ${child.firstName} ${child.lastName}`,
+      },
+    ];
 
-  try {
-    await submitForm(auth, "376960", personId, answers);
-  } catch (err) {
-    console.error("PCO form submission error:", err);
+    try {
+      await submitForm(auth, "376960", personId, answers);
+    } catch (err) {
+      console.error(`PCO submission failed for child ${child.firstName}:`, err);
+      errors.push(`${child.firstName} ${child.lastName}`);
+    }
+  }
+
+  if (errors.length > 0) {
     return NextResponse.json(
-      { error: "Failed to submit to Planning Center" },
+      { error: `Failed to submit to Planning Center for: ${errors.join(", ")}` },
       { status: 502 }
     );
   }
