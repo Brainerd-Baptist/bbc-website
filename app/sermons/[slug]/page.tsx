@@ -269,6 +269,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
 
           {/* UNIFIED MEDIA + CONTENT PLAYER */}
           <SermonTabPlayer
+            slug={slug}
             youtubeId={s.youtubeId}
             title={s.title}
             audioTrack={audioTrack}
