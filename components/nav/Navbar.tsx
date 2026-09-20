@@ -10,6 +10,7 @@ const NAV_GROUPS = [
   {
     label: "Sunday",
     links: [
+      { label: "Watch Live", href: "/live" },
       { label: "Plan a Visit", href: "/visit" },
       { label: "Sermons", href: "/sermons" },
       { label: "Who Is Jesus?", href: "/who-is-jesus" },

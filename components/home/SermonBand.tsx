@@ -1,20 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
-import { SERMONS } from "@/lib/sermons";
+import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
 
-export default function SermonBand() {
-  // Use the first (most recent) entry from the static sermon library as the
-  // source of truth — YouTube uploads are full services, not titled sermons.
-  const latest = SERMONS[0];
+export default async function SermonBand() {
+  const sermon = await getLatestSermon();
 
-  const title     = latest.title;
-  const videoId   = latest.youtubeId;
-  const thumbnail = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
-  const date      = new Date(latest.date).toLocaleDateString("en-US", {
-    year: "numeric", month: "long", day: "numeric", timeZone: "America/New_York",
-  });
-  const watchUrl  = `https://www.youtube.com/watch?v=${videoId}`;
+  const { title, passage, youtubeId, watchUrl, thumbnail } = sermon;
+  const date = formatSermonDate(sermon.date);
 
   return (
     <section className="bg-white dark:bg-[#0d1525] section-pad border-b border-gray-100 dark:border-white/5">
@@ -47,7 +40,6 @@ export default function SermonBand() {
 
               {/* Thumbnail / Play */}
               <div className="md:col-span-2 min-h-[240px] relative flex items-center justify-center bg-[#00205B]">
-                {/* Real YouTube thumbnail */}
                 {thumbnail ? (
                   <Image
                     src={thumbnail}
@@ -55,17 +47,16 @@ export default function SermonBand() {
                     fill
                     className="object-cover opacity-70"
                     sizes="(max-width: 768px) 100vw, 40vw"
-                    unoptimized // YouTube URLs bypass Next.js image optimizer
+                    unoptimized
                   />
                 ) : (
-                  /* Fallback gradient when no thumbnail */
                   <div
                     className="absolute inset-0"
                     style={{ background: "linear-gradient(135deg, #00205B 0%, #001840 100%)" }}
                   />
                 )}
 
-                {/* Dark overlay for readability */}
+                {/* Dark overlay */}
                 <div className="absolute inset-0 bg-[#00205B]/40" />
 
                 {/* Series chip */}
@@ -78,8 +69,8 @@ export default function SermonBand() {
                 {/* Play button */}
                 <a
                   href={watchUrl}
-                  target={videoId ? "_blank" : undefined}
-                  rel={videoId ? "noopener noreferrer" : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="relative z-10"
                   aria-label={`Watch ${title} on YouTube`}
                 >
@@ -112,18 +103,20 @@ export default function SermonBand() {
                     </svg>
                     {date}
                   </span>
-                  <span className="flex items-center gap-1.5 text-[#00abc9]">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
-                    </svg>
-                    {latest.passage}
-                  </span>
+                  {passage && (
+                    <span className="flex items-center gap-1.5 text-[#00abc9]">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                      </svg>
+                      {passage}
+                    </span>
+                  )}
                 </div>
                 <div className="flex gap-3 flex-wrap">
                   <a
                     href={watchUrl}
-                    target={videoId ? "_blank" : undefined}
-                    rel={videoId ? "noopener noreferrer" : undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="btn-primary text-sm"
                   >
                     Watch Now
