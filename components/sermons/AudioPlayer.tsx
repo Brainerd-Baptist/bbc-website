@@ -9,7 +9,7 @@ function fmt(s: number) {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
-const SPEEDS = [0.75, 1, 1.25, 1.5, 1.75, 2];
+const SPEEDS = [1, 1.25, 1.5, 1.75];
 
 interface Props {
   track: AudioTrack;

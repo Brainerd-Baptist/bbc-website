@@ -172,7 +172,7 @@ export default function SermonTabPlayer({
                         Scripture
                       </span>
                       <a
-                        href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(p)}&version=ESV`}
+                        href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(p)}&version=CSB`}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.6)", textDecoration: "none", fontWeight: 500 }}

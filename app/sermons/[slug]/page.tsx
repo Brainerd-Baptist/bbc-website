@@ -239,7 +239,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               <>
                 <span className="text-white/20 text-[10px]">·</span>
                 <a
-                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(s.passage)}&version=WEB`}
+                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(s.passage)}&version=CSB`}
                   target="_blank" rel="noopener noreferrer"
                   className="text-white/45 text-[10px] font-medium hover:text-[#00abc9] transition-colors"
                 >

@@ -79,7 +79,7 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
         resetOnEnd: false,
         disableContextMenu: false,
         ratio: "16:9",
-        iconUrl: "",
+        iconUrl: "/plyr.svg",
       });
 
       playerRef.current = player;
