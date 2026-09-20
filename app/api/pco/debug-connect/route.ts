@@ -58,7 +58,7 @@ async function runDebug() {
         attributes: { value: "11728683" },
         relationships: {
           form_field: { data: { type: "FormField", id: "10599355" } },
-          form_field_option: { data: { type: "FormFieldOption", id: "11728683" } },
+          form_field_option: { data: null },
         },
       },
     ],

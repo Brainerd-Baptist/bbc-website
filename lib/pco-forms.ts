@@ -104,15 +104,9 @@ function toFormSubmissionValue(a: FieldAnswer): object {
       };
 
     case "option":
-      // Checkbox/dropdown: string option ID + form_field_option relationship
-      return {
-        ...base,
-        attributes: { value: a.optionId },
-        relationships: {
-          form_field: { data: { type: "FormField", id: a.fieldId } },
-          form_field_option: { data: { type: "FormFieldOption", id: a.optionId } },
-        },
-      };
+      // Checkbox/dropdown: value is the option ID string.
+      // PCO rejects form_field_option_id on FormSubmissionValue — omit that relationship.
+      return { ...base, attributes: { value: a.optionId } };
 
     case "text":
     default:
