@@ -277,7 +277,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
           {allPassages.length > 0 && (
             <div className="space-y-3">
               {allPassages.map((p) => (
-                <ScriptureInline key={p} passage={p} accentColor={accentColor} />
+                <ScriptureInline key={p} passage={p} accentColor={accentColor} theme="light" />
               ))}
             </div>
           )}

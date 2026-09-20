@@ -21,9 +21,11 @@ interface Props {
   passage: string;
   label?: string;
   accentColor?: string;
+  theme?: "dark" | "light";
 }
 
-export default function ScriptureInline({ passage, label, accentColor = "#00abc9" }: Props) {
+export default function ScriptureInline({ passage, label, accentColor = "#00abc9", theme = "dark" }: Props) {
+  const light = theme === "light";
   const [data, setData] = useState<ScriptureResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -39,23 +41,29 @@ export default function ScriptureInline({ passage, label, accentColor = "#00abc9
   }, [passage]);
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-white/8" style={{ background: "rgba(255,255,255,0.03)" }}>
+    <div className="rounded-2xl overflow-hidden" style={{
+      background: light ? "#f4f6f9" : "rgba(255,255,255,0.03)",
+      border: `1px solid ${light ? "rgba(0,32,91,0.08)" : "rgba(255,255,255,0.08)"}`,
+    }}>
       {/* Header */}
       <button
-        className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-white/3 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-3.5 text-left transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center gap-2.5">
-          <span className="text-[10px] font-bold tracking-widest uppercase text-white/30">Scripture</span>
-          <span className="text-sm font-semibold text-white/80">{label ?? passage}</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase"
+            style={{ color: light ? "rgba(0,32,91,0.3)" : "rgba(255,255,255,0.3)" }}>Scripture</span>
+          <span className="text-sm font-semibold"
+            style={{ color: light ? "rgba(0,32,91,0.8)" : "rgba(255,255,255,0.8)" }}>{label ?? passage}</span>
           {data && (
-            <span className="text-[10px] text-white/25 font-medium uppercase tracking-wide ml-1">{data.translation_id.toUpperCase()}</span>
+            <span className="text-[10px] font-medium uppercase tracking-wide ml-1"
+              style={{ color: light ? "rgba(0,32,91,0.25)" : "rgba(255,255,255,0.25)" }}>{data.translation_id.toUpperCase()}</span>
           )}
         </div>
         <svg
           width="16" height="16" viewBox="0 0 16 16" fill="none"
-          className="text-white/25 transition-transform"
-          style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
+          style={{ color: light ? "rgba(0,32,91,0.25)" : "rgba(255,255,255,0.25)", transition: "transform 0.2s",
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
         >
           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -63,23 +71,25 @@ export default function ScriptureInline({ passage, label, accentColor = "#00abc9
 
       {/* Body */}
       {expanded && (
-        <div className="px-5 pb-5 border-t border-white/5">
+        <div className="px-5 pb-5" style={{ borderTop: `1px solid ${light ? "rgba(0,32,91,0.06)" : "rgba(255,255,255,0.05)"}` }}>
           {loading && (
             <div className="py-4 flex gap-1">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="h-2 rounded-full animate-pulse flex-1"
-                  style={{ background: "rgba(255,255,255,0.07)", animationDelay: `${i*0.1}s` }} />
+                  style={{ background: light ? "rgba(0,32,91,0.07)" : "rgba(255,255,255,0.07)", animationDelay: `${i*0.1}s` }} />
               ))}
             </div>
           )}
           {error && (
-            <p className="py-4 text-sm text-white/30 italic">Unable to load scripture text.</p>
+            <p className="py-4 text-sm italic"
+              style={{ color: light ? "rgba(0,32,91,0.3)" : "rgba(255,255,255,0.3)" }}>Unable to load scripture text.</p>
           )}
           {data && (
             <>
               {data.verses.length <= 3 ? (
                 // Short passage: inline flowing text
-                <p className="pt-4 text-base text-white/75 leading-loose font-light tracking-wide">
+                <p className="pt-4 text-base leading-loose font-light tracking-wide"
+                  style={{ color: light ? "rgba(0,32,91,0.75)" : "rgba(255,255,255,0.75)" }}>
                   {data.verses.map((v) => (
                     <span key={v.verse}>
                       <sup className="text-[10px] font-bold mr-0.5 select-none" style={{ color: accentColor, opacity: 0.7 }}>{v.verse}</sup>
@@ -94,12 +104,14 @@ export default function ScriptureInline({ passage, label, accentColor = "#00abc9
                     <div key={v.verse} className="flex gap-2.5">
                       <span className="text-[11px] font-bold tabular-nums pt-1 select-none flex-shrink-0 w-5 text-right"
                         style={{ color: accentColor, opacity: 0.6 }}>{v.verse}</span>
-                      <p className="text-base text-white/70 leading-relaxed font-light">{v.text.trim()}</p>
+                      <p className="text-base leading-relaxed font-light"
+                        style={{ color: light ? "rgba(0,32,91,0.70)" : "rgba(255,255,255,0.70)" }}>{v.text.trim()}</p>
                     </div>
                   ))}
                 </div>
               )}
-              <p className="mt-4 text-xs text-white/20 text-right font-medium tracking-wide">
+              <p className="mt-4 text-xs text-right font-medium tracking-wide"
+                style={{ color: light ? "rgba(0,32,91,0.2)" : "rgba(255,255,255,0.2)" }}>
                 {data.reference} · {data.translation_name}
               </p>
             </>
