@@ -67,7 +67,7 @@ export type TextAnswer   = { kind: "text";     fieldId: string; value: string };
 /** Phone number field. */
 export type PhoneAnswer  = { kind: "phone";    fieldId: string; number: string; location?: string };
 /** Address field. */
-export type AddressAnswer= { kind: "address";  fieldId: string; street: string; city: string; state: string; zip: string; location?: string };
+export type AddressAnswer= { kind: "address";  fieldId: string; street: string; city: string; state: string; zip: string; country?: string; location?: string };
 /** Checkbox / dropdown field — one answer per selected option. */
 export type OptionAnswer = { kind: "option";   fieldId: string; optionId: string };
 
@@ -98,6 +98,7 @@ function toFormSubmissionValue(a: FieldAnswer): object {
             city: a.city,
             state: a.state,
             zip: a.zip,
+            country: a.country ?? "US",
           },
         },
       };

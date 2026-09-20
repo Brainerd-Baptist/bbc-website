@@ -20,7 +20,7 @@ const US_STATES = [
 type ChildInfo = {
   firstName: string;
   lastName: string;
-  gender: "Male" | "Female" | "";
+  gender: "M" | "F" | "";
   birthdate: string;
 };
 
@@ -352,8 +352,8 @@ export default function KidsRegistrationForm() {
                       <option value="" disabled>
                         Select gender
                       </option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
+                      <option value="M">Male</option>
+                      <option value="F">Female</option>
                     </select>
                   </Field>
                   <Field label="Birthday" required>

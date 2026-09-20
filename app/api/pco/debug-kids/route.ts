@@ -59,13 +59,13 @@ async function runDebug() {
         type: "FormSubmissionValue",
         relationships: { form_field: { data: { type: "FormField", id: FIELD.address } } },
         attributes: {
-          value: { location: "Home", street: "123 Main St", city: "Chattanooga", state: "TN", zip: "37421" },
+          value: { location: "Home", street: "123 Main St", city: "Chattanooga", state: "TN", zip: "37421", country: "US" },
         },
       },
       {
         type: "FormSubmissionValue",
         relationships: { form_field: { data: { type: "FormField", id: FIELD.gender } } },
-        attributes: { value: "Male" },
+        attributes: { value: "M" },
       },
       {
         type: "FormSubmissionValue",

@@ -9,7 +9,7 @@ import {
 interface ChildInfo {
   firstName: string;
   lastName: string;
-  gender: "Male" | "Female" | "";
+  gender: "M" | "F" | "";
   birthdate: string; // YYYY-MM-DD
 }
 
