@@ -356,7 +356,7 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
           /* ── Print styles ── */
           @media print {
             .no-print { display: none !important; }
-            body { background: #fff; padding: 0; }
+            html, body { font-size: 12pt; background: #fff; padding: 0; }
             .page {
               box-shadow: none;
               border-radius: 0;
@@ -364,6 +364,8 @@ export default async function SermonNotesPage({ params }: { params: Promise<{ sl
             }
             .body { padding: 2rem 2.5rem 2.5rem; }
             .header-band { padding: 1.5rem 2.5rem; }
+            .outline-point { font-size: 1rem; }
+            .phrase-text { font-size: 0.875rem; }
             .screen-toolbar { display: none !important; }
             @page {
               size: letter;
