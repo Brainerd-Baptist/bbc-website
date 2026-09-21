@@ -81,13 +81,14 @@ function CheckboxGroup({
   );
 }
 
-export default function ConnectForm() {
+export default function ConnectForm({ showMembershipOption = false }: { showMembershipOption?: boolean }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [howHeard, setHowHeard] = useState<string[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
+  const [wantsMembership, setWantsMembership] = useState(false);
   const [notes, setNotes] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
@@ -138,6 +139,21 @@ export default function ConnectForm() {
       if (!res.ok || data.error) {
         setError(data.error || "Something went wrong. Please try again.");
       } else {
+        // Membership isn't a PCO Connect form option (yet) — routed as its
+        // own email separately. Fire-and-forget: a hiccup here shouldn't
+        // block the main connect submission from showing success.
+        if (showMembershipOption && wantsMembership) {
+          fetch("/api/contact/membership", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: `${firstName} ${lastName}`.trim(),
+              email,
+              phone,
+              message: "Checked \"I'm interested in membership\" on the Connect form.",
+            }),
+          }).catch(() => {});
+        }
         setSuccess(true);
       }
     } catch {
@@ -167,7 +183,7 @@ export default function ConnectForm() {
             </svg>
           </span>
         </div>
-        <p className="text-[#00205B] font-semibold text-lg">You're all set!</p>
+        <p className="text-[#00205B] font-semibold text-lg">You&apos;re all set!</p>
         <p className="text-[#00205B]/70 text-sm leading-relaxed max-w-sm mx-auto">
           Thanks! Someone from our team will be in touch soon. We&apos;re glad
           you&apos;re here.
@@ -281,6 +297,29 @@ export default function ConnectForm() {
           name="interests"
         />
       </div>
+
+      {showMembershipOption && (
+        <label className="flex items-start gap-3 cursor-pointer group rounded-xl border border-[#00205B]/10 hover:border-[#00abc9]/30 p-4 transition-colors">
+          <span className="relative flex-shrink-0 w-5 h-5 mt-0.5">
+            <input
+              type="checkbox"
+              checked={wantsMembership}
+              onChange={(e) => setWantsMembership(e.target.checked)}
+              className="peer sr-only"
+            />
+            <span className="block w-5 h-5 rounded border-2 border-[#00205B]/30 bg-white peer-checked:bg-[#00abc9] peer-checked:border-[#00abc9] transition group-hover:border-[#00abc9]/60" />
+            {wantsMembership && (
+              <svg className="absolute inset-0 m-auto w-3 h-3 text-white pointer-events-none" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="2,6 5,9 10,3" />
+              </svg>
+            )}
+          </span>
+          <span>
+            <span className="block text-[#00205B] text-sm font-medium">I&apos;m interested in membership</span>
+            <span className="block text-[#00205B]/50 text-xs mt-0.5">Someone will reach out to walk you through what that looks like.</span>
+          </span>
+        </label>
+      )}
 
       {/* Anything else? */}
       <div className="space-y-1.5">

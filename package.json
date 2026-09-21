@@ -31,6 +31,7 @@
     "plyr": "^3.8.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "resend": "^6.28.1",
     "sanity": "^3.66.1",
     "styled-components": "^6.1.0"
   },
