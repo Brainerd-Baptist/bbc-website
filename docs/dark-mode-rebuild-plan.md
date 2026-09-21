@@ -529,3 +529,86 @@ Eleven utility classes in `globals.css` have **zero usages** anywhere in the tre
 `glow-navy`, `orb-teal`, `orb-navy`, `text-gradient`, `text-gradient-navy`, `text-gradient-gold`,
 `glass-deep`, `glass-dark-deep`, `glass-light`, `btn-shimmer`, `btn-pulse`, `float`. Dead CSS is the
 same liability the dead `tailwind.config.ts` was. Not removed here to keep this diff reviewable.
+*(Done in Phase 2 instead — see below.)*
+
+---
+
+## 8. Phase 2 — complete (commit `0f15b91`)
+
+### The token-file split was a prerequisite, not tidying
+
+The plan called for Stylelint with "the token file" exempted. But `globals.css` was the project's
+**only** stylesheet, so that exemption would have exempted every line of CSS in the codebase and the
+rail would have been theatre. Tokens now live in `app/tokens.css`, the single sanctioned home for a raw
+colour value; every other stylesheet must reach colour through `var()`.
+
+Driving `globals.css` to zero raw colour surfaced two things worth having:
+
+- **The thirteen dead utility classes above were the bulk of the remaining literals**, so they were
+  deleted here rather than tokenised. Tokenising dead code would have been worse than removing it.
+  Phase 6 cleanup pulled forward because the rail forced the question.
+- **The rest resolved into a real token family**: `--fg-on-dark`, `--fg-on-dark-muted`,
+  `--surface-on-dark`, `--border-on-dark*`, `--hover-on-dark` — content sitting on ground that is dark
+  in *both* themes (a navy band, a hero photo, the scrimmed nav). Theme-**invariant** on purpose; Radix
+  ships `black-a`/`white-a` alpha scales for exactly this case. Swapping them to `--fg` would turn
+  white text on a navy hero light-blue in dark mode, over ground that never changed.
+
+Nav chrome values moved too, leaving only selector logic in `globals.css` — which let the
+`.dark .bbc-nav[data-chrome="glass"]` rule be **deleted outright**, since `--nav-ink-glass` is itself
+re-pointed under `.dark`. Verified in production: `--nav-ink` resolves to `#00205b` in light and
+`#c8d4e8` in dark with no `.dark` nav selector anywhere in `globals.css`.
+
+### The rails
+
+| Rail | Covers | Severity |
+|---|---|---|
+| Stylelint | hex, named colours, raw `rgb()`/`hsl()` in CSS; colour properties restricted to `var()`/`transparent`/`currentColor` | error (passes today) |
+| `bbc/no-raw-color` (local ESLint rule) | Tailwind arbitrary colour classes; colour literals in inline `style` objects | **warn** — 957 pre-existing |
+| `scripts/ratchet.mjs` | eight migration metrics, may only decrease | error on any increase |
+
+**Why the ESLint rule is load-bearing rather than belt-and-braces:** verified against the engine,
+clearing the palette with `--color-*: initial` does **not** block `bg-[#00205B]`. Arbitrary hex is the
+dominant pattern in this codebase, so this rule is the only thing that closes that hole.
+
+**Why it is `warn` and not `error`:** 957 pre-existing violations. A gate that always fails is one
+everybody learns to ignore. The ratchet does the gating; the rule is promoted to `error` in Phase 6.
+
+### Baseline recorded (`scripts/ratchet-baseline.json`)
+
+| Metric | Count |
+|---|---|
+| `raw-hex` | 1007 |
+| `raw-rgb-fn` | 322 |
+| `arbitrary-color-class` | 957 |
+| `unthemeable-tailwind-class` | 425 |
+| `bg-white-route-shell` | 26 |
+| `js-theme-branch` | 15 |
+| `unthemed-files` | 61 |
+| `eslint-errors` | 53 |
+
+These are the numbers Phases 3–5 drive to zero. Re-baseline with `npm run ratchet:update` after each
+phase; the file is deleted in Phase 6 when the rails become hard errors.
+
+### Checkpoint results
+
+- **CP-static (each rail catches its own bug class)** — proven, not assumed. A raw hex, an `rgba()` and
+  a named colour injected into `globals.css` produce six Stylelint errors and exit 2. A fixture of
+  arbitrary colour classes and inline-style literals is flagged 8/8, while non-colour arbitrary values
+  (`border-x-[6px]`, `w-[72ch]`, `top-[-15%]`) and `var()` usages are correctly ignored. One injected
+  line trips four ratchet metrics at once and exits 1.
+- **CP-static (the token file does not trip its own rules)** — `app/tokens.css` holds 39 hex values and
+  many `rgba()` calls and passes Stylelint cleanly via the single `overrides` entry.
+- **CP-ratchet** — baseline recorded above.
+- **CP-build** — all five rails green locally; Vercel READY; production verified to load every token
+  through the new `@import`, including the new `--fg-on-dark` family and `--nav-scrim`.
+
+### Deviation, recorded honestly
+
+CI runs the rails on push and PR but **does not gate the Vercel deploy**. The rails pass on the current
+tree locally, but they have never run on a GitHub runner, and blocking deploys on an unproven workflow
+is how you end up unable to ship a Sunday-morning fix. Once `verify.yml` has a few green runs, make it
+a required status check on `main` and add `needs: verify` to the deploy workflow. That is now a Phase 6
+step.
+
+The Playwright sweep is also deliberately absent from CI: dark mode legitimately fails its own contrast
+assertion until Phase 4, and adding a job that always fails would contradict the reasoning above.
