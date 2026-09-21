@@ -62,6 +62,13 @@ export function useScrollDock({ spacerRef, enabled, debug }: UseScrollDockArgs) 
   const tickingRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   const logRef = useRef<LogEntry[]>([]);
+  // While a programmatic scroll (e.g. "return to inline") is in flight, the
+  // spacer is transiently off-screen mid-animation. Without this guard,
+  // measure() would see it still scrolled past the dock threshold and
+  // immediately re-dock — fighting the very transition that just asked to
+  // go inline, and leaving the player visually stuck mid-transition. See
+  // suppressAutoDock below.
+  const suppressUntilRef = useRef(0);
 
   const pushLog = useCallback(
     (msg: string) => {
@@ -107,6 +114,7 @@ export function useScrollDock({ spacerRef, enabled, debug }: UseScrollDockArgs) 
       setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
 
       if (!enabledRef.current) return; // stays "inline"; see effect above
+      if (Date.now() < suppressUntilRef.current) return; // mid programmatic scroll
 
       setState((prev) => {
         if (prev === "expanded") return prev; // only closed explicitly by the user
@@ -133,5 +141,13 @@ export function useScrollDock({ spacerRef, enabled, debug }: UseScrollDockArgs) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spacerRef]);
 
-  return { state, rect, setState, pushLog, logRef, stateRef };
+  // Call right before triggering a programmatic scroll (e.g. scrollIntoView)
+  // that will move the spacer back into view over the next several hundred
+  // ms. Suppresses the automatic dock/undock decision in measure() for that
+  // window so the scroll animation isn't fought mid-flight.
+  const suppressAutoDock = useCallback((ms = 900) => {
+    suppressUntilRef.current = Date.now() + ms;
+  }, []);
+
+  return { state, rect, setState, pushLog, logRef, stateRef, suppressAutoDock };
 }

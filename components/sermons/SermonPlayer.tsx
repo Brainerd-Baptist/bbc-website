@@ -73,7 +73,7 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
   const searchParams = useSearchParams();
   const debug = searchParams?.get("debug") === "1";
 
-  const { state, rect: spacerRect, setState, pushLog, logRef } = useScrollDock({
+  const { state, rect: spacerRect, setState, pushLog, logRef, suppressAutoDock } = useScrollDock({
     spacerRef,
     enabled: isPlaying,
     debug,
@@ -122,11 +122,16 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
       const r = el.getBoundingClientRect();
       const isVisible = r.bottom > 0 && r.top < window.innerHeight;
       if (!isVisible) {
+        // The scroll below takes a few hundred ms to land. Suppress the
+        // scroll-driven auto-dock logic for that window, or it'll see the
+        // spacer still off-screen mid-animation and immediately re-dock,
+        // fighting this exact transition and leaving the player stuck.
+        suppressAutoDock();
         el.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
     setState("inline");
-  }, [setState]);
+  }, [setState, suppressAutoDock]);
 
   const closeDock = useCallback(() => {
     const player = playerRef.current as { pause?: () => void } | null;
