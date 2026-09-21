@@ -60,10 +60,22 @@ function countMatches(re, filter = () => true) {
     // otherwise the only way to make the number go down is to break them.
     const exempt = exemptLines(f, src);
     if (exempt === null) continue;
+    // Track block-comment state rather than only skipping lines that START
+    // with a comment marker. A continuation line inside a /* ... */ block does
+    // not, so prose mentioning a colour ("--nav-ink resolved to #fff") used to
+    // count as residue — which it is not, and which made the gate fail on a
+    // comment.
+    let inBlock = false;
     src.split("\n").forEach((line, i) => {
-      if (exempt.has(i)) return;
       const t = line.trim();
-      if (t.startsWith("//") || t.startsWith("*") || t.startsWith("/*")) return;
+      const opens = line.lastIndexOf("/*");
+      const closes = line.lastIndexOf("*/");
+      const wasInBlock = inBlock;
+      if (opens !== -1 && opens > closes) inBlock = true;
+      else if (closes !== -1 && closes > opens) inBlock = false;
+      if (wasInBlock || inBlock) return;
+      if (exempt.has(i)) return;
+      if (t.startsWith("//") || t.startsWith("*")) return;
       n += (line.match(re) ?? []).length;
     });
   }
