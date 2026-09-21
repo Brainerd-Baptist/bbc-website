@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useAudio } from "@/lib/audio-context";
+import { deriveInk } from "@/lib/identity-colors";
 
 function fmt(s: number) {
   if (!s || isNaN(s)) return "0:00";
@@ -144,6 +145,11 @@ export default function GlobalAudioPlayer() {
   const displayPct = dragging ? dragPct : pct;
 
   const accent = track?.accentColor ?? "#00abc9";
+  // The dark tier, for text and icons on the player's tinted chips. The raw
+  // hue happens to clear 4.5:1 there when it is brand cyan (4.72-6.19 measured
+  // across the player grounds), but `accent` is whatever the series says, and a
+  // darker hue on a dark wash of itself does not. Derived once, used below.
+  const accentInk = deriveInk(accent).dark;
 
   // ── Shared scrubber helpers ───────────────────────────────────────────────
   function getPctFromEvent(e: React.MouseEvent | React.TouchEvent | MouseEvent, ref: React.RefObject<HTMLDivElement | null>) {
@@ -387,7 +393,7 @@ export default function GlobalAudioPlayer() {
               onClick={() => setSpeed(s)}
               className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full transition"
               style={{
-                color: speed === s ? accent : "var(--fg-on-dark-muted)",
+                color: speed === s ? accentInk : "var(--fg-on-dark-muted)",
                 background: speed === s ? `${accent}20` : "transparent",
                 border: speed === s ? `1px solid ${accent}44` : "1px solid transparent",
               }}
@@ -584,7 +590,7 @@ export default function GlobalAudioPlayer() {
             <button
               onClick={() => setSpeed(nextSpeed(speed))}
               className="md:hidden text-[10px] font-bold px-2 py-1 rounded transition"
-              style={{ color: speed !== 1 ? accent : "var(--fg-on-dark-muted)", background: speed !== 1 ? `${accent}1e` : "transparent", minWidth: 34 }}
+              style={{ color: speed !== 1 ? accentInk : "var(--fg-on-dark-muted)", background: speed !== 1 ? `${accent}1e` : "transparent", minWidth: 34 }}
               aria-label={`Playback speed ${speedLabel}, tap to change`}
             >
               {speedLabel}
@@ -596,7 +602,7 @@ export default function GlobalAudioPlayer() {
                   onClick={() => setSpeed(s)}
                   className="text-[10px] font-semibold px-1.5 py-0.5 rounded transition"
                   style={{
-                    color: speed === s ? accent : "var(--fg-on-dark-muted)",
+                    color: speed === s ? accentInk : "var(--fg-on-dark-muted)",
                     background: speed === s ? `${accent}1e` : "transparent",
                   }}
                 >

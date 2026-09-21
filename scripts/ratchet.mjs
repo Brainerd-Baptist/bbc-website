@@ -158,6 +158,46 @@ const METRICS = {
     what: "isDark / resolvedTheme branches deciding a colour in JS (cannot SSR)",
     value: () => countMatches(/\bisDark\b/g, (f) => /\.(tsx|ts)$/.test(f)),
   },
+  "hue-on-own-tint": {
+    what: "text or an icon painted in a hue over a tint of that same hue",
+    // A brand hue at full strength on a 6-13% wash of itself is the same
+    // failing pairing at every hue -- the player speed pill measured 2.31:1
+    // (#00abc9 on #ddeff4) and three more sites repeated it. None was
+    // reachable locally: those components render only when the CMS says the
+    // sermon has audio, and the sandbox cannot reach the CMS. CI found one by
+    // luck; this finds the shape without needing the data.
+    //
+    // Scans whitespace-collapsed source, not lines. The first version matched
+    // `background:` and the tint on one line, and a prettier-wrapped
+    // `background:\n  ... `${hue}18`` walked straight through it -- which the
+    // proof-of-failure caught only because the proof was run. A gate nobody
+    // tries to break is a comment.
+    //
+    // It sees a tint and the bare hue used as ink within ~240 characters of
+    // each other. That covers one style object, which is the shape in
+    // practice; it does NOT catch a tint and an ink that live on different
+    // elements far apart, and it is not claimed to.
+    //
+    // The fix is always the same: `solid` under --fg-on-accent for a filled
+    // chip, or deriveInk(hue).dark for ink on a dark tint. Both are gated by
+    // verify:identity.
+    value: () => {
+      let n = 0;
+      for (const f of files.filter((x) => /\.(tsx|jsx)$/.test(x))) {
+        const code = codeOnly(f, read(f));
+        if (code === null) continue;
+        const flat = code.replace(/\s+/g, " ");
+        for (const m of flat.matchAll(/\$\{(\w+)\}[0-9a-fA-F]{2}\b/g)) {
+          const id = m[1];
+          const from = Math.max(0, m.index - 240);
+          const near = flat.slice(from, m.index + 240);
+          // the identifier used bare as ink -- `color: hue` or `color: x ? hue`
+          if (new RegExp(`color:[^;}]{0,80}\\b${id}\\b\\s*[,:?}]`).test(near)) n++;
+        }
+      }
+      return n;
+    },
+  },
   "unthemed-files": {
     what: "files with a hardcoded colour and no dark: variant at all",
     value: () =>
@@ -243,6 +283,9 @@ const FLOORS = {
     "Pre-existing non-colour debt: unescaped entities, react-hooks rules, " +
     "<img> warnings. Tracked so it cannot grow; not this project's to fix. " +
     "`npm run lint:color` is the scoped gate that blocks at zero.",
+  "hue-on-own-tint":
+    "Blocked at zero. A hue on a wash of itself fails at every hue; use the " +
+    "`solid` tier under --fg-on-accent, which verify:identity gates.",
   "unthemed-files":
     "Counts files holding any hardcoded colour with no dark: variant, which " +
     "includes every file whose colour is legitimately theme-invariant. " +

@@ -1332,3 +1332,66 @@ solid plus the derivation, zero raw colours, ratchet clean.
 Still open, and both are yours rather than the codebase's: dispatch the `baseline`
 job once to generate pixel baselines, and make `verify` a required status check in
 the repo's branch-protection settings so a red run actually blocks a merge.
+
+---
+
+## 15. The class CI found, and why a local run could not
+
+Verify #21 was the first run to finish in minutes rather than timing out: `verify`
+green in 1m13s, `visual` 51 passed and 1 failed in 3m28s. The failure was a shape
+worth recording, because a green local run had just missed it.
+
+`#00abc9 on #ddeff4`, 2.31:1 — a playback-speed pill painting the accent hue at
+full strength on a 9% wash of *that same hue*. A hue on a tint of itself is a
+failing pairing at every hue; there is no value of the hue that rescues it.
+
+It never rendered locally. `AudioPlayer` and `SermonNotes` only mount when the CMS
+says the sermon has audio, and this sandbox cannot reach the CMS, so the local
+sweep walked past components that CI renders in full. That is not a bug to fix —
+it is a permanent asymmetry between the two environments, and the lesson is that a
+browser sweep can only see what the data happens to render.
+
+So the answer was not to fix the pill. A sweep of the idiom found six sites:
+
+- the speed pill on the sermon `AudioPlayer` (2.31:1, the CI failure)
+- the "Latest Sermon" badge on `/sermons`
+- the pressed state of every `SermonNotes` toolbar button — icons, so axe would
+  never flag them, but SC 1.4.11 still owes 3:1
+- the "Copied!" confirmation on the share button (brand cyan on the toolbar,
+  2.73:1 — a confirmation nobody can read is worse than none)
+- three chips in `GlobalAudioPlayer`
+
+The `GlobalAudioPlayer` three measured 4.72–6.19 across the player grounds and
+could have been declared a documented floor. They were not, because `accent` there
+is `track?.accentColor` — whatever the series says — and the measurement only holds
+for brand cyan. A darker hue on a dark wash of itself fails. They use
+`deriveInk(accent).dark` now, so the count is a true zero rather than a floor that
+happens to be true of today's data.
+
+Everywhere else the fix is the `solid` tier under `--fg-on-accent`, which
+`verify:identity` already gates at 4.6:1 with white.
+
+### A new rail, and two failed attempts at it
+
+`hue-on-own-tint` is blocked at zero in the ratchet. It took three tries, and the
+first two are the interesting part.
+
+The first version matched `background:` and the tint on a single line. It reported
+zero against a deliberately injected violation — because the fix I had just written
+wrapped `background:` onto its own line, so the very formatting the repo uses
+defeated it. The second version widened the window but still worked line by line
+and missed a tint and its ink eight lines apart.
+
+The third scans whitespace-collapsed source and looks for a tint and the bare hue
+used as ink within about 240 characters — one style object, which is the shape in
+practice. Both injected forms are caught, the baseline is zero, and an injected
+violation exits 1.
+
+What it does *not* catch is a tint and an ink on different elements far apart. That
+limit is written into the metric's own comment rather than left for someone to
+discover, because this document already contains one floor that was wrong for
+months by being agreed with.
+
+The general point: a gate nobody tries to break is a comment. Both broken versions
+reported a confident zero, and only running the proof-of-failure told them apart
+from the working one.

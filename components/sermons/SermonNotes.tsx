@@ -6,7 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
 import { useAudio } from "@/lib/audio-context";
-import { inkVarsFor } from "@/lib/identity-colors";
+import { deriveInk, inkVarsFor } from "@/lib/identity-colors";
 
 interface Props {
   slug: string;
@@ -218,8 +218,15 @@ function ToolBtn({
       style={{
         display: "inline-flex", alignItems: "center", justifyContent: "center",
         width: 34, height: 34, borderRadius: 7, border: "none", cursor: "pointer",
-        background: active ? `${accentColor}18` : "transparent",
-        color: active ? accentColor : danger ? "var(--danger-text)" : "var(--fg-muted)",
+        /* Pressed state uses the `solid` fill under white ink. The hue on a 9%
+           tint of itself is the same failing pairing as the player speed pill
+           (2.31:1), and an icon still owes 3:1 under SC 1.4.11. */
+        background: active ? deriveInk(accentColor).solid : "transparent",
+        color: active
+          ? "var(--fg-on-accent)"
+          : danger
+            ? "var(--danger-text)"
+            : "var(--fg-muted)",
         transition: "background 0.12s, color 0.12s",
         flexShrink: 0, WebkitTapHighlightColor: "transparent",
       }}
@@ -492,7 +499,12 @@ export default function SermonNotes({
                   style={{
                     background: shareOpen ? `${accentColor}12` : "none",
                     border: "none", cursor: "pointer", padding: "0.2rem 0.5rem",
-                    color: shareLabel === "Copied!" ? accentColor : "var(--fg-muted)",
+                    /* Derived tone, not the raw hue: brand cyan on this toolbar
+                       measures 2.73:1 in light mode, and a confirmation nobody
+                       can read is worse than none. */
+                    ...(shareLabel === "Copied!" ? inkVarsFor(accentColor) : {}),
+                    color:
+                      shareLabel === "Copied!" ? "var(--identity-light)" : "var(--fg-muted)",
                     display: "flex", alignItems: "center", gap: "0.3rem",
                     fontSize: "0.65rem", fontWeight: 600, transition: "color 0.15s",
                     WebkitTapHighlightColor: "transparent", borderRadius: 6,

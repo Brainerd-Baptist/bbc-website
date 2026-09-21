@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useAudio, type AudioTrack } from "@/lib/audio-context";
+import { deriveInk } from "@/lib/identity-colors";
 
 function fmt(s: number) {
   if (!s || isNaN(s)) return "0:00";
@@ -254,8 +255,15 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
                 onClick={() => isActive && setSpeed(s)}
                 className="text-[10px] font-bold px-1.5 py-1 rounded-lg transition"
                 style={{
-                  color: (isActive ? spd : 1) === s ? accentColor : dim,
-                  background: (isActive ? spd : 1) === s ? `${accentColor}18` : "transparent",
+                    /* Selected: the validated `solid` fill under white, not the
+                       hue on a 9% tint of itself -- that pairing measured 2.31:1
+                       (#00abc9 on #ddeff4) and is the same shape wherever it
+                       appears. CI caught it and a local run could not: this
+                       player only renders when the sermon has audio, and the
+                       sandbox cannot reach the CMS that says so. */
+                    color: (isActive ? spd : 1) === s ? "var(--fg-on-accent)" : dim,
+                    background:
+                      (isActive ? spd : 1) === s ? deriveInk(accentColor).solid : "transparent",
                 }}
               >
                 {s === 1 ? "1×" : `${s}×`}

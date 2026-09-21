@@ -3,6 +3,7 @@ import { getAllSermons, getAllSeries, FALLBACK_SERMONS } from "@/lib/sanity";
 import { ALL_SERIES as FALLBACK_SERIES } from "@/lib/sermons";
 import SermonGrid from "@/components/sermons/SermonGrid";
 import ContinueListeningShelf, { type SermonForShelf } from "@/components/sermons/ContinueListeningShelf";
+import { deriveInk } from "@/lib/identity-colors";
 
 export const metadata = {
   title: "Sermons — Brainerd Baptist Church",
@@ -114,7 +115,9 @@ export default async function SermonsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase rounded-full px-2.5 py-1"
-                        style={{ background: `${heroAccent}22`, color: heroAccent }}>
+                          /* `solid` under white, not the hue on a 13% wash of
+                             itself -- that pairing fails at every hue. */
+                          style={{ background: deriveInk(heroAccent).solid, color: "var(--fg-on-accent)" }}>
                         <span className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
                           style={{ background: heroAccent }} />
                         Latest Sermon
