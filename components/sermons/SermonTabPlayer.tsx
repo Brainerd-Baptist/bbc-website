@@ -70,7 +70,7 @@ export default function SermonTabPlayer({
           }}
         >
           {youtubeId && (
-            <SermonPlayer youtubeId={youtubeId} title={title} />
+            <SermonPlayer youtubeId={youtubeId} title={title} slug={slug} />
           )}
           {audioTrack && (
             <div

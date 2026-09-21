@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { AudioProvider } from "@/lib/audio-context";
+import { VideoProvider } from "@/lib/video-context";
 import PageTransition from "@/components/PageTransition";
 import ThemeProvider from "@/components/ThemeProvider";
 import ConditionalLayout from "@/components/ConditionalLayout";
@@ -54,8 +55,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} antialiased`}>
         <ThemeProvider>
           <AudioProvider>
-            <PageTransition />
-            <ConditionalLayout>{children}</ConditionalLayout>
+            <VideoProvider>
+              <PageTransition />
+              <ConditionalLayout>{children}</ConditionalLayout>
+            </VideoProvider>
           </AudioProvider>
         </ThemeProvider>
       </body>
