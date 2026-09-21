@@ -32,6 +32,26 @@
    --focus-ring is deliberately theme-invariant; see tokens.css for why one
    ring beats a per-theme pair here.
    ──────────────────────────────────────────────────────────────────────── */
+/* ── Identity colours (per-ministry, per-series) ──────────────────────────
+   A content-driven hue cannot be a token — content adds more of them — but it
+   still needs an accessible text value. Every one of the eleven hues in use
+   fails AA as text on a light surface (1.78-3.89:1) and four also fail on
+   dark. So each hue carries a PAIR: the raw hue for decorative fills, and a
+   text value per theme. It is the same split the brand already has in
+   --accent / --accent-text, and the same thing Material, Primer and Linear do
+   for category colours.
+
+   Why classes and not a single --identity-ink variable: a custom property
+   declared on :root is substituted on :root, so
+   `--identity-ink: var(--identity-light)` would resolve against a value the
+   element has not set yet and fall back to nothing. The theme switch has to
+   happen in a selector that matches the element carrying the pair. */
+.identity-ink          { color: var(--identity-light); }
+.dark .identity-ink    { color: var(--identity-dark); }
+.identity-border       { border-color: var(--identity-light); }
+.dark .identity-border { border-color: var(--identity-dark); }
+
+
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
@@ -360,20 +380,59 @@ body {
    dark mode (the drawer, a card, a panel). Both wordmarks ship and CSS reveals
    one, so the correct mark is in the server-rendered HTML rather than being
    chosen by JS after hydration. */
-.logo-on-surface-dark  { display: block; }  /* black wordmark — light theme */
-.logo-on-surface-light { display: none; }   /* white wordmark — dark theme  */
-.dark .logo-on-surface-dark  { display: none; }
-.dark .logo-on-surface-light { display: block; }
+/* ── Wordmark ──────────────────────────────────────────────────────────────
+   One asset, recoloured by CSS.
 
-/* Logo swap for the nav bar, which additionally depends on data-chrome. Both
-   wordmarks are in the DOM and CSS reveals one, so the correct mark is already
-   present in the server-rendered HTML. */
-.bbc-nav .nav-logo-light { display: block; }
-.bbc-nav .nav-logo-dark  { display: none; }
-.bbc-nav[data-chrome="glass"] .nav-logo-light { display: none; }
-.bbc-nav[data-chrome="glass"] .nav-logo-dark  { display: block; }
-.dark .bbc-nav[data-chrome="glass"] .nav-logo-light { display: block; }
-.dark .bbc-nav[data-chrome="glass"] .nav-logo-dark  { display: none; }
+   logo-white.png and logo-black.png were the SAME artwork twice — identical
+   alpha, identical opaque pixel count, one colour bucket each — shipped
+   together on every page while CSS hid one. Six rules picked between them,
+   keyed on both `.dark` and `data-chrome`, and a navy band or the theater
+   page would have needed a third variant.
+
+   A single-colour mark does not need to be an image at all: it needs a shape
+   and a colour. So the shape is a mask and the colour is `currentColor`, which
+   means the mark is correct on any ground the site has — light, dark, navy
+   band, theater, plate — with no variants and no swap. In the navbar it picks
+   up --nav-ink, which is already computed per chrome and theme, so the logo
+   and the hamburger now derive from one value instead of two mechanisms.
+
+   The plan called for inline SVG. This is a deliberate substitution: there is
+   no vector source, and tracing a wordmark risks a subtly wrong logo, which is
+   worse than a raster mask. The mask keeps the artwork exactly as drawn and
+   gains the same theming. If a vector ever arrives, swap the mask-image for it
+   and nothing else changes.
+
+   Both the prefixed and unprefixed properties are set: unprefixed `mask-image`
+   is Safari 15.4+, and the church's audience has a long tail of older iPads. */
+/* The "A" mark, used as a large decorative watermark on the navy connect
+   band. Same mask mechanism as the wordmark, so it takes whatever colour its
+   context sets instead of needing a light and a dark copy. */
+.bbc-a-mark {
+  background-color: currentColor;
+  -webkit-mask-image: url("/logo-a-mark-mask.png");
+          mask-image: url("/logo-a-mark-mask.png");
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  /* 444x458 source */
+  aspect-ratio: 0.9694;
+}
+
+.bbc-wordmark {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask-image: url("/logo-mask.png");
+          mask-image: url("/logo-mask.png");
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+          mask-position: left center;
+  /* 5000x1461 source, so the intrinsic ratio is 3.423:1 */
+  aspect-ratio: 3.423;
+}
 
 /* ── Card hover lift ───────────────────────────────────── */
 .card-hover {

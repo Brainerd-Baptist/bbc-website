@@ -5,15 +5,18 @@ import { LEAD_PASTOR } from "@/lib/constants";
 export default function ConnectBand() {
   return (
     <section className="relative overflow-hidden" style={{ background: "var(--color-brand-navy)" }}>
-      {/* Logo mark watermark — top right */}
-      {/* mix-blend-mode:screen makes the white background transparent on dark navy,
-          leaving only the white logo lines visible */}
+      {/* Logo-mark watermark, top right.
+          The comment here used to say mix-blend-mode: screen "leaves only the
+          white logo lines visible" — but the asset has no white lines. Every
+          opaque pixel in it is pure black, and screen(0, b) = b, so this
+          watermark rendered nothing at all. Masking the same artwork and
+          painting it with --fg-on-dark makes it appear, and needs no blend
+          mode to do it. */}
       <div
-        className="absolute top-0 right-0 pointer-events-none select-none"
-        style={{ width: "40vw", maxWidth: 460, opacity: 0.09, mixBlendMode: "screen" }}
+        className="absolute top-0 right-0 pointer-events-none select-none text-fg-on-dark"
+        style={{ width: "40vw", maxWidth: 460, opacity: 0.09 }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-a-mark.png" alt="" aria-hidden="true" className="w-full h-auto" />
+        <span className="bbc-a-mark block w-full" aria-hidden="true" />
       </div>
 
       {/* Subtle top border */}
@@ -43,7 +46,7 @@ export default function ConnectBand() {
               <div className="flex items-center gap-4">
                 {/* Pastor avatar placeholder — replace with <Image> when photo is ready */}
                 <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00abc9" strokeWidth="1.5">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" style={{ stroke: "var(--accent)" }}>
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>

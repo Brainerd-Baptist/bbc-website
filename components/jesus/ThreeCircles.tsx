@@ -158,10 +158,24 @@ export default function ThreeCircles() {
   const canNext = idx < STEPS.length-1;
   const canPrev = idx > 0;
 
-  /* White-card palette */
-  const TEAL  = "#00abc9";
-  const NAVY  = "#00205B";          // replaces "WHITE" — dark elements on white card
-  const RED   = "#e04428";          // slightly deeper red reads better on white
+  /* The diagram's palette.
+     It sits on --plate, a FIXED light ground (the artwork is drawn for white
+     and inverting it does not work), so its ink is fixed too — none of these
+     invert. Measured on the plate: brand cyan #00abc9 is 2.74:1, below the
+     4.5:1 its text labels need AND below the 3:1 a meaningful stroke needs,
+     and #e04428 is 4.18:1. So the plate uses darkened versions of the same
+     hues. The navy label alpha went 0.35 -> 0.65 for the same reason (2.16:1
+     -> 5.13:1).
+
+     BAND_TEAL is separate and must stay brand cyan: the step text and the
+     ghost numeral sit on the navy band, where #00abc9 is 4.75:1 and the
+     darkened #007b91 would be 2.63:1 — darkening there is a regression. Same
+     split the rest of the site makes between --accent and --accent-text. */
+  const TEAL  = "#007b91";          // 4.95:1 on the plate
+  const NAVY  = "#00205B";          // 15.47:1 on the plate
+  const RED   = "#d83b1f";          // 4.60:1 on the plate (was #e04428, 4.18)
+  const LABEL = "rgba(0,32,91,0.65)"; // 5.13:1 on the plate (was 0.35, 2.16)
+  const BAND_TEAL = "#00abc9";      // on the navy band, NOT the plate
 
   const viewBox = useAnimVB(VIEWBOXES[v]);
 
@@ -266,9 +280,9 @@ export default function ThreeCircles() {
             </Fade>
             {/* Coping labels — only step 4 */}
             <Fade show={vis(v,"cope-labels")}>
-              <MLText x={BX-62} y={BY+108} lines={["Money"]}   fill={`rgba(0,32,91,0.35)`} size={12} weight={500}/>
-              <MLText x={BX+6}  y={BY+108} lines={["Success"]} fill={`rgba(0,32,91,0.35)`} size={12} weight={500}/>
-              <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill={`rgba(0,32,91,0.35)`} size={12} weight={500}/>
+              <MLText x={BX-62} y={BY+108} lines={["Money"]}   fill={LABEL} size={12} weight={500}/>
+              <MLText x={BX+6}  y={BY+108} lines={["Success"]} fill={LABEL} size={12} weight={500}/>
+              <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill={LABEL} size={12} weight={500}/>
             </Fade>
 
             {/* ═══ GOSPEL (bottom-center) — navy on white ═══ */}
@@ -340,7 +354,7 @@ export default function ThreeCircles() {
 
         {/* Text panel — stays dark */}
         <div className="flex-1 flex flex-col justify-center lg:pt-6 px-1 lg:px-0">
-          <p className="font-condensed font-900 mb-2" style={{fontSize:"5rem",lineHeight:1,color:TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
+          <p className="font-condensed font-900 mb-2" style={{fontSize:"5rem",lineHeight:1,color:BAND_TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
             0{step.num}
           </p>
           <h3 className="font-condensed font-900 text-fg-on-dark mb-4"
@@ -351,7 +365,7 @@ export default function ThreeCircles() {
             {step.body}
           </p>
           {step.cta && (
-            <p className="font-condensed font-700 mb-8" style={{color:TEAL,fontSize:"1.05rem"}}>
+            <p className="font-condensed font-700 mb-8" style={{color:BAND_TEAL,fontSize:"1.05rem"}}>
               {step.cta}
             </p>
           )}

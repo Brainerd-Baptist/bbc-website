@@ -66,7 +66,7 @@ export default function VisitPage() {
                 className="object-cover object-center"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(7,16,30,0.95) 0%, rgba(7,16,30,0.4) 50%, rgba(7,16,30,0.1) 100%)" }} />
+              <div className="absolute inset-0" style={{ background: "var(--scrim-card) 50%, rgba(7,16,30,0.1) 100%)" }} />
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <p className="font-condensed font-900 text-fg-on-dark leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
                   8:30 AM
@@ -86,7 +86,7 @@ export default function VisitPage() {
                 className="object-cover object-top"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(7,16,30,0.95) 0%, rgba(7,16,30,0.4) 50%, rgba(7,16,30,0.1) 100%)" }} />
+              <div className="absolute inset-0" style={{ background: "var(--scrim-card) 50%, rgba(7,16,30,0.1) 100%)" }} />
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <p className="font-condensed font-900 text-fg-on-dark leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
                   11:00 AM
@@ -107,7 +107,7 @@ export default function VisitPage() {
               className="object-cover object-center"
               sizes="(max-width: 1024px) 100vw, 1024px"
             />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(7,16,30,0.92) 0%, rgba(7,16,30,0.65) 55%, rgba(7,16,30,0.2) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "var(--scrim-side) 55%, rgba(7,16,30,0.2) 100%)" }} />
             <div className="absolute inset-0 flex flex-col justify-center px-8">
               <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent)" }}>
                 9:45 AM · Between Services

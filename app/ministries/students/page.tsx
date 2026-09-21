@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IDENTITY, inkVars } from "@/lib/identity-colors";
 
 export const metadata: Metadata = {
   title: "Students — Brainerd Baptist Church",
@@ -60,7 +61,7 @@ export default function StudentsPage() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(0,16,48,0.25) 0%, rgba(0,16,48,0.20) 30%, rgba(0,16,48,0.82) 70%, rgba(0,16,48,0.97) 100%)",
+              "var(--scrim-hero) 30%, rgba(0,16,48,0.82) 70%, rgba(0,16,48,0.97) 100%)",
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
@@ -73,7 +74,11 @@ export default function StudentsPage() {
             }}
           >
             A place to{" "}
-            <span style={{ color: "#4a7fcb" }}>belong.</span>
+            {/* Permanently dark hero (photo under a navy scrim), so the ink
+                must not invert: this pins the identity pair's DARK value
+                instead of using .identity-ink, whose light value would drop
+                to 3.75:1 here. See docs/token-mapping-rules.md. */}
+            <span style={{ color: IDENTITY.students.dark }}>belong.</span>
           </h1>
           <p
             className="text-fg-on-dark-muted leading-relaxed mb-8 max-w-lg"
@@ -87,7 +92,7 @@ export default function StudentsPage() {
             <a
               href="#schedule"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "#4a7fcb", color: "var(--fg-on-accent)" }}
+              style={{ background: IDENTITY.students.solid, color: "var(--fg-on-accent)" }}
             >
               When We Meet
             </a>
@@ -125,7 +130,7 @@ export default function StudentsPage() {
               >
                 <div
                   className="w-1 h-10 rounded-full mb-5"
-                  style={{ background: "#4a7fcb" }}
+                  style={{ background: IDENTITY.students.hue }}
                 />
                 <h3
                   className="font-condensed font-800 text-fg mb-3"
@@ -165,8 +170,8 @@ export default function StudentsPage() {
               >
                 <div className="flex items-baseline gap-3 mb-4">
                   <span
-                    className="font-condensed font-800 text-[#4a7fcb]"
-                    style={{ fontSize: "1.6rem" }}
+                    className="font-condensed font-800 identity-ink"
+                    style={{ ...inkVars(IDENTITY.students), fontSize: "1.6rem" }}
                   >
                     {day}
                   </span>
@@ -228,7 +233,8 @@ export default function StudentsPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#4a7fcb" strokeWidth="1.75">
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75"
+                        className="identity-ink" style={inkVars(IDENTITY.students)}>
                         <circle cx="20" cy="14" r="6" />
                         <path d="M8 36c0-8 5.4-13 12-13s12 5 12 13" />
                       </svg>
@@ -241,7 +247,7 @@ export default function StudentsPage() {
                 >
                   {name}
                 </h3>
-                <p className="text-xs font-semibold tracking-widest uppercase mt-1" style={{ color: "#4a7fcb" }}>
+                <p className="text-xs font-semibold tracking-widest uppercase mt-1 identity-ink" style={inkVars(IDENTITY.students)}>
                   {title}
                 </p>
               </div>
@@ -253,7 +259,11 @@ export default function StudentsPage() {
       {/* ── Dark CTA ───────────────────────────────────────── */}
       <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-3xl mx-auto text-center">
-          <p className="eyebrow mb-3" style={{ color: "#4a7fcb" }}>
+          {/* Permanently dark navy band. The raw hue reads 3.82:1 on
+              #00205b — under AA for text this small — and .identity-ink's
+              light value is worse still at 3.09:1, so this pins the pair's
+              DARK value (4.74:1). See docs/token-mapping-rules.md. */}
+          <p className="eyebrow mb-3" style={{ color: IDENTITY.students.dark }}>
             Ready to plug in?
           </p>
           <h2
@@ -274,7 +284,7 @@ export default function StudentsPage() {
             <Link
               href="/connect"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
-              style={{ background: "#4a7fcb", color: "var(--fg-on-accent)" }}
+              style={{ background: IDENTITY.students.solid, color: "var(--fg-on-accent)" }}
             >
               Get Connected
             </Link>

@@ -263,7 +263,15 @@ function ActiveView({
         {/* Stream column */}
         <div className="lg:flex-1 flex flex-col">
           {/* YouTube embed */}
-          <div className="relative w-full bg-black" style={{ aspectRatio: "16/9" }}>
+          {/* The embed well. Was bg-black, which reads as a hole punched in a
+                 #0d1525 page while the iframe loads; --theater-sunken is a well,
+                 not a hole. The border makes the seam with YouTube's own chrome
+                 look intentional rather than like a rendering fault — YouTube will
+                 not theme, so the seam is permanent and should be owned. */}
+            <div
+              className="relative w-full bg-theater-sunken border-y border-border-on-dark"
+              style={{ aspectRatio: "16/9" }}
+            >
             {state === "post" ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-theater-bg px-6 text-center">
                 <p className="text-fg-on-dark-muted text-sm">The service just ended.</p>
@@ -724,7 +732,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
                 <div className="absolute inset-0 bg-brand-navy/50" />
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="relative z-10" aria-label={`Watch ${sermon.title}`}>
                   <div className="w-14 h-14 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center transition-all shadow-lg hover:scale-105">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}><polygon points="5,3 19,12 5,21"/></svg>
                   </div>
                 </a>
               </div>

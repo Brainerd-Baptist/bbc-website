@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { SERMONS, ALL_SERIES, SERIES_META, formatDate } from "@/lib/sermons";
+import { IDENTITY } from "@/lib/identity-colors";
 
 export const revalidate = 300;
 
@@ -23,13 +24,20 @@ export async function generateMetadata({
   };
 }
 
-const SERIES_COLORS: Record<string, { bg: string; accent: string }> = {
-  "behind-the-scenes":     { bg: "#1a0d2e", accent: "#a78bfa" },
-  "prayer-that-shapes-us": { bg: "#0f2040", accent: "#00abc9" },
-  "ot-revisited":          { bg: "#1c1209", accent: "#f59e0b" },
-  "complete-in-christ":    { bg: "#0d2618", accent: "#34d399" },
-  "gods-work-our-work":    { bg: "#00205B", accent: "#00abc9" },
-  "guest-messages":        { bg: "#111827", accent: "#94a3b8" },
+// The identity hues live in lib/identity-colors.ts. `accent` stays a 6-digit
+// HEX on purpose: alpha is string-concatenated onto it below (`${accent}22`,
+// `accent + "cc"`), and `var(--accent)22` is not a colour. `ink` is the
+// accessible text pair for the same hue — every one of these fails AA as text
+// on a light surface — for any site that reads rather than decorates.
+type SeriesColor = { bg: string; accent: string; ink: { light: string; dark: string } };
+
+const SERIES_COLORS: Record<string, SeriesColor> = {
+  "behind-the-scenes":     { bg: "#1a0d2e", accent: IDENTITY.violet.hue,  ink: IDENTITY.violet },
+  "prayer-that-shapes-us": { bg: "#0f2040", accent: "#00abc9",            ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } },
+  "ot-revisited":          { bg: "#1c1209", accent: IDENTITY.amber.hue,   ink: IDENTITY.amber },
+  "complete-in-christ":    { bg: "#0d2618", accent: IDENTITY.emerald.hue, ink: IDENTITY.emerald },
+  "gods-work-our-work":    { bg: "#00205B", accent: "#00abc9",            ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } },
+  "guest-messages":        { bg: "#111827", accent: IDENTITY.slate.hue,   ink: IDENTITY.slate },
 };
 
 export default async function SeriesPage({
@@ -42,7 +50,8 @@ export default async function SeriesPage({
   if (!series) notFound();
 
   const meta  = SERIES_META[seriesId];
-  const color = SERIES_COLORS[seriesId] ?? { bg: "#00205B", accent: "#00abc9" };
+  const color: SeriesColor =
+    SERIES_COLORS[seriesId] ?? { bg: "#00205B", accent: "#00abc9", ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } };
 
   const sermons = SERMONS
     .filter((s) => s.seriesId === seriesId)
@@ -70,7 +79,14 @@ export default async function SeriesPage({
           {/* Accent bar */}
           <div className="w-12 h-1 rounded-full mb-5" style={{ background: color.accent }} />
 
-          {/* Series label */}
+          {/* Series label. This and the passage below sit on var(--brand-band),
+              a permanently dark ground, so the ink must not invert and
+              .identity-ink is the wrong tool: its light value reads 2.5-2.6:1
+              here. The RAW hue is the accessible value on this ground —
+              4.75:1 (#00abc9) to 6.77:1 (emerald) against the band's lightest
+              stop #0a2d6e — so these two deliberately keep it, exactly like the
+              full-brand-cyan note in app/ministries/page.tsx. `color.ink` is
+              for the light surfaces below. See docs/token-mapping-rules.md. */}
           <p className="text-[11px] font-semibold tracking-widest uppercase mb-3" style={{ color: color.accent }}>
             Series
           </p>
@@ -89,6 +105,7 @@ export default async function SeriesPage({
           </h1>
 
           {meta?.passage && (
+            /* Raw hue, same dark-ground reasoning as the Series label above. */
             <p className="text-sm font-medium mb-4" style={{ color: color.accent }}>
               {meta.passage}
             </p>

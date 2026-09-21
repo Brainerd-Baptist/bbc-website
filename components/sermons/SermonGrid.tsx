@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { formatDate } from "@/lib/sermons";
+import { IDENTITY } from "@/lib/identity-colors";
 
 // Normalised sermon shape — works for both static and Sanity data
 export interface GridSermon {
@@ -13,7 +14,10 @@ export interface GridSermon {
   slug: string;          // empty string when coming from static data
   series: string;
   seriesId: string;
-  seriesAccent?: string; // overrides default palette when set in Sanity
+  // Overrides the default palette when set in Sanity. Decorative only: it
+  // carries no accessible text pair, so a Sanity-supplied hue must not be
+  // used as text without pairing it the way SERIES_COLORS.ink does.
+  seriesAccent?: string;
   seriesBg?: string;
   speaker: string;
   date: string;
@@ -56,15 +60,22 @@ function parseDurationSecs(dur?: string): number {
   return 3600;
 }
 
-const SERIES_COLORS: Record<string, { bg: string; accent: string }> = {
-  "behind-the-scenes":    { bg: "#1a0d2e", accent: "#a78bfa" },
-  "prayer-that-shapes-us":{ bg: "#0f2040", accent: "#00abc9" },
-  "ot-revisited":         { bg: "#1c1209", accent: "#f59e0b" },
-  "complete-in-christ":   { bg: "#0d2618", accent: "#34d399" },
-  "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9" },
-  "guest-messages":       { bg: "#111827", accent: "#94a3b8" },
+// The identity hues live in lib/identity-colors.ts. `accent` stays a 6-digit
+// HEX on purpose: alpha is string-concatenated onto it below (`${accent}22`,
+// `accent + "cc"`), and `var(--accent)22` is not a colour. `ink` is the
+// accessible text pair for the same hue — every one of these fails AA as text
+// on a light surface — for any site that reads rather than decorates.
+type SeriesColor = { bg: string; accent: string; ink: { light: string; dark: string } };
+
+const SERIES_COLORS: Record<string, SeriesColor> = {
+  "behind-the-scenes":    { bg: "#1a0d2e", accent: IDENTITY.violet.hue,  ink: IDENTITY.violet },
+  "prayer-that-shapes-us":{ bg: "#0f2040", accent: "#00abc9",            ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } },
+  "ot-revisited":         { bg: "#1c1209", accent: IDENTITY.amber.hue,   ink: IDENTITY.amber },
+  "complete-in-christ":   { bg: "#0d2618", accent: IDENTITY.emerald.hue, ink: IDENTITY.emerald },
+  "gods-work-our-work":   { bg: "#00205B", accent: "#00abc9",            ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } },
+  "guest-messages":       { bg: "#111827", accent: IDENTITY.slate.hue,   ink: IDENTITY.slate },
 };
-const DEFAULT_COLOR = { bg: "#00205B", accent: "#00abc9" };
+const DEFAULT_COLOR: SeriesColor = { bg: "#00205B", accent: "#00abc9", ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } };
 
 function seriesColor(seriesId: string) {
   return SERIES_COLORS[seriesId] ?? DEFAULT_COLOR;
@@ -201,7 +212,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
     >
       {/* Thumbnail */}
       <div
-        className="relative hidden sm:flex flex-shrink-0 w-[140px] md:w-[180px] items-center justify-center overflow-hidden"
+        className="relative hidden sm:flex flex-shrink-0 w-[140px] md:w-[180px] items-center justify-center overflow-hidden bg-media-bg"
         style={{ background: color.bg }}
       >
         {thumb ? (

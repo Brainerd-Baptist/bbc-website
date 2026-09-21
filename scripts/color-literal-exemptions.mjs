@@ -74,6 +74,30 @@ export const COLOR_LITERAL_EXEMPTIONS = [
       "`var(--accent)99` is not a colour. Every OTHER colour in this file is " +
       "tokenised; this one is load-bearing as a string.",
   },
+  {
+    file: "lib/identity-colors.ts",
+    whole: true,
+    reason:
+      "The sanctioned home for the identity hues, same argument as " +
+      "app/tokens.css. These are content colours rather than theme tokens — " +
+      "content adds more of them — so they cannot live in the token layer, " +
+      "but every literal here is a definition that call sites reference by " +
+      "name. Each hue carries its accessible text pair and a fill-safe value, " +
+      "all generated against measured contrast rather than picked by eye.",
+  },
+
+  {
+    file: "components/jesus/ThreeCircles.tsx",
+    match: /const (TEAL|NAVY|RED|LABEL|BAND_TEAL)\s*=/,
+    reason:
+      "The diagram's palette. It is drawn on --plate, a fixed light ground, " +
+      "so its ink is fixed too and cannot come from theme tokens: the plate " +
+      "never inverts, and a token that did would break the artwork. Each " +
+      "value is set to its measured contrast on the plate (4.6-15.5:1), with " +
+      "BAND_TEAL deliberately separate because it sits on the navy band where " +
+      "the darkened value would be a regression.",
+  },
+
   // ── hex required because alpha is string-concatenated onto it ────────────
   // Same mechanism as GlobalAudioPlayer above: `var(--accent)66` is not a
   // colour, so these fallbacks are load-bearing AS STRINGS.

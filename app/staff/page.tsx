@@ -48,7 +48,7 @@ export default function StaffPage() {
                       </div>
                     )}
                     <div className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
-                      style={{ background: "linear-gradient(to top, rgba(0,32,91,0.18) 0%, transparent 100%)" }} />
+                      style={{ background: "var(--scrim-veil)" }} />
                   </div>
 
                   {/* Name + title */}

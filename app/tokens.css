@@ -264,6 +264,54 @@
      carries a border so it reads as a deliberate object. */
   --plate:                 #ffffff;
 
+  /* ── Photo scrims ──────────────────────────────────────────────────────
+     A scrim sits BETWEEN a photograph and the text on it. It is not dimming:
+     `opacity` or `filter: brightness` on the photo itself reduces contrast and
+     makes the image harder to perceive — worst of all for images containing
+     text — and restoring it on :hover never reaches keyboard or touch users.
+     Scrimming instead darkens the ground under the text while leaving the
+     photograph at full fidelity.
+
+     Theme-invariant: a scrimmed hero is dark in both themes, so white text
+     over it is correct either way.
+
+     There were eleven of these inline with FOUR different near-identical
+     bases (0,16,48 / 7,16,30 / 0,20,42 / 0,20,60) — drift, not design. One
+     base, three ramp shapes for where the text actually sits.
+
+     Verified against the worst case, a blown-out white photo: at the dark end
+     of each ramp white text lands at 16.5–17.3:1 and the muted tier at 5.6+.
+     Text belongs in the dark end — the 0.22 and 0.45 stops carry none, and at
+     0.45 white would be 3.07:1. */
+  --scrim-base:            0 16 48;
+  --scrim-hero: linear-gradient(to bottom,
+                  rgb(var(--scrim-base) / 0.35) 0%,
+                  rgb(var(--scrim-base) / 0.22) 30%,
+                  rgb(var(--scrim-base) / 0.81) 70%,
+                  rgb(var(--scrim-base) / 0.96) 100%);
+  --scrim-card: linear-gradient(to top,
+                  rgb(var(--scrim-base) / 0.94) 0%,
+                  rgb(var(--scrim-base) / 0.45) 50%,
+                  rgb(var(--scrim-base) / 0.12) 100%);
+  --scrim-card-soft: linear-gradient(to top,
+                  rgb(var(--scrim-base) / 0.75) 0%,
+                  rgb(var(--scrim-base) / 0.10) 60%,
+                  transparent 100%);
+  --scrim-side: linear-gradient(to right,
+                  rgb(var(--scrim-base) / 0.94) 0%,
+                  rgb(var(--scrim-base) / 0.68) 55%,
+                  rgb(var(--scrim-base) / 0.22) 100%);
+  /* A vignette, not a legibility scrim: it settles a portrait into its card
+     and carries no text, so it has no contrast requirement. Named anyway,
+     so the next one does not get inlined at a fifth base value. */
+  --scrim-veil: linear-gradient(to top,
+                  rgb(var(--scrim-base) / 0.18) 0%,
+                  transparent 100%);
+
+  /* The scrim's dark end as a flat colour, so the contrast gate can check
+     what text actually sits on. */
+  --scrim-solid:           #0a1a38;
+
   --theater-bg:            #0d1525;
   --theater-sunken:        #0a1120;
   --theater-raised:        #162030;
@@ -368,6 +416,7 @@
   --color-hover-on-dark-strong: var(--hover-on-dark-strong);
   --color-danger-on-dark:     var(--danger-on-dark);
   --color-theater-bg:         var(--theater-bg);
+  --color-scrim-solid:        var(--scrim-solid);
   --color-theater-sunken:     var(--theater-sunken);
   --color-theater-raised:     var(--theater-raised);
   --color-theater-glow:       var(--theater-glow);

@@ -171,10 +171,9 @@ export default function KidsRegistrationForm() {
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
           style={{ background: "var(--accent-bg)" }}
         >
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style={{ stroke: "var(--accent)" }}>
             <path
               d="M7 16l6 6 12-12"
-              stroke="#00abc9"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -228,7 +227,7 @@ export default function KidsRegistrationForm() {
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path
                       d="M3 8l3.5 3.5 6.5-6.5"
-                      stroke="#00142a"
+                      stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"

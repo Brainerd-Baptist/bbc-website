@@ -38,7 +38,10 @@ export default function VideoHero() {
   const LANDSCAPE_POSTER = `https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID}/thumbnails/thumbnail.jpg?width=1920&height=1080&time=4s`;
 
   return (
-    <section className="relative w-full overflow-hidden" style={{ height: "100svh" }}>
+    <section
+      className="relative w-full overflow-hidden"
+      style={{ height: "100svh", background: "var(--scrim-solid)" }}
+    >
       {/* ── Mobile: still photo — landscape video crops badly on portrait screens ── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -68,7 +71,7 @@ export default function VideoHero() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0,16,48,0.45) 0%, rgba(0,16,48,0.30) 40%, rgba(0,16,48,0.80) 75%, rgba(0,16,48,0.96) 100%)",
+            "var(--scrim-hero) 40%, rgba(0,16,48,0.80) 75%, rgba(0,16,48,0.96) 100%)",
         }}
       />
 

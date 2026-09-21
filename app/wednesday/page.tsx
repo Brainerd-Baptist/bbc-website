@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IDENTITY, inkVars } from "@/lib/identity-colors";
 
 export const metadata: Metadata = {
   title: "Wednesday Nights — Brainerd Baptist Church",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 // ── Wednesday ministries ─────────────────────────────────────
 type Program = {
   key: string; time: string; label: string; ages: string; color: string;
+  ink: { light: string; dark: string };
   location: string; href: string | null; body: string; photo?: string;
   icon: React.ReactNode;
 };
@@ -19,7 +21,8 @@ const PROGRAMS: Program[] = [
     time: "6:00 – 7:30 PM",
     label: "Kids Midweek",
     ages: "Ages 2 – 5th Grade",
-    color: "var(--accent-text)",
+    color: "var(--accent)",
+    ink: { light: "var(--accent-text)", dark: "var(--accent-text)" },
     location: "Kids Area — enter from Albemarle Ave, Purple Lot",
     href: "/ministries/kids",
     photo: "/carousel/kids-midweek.jpg",
@@ -36,7 +39,8 @@ const PROGRAMS: Program[] = [
     time: "6:30 PM",
     label: "Students",
     ages: "Middle & High School",
-    color: "#4a7fcb",
+    color: IDENTITY.students.hue,
+    ink: IDENTITY.students,
     location: "The BX — enter from the soccer field",
     href: "/ministries/students",
     photo: "/carousel/students-1.jpg",
@@ -54,6 +58,7 @@ const PROGRAMS: Program[] = [
     label: "Adult Bible Study",
     ages: "Adults",
     color: "var(--fg)",
+    ink: { light: "var(--fg)", dark: "var(--fg)" },
     location: "Main Worship Center",
     href: null,
     photo: "/carousel/adult-bible-study.jpg",
@@ -72,7 +77,8 @@ const PROGRAMS: Program[] = [
     time: "Varies by group",
     label: "College & Young Adults",
     ages: "College Age",
-    color: "#5b7fa6",
+    color: IDENTITY.steel.hue,
+    ink: IDENTITY.steel,
     location: "Off-campus locations",
     href: null,
     body:
@@ -90,7 +96,8 @@ const PROGRAMS: Program[] = [
     time: "6:00 PM",
     label: "Choir & Orchestra",
     ages: "All ages welcome",
-    color: "#8b6fae",
+    color: IDENTITY.plum.hue,
+    ink: IDENTITY.plum,
     location: "Choir Room / Worship Center",
     href: null,
     photo: "/carousel/choir-orchestra.jpg",
@@ -175,7 +182,7 @@ export default function WednesdayPage() {
       {/* ── Program cards ─────────────────────────────────── */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto space-y-6">
-          {PROGRAMS.map(({ key, time, label, ages, color, location, href, body, icon, photo }) => (
+          {PROGRAMS.map(({ key, time, label, ages, color, ink, location, href, body, icon, photo }) => (
             <div
               key={key}
               className="glass-md rounded-2xl overflow-hidden"
@@ -198,8 +205,8 @@ export default function WednesdayPage() {
 
                 {/* Icon */}
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: `color-mix(in srgb, ${color} 9%, transparent)`, color }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 identity-ink"
+                  style={{ ...inkVars(ink), background: `color-mix(in srgb, ${color} 9%, transparent)` }}
                 >
                   {icon}
                 </div>
@@ -214,8 +221,8 @@ export default function WednesdayPage() {
                       {label}
                     </h2>
                     <span
-                      className="text-xs font-semibold tracking-widest uppercase"
-                      style={{ color }}
+                      className="text-xs font-semibold tracking-widest uppercase identity-ink"
+                      style={inkVars(ink)}
                     >
                       {ages}
                     </span>
@@ -224,7 +231,7 @@ export default function WednesdayPage() {
                   {/* Time + location row */}
                   <div className="flex flex-wrap gap-x-5 gap-y-1 mb-4">
                     <span className="text-sm font-medium text-fg-muted">
-                      <span className="font-condensed font-700" style={{ color }}>
+                      <span className="font-condensed font-700 identity-ink" style={inkVars(ink)}>
                         {time}
                       </span>
                     </span>
@@ -241,11 +248,8 @@ export default function WednesdayPage() {
                   <div className="shrink-0 self-center">
                     <Link
                       href={href}
-                      className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap"
-                      style={{
-                        borderColor: `color-mix(in srgb, ${color} 25%, transparent)`,
-                        color,
-                      }}
+                      className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap identity-ink identity-border"
+                      style={inkVars(ink)}
                     >
                       Learn More
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">

@@ -95,7 +95,7 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
                 className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-active:scale-95"
                 style={{ background: "var(--accent-bg)", boxShadow: "0 0 40px rgba(0,171,201,0.4)" }}
               >
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="white" style={{ marginLeft: 3 }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" style={{ marginLeft: 3, fill: "var(--fg-on-dark)" }}>
                   <path d="M3 1.5l16 9.5-16 9.5z" />
                 </svg>
               </span>
@@ -120,7 +120,7 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
             whiteSpace: "nowrap",
           }}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00abc9" strokeWidth="2.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="2.5" style={{ stroke: "var(--accent)" }}>
             <path d="M12 2v10l4 2" />
             <circle cx="12" cy="12" r="10" />
           </svg>

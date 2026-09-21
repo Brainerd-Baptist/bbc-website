@@ -83,7 +83,7 @@ function PhotoCard({
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,20,42,0.92) 0%, rgba(0,20,42,0.42) 55%, rgba(0,20,42,0.10) 100%)",
+              "var(--scrim-card) 55%, rgba(0,20,42,0.10) 100%)",
           }}
         />
         {/* Hover ring */}
@@ -172,7 +172,7 @@ export default function MinistriesSection() {
               className="absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(to top, rgba(0,20,42,0.75) 0%, rgba(0,20,42,0.10) 60%, transparent 100%)",
+                  "var(--scrim-card) 60%, transparent 100%)",
               }}
             />
             {/* Hover ring */}

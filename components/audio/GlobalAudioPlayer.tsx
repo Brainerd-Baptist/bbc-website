@@ -252,7 +252,7 @@ export default function GlobalAudioPlayer() {
           className="w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-white/10 active:bg-white/15"
           aria-label="Collapse player"
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" strokeWidth="2" strokeLinecap="round" style={{ stroke: "var(--fg-on-dark)" }}>
             <path d="M5 8l5 5 5-5"/>
           </svg>
         </button>
@@ -267,7 +267,7 @@ export default function GlobalAudioPlayer() {
           className="w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-white/10"
           aria-label="Go to sermon"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5, stroke: "var(--fg-on-dark)" }}>
             <path d="M3 8h10M9 4l4 4-4 4"/>
           </svg>
         </Link>
@@ -300,10 +300,10 @@ export default function GlobalAudioPlayer() {
                 border: `1px solid ${accent}33`,
               }}
             >
-              <svg width="72" height="72" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.25 }}>
-                <path d="M9 18V5l12-2v13" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="6" cy="18" r="3" stroke="white" strokeWidth="1.5"/>
-                <circle cx="18" cy="16" r="3" stroke="white" strokeWidth="1.5"/>
+              <svg width="72" height="72" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.25, stroke: "var(--fg-on-dark)" }}>
+                <path d="M9 18V5l12-2v13" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="6" cy="18" r="3" strokeWidth="1.5"/>
+                <circle cx="18" cy="16" r="3" strokeWidth="1.5"/>
               </svg>
             </div>
           )}
@@ -356,12 +356,12 @@ export default function GlobalAudioPlayer() {
           aria-label={isPlaying ? "Pause" : "Play"}
         >
           {isPlaying ? (
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="white">
+            <svg width="22" height="22" viewBox="0 0 22 22" style={{ fill: "var(--fg-on-accent)" }}>
               <rect x="2" y="1" width="6" height="20" rx="2"/>
               <rect x="14" y="1" width="6" height="20" rx="2"/>
             </svg>
           ) : (
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="white" style={{ marginLeft: 3 }}>
+            <svg width="22" height="22" viewBox="0 0 22 22" style={{ marginLeft: 3, fill: "var(--fg-on-accent)" }}>
               <path d="M3 1.5l16 9.5-16 9.5z"/>
             </svg>
           )}
@@ -559,12 +559,12 @@ export default function GlobalAudioPlayer() {
             aria-label={isPlaying ? "Pause" : "Play"}
           >
             {isPlaying ? (
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="white">
+              <svg width="14" height="14" viewBox="0 0 14 14" style={{ fill: "var(--fg-on-accent)" }}>
                 <rect x="1" y="0" width="4" height="14" rx="1.5"/>
                 <rect x="9" y="0" width="4" height="14" rx="1.5"/>
               </svg>
             ) : (
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="white" style={{ marginLeft: 2 }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" style={{ marginLeft: 2, fill: "var(--fg-on-accent)" }}>
                 <path d="M2 1l11 6-11 6z"/>
               </svg>
             )}

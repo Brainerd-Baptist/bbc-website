@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { IDENTITY, inkVars } from "@/lib/identity-colors";
 
 export const metadata: Metadata = {
   title: "Ministries — Brainerd Baptist Church",
@@ -13,7 +14,8 @@ const MINISTRIES = [
     key: "kids",
     name: "Kids Ministry",
     ages: "Nursery – 5th Grade",
-    color: "#c9a84c",
+    color: IDENTITY.kids.hue,
+    ink: IDENTITY.kids,
     photo: "/carousel/kids-midweek.jpg",
     href: "/ministries/kids",
     body: "The gospel, taught clearly and creatively. Children through 5th grade participate in age-appropriate environments every Sunday. Midweek ministry runs every Wednesday night during the school year.",
@@ -23,7 +25,8 @@ const MINISTRIES = [
     key: "students",
     name: "Students",
     ages: "Middle & High School",
-    color: "#4a7fcb",
+    color: IDENTITY.students.hue,
+    ink: IDENTITY.students,
     photo: "/carousel/students-1.jpg",
     href: "/ministries/students",
     body: "Known, loved, and prayed for. Middle and high schoolers gather Sunday mornings and Wednesday evenings for real community, Scripture, and a faith that holds up under pressure.",
@@ -33,7 +36,8 @@ const MINISTRIES = [
     key: "lifegroups",
     name: "Life Groups",
     ages: "All Ages",
-    color: "var(--accent-text)",
+    color: "var(--accent)",
+    ink: { light: "var(--accent-text)", dark: "var(--accent-text)" },
     photo: "/carousel/life-groups-1.jpg",
     href: "/life-groups",
     body: "The local church is best experienced in a smaller circle. Life Groups meet weekly — in homes and around tables — for Bible study, prayer, and the kind of community you can't get on Sunday morning alone.",
@@ -43,7 +47,8 @@ const MINISTRIES = [
     key: "missions",
     name: "Missions",
     ages: "Church-wide",
-    color: "#e07b54",
+    color: IDENTITY.missions.hue,
+    ink: IDENTITY.missions,
     photo: "/carousel/missions-1.jpg",
     href: "/connect",
     body: "From East Ridge to East Africa. Brainerd Baptist partners with missionaries and church-planting networks globally, and engages the Brainerd community locally every week.",
@@ -53,7 +58,8 @@ const MINISTRIES = [
     key: "college",
     name: "College & Young Adults",
     ages: "Ages 18–30",
-    color: "#9b6ecc",
+    color: IDENTITY.college.hue,
+    ink: IDENTITY.college,
     photo: null,
     href: "/connect",
     body: "College and young adult years carry enormous spiritual weight. Groups meet throughout the week around Chattanooga for Scripture, friendship, and figuring out the next chapter together.",
@@ -63,7 +69,8 @@ const MINISTRIES = [
     key: "adults",
     name: "Adults",
     ages: "Adults",
-    color: "#4ab8c4",
+    color: IDENTITY.adults.hue,
+    ink: IDENTITY.adults,
     photo: "/carousel/adult-bible-study.jpg",
     href: "/connect",
     body: "Whether you are newly married, raising teenagers, navigating an empty nest, or entering retirement — there is a place for you. Adult ministries include Bible studies, Sunday classes, and men's and women's events.",
@@ -145,7 +152,7 @@ export default function MinistriesPage() {
       {/* ── Ministry cards ───────────────────────────────────── */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto space-y-6">
-          {MINISTRIES.map(({ key, name, ages, color, photo, href, body, detail }) => (
+          {MINISTRIES.map(({ key, name, ages, color, ink, photo, href, body, detail }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">
 
               {/* Color bar */}
@@ -166,8 +173,8 @@ export default function MinistriesPage() {
 
                 {/* Icon */}
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: `color-mix(in srgb, ${color} 9%, transparent)`, color }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 identity-ink"
+                  style={{ ...inkVars(ink), background: `color-mix(in srgb, ${color} 9%, transparent)` }}
                 >
                   {ICONS[key]}
                 </div>
@@ -182,8 +189,8 @@ export default function MinistriesPage() {
                       {name}
                     </h2>
                     <span
-                      className="text-xs font-semibold tracking-widest uppercase"
-                      style={{ color }}
+                      className="text-xs font-semibold tracking-widest uppercase identity-ink"
+                      style={inkVars(ink)}
                     >
                       {ages}
                     </span>
@@ -205,8 +212,8 @@ export default function MinistriesPage() {
                 <div className="shrink-0 self-center">
                   <Link
                     href={href}
-                    className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80"
-                    style={{ borderColor: `color-mix(in srgb, ${color} 31%, transparent)`, color }}
+                    className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80 identity-ink identity-border"
+                    style={inkVars(ink)}
                   >
                     {href.startsWith("/ministries/") || href === "/life-groups"
                       ? "Learn More"

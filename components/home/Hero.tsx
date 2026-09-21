@@ -181,7 +181,7 @@ export default function Hero() {
       <div
         ref={parallaxRef}
         className="absolute inset-0"
-        style={{ top: "-15%", height: "115%" }}
+        style={{ top: "-15%", height: "115%", background: "var(--scrim-solid)" }}
       >
         {/* Mobile: static photo — landscape video crops badly on portrait screens */}
         <Image
@@ -213,7 +213,7 @@ export default function Hero() {
         className="absolute inset-0 z-[1]"
         style={{
           background:
-            "linear-gradient(to top, rgba(0,20,60,0.96) 0%, rgba(0,20,60,0.68) 40%, rgba(0,20,60,0.22) 100%)",
+            "var(--scrim-card) 40%, rgba(0,20,60,0.22) 100%)",
         }}
       />
 

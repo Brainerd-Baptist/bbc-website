@@ -830,3 +830,143 @@ A CSS comment inside a `<style>{`...`}</style>` JSX template literal must not co
 closes the string and turns the rest of the file into JSX. Cost one `tsc` cycle to find. Related: my own
 global focus rule initially carried `border-radius: inherit`, which re-shapes the element on focus rather
 than the outline; browsers already curve an outline to its element.
+
+---
+
+## 11. Phase 5 — complete
+
+Media, assets and third-party embeds. Not yet deployed.
+
+### CP-static passed before it was checked
+
+Zero `filter: brightness`, zero `opacity` dimming, and no `<picture media="(prefers-color-scheme: dark)">`
+anywhere. So Soueidan's rule — **do not dim** — was never violated here, and the OS-preference limitation
+recorded as a Phase 5 decision only ever applied to `themeColor` in `app/layout.tsx`, which is already
+documented in place. Nothing to fix, and worth knowing rather than assuming.
+
+### The logo shipped twice
+
+`logo-white.png` and `logo-black.png` were the **same artwork**: identical alpha, identical opaque pixel
+count (1,997,214 each), one colour bucket apiece. Both shipped on every page while six CSS rules — keyed on
+`.dark` *and* `data-chrome` — hid one, and a navy band or the theater page would have needed a third
+variant.
+
+A single-colour mark does not need to be an image. It needs a shape and a colour, so the shape is now a
+mask and the colour is `currentColor`. In the navbar it picks up `--nav-ink`, which is already computed per
+chrome and per theme, so the wordmark and the hamburger finally derive from one value instead of two
+parallel mechanisms. One 49KB asset replaces 178KB of duplicated PNG, four `<Image>` elements become two
+spans, and the mark is now correct on any ground the site has without variants.
+
+**Deliberate deviation from the plan**, which called for inline SVG: there is no vector source, and tracing
+a wordmark risks shipping a subtly wrong logo, which is worse than a raster mask. The mask keeps the artwork
+exactly as drawn and gains the same theming. If a vector arrives, the `mask-image` URL is the only line
+that changes. Both prefixed and unprefixed mask properties are set, because unprefixed is Safari 15.4+ and
+this audience has a long tail of older iPads.
+
+### A watermark that rendered nothing
+
+`ConnectBand` drew the "A" mark under `mix-blend-mode: screen`, with a comment explaining that screen
+"leaves only the white logo lines visible." The asset has no white lines — every opaque pixel is pure
+black — and `screen(0, b) = b`, so the watermark was invisible. It had presumably never rendered. Masking
+the same artwork and painting it with `--fg-on-dark` makes it appear, with no blend mode.
+
+### Eleven scrims, four bases
+
+The photo scrims were inline at four different near-identical base colours — `rgba(0,16,48)`,
+`rgba(7,16,30)`, `rgba(0,20,42)`, `rgba(0,20,60)` — which is drift, not design, on the most visible
+surfaces the site has. Now one `--scrim-base` and four ramp shapes named for where the text sits:
+`--scrim-hero`, `--scrim-card`, `--scrim-card-soft`, `--scrim-side`, plus `--scrim-veil` for a portrait
+vignette that carries no text.
+
+CP-a11y is satisfied against the **scrimmed composite**, not the raw photo, and against the worst possible
+photo — a blown-out white sky. At the dark end of each ramp white text lands at 16.5–17.3:1 and the muted
+tier at 5.6+. The light stops carry no text, deliberately: at 0.45 alpha white would be 3.07:1.
+
+### The letterbox hole
+
+`LivePlayer`'s YouTube well was `bg-black` — pure black punched into a `#0d1525` page while the iframe
+loads, which is exactly the defect `--media-bg` exists to prevent. It is now `--theater-sunken`, a well
+rather than a hole, with a border so the seam against YouTube's own chrome reads as intentional. YouTube
+will not theme, so that seam is permanent and is better owned than hidden.
+
+Both hero video boxes also had no ground, so in light mode a white flash preceded a dark hero until the
+poster decoded. They now paint `--scrim-solid` — the same value the scrim above them settles to.
+
+`app/bx`'s Google Calendar iframe was already correctly wrapped, and the Clearstream form is injected HTML
+we style rather than an iframe, so it themes outright. Every `<video>` uses `object-cover` and therefore
+never letterboxes; the letterboxing risk was confined to the one embed and the card thumbnail wells.
+
+### Icons
+
+18 of 21 hardcoded `fill`/`stroke` values converted, against the 120 already on `currentColor`. The three
+left are the two wordmark rects inside `buildPrintHTML` (a standalone printed document) and one case where
+`currentColor` would have been wrong: `ConnectSidebar`'s play triangle is a **knockout** through the YouTube
+shape, so with `currentColor` it would vanish. It tracks `--surface-raised` instead and now follows the card
+in both themes rather than being white on a dark card.
+
+No `var()` went into an SVG presentation attribute. It works in current Chromium — verified in a real
+browser rather than assumed — but support has been patchy across Safari versions, so every token goes
+through `style={{ … }}`, which is mapped through the cascade in every engine.
+
+### The identity palettes, solved properly
+
+All eleven content-driven hues failed AA as text in light mode (1.78–3.89:1) and four failed on dark too.
+
+A uniform `color-mix` was tried first and rejected: at the 60% needed by emerald, `#4a7fcb` landed at
+8.01:1, so every hue collapsed toward the same dark and stopped being distinguishable from the others —
+which defeats the reason for having them. So each hue carries a **triple** in `lib/identity-colors.ts`:
+
+- `hue` — the raw colour, decorative fills only (the 1px identity bar, a dot), where nothing reads it
+- `light` / `dark` — accessible as text, mixed only as far as needed to clear 4.6:1 on the worst surface
+- `solid` — safe as a fill under white text, and theme-invariant, because a filled identity button that
+  inverted would put white text on a pale fill, which is the failure being fixed
+
+That is the split Material, Primer and Linear all make for category colours, and the same split the brand
+already had in `--accent` / `--accent-text`. Two filled buttons on `/ministries/students` were putting
+white text on the raw hue at 4.05:1 and now use `solid` at 4.60:1.
+
+`.identity-ink` / `.identity-border` do the theme switch as classes rather than one variable, because a
+custom property declared on `:root` is substituted **on `:root`** — `--identity-ink: var(--identity-light)`
+would resolve against a value the element has not set yet and fall back to nothing. The switch has to
+happen in a selector that matches the element carrying the pair.
+
+### A new rail, because the old ones structurally could not cover this
+
+`verify-contrast` reads token pairings out of `app/tokens.css`. The identity hues are deliberately not
+tokens — content adds more of them — so that gate could never see them, which is exactly how all eleven
+came to fail unmeasured. `scripts/verify-identity.mjs` checks the table directly: `light` as text on the
+light surfaces, `dark` as text on the dark ones, and white on `solid`. It was tested by feeding it the raw
+kids hue as its light value, which it caught at 2.11:1, and it is in the `verify` chain.
+
+### The diagram
+
+`ThreeCircles` sits on `--plate`, a fixed light ground, so its ink is fixed too — a theme token there would
+break artwork drawn for white. On the plate, brand cyan measured 2.74:1, below both the 4.5:1 its text
+labels need and the 3:1 a meaningful stroke needs; `#e04428` was 4.18:1; and the "Money / Success /
+Religion" labels were 2.16:1. The palette is now darkened to measured values (4.6–15.5:1), with
+`BAND_TEAL` split out and left as brand cyan, because the step text and ghost numeral sit on the navy band
+where the darkened value would be a **regression** (4.75:1 → 2.63:1).
+
+### Ratchet
+
+| metric | Phase 4 | Phase 5 |
+|---|---|---|
+| raw-hex | 106 | **83** |
+| raw-rgb-fn | 80 | **56** |
+| arbitrary-color-class | 79 | **70** |
+| unthemed-files | 38 | **34** |
+
+`verify-contrast` is at 230 pairings, plus 11 identity hues on their own gate.
+
+### Open for Phase 6
+
+1. **`logo-white.png`, `logo-black.png`, `logo-a-mark.png` are now unreferenced** — 188KB of dead assets.
+   Left in place deliberately: removing brand files is the church's call, not a cleanup decision, and they
+   cost nothing at runtime since Next only serves what is requested.
+2. **`ScriptureInline.tsx`** — still dead, 24 literals, zero importers.
+3. **`app/admin/analytics/page.tsx`** — 12 literals, excluded from the visual sweep as internal, but it
+   will look broken in dark mode for whoever opens it.
+4. **`unthemeable-tailwind-class` (192) has a legitimate floor** and should not be driven to zero —
+   `text-white/60` on the navy footer is correct. Unchanged from the Phase 3 note.
+5. `SermonGrid`'s `SERIES_COLORS` now carries an `ink` pair that nothing in that file consumes — every use
+   there is decorative. Kept for parity with the series page; drop it if that parity is not wanted.

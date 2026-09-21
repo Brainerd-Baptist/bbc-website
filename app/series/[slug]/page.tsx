@@ -190,7 +190,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                   <div className="relative z-10 w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
                     style={{ background: accentColor + "cc", boxShadow: `0 4px 16px ${accentColor}44` }}
                   >
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="white" className="sm:w-[11px] sm:h-[11px]">
+                    <svg width="9" height="9" viewBox="0 0 24 24" className="sm:w-[11px] sm:h-[11px]" style={{ fill: "var(--fg-on-accent)" }}>
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
                   </div>

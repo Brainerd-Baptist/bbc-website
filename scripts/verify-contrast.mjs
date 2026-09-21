@@ -118,6 +118,7 @@ const DARK_GROUNDS = [
   "--brand-band-lightest",
   "--brand-band-deep-lightest",
   "--brand-ink",
+  "--scrim-solid",
   "--theater-bg",
   "--theater-sunken",
   "--theater-raised",

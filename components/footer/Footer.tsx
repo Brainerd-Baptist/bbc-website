@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { SITE, FOOTER_LINKS, HISPANIC_MINISTRY } from "@/lib/constants";
 
 const SOCIAL = [
@@ -60,14 +59,13 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-1">
             <div className="mb-5">
-              {/* Logo — white version */}
-              <Image
-                src="/logo-white.png"
-                alt="Brainerd Baptist Church"
-                width={140}
-                height={48}
-                className="h-10 w-auto object-contain"
-              />
+                {/* The footer is navy in both themes, so the mark is white in
+                    both — text-fg-on-dark rather than a second asset. */}
+                <span
+                  className="bbc-wordmark h-10 text-fg-on-dark"
+                  role="img"
+                  aria-label="Brainerd Baptist Church"
+                />
             </div>
             <p className="text-white/50 text-sm leading-relaxed mb-6 max-w-[220px]">
               A church in Chattanooga, TN where every person can experience the grace of Jesus Christ.

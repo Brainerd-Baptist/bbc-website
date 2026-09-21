@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { getNavTreatment } from "@/lib/nav-treatment";
@@ -128,25 +127,16 @@ export default function Navbar() {
 
           {/* Logo — both wordmarks ship and CSS picks one, so the correct mark is
               present in the SSR HTML instead of being chosen by JS after mount. */}
-          <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
-            <Image
-              src="/logo-white.png"
-              alt="Brainerd Baptist Church"
-              width={120}
-              height={48}
-              className="nav-logo-light h-9 w-auto"
-              priority
-            />
-            <Image
-              src="/logo-black.png"
-              alt=""
-              aria-hidden="true"
-              width={120}
-              height={48}
-              className="nav-logo-dark h-9 w-auto"
-              priority
-            />
-          </Link>
+              {/* One mark, painted with --nav-ink — the same value the hamburger
+                  uses — so it is correct over a dark hero and over glass, in both
+                  themes, with no variants and nothing chosen in JS. */}
+              <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
+                <span
+                  className="bbc-wordmark h-9"
+                  role="img"
+                  aria-label="Brainerd Baptist Church"
+                />
+              </Link>
 
           {/* Right side — Plan a Visit + theme toggle + hamburger */}
           <div className="flex items-center gap-2">
@@ -200,25 +190,14 @@ export default function Navbar() {
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
-          <Link href="/" onClick={() => setMenuOpen(false)}>
-            {/* Both wordmarks ship; CSS reveals one. Keeps the right mark in the
-                server-rendered HTML instead of picking it in JS after mount. */}
-            <Image
-              src="/logo-black.png"
-              alt="Brainerd Baptist Church"
-              width={100}
-              height={40}
-              className="logo-on-surface-dark h-8 w-auto"
-            />
-            <Image
-              src="/logo-white.png"
-              alt=""
-              aria-hidden="true"
-              width={100}
-              height={40}
-              className="logo-on-surface-light h-8 w-auto"
-            />
-          </Link>
+              <Link href="/" onClick={() => setMenuOpen(false)}>
+                {/* Drawer sits on --surface, so the mark follows --fg. */}
+                <span
+                  className="bbc-wordmark h-8 text-fg"
+                  role="img"
+                  aria-label="Brainerd Baptist Church"
+                />
+              </Link>
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"

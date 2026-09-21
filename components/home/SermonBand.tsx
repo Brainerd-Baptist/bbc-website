@@ -75,7 +75,7 @@ export default async function SermonBand() {
                   aria-label={`Watch ${title} on YouTube`}
                 >
                   <div className="w-16 h-16 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center cursor-pointer transition-all shadow-lg shadow-[#00abc9]/40 hover:scale-105">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+                    <svg width="22" height="22" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}>
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
                   </div>
