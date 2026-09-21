@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     description: "A church family in Chattanooga, TN.",
     type: "website",
   },
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+    shortcut: "/icon.png",
+  },
 };
 
 export default function RootLayout({
