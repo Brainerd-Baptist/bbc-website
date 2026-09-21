@@ -3,6 +3,29 @@
 /* ── Tailwind v4: enable dark-mode via .dark class on <html> ──── */
 @variant dark (&:where(.dark, .dark *));
 
+/* ── Brand primitives ──────────────────────────────────────────────
+   Tailwind v4 is CSS-first and does NOT read a tailwind.config.ts
+   unless you add an explicit `@config` directive. There wasn't one,
+   which is how the old config became dead code: `bg-gold`,
+   `text-navy` and friends were compiling to nothing at all, so those
+   buttons rendered with no background and no text colour. Declaring
+   the palette here is what actually generates those utilities.
+
+   This is the PRIMITIVE tier — raw brand values named for the brand,
+   not for a role. Semantic role tokens (surface / fg / border /
+   accent) get layered on top of these in the next phase, and app code
+   should migrate to those rather than reaching for these directly.
+   ──────────────────────────────────────────────────────────────── */
+@theme {
+  --color-brand-navy: #00205b;
+  --color-brand-navy-light: #0a2d6e;
+  --color-brand-navy-deep: #001340;
+  --color-brand-cyan: #00abc9;
+  --color-brand-cyan-light: #33c1d9;
+  --color-brand-cyan-dark: #0090a8;
+  --color-brand-cyan-pale: #e6f7fb;
+}
+
 :root {
   /* Official BBC Brand Colors */
   --bbc-blue: #00abc9;
@@ -291,6 +314,67 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0,32,91,0.08);
 }
+
+/* ── Nav chrome ─────────────────────────────────────────────────────
+   The bar's colours are decided HERE, from the data-chrome attribute the
+   Navbar sets — not in JavaScript. data-chrome depends only on the route
+   and the scroll position, never on the theme, so the server and the
+   client always agree on it and the bar cannot flash on load. The theme
+   half is handled purely by re-pointing these variables under `.dark`.
+
+     data-chrome="transparent"  floating over a dark hero or photo
+     data-chrome="glass"        on a translucent surface (light or dark)
+
+   This replaced a set of `isDark` ternaries that could not server-render:
+   on every light-topped route they resolved to white-on-white and the
+   logo, toggle and hamburger were literally invisible.
+   ───────────────────────────────────────────────────────────────── */
+.bbc-nav {
+  --nav-ink: #ffffff;
+  --nav-hover: rgba(255, 255, 255, 0.12);
+}
+
+/* Scrim beneath the transparent bar. Without it, white chrome sitting over
+   a bright patch of a hero photo can fall below the 3:1 that WCAG 1.4.11
+   requires for non-text UI. It fades to nothing by the bottom of the 64px
+   bar, so it reads as a natural vignette rather than a hard band. */
+.bbc-nav[data-chrome="transparent"] {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 12, 28, 0.50) 0%,
+    rgba(0, 12, 28, 0.22) 55%,
+    rgba(0, 12, 28, 0) 100%
+  );
+}
+
+.bbc-nav[data-chrome="glass"] {
+  --nav-ink: #00205b;
+  --nav-hover: rgba(0, 32, 91, 0.07);
+}
+.dark .bbc-nav[data-chrome="glass"] {
+  --nav-ink: #c8d4e8;
+  --nav-hover: rgba(255, 255, 255, 0.10);
+}
+
+.nav-ctl {
+  color: var(--nav-ink);
+}
+.nav-ctl:hover {
+  background-color: var(--nav-hover);
+}
+.nav-bar-line {
+  background-color: var(--nav-ink);
+  transition: background-color 0.3s;
+}
+
+/* Logo swap. Both wordmarks are in the DOM and CSS reveals one, so the
+   correct mark is already present in the server-rendered HTML. */
+.bbc-nav .nav-logo-light { display: block; }
+.bbc-nav .nav-logo-dark  { display: none; }
+.bbc-nav[data-chrome="glass"] .nav-logo-light { display: none; }
+.bbc-nav[data-chrome="glass"] .nav-logo-dark  { display: block; }
+.dark .bbc-nav[data-chrome="glass"] .nav-logo-light { display: block; }
+.dark .bbc-nav[data-chrome="glass"] .nav-logo-dark  { display: none; }
 
 /* ── Card hover lift ───────────────────────────────────── */
 .card-hover {

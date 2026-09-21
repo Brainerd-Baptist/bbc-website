@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify:classes": "node scripts/verify-classes.mjs",
+    "verify": "tsc --noEmit && eslint && npm run verify:classes"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.127.0",

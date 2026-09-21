@@ -153,7 +153,7 @@ export default function VisitPage() {
           </h2>
           <div className="grid sm:grid-cols-2 gap-6">
             {EXPECT_ITEMS.map((item) => (
-              <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-[#00205B]/08 bg-white hover:border-[#00abc9]/30 transition-colors">
+              <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-[#00205B]/8 bg-white hover:border-[#00abc9]/30 transition-colors">
                 <span
                   className="font-condensed font-900 leading-none flex-shrink-0 mt-0.5"
                   style={{ fontSize: "2.5rem", color: "#00abc9", opacity: 0.35, letterSpacing: "-0.03em" }}
@@ -210,7 +210,7 @@ export default function VisitPage() {
             Find Us
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl p-8 border border-[#00205B]/08 bg-white">
+            <div className="rounded-2xl p-8 border border-[#00205B]/8 bg-white">
               <p className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.35rem" }}>Brainerd Baptist Church</p>
               <p className="text-[#00205B]/55 text-sm leading-relaxed mb-6">
                 300 Brookfield Ave<br />Chattanooga, TN 37411
@@ -225,7 +225,7 @@ export default function VisitPage() {
               </a>
             </div>
 
-            <div className="rounded-2xl p-8 border-t-4 border-[#00abc9] border border-[#00205B]/08 bg-white">
+            <div className="rounded-2xl p-8 border-t-4 border-[#00abc9] border border-[#00205B]/8 bg-white">
               <p className="eyebrow mb-3">Ministerio Hispano · Hispanic Ministry</p>
               <p className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
               <p className="text-[#00205B]/55 text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.address}</p>

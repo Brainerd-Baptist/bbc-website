@@ -121,7 +121,7 @@ export default function StudentsPage() {
             {PILLARS.map(({ label, body }) => (
               <div
                 key={label}
-                className="bg-white rounded-2xl p-8 border border-[#00205B]/08 hover:border-[#4a7fcb]/30 transition-colors"
+                className="bg-white rounded-2xl p-8 border border-[#00205B]/8 hover:border-[#4a7fcb]/30 transition-colors"
               >
                 <div
                   className="w-1 h-10 rounded-full mb-5"
@@ -160,7 +160,7 @@ export default function StudentsPage() {
             {SCHEDULE.map(({ day, time, label, body }) => (
               <div
                 key={day}
-                className="rounded-2xl p-8 border border-[#00205B]/08"
+                className="rounded-2xl p-8 border border-[#00205B]/8"
                 style={{ background: "#f4f6f9" }}
               >
                 <div className="flex items-baseline gap-3 mb-4">

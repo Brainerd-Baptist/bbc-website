@@ -182,7 +182,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
             {info.familyPhoto && (
               <div>
                 <p className="eyebrow-muted mb-3">Family</p>
-                <div className="rounded-2xl overflow-hidden shadow-lg border border-[#00205B]/06">
+                <div className="rounded-2xl overflow-hidden shadow-lg border border-[#00205B]/6">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={info.familyPhoto}
@@ -204,7 +204,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
       {/* ── Sermons ───────────────────────────────────────────────────── */}
       {hasSermons && (
-        <div className="px-5 md:px-8 pb-24 border-t border-[#00205B]/06 pt-10" style={{ background: "#f4f6f9" }}>
+        <div className="px-5 md:px-8 pb-24 border-t border-[#00205B]/6 pt-10" style={{ background: "#f4f6f9" }}>
           <div className="max-w-4xl mx-auto">
             <p className="eyebrow-muted mb-6">Sermons</p>
 
@@ -218,10 +218,10 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                   <a
                     key={s.slug || s.date}
                     href={s.slug ? `/sermons/${s.slug}` : "#"}
-                    className="group flex items-center gap-4 p-3 rounded-xl bg-white border border-[#00205B]/06 hover:border-[#00abc9]/30 hover:shadow-sm transition-all"
+                    className="group flex items-center gap-4 p-3 rounded-xl bg-white border border-[#00205B]/6 hover:border-[#00abc9]/30 hover:shadow-sm transition-all"
                   >
                     {/* Thumbnail */}
-                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#00205B]/06">
+                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#00205B]/6">
                       {thumbUrl && (
                         <img
                           src={thumbUrl}

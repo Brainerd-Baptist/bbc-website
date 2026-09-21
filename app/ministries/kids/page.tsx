@@ -206,7 +206,7 @@ export default function KidsPage() {
             {AGE_GROUPS.map(({ icon, label, ages, body, note }) => (
               <div
                 key={label}
-                className="bg-white rounded-2xl p-8 border border-[#00205B]/08 hover:border-[#00abc9]/30 transition-colors"
+                className="bg-white rounded-2xl p-8 border border-[#00205B]/8 hover:border-[#00abc9]/30 transition-colors"
               >
                 {/* Icon */}
                 <div

@@ -156,7 +156,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
             return (
               <div
                 key={sermon.id}
-                className="group flex gap-0 rounded-2xl overflow-hidden border border-[#00205B]/08 hover:border-[#00abc9]/30 bg-white hover:shadow-md transition-all duration-200"
+                className="group flex gap-0 rounded-2xl overflow-hidden border border-[#00205B]/8 hover:border-[#00abc9]/30 bg-white hover:shadow-md transition-all duration-200"
               >
                 {/* Episode number + thumbnail — links to sermon.
                     Kept (smaller) on mobile instead of hidden: the series
@@ -244,7 +244,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section
-        className="py-14 px-6 border-t border-[#00205B]/06"
+        className="py-14 px-6 border-t border-[#00205B]/6"
         style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
       >
         <div className="max-w-2xl mx-auto text-center">

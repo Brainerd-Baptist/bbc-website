@@ -60,7 +60,7 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
   return (
     <section className="px-5 md:px-8 pb-12">
       <div className="max-w-4xl mx-auto">
-        <div className="border-t border-[#00205B]/08 pt-10 mb-6">
+        <div className="border-t border-[#00205B]/8 pt-10 mb-6">
           <div className="flex items-center justify-between mb-6">
             <h2
               className="text-[10px] font-semibold tracking-widest uppercase"
@@ -85,7 +85,7 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
             <a
               key={s.id}
               href={s.href}
-              className="group flex gap-3 rounded-xl overflow-hidden border border-[#00205B]/08 hover:border-[#00abc9]/25 bg-white hover:shadow-sm transition-all p-3"
+              className="group flex gap-3 rounded-xl overflow-hidden border border-[#00205B]/8 hover:border-[#00abc9]/25 bg-white hover:shadow-sm transition-all p-3"
             >
               {/* Thumbnail */}
               {s.youtubeId && (

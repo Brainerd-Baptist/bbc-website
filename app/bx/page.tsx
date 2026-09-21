@@ -115,7 +115,7 @@ export default function BXPage() {
           </div>
 
           {/* Hours card */}
-          <div className="rounded-2xl p-8 border border-[#00205B]/08" style={{ background: "#f4f6f9" }}>
+          <div className="rounded-2xl p-8 border border-[#00205B]/8" style={{ background: "#f4f6f9" }}>
             <div className="flex items-center gap-3 mb-6">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center"
@@ -133,7 +133,7 @@ export default function BXPage() {
               {HOURS.map(({ days, hours }) => (
                 <div
                   key={days}
-                  className="flex justify-between items-center py-2 border-b border-[#00205B]/06 last:border-0"
+                  className="flex justify-between items-center py-2 border-b border-[#00205B]/6 last:border-0"
                 >
                   <span className="text-sm text-[#00205B]/65">{days}</span>
                   <span
@@ -145,7 +145,7 @@ export default function BXPage() {
                 </div>
               ))}
             </div>
-            <div className="mt-6 pt-5 border-t border-[#00205B]/06">
+            <div className="mt-6 pt-5 border-t border-[#00205B]/6">
               <p className="text-xs text-[#00205B]/40">
                 Holiday hours may vary. Call{" "}
                 <a href="tel:4236434978" className="underline underline-offset-2">(423) 643-4978</a>{" "}
@@ -170,7 +170,7 @@ export default function BXPage() {
             {AMENITIES.map(({ label, desc }) => (
               <div
                 key={label}
-                className="bg-white rounded-2xl p-6 border border-[#00205B]/08 hover:border-[#00abc9]/30 transition-colors"
+                className="bg-white rounded-2xl p-6 border border-[#00205B]/8 hover:border-[#00abc9]/30 transition-colors"
               >
                 <div className="w-1.5 h-6 rounded-full mb-4" style={{ background: "#00abc9" }} />
                 <h3 className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.1rem" }}>
@@ -221,7 +221,7 @@ export default function BXPage() {
 
           {/* Fitness Classes card */}
           <div
-            className="rounded-2xl overflow-hidden border border-[#00205B]/08"
+            className="rounded-2xl overflow-hidden border border-[#00205B]/8"
             style={{ background: "#f4f6f9" }}
           >
             <div className="h-1" style={{ background: "#00abc9" }} />
@@ -337,7 +337,7 @@ export default function BXPage() {
                 body: "Microphones, projectors, and screens available for an additional fee.",
               },
             ].map(({ icon, label, body }) => (
-              <div key={label} className="rounded-2xl p-6 border border-[#00205B]/08" style={{ background: "#f4f6f9" }}>
+              <div key={label} className="rounded-2xl p-6 border border-[#00205B]/8" style={{ background: "#f4f6f9" }}>
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
                   style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
@@ -353,7 +353,7 @@ export default function BXPage() {
           </div>
 
           {/* Policy details */}
-          <div className="bg-white rounded-2xl p-8 border border-[#00205B]/08 mb-8">
+          <div className="bg-white rounded-2xl p-8 border border-[#00205B]/8 mb-8">
             <h3 className="font-condensed font-800 text-[#00205B] mb-5" style={{ fontSize: "1.2rem" }}>
               Before you book
             </h3>

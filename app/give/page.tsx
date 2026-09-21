@@ -56,7 +56,7 @@ export default function GivePage() {
             {FUNDS.map((f) => (
               <div
                 key={f.name}
-                className={`glass rounded-2xl p-6 ${f.primary ? "border border-gold/30" : ""}`}
+                className={`glass rounded-2xl p-6 ${f.primary ? "border border-brand-cyan/30" : ""}`}
               >
                 {f.primary && (
                   <p className="eyebrow mb-2 text-xs">Primary</p>
@@ -69,7 +69,7 @@ export default function GivePage() {
                   rel="noopener noreferrer"
                   className={`block text-center font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full transition-colors ${
                     f.primary
-                      ? "bg-gold hover:bg-gold-light text-navy"
+                      ? "bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy"
                       : "border border-white/20 hover:border-white/40 text-[#00205B] glass"
                   }`}
                 >
@@ -106,7 +106,7 @@ export default function GivePage() {
                 <p className="font-semibold text-[#00205B] mb-1">Stock & Non-Cash</p>
                 <p className="text-[#00205B]/60 text-sm">
                   For gifts of stock, real estate, or other non-cash assets, please{" "}
-                  <Link href="/connect" className="text-gold hover:text-gold-light underline underline-offset-2">
+                  <Link href="/connect" className="text-brand-cyan hover:text-brand-cyan-light underline underline-offset-2">
                     contact us
                   </Link>{" "}
                   directly.

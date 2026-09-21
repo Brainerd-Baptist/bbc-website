@@ -242,7 +242,7 @@ export default function MinistriesPage() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/connect"
-              className="font-condensed font-700 tracking-wide uppercase text-sm bg-gold hover:bg-gold-light text-navy px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-8 py-3.5 rounded-full transition-colors"
             >
               Connect With Us
             </Link>

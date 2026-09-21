@@ -168,7 +168,7 @@ function BeliefCard({ icon, title, body, verse }: {
 }) {
   const refs = verse.split(" · ");
   return (
-    <div className="flex gap-6 p-7 rounded-2xl border border-[#00205B]/08 bg-white hover:border-[#00abc9]/25 transition-colors">
+    <div className="flex gap-6 p-7 rounded-2xl border border-[#00205B]/8 bg-white hover:border-[#00abc9]/25 transition-colors">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
       <div>
         <h3
@@ -227,7 +227,7 @@ export default function BeliefsPage() {
       <BeliefQuestion />
 
       {/* ── BF&M footnote ──────────────────────────────────── */}
-      <section className="py-10 px-6 bg-white border-t border-[#00205B]/06">
+      <section className="py-10 px-6 bg-white border-t border-[#00205B]/6">
         <p className="text-center text-[#00205B]/35 text-xs max-w-lg mx-auto leading-relaxed">
           Brainerd Baptist Church holds to the{" "}
           <a

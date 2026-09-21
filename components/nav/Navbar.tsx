@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { getNavTreatment } from "@/lib/nav-treatment";
 
 // ── Nav groups shown in the drawer ─────────────────────────────
 const NAV_GROUPS = [
@@ -76,6 +78,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  const pathname = usePathname();
   const { theme, resolvedTheme, setTheme } = useTheme();
 
   // Avoid hydration mismatch — only render theme-aware icons after mount
@@ -92,14 +95,21 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  // Use theme as fallback so isDark is correct even if resolvedTheme hasn't resolved yet
+  // Use theme as fallback so isDark is correct even if resolvedTheme hasn't resolved yet.
+  // NOTE: isDark must never decide a *colour* — only the toggle's own icon and
+  // label, which are gated on `mounted`. All nav colours are chosen in CSS from
+  // data-chrome below, so the bar paints correctly during SSR and never flashes.
   const isDark = (resolvedTheme ?? theme) === "dark";
 
-  // Logo: white unless scrolled in light mode
-  const logoSrc = scrolled && !isDark ? "/logo-black.png" : "/logo-white.png";
+  // How this route wants the bar painted. "overlay" routes have a dark hero or
+  // photo under the nav and get the transparent treatment; everything else gets
+  // the always-legible glass surface. Unlisted routes default to "solid".
+  const treatment = getNavTreatment(pathname);
 
-  // Hamburger bar color: dark navy bars only when scrolled in light mode
-  const barColor = scrolled && !isDark ? "bg-[#00205B]" : "bg-white";
+  // The bar is a light glass surface whenever the route is a light one, or once
+  // an overlay route has scrolled past its hero. Deliberately theme-independent:
+  // `.dark` re-points the same tokens in CSS.
+  const chrome = treatment === "solid" || scrolled ? "glass" : "transparent";
 
   function toggleTheme() {
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
@@ -109,20 +119,31 @@ export default function Navbar() {
     <>
       {/* ── Fixed top bar ──────────────────────────────────────── */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? "nav-glass" : "bg-transparent"
+        data-chrome={chrome}
+        className={`bbc-nav fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          chrome === "glass" ? "nav-glass" : ""
         }`}
       >
         <div className="max-w-7xl mx-auto px-5 flex items-center justify-between h-16">
 
-          {/* Logo */}
+          {/* Logo — both wordmarks ship and CSS picks one, so the correct mark is
+              present in the SSR HTML instead of being chosen by JS after mount. */}
           <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
             <Image
-              src={logoSrc}
+              src="/logo-white.png"
               alt="Brainerd Baptist Church"
               width={120}
               height={48}
-              className="h-9 w-auto transition-opacity duration-300"
+              className="nav-logo-light h-9 w-auto"
+              priority
+            />
+            <Image
+              src="/logo-black.png"
+              alt=""
+              aria-hidden="true"
+              width={120}
+              height={48}
+              className="nav-logo-dark h-9 w-auto"
               priority
             />
           </Link>
@@ -137,15 +158,12 @@ export default function Navbar() {
               Plan a Visit
             </Link>
 
-            {/* Theme toggle — always in DOM; only icon is gated on mount */}
+            {/* Theme toggle — always in DOM; only the icon is gated on mount.
+                Colour comes from --nav-ink in CSS, not from isDark. */}
             <button
               onClick={toggleTheme}
-              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              className={`p-2 rounded-lg transition-colors ${
-                scrolled && !isDark
-                  ? "text-[#00205B] hover:bg-[#00205B]/06"
-                  : "text-white hover:bg-white/10"
-              }`}
+              aria-label={mounted && isDark ? "Switch to light mode" : "Switch to dark mode"}
+              className="nav-ctl p-2 rounded-lg transition-colors"
             >
               {!mounted ? <span className="w-5 h-5 block" /> : isDark ? <SunIcon /> : <MoonIcon />}
             </button>
@@ -154,13 +172,11 @@ export default function Navbar() {
             <button
               onClick={() => setMenuOpen(true)}
               aria-label="Open navigation menu"
-              className={`flex flex-col gap-1.5 p-2 cursor-pointer rounded-lg transition-colors ${
-                scrolled && !isDark ? "hover:bg-[#00205B]/06" : "hover:bg-white/10"
-              }`}
+              className="nav-ctl flex flex-col gap-1.5 p-2 cursor-pointer rounded-lg transition-colors"
             >
-              <span className={`w-6 h-0.5 rounded-full transition-colors ${barColor}`} />
-              <span className={`w-6 h-0.5 rounded-full transition-colors ${barColor}`} />
-              <span className={`w-4 h-0.5 rounded-full transition-colors ${barColor}`} />
+              <span className="nav-bar-line w-6 h-0.5 rounded-full" />
+              <span className="nav-bar-line w-6 h-0.5 rounded-full" />
+              <span className="nav-bar-line w-4 h-0.5 rounded-full" />
             </button>
           </div>
         </div>
@@ -185,7 +201,7 @@ export default function Navbar() {
         aria-label="Site navigation"
       >
         {/* Drawer header */}
-        <div className={`flex items-center justify-between px-7 py-5 border-b ${isDark ? "border-white/10" : "border-[#00205B]/08"}`}>
+        <div className={`flex items-center justify-between px-7 py-5 border-b ${isDark ? "border-white/10" : "border-[#00205B]/8"}`}>
           <Link href="/" onClick={() => setMenuOpen(false)}>
             <Image
               src={isDark ? "/logo-white.png" : "/logo-black.png"}
@@ -198,7 +214,7 @@ export default function Navbar() {
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
-            className={`p-2 rounded-lg transition-colors ${isDark ? "hover:bg-white/10" : "hover:bg-[#00205B]/06"}`}
+            className={`p-2 rounded-lg transition-colors ${isDark ? "hover:bg-white/10" : "hover:bg-[#00205B]/6"}`}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M18 6L6 18M6 6l12 12" stroke={isDark ? "white" : "#00205B"} strokeWidth="2" strokeLinecap="round" />
@@ -224,7 +240,7 @@ export default function Navbar() {
                     href={href}
                     onClick={() => setMenuOpen(false)}
                     className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors ${
-                      isDark ? "hover:bg-white/08" : "hover:bg-[#00205B]/06"
+                      isDark ? "hover:bg-white/8" : "hover:bg-[#00205B]/6"
                     }`}
                   >
                     <span
@@ -253,7 +269,7 @@ export default function Navbar() {
         </nav>
 
         {/* Drawer footer */}
-        <div className={`px-7 py-6 border-t ${isDark ? "border-white/10" : "border-[#00205B]/08"}`}>
+        <div className={`px-7 py-6 border-t ${isDark ? "border-white/10" : "border-[#00205B]/8"}`}>
           <Link
             href="/visit"
             onClick={() => setMenuOpen(false)}

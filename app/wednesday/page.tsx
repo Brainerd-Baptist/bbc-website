@@ -154,7 +154,7 @@ export default function WednesdayPage() {
 
       {/* ── Quick-glance time bar ──────────────────────────── */}
       <div
-        className="py-5 px-6 border-b border-[#00205B]/08"
+        className="py-5 px-6 border-b border-[#00205B]/8"
         style={{ background: "#f4f6f9" }}
       >
         <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-2">
@@ -284,7 +284,7 @@ export default function WednesdayPage() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm bg-gold hover:bg-gold-light text-navy px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-8 py-3.5 rounded-full transition-colors"
             >
               Plan Your Visit
             </Link>

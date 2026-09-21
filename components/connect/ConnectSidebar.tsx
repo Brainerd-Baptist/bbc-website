@@ -14,7 +14,7 @@ export default function ConnectSidebar() {
           href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-gold hover:text-gold-light transition-colors"
+          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-brand-cyan hover:text-brand-cyan-light transition-colors"
         >
           Get Directions
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -64,7 +64,7 @@ export default function ConnectSidebar() {
       </div>
 
       {/* Give */}
-      <div className="glass rounded-2xl p-6 border border-gold/20">
+      <div className="glass rounded-2xl p-6 border border-brand-cyan/20">
         <p className="eyebrow mb-2">Generosity</p>
         <p className="font-semibold text-[#00205B] mb-2">Give Online</p>
         <p className="text-[#00205B]/60 text-xs leading-relaxed mb-4">
@@ -72,7 +72,7 @@ export default function ConnectSidebar() {
         </p>
         <a
           href="/give"
-          className="block text-center font-condensed font-700 tracking-wide uppercase text-sm bg-gold hover:bg-gold-light text-navy py-2.5 rounded-full transition-colors"
+          className="block text-center font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy py-2.5 rounded-full transition-colors"
         >
           Give Now
         </a>

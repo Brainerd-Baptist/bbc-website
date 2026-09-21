@@ -34,7 +34,7 @@ export default function ConnectPage() {
         </div>
 
         {/* Utility links */}
-        <div className="max-w-5xl mx-auto mt-10 pt-8 border-t border-[#00205B]/08 flex flex-wrap gap-x-8 gap-y-2 text-sm">
+        <div className="max-w-5xl mx-auto mt-10 pt-8 border-t border-[#00205B]/8 flex flex-wrap gap-x-8 gap-y-2 text-sm">
           <Link href="/connect/other?category=website-issue" className="text-[#00205B]/45 hover:text-[#00abc9] transition-colors">
             Report a website issue
           </Link>

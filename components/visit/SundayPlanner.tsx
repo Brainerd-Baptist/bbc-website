@@ -167,7 +167,7 @@ export default function SundayPlanner() {
 
         {/* ── Result view ── */}
         {result ? (
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#00205B]/06">
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#00205B]/6">
             {/* Plan bullets */}
             <p className="eyebrow mb-5">Your Sunday Plan</p>
             <ul className="space-y-4 mb-6">
@@ -208,7 +208,7 @@ export default function SundayPlanner() {
             )}
 
             {/* Greeting */}
-            <p className="text-[#00205B]/55 text-sm italic border-t border-[#00205B]/08 pt-5 mb-6">
+            <p className="text-[#00205B]/55 text-sm italic border-t border-[#00205B]/8 pt-5 mb-6">
               {result.greeting}
             </p>
 
@@ -253,7 +253,7 @@ export default function SundayPlanner() {
           </div>
         ) : (
           /* ── Question view ── */
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#00205B]/06 space-y-10">
+          <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#00205B]/6 space-y-10">
             {/* Q1 */}
             <div>
               <StepLabel num={1} label="Who's coming with you?" />

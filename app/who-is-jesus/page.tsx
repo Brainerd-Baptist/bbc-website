@@ -45,7 +45,7 @@ export default function WhoIsJesusPage() {
       {/* ── Three Circles Interactive ───────────────────────────── */}
       <section id="three-circles" className="px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-3xl p-8 md:p-12 border border-[#00205B]/08 shadow-sm">
+          <div className="rounded-3xl p-8 md:p-12 border border-[#00205B]/8 shadow-sm">
             <ThreeCircles />
           </div>
         </div>
@@ -86,7 +86,7 @@ export default function WhoIsJesusPage() {
             ].map((item) => (
               <div
                 key={item.num}
-                className="bg-white rounded-2xl p-7 border border-[#00205B]/06 shadow-sm"
+                className="bg-white rounded-2xl p-7 border border-[#00205B]/6 shadow-sm"
               >
                 <span
                   className="font-condensed font-900 block mb-4"

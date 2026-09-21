@@ -73,12 +73,12 @@ export default function LifeGroupsPage() {
               <h2 className="font-condensed font-800 text-[#00205B] text-2xl mb-4">When Do They Meet?</h2>
               <div className="space-y-3">
                 <div className="glass rounded-xl p-4">
-                  <p className="text-gold text-xs font-semibold tracking-widest uppercase mb-1">Sunday Mornings</p>
+                  <p className="text-brand-cyan text-xs font-semibold tracking-widest uppercase mb-1">Sunday Mornings</p>
                   <p className="font-semibold text-[#00205B]">9:45 AM</p>
                   <p className="text-[#00205B]/60 text-sm">On campus — between services</p>
                 </div>
                 <div className="glass rounded-xl p-4">
-                  <p className="text-gold text-xs font-semibold tracking-widest uppercase mb-1">Throughout the Week</p>
+                  <p className="text-brand-cyan text-xs font-semibold tracking-widest uppercase mb-1">Throughout the Week</p>
                   <p className="font-semibold text-[#00205B]">In Homes Across Chattanooga</p>
                   <p className="text-[#00205B]/60 text-sm">Evenings vary by group</p>
                 </div>
@@ -112,7 +112,7 @@ export default function LifeGroupsPage() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/connect"
-              className="font-condensed font-700 tracking-wide uppercase text-sm bg-gold hover:bg-gold-light text-navy px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-8 py-3.5 rounded-full transition-colors"
             >
               Find a Group
             </Link>

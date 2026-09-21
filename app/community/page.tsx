@@ -83,7 +83,7 @@ export default function CommunityPage() {
 
             <div className="space-y-4">
               {/* Address */}
-              <div className="rounded-2xl p-6 border border-[#00205B]/08" style={{ background: "#f4f6f9" }}>
+              <div className="rounded-2xl p-6 border border-[#00205B]/8" style={{ background: "#f4f6f9" }}>
                 <div className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
@@ -113,7 +113,7 @@ export default function CommunityPage() {
               </div>
 
               {/* Hours */}
-              <div className="rounded-2xl p-6 border border-[#00205B]/08" style={{ background: "#f4f6f9" }}>
+              <div className="rounded-2xl p-6 border border-[#00205B]/8" style={{ background: "#f4f6f9" }}>
                 <div className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
@@ -153,7 +153,7 @@ export default function CommunityPage() {
       </section>
 
       {/* ── Divider ──────────────────────────────────────────── */}
-      <div className="border-t border-[#00205B]/06" />
+      <div className="border-t border-[#00205B]/6" />
 
       {/* ── Food Pantry + Benevolence ────────────────────────── */}
       <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
@@ -171,7 +171,7 @@ export default function CommunityPage() {
           <div className="grid md:grid-cols-2 gap-6">
 
             {/* Food Pantry */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/08">
+            <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/8">
               <div className="h-1" style={{ background: "#00abc9" }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/carousel/food-pantry-checkin.jpg" alt="Food pantry volunteers helping community members" className="w-full object-cover" style={{ height: "200px", objectPosition: "center 30%" }} />
@@ -207,7 +207,7 @@ export default function CommunityPage() {
             </div>
 
             {/* Benevolence */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/08">
+            <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/8">
               <div className="h-1" style={{ background: "#00205B" }} />
               <div className="p-8">
                 <div
