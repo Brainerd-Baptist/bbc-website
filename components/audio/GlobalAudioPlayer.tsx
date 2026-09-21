@@ -479,9 +479,9 @@ export default function GlobalAudioPlayer() {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <span className="text-white/40 text-[10px]">Up next · </span>
+              <span className="text-fg-on-dark-muted text-[10px]">Up next · </span>
               <span className="text-white/80 text-[10px] font-semibold truncate">{nextTrack.title}</span>
-              <span className="text-white/30 text-[10px]"> · {nextTrack.speaker}</span>
+              <span className="text-fg-on-dark-muted text-[10px]"> · {nextTrack.speaker}</span>
             </div>
             <button onClick={cancelUpNext}
               className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full transition hover:bg-white/10"
@@ -527,7 +527,7 @@ export default function GlobalAudioPlayer() {
               <p className="text-white text-xs font-semibold leading-tight truncate group-hover:text-accent-text transition-colors" style={{ letterSpacing: "-0.01em" }}>
                 {track.title}
               </p>
-              <p className="text-white/35 text-[10px] truncate mt-0.5">{track.speaker}</p>
+              <p className="text-fg-on-dark-muted text-[10px] truncate mt-0.5">{track.speaker}</p>
             </div>
             {/* Expand chevron hint */}
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ stroke: "var(--border-on-dark-strong)" }} strokeWidth="1.5" strokeLinecap="round" className="flex-shrink-0 mr-1">
@@ -536,16 +536,16 @@ export default function GlobalAudioPlayer() {
           </button>
 
           {/* Time — hidden on smallest */}
-          <div className="hidden xs:flex sm:flex items-center gap-1 text-[10px] text-white/35 tabular-nums flex-shrink-0">
+          <div className="hidden xs:flex sm:flex items-center gap-1 text-[10px] text-fg-on-dark-muted tabular-nums flex-shrink-0">
             <span>{fmt(currentTime)}</span>
-            <span className="text-white/15">/</span>
+            <span className="text-fg-on-dark-muted">/</span>
             <span>{fmt(duration)}</span>
           </div>
 
           {/* Skip back */}
           <button
             onClick={() => seek(Math.max(0, currentTime - 15))}
-            className="flex-shrink-0 text-white/45 hover:text-white active:scale-95 transition"
+            className="flex-shrink-0 text-fg-on-dark-muted hover:text-white active:scale-95 transition"
             aria-label="Skip back 15 seconds"
           >
             <SkipIcon direction="back" />
@@ -573,7 +573,7 @@ export default function GlobalAudioPlayer() {
           {/* Skip forward */}
           <button
             onClick={() => seek(Math.min(duration, currentTime + 15))}
-            className="flex-shrink-0 text-white/45 hover:text-white active:scale-95 transition"
+            className="flex-shrink-0 text-fg-on-dark-muted hover:text-white active:scale-95 transition"
             aria-label="Skip forward 15 seconds"
           >
             <SkipIcon direction="fwd" />
@@ -609,7 +609,7 @@ export default function GlobalAudioPlayer() {
           {/* Dismiss */}
           <button
             onClick={dismiss}
-            className="flex-shrink-0 text-white/25 hover:text-white/60 transition-colors ml-1"
+            className="flex-shrink-0 text-fg-on-dark-muted hover:text-white/60 transition-colors ml-1"
             aria-label="Close player"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8">

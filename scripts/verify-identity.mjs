@@ -92,6 +92,72 @@ for (const [, name, , light, dark, solid] of rows) {
   }
 }
 
+/* --------------------------------------------------------------------------
+ * Part 2: the DERIVATION, for hues that arrive as data.
+ *
+ * lib/identity-colors.ts hardcodes the two worst grounds, because a bundled
+ * module cannot read tokens.css. That is only safe if something fails when a
+ * token changes underneath it — so this checks it. Then it feeds every table
+ * hue through the derivation and requires the result to pass AA, which is how
+ * the function and the hand-tuned table are held to one standard instead of
+ * drifting into two different ideas of the same thing.
+ * ------------------------------------------------------------------------ */
+
+const declared = (name) => {
+  const m = src.match(new RegExp(`export const ${name} = "([^"]+)"`));
+  if (!m) {
+    console.error(`✗ ${name} is not exported from lib/identity-colors.ts`);
+    process.exit(1);
+  }
+  return m[1];
+};
+
+// Worst light ground = the LOWEST-luminance light surface (hardest for dark
+// text). Worst dark ground = the HIGHEST-luminance dark surface.
+const worstLight = LIGHT_SURFACES.reduce((a, b) => (lum(a) < lum(b) ? a : b));
+const worstDark = DARK_SURFACES.reduce((a, b) => (lum(a) > lum(b) ? a : b));
+const asHex = (c) => "#" + c.map((v) => Math.round(v).toString(16).padStart(2, "0")).join("");
+
+for (const [name, declaredHex, actual] of [
+  ["WORST_LIGHT_GROUND", declared("WORST_LIGHT_GROUND"), worstLight],
+  ["WORST_DARK_GROUND", declared("WORST_DARK_GROUND"), worstDark],
+]) {
+  const ok = asHex(hex(declaredHex)) === asHex(actual);
+  if (!ok) failed++;
+  console.log(
+    `  ${ok ? "ok  " : "FAIL"} ${name.padEnd(18)} ${declaredHex} ${ok ? "==" : "!="} ${asHex(actual)} (worst surface in tokens.css)`,
+  );
+}
+
+// Re-implement the derivation here on purpose. A test that imports the
+// function under test can only confirm it is self-consistent; this confirms
+// the method still produces AA-passing tones.
+const TARGET = 4.6;
+const towardTone = (hueHex, end, test) => {
+  const from = hex(hueHex);
+  for (let t = 0; t <= 1.0001; t += 0.01) {
+    const c = asHex(from.map((v, i) => v + (end[i] - v) * t));
+    if (test(c) >= TARGET) return c;
+  }
+  return asHex(end);
+};
+const BLACK = [0, 0, 0];
+
+console.log();
+for (const [, name, hue] of rows) {
+  const dl = towardTone(hue, BLACK, (c) => ratio(hex(c), worstLight));
+  const dd = towardTone(hue, WHITE, (c) => ratio(hex(c), worstDark));
+  const checks = [
+    ["derived light on light surfaces", worst(hex(dl), LIGHT_SURFACES)],
+    ["derived dark  on dark surfaces ", worst(hex(dd), DARK_SURFACES)],
+  ];
+  for (const [what, r] of checks) {
+    const ok = r >= AA;
+    if (!ok) failed++;
+    console.log(`  ${ok ? "ok  " : "FAIL"} ${name.padEnd(9)} ${what}  ${r.toFixed(2)}`);
+  }
+}
+
 console.log();
 if (failed) {
   console.error(

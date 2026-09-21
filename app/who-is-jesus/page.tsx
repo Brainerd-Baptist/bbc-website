@@ -98,6 +98,8 @@ export default function WhoIsJesusPage() {
               >
                 <span
                   className="font-condensed font-900 block mb-4"
+                  aria-hidden="true"
+                  data-decorative="true"
                   style={{ fontSize: "2.5rem", color: "var(--accent)", opacity: 0.4, letterSpacing: "-0.03em", lineHeight: 1 }}
                 >
                   {item.num}

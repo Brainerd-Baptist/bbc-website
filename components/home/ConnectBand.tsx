@@ -53,7 +53,7 @@ export default function ConnectBand() {
                 </div>
                 <div>
                   <p className="font-condensed font-700 text-white text-base">{LEAD_PASTOR.name}</p>
-                  <p className="text-white/50 text-sm">{LEAD_PASTOR.title}</p>
+                  <p className="text-fg-on-dark-muted text-sm">{LEAD_PASTOR.title}</p>
                 </div>
               </div>
             </div>
@@ -126,9 +126,9 @@ export default function ConnectBand() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-condensed font-700 text-white text-base">{item.label}</p>
-                    <p className="text-white/50 text-sm leading-snug">{item.desc}</p>
+                    <p className="text-fg-on-dark-muted text-sm leading-snug">{item.desc}</p>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/25 group-hover:text-accent-text transition-colors shrink-0">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-fg-on-dark-muted group-hover:text-accent-text transition-colors shrink-0">
                     <path d="M3 7h8M8 4l3 3-3 3"/>
                   </svg>
                 </Link>

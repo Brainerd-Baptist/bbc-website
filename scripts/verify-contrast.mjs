@@ -130,7 +130,7 @@ const DARK_GROUNDS = [
 const CHECKS = [
   { fg: "--fg", on: SURFACES, kind: "body", note: "body text" },
   { fg: "--fg-muted", on: SURFACES, kind: "body", note: "secondary text" },
-  { fg: "--fg-subtle", on: SURFACES, kind: "large", note: "de-emphasised text (LARGE ONLY)" },
+  { fg: "--fg-subtle", on: SURFACES, kind: "body", note: "de-emphasised text" },
   { fg: "--accent-text", on: SURFACES, kind: "body", note: "accent used as text" },
   { fg: "--fg-on-accent", on: ["--accent-solid"], kind: "body", note: "text on a solid accent fill" },
   { fg: "--accent-fg", on: ["--accent"], kind: "body", note: "the fixed foreground on brand cyan" },
@@ -163,6 +163,21 @@ const CHECKS = [
   { fg: "--highlight-fg", on: ["--highlight-bg"], kind: "body", note: "text under a highlight" },
   { fg: "--plate-fg", on: ["--plate"], kind: "body", note: "ink on the fixed light plate" },
 
+  // Text on a TRANSLUCENT FILL that itself sits on a surface. The gate used
+  // to check --accent-text against the surfaces only, so an eyebrow inside an
+  // accent-tinted callout — a shape this site uses constantly — was never
+  // measured. axe found it on a rendered page at 4.47:1.
+  { fg: "--accent-text", on: ["--accent-bg"], over: SURFACES, kind: "body", note: "accent text on an accent-tinted fill" },
+  { fg: "--fg", on: ["--accent-bg"], over: SURFACES, kind: "body", note: "body text on an accent-tinted fill" },
+  { fg: "--danger-text", on: ["--danger-bg"], over: SURFACES, kind: "body", note: "error text on a danger-tinted fill" },
+  { fg: "--success-text", on: ["--success-bg"], over: SURFACES, kind: "body", note: "success text on a success-tinted fill" },
+  { fg: "--warning-text", on: ["--warning-bg"], over: SURFACES, kind: "body", note: "warning text on a warning-tinted fill" },
+
+  // The hover/chip tint. A keyboard cap and a hovered row both paint text on
+  // it, and it is translucent, so it is only as light as whatever it covers.
+  { fg: "--fg", on: ["--hover-subtle"], over: SURFACES, kind: "body", note: "text on a hover/chip tint" },
+  { fg: "--fg-muted", on: ["--hover-subtle"], over: SURFACES, kind: "body", note: "muted text on a hover/chip tint" },
+
   // The audio player's own chrome is dark in both themes.
   { fg: "--fg-on-dark-muted", on: ["--player-bar-opaque"], kind: "body", note: "player transport labels" },
   { fg: "--danger-on-dark", on: DARK_GROUNDS, kind: "body", note: "error text on a dark ground" },
@@ -181,20 +196,34 @@ for (const [theme, tokens] of [["light", root], ["dark", dark]]) {
   for (const check of CHECKS) {
     for (const surfaceName of check.on) {
       const surface = resolve(tokens, surfaceName);
-      // A translucent surface is itself composited over the page canvas.
-      const surfaceSolid =
-        surface[3] < 1 ? flatten(surface, resolve(tokens, "--surface")) : surface;
-      const fg = flatten(resolve(tokens, check.fg), surfaceSolid);
-      const r = ratio(fg, surfaceSolid);
-      const need = MIN[check.kind];
-      const ok = r >= need;
-      checked++;
-      if (!ok) failures++;
-      const label = `${check.fg} on ${surfaceName}`;
-      console.log(
-        `  ${ok ? "ok  " : "FAIL"} ${label.padEnd(44)} ${r.toFixed(2).padStart(6)}` +
-          `  (needs ${need.toFixed(1)}, ${check.note})`,
-      );
+      // A translucent fill composites over whatever is BENEATH it, and that is
+      // not always the page canvas: the same tint chip reads differently on
+      // --surface than on --surface-sunken. `over` names the grounds a pairing
+      // can actually sit on, and every one of them is checked.
+      //
+      // This flattened over --surface only, while `over` was declared on five
+      // pairings and never read -- so the file looked more rigorous than it
+      // was. A keyboard chip on --hover-subtle measured 4.43 here (over white)
+      // and 4.09 in a real browser (over --surface-sunken): a genuine AA
+      // failure that walked through a 242-pairing gate.
+      const grounds = surface[3] < 1 ? (check.over ?? ["--surface"]) : [null];
+      for (const groundName of grounds) {
+        const surfaceSolid =
+          groundName === null ? surface : flatten(surface, resolve(tokens, groundName));
+        const fg = flatten(resolve(tokens, check.fg), surfaceSolid);
+        const r = ratio(fg, surfaceSolid);
+        const need = MIN[check.kind];
+        const ok = r >= need;
+        checked++;
+        if (!ok) failures++;
+        const label = groundName
+          ? `${check.fg} on ${surfaceName} over ${groundName}`
+          : `${check.fg} on ${surfaceName}`;
+        console.log(
+          `  ${ok ? "ok  " : "FAIL"} ${label.padEnd(58)} ${r.toFixed(2).padStart(6)}` +
+            `  (needs ${need.toFixed(1)}, ${check.note})`,
+        );
+      }
     }
   }
 }

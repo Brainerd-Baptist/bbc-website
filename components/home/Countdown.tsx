@@ -103,7 +103,7 @@ export default function Countdown() {
           >
             {String(value).padStart(2, "0")}
           </span>
-          <span className="text-white/50 text-[10px] tracking-widest uppercase mt-1">
+          <span className="text-fg-on-dark-muted text-[10px] tracking-widest uppercase mt-1">
             {label}
           </span>
         </div>

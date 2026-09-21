@@ -12,7 +12,7 @@ export default function GiveCTA() {
           >
             Support the Work
           </p>
-          <p className="text-white/40 text-sm leading-relaxed max-w-sm">
+          <p className="text-fg-on-dark-muted text-sm leading-relaxed max-w-sm">
             Your generosity makes it possible to keep teaching God&apos;s Word — here and beyond.
           </p>
         </div>

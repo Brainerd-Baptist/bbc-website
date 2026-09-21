@@ -147,6 +147,8 @@ export default function AboutPage() {
               <div key={p.num} className="relative">
                 <span
                   className="font-condensed font-900 block mb-4"
+                  data-decorative="true"
+                  aria-hidden="true"
                   style={{
                     fontSize: "4rem",
                     color: "var(--accent-text)",
@@ -200,7 +202,7 @@ export default function AboutPage() {
             <span style={{ color: "var(--accent)" }}>know and worship</span>{" "}
             at the feet of Jesus."
           </blockquote>
-          <p className="text-white/45 mt-6 text-sm">
+          <p className="text-fg-on-dark-muted mt-6 text-sm">
             Everything we do — Sunday worship, Life Groups, missions — flows from this.
           </p>
         </div>
@@ -303,8 +305,8 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full text-white transition hover:-translate-y-0.5"
-              style={{ background: "var(--accent)" }}
+              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition hover:-translate-y-0.5"
+              style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
             >
               Plan a Visit
             </Link>

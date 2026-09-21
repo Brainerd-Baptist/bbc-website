@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getSermonsBySeries } from "@/lib/sanity";
 import { SERMONS, formatDate } from "@/lib/sermons";
+import { inkVarsFor } from "@/lib/identity-colors";
 
 interface Props {
   currentId: string;   // slug of the sermon being viewed
@@ -63,8 +64,8 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
         <div className="border-t border-border pt-10 mb-6">
           <div className="flex items-center justify-between mb-6">
             <h2
-              className="text-[10px] font-semibold tracking-widest uppercase"
-              style={{ color: accentColor }}
+              className="text-[10px] font-semibold tracking-widest uppercase identity-ink"
+              style={inkVarsFor(accentColor)}
             >
               More from This Series
             </h2>

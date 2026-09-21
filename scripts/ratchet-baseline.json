@@ -5,10 +5,10 @@
     "raw-hex": 0,
     "raw-rgb-fn": 0,
     "arbitrary-color-class": 0,
-    "unthemeable-tailwind-class": 177,
+    "unthemeable-tailwind-class": 131,
     "bg-white-route-shell": 0,
     "js-theme-branch": 3,
-    "unthemed-files": 14,
+    "unthemed-files": 0,
     "eslint-errors": 52
   }
 }

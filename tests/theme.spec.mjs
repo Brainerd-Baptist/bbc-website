@@ -45,7 +45,54 @@ for (const theme of THEMES) {
     for (const { path, navChrome } of ROUTES) {
       test(`${path}`, async ({ page }) => {
         await presetTheme(page, theme);
-        await page.goto(path, { waitUntil: "networkidle" });
+        // NOT networkidle. This site keeps a looping ambient video on the
+        // homepage and /visit, a YouTube embed on /live, and a Cloudflare
+        // Stream source elsewhere — so the network never goes quiet for the
+        // 500ms `networkidle` requires, and it simply never fires. The first
+        // CI run proved it: all 52 tests timed out identically at 30s on this
+        // line, which is where the 29-minute run came from. Playwright's own
+        // docs discourage networkidle for exactly this reason.
+        //
+        // Instead: load the document, then wait for the specific things the
+        // assertions below actually depend on.
+        await page.goto(path, { waitUntil: "domcontentloaded" });
+
+        // Wait for the stylesheet to be LIVE, not merely for the document.
+        // `domcontentloaded` fires before stylesheets are applied, and that
+        // caught me out: three routes reported 137 elements at rgb(0,0,0) and
+        // a 1.00:1 ratio, which is the signature of an unstyled page rather
+        // than a contrast bug. `--fg` only resolves once tokens.css is in, so
+        // it is an exact probe for "our CSS is applied".
+        await page.waitForFunction(
+          () => getComputedStyle(document.documentElement).getPropertyValue("--fg").trim().length > 0,
+          undefined,
+          { timeout: 15000 },
+        );
+
+        // next-themes applies the class on mount, so wait for it rather than
+        // sleeping. This is also assertion 1's precondition.
+        await page.waitForFunction(
+          (t) => {
+            const c = document.documentElement.className;
+            return t === "dark" ? c.includes("dark") : c.includes("light") || !c.includes("dark");
+          },
+          theme,
+          { timeout: 15000 },
+        );
+
+        // The navbar is what assertion 2 reads, and it sets data-chrome from a
+        // scroll listener after hydration.
+        await page.locator("nav.bbc-nav").waitFor({ state: "attached", timeout: 15000 });
+        await page.waitForFunction(
+          () => document.querySelector("nav.bbc-nav")?.getAttribute("data-chrome") !== null,
+          undefined,
+          { timeout: 15000 },
+        );
+
+        // Let fonts settle so contrast sampling reads final colours, and give
+        // the reveal animations a beat to finish so nothing is mid-fade.
+        await page.evaluate(() => document.fonts?.ready).catch(() => {});
+        await page.waitForTimeout(400);
 
         // The theme actually applied.
         const htmlClass = await page.locator("html").getAttribute("class");
@@ -240,9 +287,30 @@ for (const theme of THEMES) {
         //    "is it invisible" floor at 1.5:1 that we control; axe applies the
         //    real WCAG algorithm, including the cases our own probe declines to
         //    judge. Where they disagree, axe is right.
+        //    Decorative ordinals are excluded, and the exclusion is itself
+        //    guarded here. WCAG 1.4.3 exempts pure decoration, and these are:
+        //    a faint oversized "01".."04" watermark beside a heading that
+        //    already carries the meaning. Darkening them to 3:1 would not
+        //    make the page more accessible, only make the ornament loud.
+        //    But "it's decorative" is exactly the excuse that hides real
+        //    failures, so the marker is not taken on trust.
+        const decorative = await page.$$eval("[data-decorative]", (els) =>
+          els.map((el) => ({
+            html: el.outerHTML.slice(0, 80),
+            hidden: el.getAttribute("aria-hidden") === "true",
+            text: (el.textContent || "").trim(),
+          })),
+        );
+        expect(
+          decorative.filter((d) => !d.hidden || d.text.length > 3),
+          `[data-decorative] on ${path} (${theme}) must be aria-hidden and hold ` +
+            `at most 3 characters - it exempts an ornament, not content`,
+        ).toEqual([]);
+
         const axe = await new AxeBuilder({ page })
           .withRules(["color-contrast"])
-          .analyze();
+          .exclude("[data-decorative]")
+            .analyze();
         const contrastViolations = axe.violations.flatMap((v) =>
           v.nodes.map((n) => ({
             impact: v.impact,
@@ -302,11 +370,16 @@ for (const theme of THEMES) {
         //    To create them: run the workflow's `baseline` job, download the
         //    artifact, commit tests/theme.spec.mjs-snapshots/, then set
         //    PIXEL_BASELINE=1 in the visual job.
-        test.skip(!process.env.PIXEL_BASELINE, "no committed pixel baseline yet");
-        await expect(page).toHaveScreenshot(
-          `${theme}${path.replace(/\//g, "_") || "_root"}.png`,
-          { fullPage: true, maxDiffPixelRatio: 0.01, animations: "disabled" },
-        );
+        //    An `if`, not test.skip(): test.skip() inside a test body marks the
+        //    WHOLE test skipped, including the five assertions that already
+        //    passed above it. A fully green run reported "51 skipped, 0 passed",
+        //    which in CI is indistinguishable from a suite that never ran.
+        if (process.env.PIXEL_BASELINE) {
+          await expect(page).toHaveScreenshot(
+            `${theme}${path.replace(/\//g, "_") || "_root"}.png`,
+            { fullPage: true, maxDiffPixelRatio: 0.01, animations: "disabled" },
+          );
+        }
       });
     }
   });

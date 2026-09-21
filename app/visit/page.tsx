@@ -156,6 +156,8 @@ export default function VisitPage() {
               <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-border bg-surface-raised hover:border-accent/30 transition-colors">
                 <span
                   className="font-condensed font-900 leading-none flex-shrink-0 mt-0.5"
+                  aria-hidden="true"
+                  data-decorative="true"
                   style={{ fontSize: "2.5rem", color: "var(--accent-text)", opacity: 0.35, letterSpacing: "-0.03em" }}
                 >
                   {item.num}

@@ -50,14 +50,15 @@ export default function BeliefQuestion() {
   return (
     <section className="py-24 px-6" style={{ background: "var(--brand-ink)" }}>
       <div className="max-w-2xl mx-auto">
-        <p className="eyebrow text-center mb-3" style={{ color: "var(--accent-text)" }}>Have a Question?</p>
+        {/* On the --brand-ink band, so full brand cyan: --accent-text is 3.35:1 here. */}
+        <p className="eyebrow text-center mb-3" style={{ color: "var(--accent)" }}>Have a Question?</p>
         <h2
           className="font-condensed font-900 text-white text-center mb-4"
           style={{ fontSize: "clamp(2.4rem, 6vw, 3.2rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
         >
           Ask Us What We Believe
         </h2>
-        <p className="text-white/45 text-center mb-10 text-sm max-w-sm mx-auto">
+        <p className="text-fg-on-dark-muted text-center mb-10 text-sm max-w-sm mx-auto">
           No question is too small or too basic. Ask anything about our beliefs, practices, or what to expect.
         </p>
 
@@ -69,7 +70,7 @@ export default function BeliefQuestion() {
             <p className="text-white/80 text-sm leading-relaxed">{answer}</p>
             <button
               onClick={handleReset}
-              className="mt-6 text-white/30 text-xs hover:text-white/55 transition-colors underline underline-offset-2"
+              className="mt-6 text-fg-on-dark-muted text-xs hover:text-white/55 transition-colors underline underline-offset-2"
             >
               Ask another question
             </button>
@@ -82,7 +83,7 @@ export default function BeliefQuestion() {
                 <button
                   key={q}
                   onClick={() => handleAsk(q)}
-                  className="text-xs px-4 py-2 rounded-full border border-white/15 text-white/50 hover:border-white/35 hover:text-white/75 transition"
+                  className="text-xs px-4 py-2 rounded-full border border-white/15 text-fg-on-dark-muted hover:border-white/35 hover:text-white/75 transition"
                 >
                   {q}
                 </button>
@@ -103,7 +104,7 @@ export default function BeliefQuestion() {
                     handleAsk();
                   }
                 }}
-                className="w-full px-5 py-4 rounded-2xl border border-white/15 text-sm text-white placeholder:text-white/25 focus:border-white/30 resize-none"
+                className="w-full px-5 py-4 rounded-2xl border border-white/15 text-sm text-white placeholder:text-fg-on-dark-muted focus:border-white/30 resize-none"
                 style={{ background: "var(--surface-on-dark)" }}
               />
               <button

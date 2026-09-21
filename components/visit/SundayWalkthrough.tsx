@@ -169,10 +169,14 @@ export default function SundayWalkthrough() {
           {/* Step label */}
           <p
             className="font-condensed font-700 tracking-widest uppercase text-xs mb-4"
-            /* Was a hex string-concatenated with an alpha suffix, which var()
-               cannot express. The same paint comes from the accent token plus
-               an opacity on this element, which carries only this text. */
-            style={{ color: "var(--accent)", opacity: 0.53 }}
+              /* Full brand cyan at full strength. This began as a hex with an
+                 alpha suffix (`${TEAL}88`), and the token migration faithfully
+                 reproduced that paint as 53% opacity -- which preserved a
+                 pre-existing failure: over the navy band it composites to
+                 #00647e, 2.75:1. Brand cyan undimmed is 5.65:1 there.
+                 Reproducing a colour exactly is the wrong goal when the
+                 original colour was the defect. */
+              style={{ color: "var(--accent)" }}
           >
             {step.label}
           </p>
@@ -181,6 +185,8 @@ export default function SundayWalkthrough() {
           <div className="flex items-start gap-5 mb-6">
             <span
               className="font-condensed font-900 leading-none flex-shrink-0"
+              aria-hidden="true"
+              data-decorative="true"
               style={{ fontSize: "clamp(4rem, 10vw, 6rem)", color: "var(--accent)", opacity: 0.15, letterSpacing: "-0.04em", lineHeight: 0.85 }}
             >
               {step.num}

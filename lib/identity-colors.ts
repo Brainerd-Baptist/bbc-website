@@ -74,3 +74,108 @@ export function inkVars(ink: Pick<IdentityInk, "light" | "dark">): React.CSSProp
     "--identity-dark": ink.dark,
   } as React.CSSProperties;
 }
+
+/* ------------------------------------------------------------------------- *
+ * Derivation, for hues that arrive as DATA.
+ *
+ * The table above is hand-tuned because those hues are fixed and few. Series
+ * and speaker accents are not: they come from content, so no table can cover
+ * them, and every one of them lands in the same trap — a mid-chroma brand hue
+ * is legible as a fill and illegible as 10px text on white. Fourteen call
+ * sites were painting a raw data hue as text; on a light card the default
+ * brand cyan measured 2.73:1.
+ *
+ * So the same method the table was built with is expressed as a function:
+ * mix toward black (light) or white (dark) only as far as needed to clear
+ * 4.6:1 against the WORST surface in that theme. Feeding the twelve table
+ * hues through it returns the hand-tuned values -- nine byte-identical, three
+ * off by a single hex digit -- which is the check that the function and the
+ * table agree rather than two different ideas of the same thing.
+ *
+ * The two grounds are literals because this module is bundled and cannot read
+ * tokens.css at runtime. `npm run verify:identity` asserts they are still the
+ * worst light and dark surfaces, so a token change cannot silently invalidate
+ * the derivation.
+ * ------------------------------------------------------------------------- */
+
+/** Worst (darkest) light surface: --surface-sunken. Guarded by verify:identity. */
+export const WORST_LIGHT_GROUND = "#f4f6f9";
+/** Worst (lightest) dark surface: --surface-overlay, dark. Guarded by verify:identity. */
+export const WORST_DARK_GROUND = "#1b2738";
+
+const TARGET = 4.6;
+
+const rgbOf = (s: string): [number, number, number] => {
+  const h = s.replace("#", "").trim();
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  return [0, 2, 4].map((i) => parseInt(f.slice(i, i + 2), 16)) as [number, number, number];
+};
+const chan = (c: number) => {
+  const v = c / 255;
+  return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+};
+const lum = (c: [number, number, number]) =>
+  0.2126 * chan(c[0]) + 0.7152 * chan(c[1]) + 0.0722 * chan(c[2]);
+
+/** WCAG 2.1 contrast ratio between two opaque colours. */
+export function contrast(a: string, b: string): number {
+  const [x, y] = [lum(rgbOf(a)), lum(rgbOf(b))];
+  const [hi, lo] = x > y ? [x, y] : [y, x];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+const asHex = (c: number[]) =>
+  "#" + c.map((v) => Math.round(v).toString(16).padStart(2, "0")).join("");
+
+/**
+ * Walk `hue` toward `end` in 1% steps and stop at the first tone that clears
+ * TARGET. Stepping (rather than solving) is deliberate: it stops at the FIRST
+ * passing tone, so the result stays as close to the original hue as the
+ * requirement allows, which is what keeps twelve hues distinguishable from
+ * each other instead of collapsing toward the same dark.
+ */
+function toward(
+  hue: string,
+  end: [number, number, number],
+  test: (candidate: string) => number,
+): string {
+  const from = rgbOf(hue);
+  for (let t = 0; t <= 1.0001; t += 0.01) {
+    const c = asHex(from.map((v, i) => v + (end[i] - v) * t));
+    if (test(c) >= TARGET) return c;
+  }
+  return asHex(end);
+}
+
+const BLACK: [number, number, number] = [0, 0, 0];
+const WHITE_RGB: [number, number, number] = [255, 255, 255];
+
+/**
+ * Accessible ink for a hue that came from content rather than the table above.
+ * Pass the result to `inkVars` exactly like a table entry.
+ */
+export function deriveInk(hue: string): IdentityInk {
+  return {
+    hue,
+    light: toward(hue, BLACK, (c) => contrast(c, WORST_LIGHT_GROUND)),
+    dark: toward(hue, WHITE_RGB, (c) => contrast(c, WORST_DARK_GROUND)),
+    solid: toward(hue, BLACK, (c) => contrast("#ffffff", c)),
+  };
+}
+
+/**
+ * Accessible ink for a hue over ONE known ground, when that ground is also
+ * data-driven (a series hero paints its own background colour, so neither
+ * theme tone is the right answer -- the ground is whatever the content says).
+ * Lightens or darkens away from the ground, whichever direction the ground
+ * requires.
+ */
+export function inkOn(hue: string, ground: string): string {
+  const goDark = contrast("#ffffff", ground) < contrast("#000000", ground);
+  return toward(hue, goDark ? BLACK : WHITE_RGB, (c) => contrast(c, ground));
+}
+
+/** `deriveInk` + `inkVars` in one call, for a data hue on a themed surface. */
+export function inkVarsFor(hue: string): React.CSSProperties {
+  return inkVars(deriveInk(hue));
+}

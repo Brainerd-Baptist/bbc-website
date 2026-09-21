@@ -132,9 +132,9 @@ export default function ScriptureRef({ reference }: { reference: string }) {
           </span>
 
           {popup.loading ? (
-            <span className="block text-white/40 text-xs italic">Loading…</span>
+            <span className="block text-fg-on-dark-muted text-xs italic">Loading…</span>
           ) : popup.error ? (
-            <span className="block text-white/40 text-xs italic">
+            <span className="block text-fg-on-dark-muted text-xs italic">
               Couldn't load this passage right now.
             </span>
           ) : (

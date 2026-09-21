@@ -73,12 +73,12 @@ export default function LifeGroupsPage() {
               <h2 className="font-condensed font-800 text-fg text-2xl mb-4">When Do They Meet?</h2>
               <div className="space-y-3">
                 <div className="glass rounded-xl p-4">
-                  <p className="text-brand-cyan text-xs font-semibold tracking-widest uppercase mb-1">Sunday Mornings</p>
+                  <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">Sunday Mornings</p>
                   <p className="font-semibold text-fg">9:45 AM</p>
                   <p className="text-fg-muted text-sm">On campus — between services</p>
                 </div>
                 <div className="glass rounded-xl p-4">
-                  <p className="text-brand-cyan text-xs font-semibold tracking-widest uppercase mb-1">Throughout the Week</p>
+                  <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">Throughout the Week</p>
                   <p className="font-semibold text-fg">In Homes Across Chattanooga</p>
                   <p className="text-fg-muted text-sm">Evenings vary by group</p>
                 </div>

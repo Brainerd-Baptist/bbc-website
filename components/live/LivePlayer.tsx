@@ -305,7 +305,7 @@ function ActiveView({
                   onClick={() => setTab(t.id)}
                   className={`flex-1 min-w-[64px] flex flex-col items-center gap-0.5 py-2.5 px-1 text-[10px] font-semibold tracking-wide transition-colors ${
                     tab === t.id
-                      ? "text-accent-text border-b-2 border-accent"
+                      ? "text-accent border-b-2 border-accent"
                       : "text-fg-on-dark-muted hover:text-fg-on-dark"
                   }`}
                 >
@@ -338,7 +338,7 @@ function ActiveView({
                 href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent-text text-xs font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity block mb-1"
+                className="text-accent text-xs font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity block mb-1"
               >
                 {sermon.passage}
               </a>
@@ -359,7 +359,7 @@ function ActiveView({
                   onClick={() => setTab(t)}
                   className={`flex-1 py-2.5 text-[11px] font-semibold tracking-wide transition-colors ${
                     tab === t
-                      ? "text-accent-text border-b-2 border-accent"
+                      ? "text-accent border-b-2 border-accent"
                       : "text-fg-on-dark-muted hover:text-fg-on-dark"
                   }`}
                 >
@@ -389,7 +389,7 @@ function WatchTab({ sermon }: { sermon: SermonData }) {
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
       {sermon.passage && (
-        <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">
+        <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">
           {sermon.passage}
         </p>
       )}
@@ -431,7 +431,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">
+      <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-1">
         Scripture
       </p>
       <h3 className="text-lg font-bold text-fg-on-dark mb-5">{sermon.passage}</h3>
@@ -451,7 +451,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
             href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-accent-text underline"
+            className="text-accent underline"
           >
             Read on Bible Gateway →
           </a>
@@ -494,7 +494,7 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">
+      <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-1">
         {isScripture ? "Scripture Journey" : "Sermon Outline"}
       </p>
       <h3 className="text-lg font-bold text-fg-on-dark mb-1">{sermon.title}</h3>
@@ -509,7 +509,7 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
         {sermon.outline.map((point, i) => (
           <li key={i} className="flex gap-3">
             <span
-              className="mt-0.5 w-5 h-5 rounded-full bg-brand-navy text-accent-text text-[10px] font-bold flex items-center justify-center shrink-0"
+              className="mt-0.5 w-5 h-5 rounded-full bg-brand-navy text-accent text-[10px] font-bold flex items-center justify-center shrink-0"
             >
               {i + 1}
             </span>
@@ -537,7 +537,7 @@ function NotesTab({ sermon }: { sermon: SermonData }) {
     <div className="px-5 py-6 max-w-xl mx-auto flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-accent-text text-xs font-semibold tracking-widest uppercase">My Notes</p>
+          <p className="text-accent text-xs font-semibold tracking-widest uppercase">My Notes</p>
           <p className="text-[11px] text-fg-on-dark-muted mt-0.5">Saved automatically</p>
         </div>
         <div className="flex gap-2">
@@ -603,7 +603,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">Prayer Request</p>
+      <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-1">Prayer Request</p>
       <p className="text-fg-on-dark-muted text-sm mb-5">
         Our prayer team reviews every request during and after the service.
       </p>
@@ -611,7 +611,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
-            Your Name <span className="text-accent-text">*</span>
+            Your Name <span className="text-accent">*</span>
           </label>
           <input
             type="text"
@@ -625,7 +625,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
 
         <div>
           <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
-            Prayer Request <span className="text-accent-text">*</span>
+            Prayer Request <span className="text-accent">*</span>
           </label>
           <textarea
             value={request}
@@ -710,7 +710,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
               Watch Latest Sermon
             </a>
-            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:text-fg-on-dark transition-colors">
+            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors">
               Plan a Visit
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>
@@ -737,7 +737,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
                 </a>
               </div>
               <div className="md:col-span-3 p-7 md:p-9 flex flex-col justify-center">
-                {sermon.passage && <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
+                {sermon.passage && <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
                 <h3 className="text-xl md:text-2xl font-bold text-fg-on-dark mb-3 leading-tight">{sermon.title}</h3>
                 <p className="text-sm text-fg-on-dark-muted mb-5">{date} · Curtis Hill</p>
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm inline-block self-start">
@@ -760,13 +760,13 @@ function OffHours({ sermon }: { sermon: SermonData }) {
             ].map((svc) => (
               <div key={svc.time} className="rounded-xl border border-border-on-dark bg-surface-on-dark p-6">
                 <span className="text-2xl font-bold text-fg-on-dark block mb-1">{svc.time}</span>
-                <span className="text-accent-text text-sm font-semibold block">{svc.style}</span>
+                <span className="text-accent text-sm font-semibold block">{svc.style}</span>
                 <span className="text-fg-on-dark-muted text-xs">{svc.note}</span>
               </div>
             ))}
           </div>
           <div className="mt-7 text-center">
-            <a href="/plan-your-visit" className="text-sm font-semibold text-accent-text hover:text-fg-on-dark transition-colors inline-flex items-center gap-1.5">
+            <a href="/plan-your-visit" className="text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors inline-flex items-center gap-1.5">
               Get directions &amp; parking info
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>

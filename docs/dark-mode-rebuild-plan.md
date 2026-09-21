@@ -1184,3 +1184,151 @@ styling as its siblings, so this was a superseded duplicate — the same situati
 `react-hooks/set-state-in-effect` and 11 `react-hooks/refs` (real bug classes), 4
 `@next/next/no-html-link-for-pages` (these break client-side navigation), 1 `react-hooks/purity`, 1
 `no-explicit-any`. Held flat by the ratchet so they cannot grow.
+
+---
+
+## 14. CI hardening — what the browser found that the tokens could not
+
+Phase 6 declared the rebuild locked, and the first CI run with the new visual job
+(Verify #19) failed all 52 tests in 29m26s. Runs #1–#18 had passed in about a
+minute, because they only ran the token-level rails. Adding a real browser to the
+pipeline is what made the difference, and it found defects in three categories that
+no amount of token checking could have reached.
+
+### The harness faults (why the run took 29 minutes)
+
+`page.goto(..., { waitUntil: "networkidle" })` can never settle on this site: the
+home page loops an ambient video and several routes embed YouTube, so there is no
+quiet moment. Playwright's own docs discourage `networkidle` for exactly this
+reason. Every test waited out its timeout.
+
+Replacing it with `domcontentloaded` then failed differently: three routes reported
+137 elements at `rgb(0, 0, 0)` and a flat 1.00:1, the signature of a page rendering
+before its stylesheet applies. The fix is to wait for the stylesheet to be *live*
+rather than for the document to exist:
+
+```js
+await page.waitForFunction(
+  () => getComputedStyle(document.documentElement)
+          .getPropertyValue("--fg").trim().length > 0,
+);
+```
+
+A third harness fault only surfaced once the suite went green: a fully passing run
+reported `51 skipped, 0 passed`. `test.skip()` called inside a test body marks the
+*whole* test skipped, including the five assertions that already passed above it —
+so the pixel-baseline gate was erasing the result of everything before it. In CI
+that is indistinguishable from a suite that never ran. It is an `if` now.
+
+### The blind spot in the token gate
+
+`verify-contrast.mjs` declared an `over:` key on five pairings. Nothing read it.
+Every translucent fill was flattened over `--surface` and only `--surface`, while
+the page composites it over whatever is actually beneath — so the file looked more
+rigorous than it was.
+
+A keyboard-shortcut chip on `--hover-subtle` measured 4.43 in the gate (over white)
+and 4.09 in a real browser (over `--surface-sunken`). Wiring `over:` up took the
+suite from 242 pairings to 288 and immediately exposed three further failures that
+had been invisible: `--accent-text` at 4.41 and `--danger-text` at 4.20 and 3.89,
+all on tinted fills over the raised and overlay surfaces.
+
+Extending it to `--hover-subtle` found one more, and this one matters because axe
+structurally cannot see it: a muted caption inside a `bg-hover-subtle` panel is
+only rendered after a form submit, and a muted row label on the same tint only
+exists while the pointer is on the row. Both measured below AA (4.04 light,
+3.61 dark). A browser sweep tests resting state; only a token gate sees these.
+
+Fixing it also corrected an inversion nobody had noticed: dark `--fg-muted`
+(`#838fa2`) was *darker* than `--fg-subtle` (`#8591a1`), and the two light values
+differed by one hex digit. The "muted" and "subtle" tiers were not two tiers. They
+are now `#56698c` / `#5e7093` light and `#97a1b1` / `#8591a1` dark.
+
+### Identity hues arriving as data
+
+The identity palette handled twelve fixed hues with a hand-tuned light/dark/solid
+triple each. Series and speaker accents are not fixed — they come from content — and
+fourteen call sites painted a raw data hue straight into text. The default brand
+cyan measured 2.73:1 as 10px text on a white card.
+
+No table can cover arbitrary data, so the method the table was built with is now a
+function. `deriveInk(hue)` mixes toward black or white only as far as needed to
+clear 4.6:1 against the worst surface in that theme. Fed the twelve table hues it
+returns the hand-tuned values — nine byte-identical, three off by a single hex
+digit — which is the evidence that the function and the table are one idea rather
+than two. `inkOn(hue, ground)` handles the case where the ground is also data (a
+series hero paints its own background).
+
+`verify:identity` now also asserts that the two ground constants in
+`lib/identity-colors.ts` are still the worst light and dark surfaces in
+`tokens.css`, so a token change cannot silently invalidate a bundled literal.
+
+### Decoration, and not taking the word for it
+
+Fifteen oversized ghost ordinals ("01".."04", 2–6rem, 0.12–0.4 opacity) across four
+routes measured 1.17–2.07:1. WCAG 1.4.3 exempts pure decoration and these qualify:
+a faint watermark beside a heading that already carries the meaning. Darkening them
+to 3:1 would not make the page more accessible, only make the ornament loud.
+
+But "it's decorative" is the excuse that hides real failures, so the exemption is
+guarded rather than trusted. Each is marked `data-decorative`, axe excludes that
+selector, and a separate assertion requires every `[data-decorative]` element to be
+`aria-hidden="true"` and to hold at most three characters. The marker exempts an
+ornament; it cannot be used to silence content.
+
+Note that `aria-hidden` alone does not satisfy axe's `color-contrast` rule, and
+should not: sighted users still see the element.
+
+### Two defects the migration itself created
+
+Worth recording because both passed every gate.
+
+A step label on `/visit` had been `${TEAL}88` — a hex with an alpha suffix, which
+`var()` cannot express. The migration reproduced the paint exactly as
+`color: var(--accent); opacity: 0.53`. Faithful, and wrong: the original composited
+to `#00647e` on the navy band, 2.75:1. Reproducing a colour exactly is the wrong
+goal when the original colour was the defect.
+
+`ShareButton` used `text-fg-on-dark-muted` and `border-white/10` while the two
+sibling controls in the same row used themed tokens, on a surface that follows the
+theme. In light mode it painted near-white text on white: 1.00:1. It had been
+`text-white/50` before the token work, so it was invisible then too — the migration
+just carried it across. That is how an invisible control survives a rewrite.
+
+### The ratchet failing on its own documentation
+
+`unthemed-files` went 14 → 15 and the new entry was a comment explaining a colour
+(`it composites to #00647e, 2.75:1`). `countMatches` had been taught block-comment
+state in Phase 6; `countFiles` had not, and read raw source. Both read through one
+`codeOnly()` helper now — and the true count is **0**, not 14. That metric had been
+counting documentation and exempt regions the whole time.
+
+A gate that fails on its own documentation teaches people to delete the
+documentation.
+
+### The correction owed on the `text-white/N` floor
+
+The `unthemeable-tailwind-class` floor was defended twice in this document on the
+grounds that `text-white/N` on a permanently dark band is theme-invariant and
+therefore correct. That was true of the class and false of the count. axe measured
+`text-white/30` at 2.56:1 and `text-white/40` at 3.52:1 on the same navy — real AA
+failures sitting inside a floor marked legitimate.
+
+White clears 4.5:1 on this navy at 52% alpha. Every site at `/50` and below (40
+sites across 14 files) is now `--fg-on-dark-muted`, and the count fell 177 → 131.
+The floor's recorded reason now states the measured cutoff.
+
+A floor is a claim about correctness, and this one went unexamined because it
+sounded reasonable. That is the only way a rail hides a defect: by being agreed
+with.
+
+### Result
+
+52/52 green in both themes across 26 routes: nav chrome, an invisible-text floor,
+a 25-press keyboard focus sweep, axe `color-contrast`, a live theme toggle, and the
+decorative-marker guard. Token rails: 288 contrast pairings, identity light/dark/
+solid plus the derivation, zero raw colours, ratchet clean.
+
+Still open, and both are yours rather than the codebase's: dispatch the `baseline`
+job once to generate pixel baselines, and make `verify` a required status check in
+the repo's branch-protection settings so a red run actually blocks a merge.

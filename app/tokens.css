@@ -125,8 +125,21 @@
 
   /* Foregrounds. --fg-subtle is LARGE TEXT ONLY at 3.01:1 — never body copy. */
   --fg:           #00205b;
-  --fg-muted:     #5d7197;
-  --fg-subtle:    #7f8fad;
+  /* Moved off #5d7197 / #838fa2. Both failed on --hover-subtle, the site's own
+     hover wash: 4.04 light, 3.61 dark. That shape is real (a muted caption in a
+     bg-hover-subtle panel, a muted row label under the cursor) and axe cannot
+     reach it, because one is behind a submit and the other only exists while
+     the pointer is down on the row. Only a token-level gate sees it.
+     The move also un-inverts the tiers: dark --fg-muted used to be DARKER than
+     --fg-subtle, and the two light values differed by one hex digit, so the
+     "muted" and "subtle" tiers were not actually two tiers. */
+  --fg-muted:     #56698c;
+  /* --fg-subtle now meets 4.5 on every surface, so it is safe on SMALL text.
+     It used to be documented "large text only" at 3.0 — and the codebase then
+     used it on 10px keyboard hints and 12px labels in three places, which axe
+     caught at 2.95-3.25:1. A caveat a codebase ignores is not a caveat; it is
+     a latent defect. Cheaper to make the token safe than to police its use. */
+  --fg-subtle:    #5e7093;
   --fg-on-accent: #ffffff;
 
   /* Accent — three distinct roles, NOT interchangeable:
@@ -140,7 +153,14 @@
   --accent:             #00abc9;
   --accent-solid:       #008299;
   --accent-solid-hover: #006d80;
-  --accent-text:        #007b91;
+  /* #007388, not #007b91. The old value cleared 4.5 on a plain surface but
+     measured 4.47 on --accent-bg composited over white and 4.16 over
+     --surface-sunken — and an accent-tinted callout with an eyebrow in it
+     is a shape this site uses constantly. Found by axe on a rendered page;
+     the token gate could not see it, because it checked --accent-text
+     against the SURFACES and never against a translucent fill sitting on
+     one. That pairing is now in the gate. */
+  --accent-text:        #007388;
   --accent-bg:          rgba(0, 171, 201, 0.10);
   /* An accent-tinted container edge. Mirrors --danger-border: a tint of the
      same hue as its matching -bg, so an accent callout reads as one object
@@ -197,14 +217,19 @@
      4.5:1 carrying white text. Note every seed FAILED as a fill with white
      text (danger 3.91, success 2.28, warning 2.15), which is exactly the
      trap the brand cyan CTA fell into. */
-  --danger-text:   #ca3f44;
+  /* These three are darker than their seed values because an error, success
+     or warning message usually sits INSIDE its own tinted box, not on a plain
+     surface — and on that tint they measured 3.98, 4.17 and 4.15. The gate
+     only compared them against the surfaces until axe caught the real thing
+     on a rendered page; the tint-over-surface pairing is in the gate now. */
+  --danger-text:   #bd3439;
   --danger-solid:  #d34247;
   --danger-bg:     rgba(229, 72, 77, 0.10);
   --danger-border: rgba(229, 72, 77, 0.30);
-  --success-text:  #16823e;
+  --success-text:  #157a3a;
   --success-solid: #178841;
   --success-bg:    rgba(34, 197, 94, 0.10);
-  --warning-text:  #9d6507;
+  --warning-text:  #925e07;
   --warning-solid: #a46a07;
   --warning-bg:    rgba(245, 158, 11, 0.12);
   /* White reads on all three -solid fills; kept as its own token so a call
@@ -505,8 +530,8 @@
   --surface-overlay: #1b2738;
 
   --fg:           #c8d4e8;
-  --fg-muted:     #838fa2;
-  --fg-subtle:    #647082;
+  --fg-muted:     #97a1b1;
+  --fg-subtle:    #8591a1;
   --fg-on-accent: #ffffff;
 
   /* --accent-text returns to full brand cyan here: on a dark surface it
@@ -515,7 +540,7 @@
   --accent:             #00abc9;
   --accent-solid:       #008299;
   --accent-solid-hover: #006d80;
-  --accent-text:        #00abc9;
+  --accent-text:        #05adca;
   --accent-bg:          rgba(0, 171, 201, 0.14);
   --accent-border:      rgba(0, 171, 201, 0.38);
   --accent-fg:          #00205b; /* theme-invariant — see the light block */
@@ -531,7 +556,7 @@
      the lightest dark surface. success and warning are already light enough
      at their seed values. The -solid fills do NOT change — white has to stay
      readable on them, and that is a property of the fill, not the theme. */
-  --danger-text:   #e86064;
+  --danger-text:   #eb767a;
   --success-text:  #22c55e;
   --warning-text:  #f59e0b;
   --danger-bg:     rgba(229, 72, 77, 0.16);

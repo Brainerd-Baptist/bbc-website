@@ -46,9 +46,9 @@ export default function ServiceInfo() {
                   <p className="text-white/60 mb-4">Chattanooga, TN 37411</p>
 
                   <div className="border-t border-white/10 pt-4 mt-4">
-                    <p className="text-white/50 text-xs uppercase tracking-widest mb-1">Ministerio Hispano</p>
+                    <p className="text-fg-on-dark-muted text-xs uppercase tracking-widest mb-1">Ministerio Hispano</p>
                     <p className="text-white/70 text-sm">1203 Blocker Lane</p>
-                    <p className="text-white/50 text-sm">Domingos · 1:00 PM</p>
+                    <p className="text-fg-on-dark-muted text-sm">Domingos · 1:00 PM</p>
                   </div>
                 </div>
                 <Link

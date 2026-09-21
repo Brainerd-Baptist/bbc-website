@@ -8,6 +8,7 @@ import {
   formatDate,
 } from "@/lib/sanity";
 import { ALL_SERIES as FALLBACK_SERIES, SERMONS as FALLBACK_SERMONS } from "@/lib/sermons";
+import { inkOn, inkVarsFor } from "@/lib/identity-colors";
 
 export const revalidate = 300;
 
@@ -97,7 +98,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
           {/* Back link */}
           <Link
             href="/sermons"
-            className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs font-semibold tracking-wide uppercase mb-8 transition-colors"
+            className="inline-flex items-center gap-1.5 text-fg-on-dark-muted hover:text-white/70 text-xs font-semibold tracking-wide uppercase mb-8 transition-colors"
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M8 2L4 6l4 4"/>
@@ -108,7 +109,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
           {/* Series eyebrow */}
           <p
             className="text-[10px] font-bold tracking-widest uppercase mb-4"
-            style={{ color: accentColor }}
+            style={{ color: inkOn(accentColor, bgColor) }}
           >
             Series
           </p>
@@ -130,7 +131,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
             </p>
           )}
 
-          <p className="mt-6 text-white/30 text-sm">
+          <p className="mt-6 text-fg-on-dark-muted text-sm">
             {sermons.length} sermon{sermons.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -205,8 +206,8 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                           href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[10px] font-semibold hover:underline transition-colors"
-                          style={{ color: accentColor }}
+                          className="text-[10px] font-semibold hover:underline identity-ink"
+                          style={inkVarsFor(accentColor)}
                         >
                           {sermon.passage}
                         </a>

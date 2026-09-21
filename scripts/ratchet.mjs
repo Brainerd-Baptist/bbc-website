@@ -51,39 +51,55 @@ const files = SCAN_DIRS.flatMap((d) => walk(d));
 const read = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 
 /** Count regex matches across the tree, ignoring comment-only lines. */
-function countMatches(re, filter = () => true) {
-  let n = 0;
-  for (const f of files.filter(filter)) {
-    const src = read(f);
-    // Regions where a literal is the correct answer (print documents, <meta>
-    // attributes, the token layer) are not residue and must not be counted —
-    // otherwise the only way to make the number go down is to break them.
-    const exempt = exemptLines(f, src);
-    if (exempt === null) continue;
-    // Track block-comment state rather than only skipping lines that START
-    // with a comment marker. A continuation line inside a /* ... */ block does
-    // not, so prose mentioning a colour ("--nav-ink resolved to #fff") used to
-    // count as residue — which it is not, and which made the gate fail on a
-    // comment.
-    let inBlock = false;
-    src.split("\n").forEach((line, i) => {
+/**
+ * The file's source with everything that is NOT code blanked out: comments,
+ * and the regions the exemption registry declares (print documents, <meta>
+ * attributes, the token layer) where a literal is the correct answer.
+ *
+ * Returns null for a whole-file exemption.
+ *
+ * Every metric reads through this. It used to be inlined in countMatches
+ * alone, so countFiles saw raw source — and a comment EXPLAINING a colour
+ * ("it composites to #00647e, 2.75:1") counted as an unthemed file. A gate
+ * that fails on its own documentation teaches people to delete the
+ * documentation.
+ */
+function codeOnly(f, src) {
+  const exempt = exemptLines(f, src);
+  if (exempt === null) return null;
+  let inBlock = false;
+  return src
+    .split("\n")
+    .map((line, i) => {
       const t = line.trim();
       const opens = line.lastIndexOf("/*");
       const closes = line.lastIndexOf("*/");
       const wasInBlock = inBlock;
       if (opens !== -1 && opens > closes) inBlock = true;
       else if (closes !== -1 && closes > opens) inBlock = false;
-      if (wasInBlock || inBlock) return;
-      if (exempt.has(i)) return;
-      if (t.startsWith("//") || t.startsWith("*")) return;
-      n += (line.match(re) ?? []).length;
-    });
+      if (wasInBlock || inBlock) return "";
+      if (exempt.has(i)) return "";
+      if (t.startsWith("//") || t.startsWith("*")) return "";
+      return line;
+    })
+    .join("\n");
+}
+
+function countMatches(re, filter = () => true) {
+  let n = 0;
+  for (const f of files.filter(filter)) {
+    const code = codeOnly(f, read(f));
+    if (code === null) continue;
+    n += (code.match(re) ?? []).length;
   }
   return n;
 }
 
 function countFiles(pred) {
-  return files.filter((f) => pred(read(f), f)).length;
+  return files.filter((f) => {
+    const code = codeOnly(f, read(f));
+    return code !== null && pred(code, f);
+  }).length;
 }
 
 function eslintWarnings(ruleId) {
@@ -207,9 +223,18 @@ if (updating || !fs.existsSync(BASELINE)) {
  */
 const FLOORS = {
   "unthemeable-tailwind-class":
-    "`text-white/60` on the navy footer is correct: theme-invariant ink on a " +
-    "permanently dark ground. Zeroing this would mean a token per alpha step " +
-    "and a visual change to a dozen bands, for nothing.",
+    "`text-white/60` and above on a permanently dark band is correct: " +
+    "theme-invariant ink on a ground that never flips. A token per alpha step " +
+    "would be churn.\n" +
+    "        This floor was previously claimed for the whole metric, and that " +
+    "claim was wrong. axe measured text-white/30 at 2.56:1 and text-white/40 " +
+    "at 3.52:1 on the same navy — real AA failures sitting inside a " +
+    "\"legitimate\" floor. The alpha at which white clears 4.5:1 on this navy " +
+    "is 52%, so every site at /50 and below was converted to " +
+    "--fg-on-dark-muted (40 sites, 14 files) and the count fell 177 -> 131.\n" +
+    "        A floor is a claim about correctness. This one went unchecked " +
+    "because it sounded reasonable, which is the only way a rail hides a " +
+    "defect: by being agreed with.",
   "js-theme-branch":
     "The theme toggle's own icon and aria-label. You cannot write \"Switch to " +
     "light mode\" in CSS, so these three must read the resolved theme in JS. " +

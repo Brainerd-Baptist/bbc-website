@@ -14,7 +14,7 @@ export default function ConnectSidebar() {
           href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-brand-cyan hover:text-brand-cyan-light transition-colors"
+          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-accent-text hover:underline transition-colors"
         >
           Get Directions
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">

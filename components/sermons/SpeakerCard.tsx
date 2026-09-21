@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS } from "@/lib/sermons";
+import { deriveInk } from "@/lib/identity-colors";
 
 interface Props {
   name: string;
@@ -25,7 +26,14 @@ export default function SpeakerCard({ name, accentColor }: Props) {
         style={
           info.photo
             ? {}
-            : { background: accentColor + "33", border: `1px solid ${accentColor}44` }
+            : {
+                /* The `solid` tier, not the raw hue on a 20% tint of itself:
+                   that is a hue against a pale wash of the same hue, which
+                   fails at every hue. `solid` is the fill white text clears
+                   4.6:1 on, and verify:identity gates it. */
+                background: deriveInk(accentColor).solid,
+                border: `1px solid ${deriveInk(accentColor).solid}`,
+              }
         }
       >
         {info.photo ? (
@@ -37,7 +45,7 @@ export default function SpeakerCard({ name, accentColor }: Props) {
             className="w-full h-full object-cover object-top"
           />
         ) : (
-          <span style={{ color: accentColor }}>
+          <span style={{ color: "var(--fg-on-accent)" }}>
             {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
           </span>
         )}

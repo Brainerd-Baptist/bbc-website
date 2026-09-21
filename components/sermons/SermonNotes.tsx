@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
 import { useAudio } from "@/lib/audio-context";
+import { inkVarsFor } from "@/lib/identity-colors";
 
 interface Props {
   slug: string;
@@ -476,7 +477,7 @@ export default function SermonNotes({
               </span>
             )}
             {saveStatus === "saved" && (
-              <span style={{ fontSize: "0.65rem", fontWeight: 600, color: accentColor, display: "flex", alignItems: "center", gap: "0.25rem" }}>
+              <span className="identity-ink" style={{ ...inkVarsFor(accentColor), fontSize: "0.65rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.25rem" }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
                 Saved
               </span>
@@ -570,7 +571,7 @@ export default function SermonNotes({
             title={isAudioActive && audioTime > 5 ? `Insert timestamp (${formatTime(audioTime)})` : "Insert timestamp"}
             accentColor={accentColor}><IconClock /></ToolBtn>
           {isAudioActive && audioTime > 5 && (
-            <span style={{ fontSize: "0.65rem", fontWeight: 700, color: accentColor, marginLeft: 1, flexShrink: 0, lineHeight: 1 }}>
+            <span className="identity-ink" style={{ ...inkVarsFor(accentColor), fontSize: "0.65rem", fontWeight: 700, marginLeft: 1, flexShrink: 0, lineHeight: 1 }}>
               {formatTime(audioTime)}
             </span>
           )}
@@ -610,7 +611,7 @@ export default function SermonNotes({
           <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap" }}>
             {[{ keys: "⌘B", label: "Bold" }, { keys: "⌘I", label: "Italic" }, { keys: "⌘U", label: "Underline" }, { keys: "Tab", label: "Indent" }, { keys: "⌘Z", label: "Undo" }].map(({ keys, label }) => (
               <span key={keys} style={{ fontSize: "0.6rem", color: "var(--fg-subtle)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                <kbd style={{ fontFamily: "system-ui, sans-serif", background: "var(--hover-subtle)", border: "1px solid var(--border)", borderRadius: "3px", padding: "1px 4px", fontSize: "0.6rem" }}>{keys}</kbd>
+                <kbd style={{ fontFamily: "system-ui, sans-serif", color: "var(--fg)", background: "var(--hover-subtle)", border: "1px solid var(--border)", borderRadius: "3px", padding: "1px 4px", fontSize: "0.6rem" }}>{keys}</kbd>
                 {label}
               </span>
             ))}

@@ -16,6 +16,7 @@ import SpeakerCard from "@/components/sermons/SpeakerCard";
 import GiveCTA from "@/components/sermons/GiveCTA";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { getSermonNotesByDate, parseOutline } from "@/lib/sermon";
+import { inkVarsFor } from "@/lib/identity-colors";
 
 // ── Sermon notes helpers ──────────────────────────────────────────────────────
 
@@ -276,13 +277,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             {s.seriesSlug ? (
               <a
                 href={`/series/${s.seriesSlug}`}
-                className="text-[10px] font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity"
-                style={{ color: accentColor }}
+                className="text-[10px] font-semibold tracking-widest uppercase hover:opacity-75 identity-ink"
+                style={inkVarsFor(accentColor)}
               >
                 {s.series}
               </a>
             ) : (
-              <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: accentColor }}>
+              <span className="text-[10px] font-semibold tracking-widest uppercase identity-ink" style={inkVarsFor(accentColor)}>
                 {s.series}
               </span>
             )}

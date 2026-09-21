@@ -66,7 +66,7 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
         {showReturnPrompt && (
           <button
             onClick={returnToInline}
-            className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/45 text-sm hover:text-white/70 transition-colors cursor-pointer"
+            className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-fg-on-dark-muted text-sm hover:text-white/70 transition-colors cursor-pointer"
           >
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
               <circle cx="12" cy="12" r="10" />
@@ -125,10 +125,10 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
             <circle cx="12" cy="12" r="10" />
           </svg>
           Resuming from {formatTime(resumeFrom)}
-          <button onClick={startOver} className="ml-1 text-white/40 hover:text-white/70 underline text-xs transition-colors cursor-pointer">
+          <button onClick={startOver} className="ml-1 text-fg-on-dark-muted hover:text-white/70 underline text-xs transition-colors cursor-pointer">
             Start over
           </button>
-          <button onClick={dismissToast} className="ml-1 text-white/30 hover:text-white/60 transition-colors cursor-pointer" aria-label="Dismiss">
+          <button onClick={dismissToast} className="ml-1 text-fg-on-dark-muted hover:text-white/60 transition-colors cursor-pointer" aria-label="Dismiss">
             ✕
           </button>
         </div>

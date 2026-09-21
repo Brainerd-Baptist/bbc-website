@@ -346,8 +346,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
       <button
         type="submit"
         disabled={submitting}
-        className="w-full py-3.5 px-6 rounded-xl font-semibold text-white text-base transition
-          bg-accent hover:bg-brand-navy
+        className="w-full py-3.5 px-6 rounded-xl font-semibold text-fg-on-accent text-base transition
+          bg-accent-solid hover:bg-accent-solid-hover
           disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {submitting ? "Sending…" : "Connect with us"}

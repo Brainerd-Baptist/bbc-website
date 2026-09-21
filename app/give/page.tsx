@@ -106,7 +106,7 @@ export default function GivePage() {
                 <p className="font-semibold text-fg mb-1">Stock & Non-Cash</p>
                 <p className="text-fg-muted text-sm">
                   For gifts of stock, real estate, or other non-cash assets, please{" "}
-                  <Link href="/connect" className="text-brand-cyan hover:text-brand-cyan-light underline underline-offset-2">
+                  <Link href="/connect" className="text-accent-text hover:underline underline underline-offset-2">
                     contact us
                   </Link>{" "}
                   directly.

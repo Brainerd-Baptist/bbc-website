@@ -67,7 +67,7 @@ export default function Footer() {
                   aria-label="Brainerd Baptist Church"
                 />
             </div>
-            <p className="text-white/50 text-sm leading-relaxed mb-6 max-w-[220px]">
+            <p className="text-fg-on-dark-muted text-sm leading-relaxed mb-6 max-w-[220px]">
               A church in Chattanooga, TN where every person can experience the grace of Jesus Christ.
             </p>
             {/* Socials */}
@@ -90,7 +90,7 @@ export default function Footer() {
           {/* Nav columns */}
           {(Object.entries(FOOTER_LINKS) as [string, { label: string; href: string }[]][]).map(([groupLabel, links]) => (
             <div key={groupLabel}>
-              <p className="text-white/30 text-xs font-semibold tracking-widest uppercase mb-4">
+              <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-4">
                 {groupLabel}
               </p>
               <ul className="space-y-2.5">
@@ -110,18 +110,18 @@ export default function Footer() {
 
           {/* Visit column */}
           <div>
-            <p className="text-white/30 text-xs font-semibold tracking-widest uppercase mb-4">
+            <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-4">
               Visit
             </p>
             <p className="font-condensed font-700 text-white text-base mb-0.5">300 Brookfield Ave</p>
-            <p className="text-white/50 text-sm mb-4">Chattanooga, TN 37411</p>
+            <p className="text-fg-on-dark-muted text-sm mb-4">Chattanooga, TN 37411</p>
 
-            <p className="text-white/30 text-xs font-semibold tracking-widest uppercase mb-3">
+            <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-3">
               Sunday Services
             </p>
             <p className="text-white/70 text-sm">8:30 AM · Choir & Orchestra</p>
             <p className="text-white/70 text-sm mb-5">11:00 AM · Band-Led</p>
-            <p className="text-white/50 text-xs">Life Groups · 9:45 AM</p>
+            <p className="text-fg-on-dark-muted text-xs">Life Groups · 9:45 AM</p>
 
             {/* Hispanic Ministry */}
             <div className="mt-6 border-t border-white/10 pt-5">
@@ -129,13 +129,13 @@ export default function Footer() {
                 Ministerio Hispano
               </p>
               <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.address}</p>
-              <p className="text-white/40 text-sm">{HISPANIC_MINISTRY.serviceTime}</p>
+              <p className="text-fg-on-dark-muted text-sm">{HISPANIC_MINISTRY.serviceTime}</p>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-white/30 text-xs">
+        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-fg-on-dark-muted text-xs">
           <p>© {year} {SITE.name}. All rights reserved.</p>
           <div className="flex gap-5">
             <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy</Link>

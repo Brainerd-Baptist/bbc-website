@@ -222,7 +222,12 @@ export default function ThreeCircles() {
         <div className="flex items-center gap-2">
           {STEPS.map((s,i)=>(
             <button key={s.id} onClick={()=>setIdx(i)} aria-label={`Step ${i+1}`}
-              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?"var(--accent)":"var(--border-on-dark-strong)", border:"none", cursor:"pointer", transition:"all .3s ease" }}/>
+              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?"var(--accent)":"var(--border-on-dark-strong)", border:"none", cursor:"pointer",
+                  /* Not `all`: that animates outline-width too, so the focus
+                     ring fades in from zero and the dot reads as having no
+                     indicator at the moment focus lands. Only the two
+                     properties that actually move are animated. */
+                  transition:"width .3s ease, background-color .3s ease" }}/>
           ))}
         </div>
         {canNext

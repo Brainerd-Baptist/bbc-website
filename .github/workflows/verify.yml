@@ -30,9 +30,9 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -74,9 +74,9 @@ jobs:
   visual:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -111,6 +111,8 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+          # The first run uploaded 336 MB. Video is off now and traces only
+          # attach on retry, so this should be a few MB.
 
   # ── One-shot: generate the pixel baselines ─────────────────────────────────
   # Run manually from the Actions tab, download the artifact, and commit
@@ -120,8 +122,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm

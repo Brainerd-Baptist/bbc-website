@@ -37,7 +37,14 @@ export default function ShareButton({ title, speaker }: Props) {
   return (
     <button
       onClick={handleShare}
-      className="inline-flex items-center gap-2 text-xs font-semibold text-white/50 hover:text-white border border-white/10 hover:border-white/25 px-4 py-2 rounded-full transition"
+      /* Theme-following, matching the "Watch on YouTube" and "Download Audio"
+           controls it sits beside in the same row. It used on-dark tokens while
+           its two siblings used themed ones, on a surface that follows the
+           theme — so in light mode it painted near-white text on white and
+           measured 1.00:1. That predates the token work (it was text-white/50)
+           and the migration reproduced it exactly, which is how an invisible
+           control survives a rewrite. */
+        className="inline-flex items-center gap-2 text-xs font-semibold text-fg-muted hover:text-fg border border-border-strong px-4 py-2 rounded-full transition"
     >
       {copied ? (
         <>

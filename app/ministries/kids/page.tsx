@@ -306,6 +306,8 @@ export default function KidsPage() {
                 <div key={num} className="flex gap-5 items-start">
                   <div
                     className="flex-shrink-0 font-condensed font-800 text-accent-text opacity-40 mt-0.5"
+                  aria-hidden="true"
+                  data-decorative="true"
                     style={{ fontSize: "2rem", lineHeight: 1 }}
                   >
                     {num}
