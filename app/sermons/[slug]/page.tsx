@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { PortableText } from "@portabletext/react";
 import fs from "fs/promises";
 import path from "path";
@@ -318,23 +319,25 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
         <div className="max-w-4xl mx-auto space-y-8">
 
           {/* UNIFIED MEDIA + CONTENT PLAYER */}
-          <SermonTabPlayer
-            slug={slug}
-            youtubeId={s.youtubeId}
-            title={s.title}
-            speaker={s.speaker}
-            series={s.series}
-            date={s.date}
-            passage={s.passage}
-            audioTrack={audioTrack}
-            nextTrack={nextAudioTrack}
-            passages={allPassages}
-            accentColor={accentColor}
-            outline={sermonNotes.outline}
-            outlineType={sermonNotes.outlineType}
-            rawText={sermonNotes.rawText}
-            highlights={sermonNotes.highlights}
-          />
+          <Suspense fallback={null}>
+            <SermonTabPlayer
+              slug={slug}
+              youtubeId={s.youtubeId}
+              title={s.title}
+              speaker={s.speaker}
+              series={s.series}
+              date={s.date}
+              passage={s.passage}
+              audioTrack={audioTrack}
+              nextTrack={nextAudioTrack}
+              passages={allPassages}
+              accentColor={accentColor}
+              outline={sermonNotes.outline}
+              outlineType={sermonNotes.outlineType}
+              rawText={sermonNotes.rawText}
+              highlights={sermonNotes.highlights}
+            />
+          </Suspense>
 
           {/* Action row */}
           <div>
