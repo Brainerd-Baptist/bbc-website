@@ -100,8 +100,37 @@ for (const theme of THEMES) {
             return (hi + 0.05) / (lo + 0.05);
           };
 
-          /** Walk up for the first ancestor that actually paints a background. */
+          /**
+           * Walk up for the first ancestor that actually paints a background.
+           *
+           * Returns null — "can't judge" — whenever the thing behind the text
+           * is artwork rather than a flat colour. Two ways that happens, and
+           * BOTH are needed: a CSS background-image, and a real <img>/<video>
+           * covering the element's box. Missing the second one made every hero
+           * headline on / and /visit report exactly 1.00:1, because the walk
+           * sailed past the hero video up to the white page and compared white
+           * text against it. Eighteen phantom failures on the homepage alone.
+           */
+          const coveredByMedia = (el) => {
+            const r = el.getBoundingClientRect();
+            let n = el.parentElement;
+            let hops = 0;
+            while (n && n !== document.documentElement && hops++ < 8) {
+              for (const m of n.querySelectorAll("img,video,canvas,svg[data-art]")) {
+                const mr = m.getBoundingClientRect();
+                if (
+                  mr.width > 0 &&
+                  mr.left <= r.left + 1 && mr.right >= r.right - 1 &&
+                  mr.top <= r.top + 1 && mr.bottom >= r.bottom - 1
+                ) return true;
+              }
+              n = n.parentElement;
+            }
+            return false;
+          };
+
           const backdrop = (el) => {
+            if (coveredByMedia(el)) return null;
             let n = el;
             while (n && n !== document.documentElement) {
               const cs = getComputedStyle(n);

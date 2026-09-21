@@ -67,26 +67,26 @@ export default function ClearstreamForm() {
         .bbc-cs-form .cs_html_form_row p {
           font-size: 0.875rem;
           font-weight: 500;
-          color: #00205B;
+          color: var(--fg);
           margin-bottom: 0.625rem;
         }
         .bbc-cs-form input[type="text"] {
-          border: 1px solid rgba(0,32,91,0.2);
+          border: 1px solid var(--border-input);
           border-radius: 0.75rem;
           padding: 0.75rem 1rem;
           width: 100%;
           font-size: 0.875rem;
-          color: #00205B;
-          background: #fff;
+          color: var(--fg);
+          background: var(--surface-raised);
           transition: box-shadow 0.15s, border-color 0.15s;
         }
         .bbc-cs-form input[type="text"]::placeholder {
-          color: rgba(0,32,91,0.4);
+          color: var(--fg-muted);
         }
         .bbc-cs-form input[type="text"]:focus {
           outline: none;
           border-color: transparent;
-          box-shadow: 0 0 0 2px rgba(0,171,201,0.4);
+          box-shadow: 0 0 0 2px var(--focus-ring);
         }
         .bbc-cs-form .cs_html_form_lists {
           list-style: none;
@@ -98,13 +98,13 @@ export default function ClearstreamForm() {
         }
         .bbc-cs-form .cs_html_form_lists li {
           font-size: 0.875rem;
-          color: #00205B;
+          color: var(--fg);
           display: flex;
           align-items: center;
           gap: 0.5rem;
         }
         .bbc-cs-form .cs_html_form_lists input[type="checkbox"] {
-          accent-color: #00abc9;
+          accent-color: var(--accent);
           width: 1.05rem;
           height: 1.05rem;
           flex-shrink: 0;
@@ -116,8 +116,8 @@ export default function ClearstreamForm() {
           letter-spacing: 0.02em;
           text-transform: uppercase;
           font-size: 0.875rem;
-          color: #fff;
-          background: #00abc9;
+          color: var(--fg-on-accent);
+          background: var(--accent-solid);
           border: none;
           border-radius: 9999px;
           padding: 0.875rem 1.5rem;
@@ -125,16 +125,16 @@ export default function ClearstreamForm() {
           transition: background 0.15s;
         }
         .bbc-cs-form button[type="submit"]:hover {
-          background: #00205B;
+          background: var(--accent-solid-hover);
         }
         .bbc-cs-form .cs_html_form_terms {
           font-size: 0.7rem;
           line-height: 1.5;
-          color: rgba(0,32,91,0.4);
+          color: var(--fg-muted);
           margin-top: 1.25rem;
         }
         .bbc-cs-form .cs_html_form_terms a {
-          color: rgba(0,32,91,0.55);
+          color: var(--fg-muted);
           text-decoration: underline;
         }
         .bbc-cs-form .cs_html_form_error:not(:empty) {
@@ -147,12 +147,12 @@ export default function ClearstreamForm() {
           margin-bottom: 1rem;
         }
         .bbc-cs-form .cs_html_form_result:not(:empty) {
-          background: rgba(0,171,201,0.1);
-          border: 1px solid rgba(0,171,201,0.3);
+          background: var(--accent-bg);
+          border: 1px solid var(--accent);
           border-radius: 1rem;
           padding: 1.5rem;
           text-align: center;
-          color: #00205B;
+          color: var(--fg);
           font-weight: 600;
           font-size: 0.9rem;
           margin-bottom: 1rem;
