@@ -55,7 +55,7 @@ const TILES: Tile[] = [
   {
     href: "/connect/care",
     title: "Care & Support",
-    description: "Financial assistance, hospital visits, weddings, funerals — handled privately.",
+    description: "Financial assistance, hospital visits, weddings, funerals.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
         <path d="M20.8 8.6c0 5.6-8.8 10.9-8.8 10.9S3.2 14.2 3.2 8.6a4.6 4.6 0 0 1 8.8-1.9 4.6 4.6 0 0 1 8.8 1.9z" />
