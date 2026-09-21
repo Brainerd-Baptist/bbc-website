@@ -138,6 +138,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     youtubeId: string;
     title: string;
     series: string;
+    seriesSlug: string;
     passage: string;
     passages?: string[];
     speaker: string;
@@ -156,6 +157,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       youtubeId:   sanitySermon.youtubeId ?? "",
       title:       sanitySermon.title,
       series:      sanitySermon.series?.title ?? "",
+      seriesSlug:  sanitySermon.series?.slug?.current ?? "",
       passage:     sanitySermon.passage ?? "",
       passages:    sanitySermon.passages as string[] | undefined,
       speaker:     sanitySermon.speaker ?? "",
@@ -173,6 +175,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       youtubeId:   staticS.youtubeId,
       title:       staticS.title,
       series:      staticS.series,
+      seriesSlug:  staticS.seriesId ?? "",
       passage:     staticS.passage,
       passages:    staticS.passages,
       speaker:     staticS.speaker,
@@ -269,9 +272,19 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
           </a>
 
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: accentColor }}>
-              {s.series}
-            </span>
+            {s.seriesSlug ? (
+              <a
+                href={`/series/${s.seriesSlug}`}
+                className="text-[10px] font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity"
+                style={{ color: accentColor }}
+              >
+                {s.series}
+              </a>
+            ) : (
+              <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: accentColor }}>
+                {s.series}
+              </span>
+            )}
             {s.passage && (
               <>
                 <span className="text-white/20 text-[10px]">·</span>

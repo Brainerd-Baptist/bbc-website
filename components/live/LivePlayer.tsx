@@ -255,58 +255,118 @@ function ActiveView({
         )}
       </div>
 
-      {/* ── YouTube embed ─────────────────────────────────────────────── */}
-      <div className="relative w-full bg-black" style={{ aspectRatio: "16/9", maxHeight: "56vw" }}>
-        {state === "post" ? (
-          /* Post-service: show thumbnail + replay nudge */
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#0d1525] px-6 text-center">
-            <p className="text-[#6b7f9e] text-sm">The service just ended.</p>
-            <h2 className="text-lg font-bold">The replay uploads to YouTube shortly.</h2>
-            <a
-              href={sermon.watchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary text-sm"
-            >
-              Watch on YouTube
-            </a>
+      {/* ── Main content: stream + bulletin side-by-side on desktop ──── */}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+
+        {/* Stream column */}
+        <div className="lg:flex-1 flex flex-col">
+          {/* YouTube embed */}
+          <div className="relative w-full bg-black" style={{ aspectRatio: "16/9" }}>
+            {state === "post" ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#0d1525] px-6 text-center">
+                <p className="text-[#6b7f9e] text-sm">The service just ended.</p>
+                <h2 className="text-lg font-bold">The replay uploads to YouTube shortly.</h2>
+                <a
+                  href={sermon.watchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary text-sm"
+                >
+                  Watch on YouTube
+                </a>
+              </div>
+            ) : (
+              <iframe
+                src={embedUrl}
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Brainerd Baptist Live Stream"
+              />
+            )}
           </div>
-        ) : (
-          <iframe
-            src={embedUrl}
-            className="absolute inset-0 w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Brainerd Baptist Live Stream"
-          />
-        )}
-      </div>
 
-      {/* ── Tab bar ────────────────────────────────────────────────────── */}
-      <div className="flex border-b border-white/8 bg-[#0d1525] overflow-x-auto scrollbar-hide">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            className={`flex-1 min-w-[64px] flex flex-col items-center gap-0.5 py-2.5 px-1 text-[10px] font-semibold tracking-wide transition-colors ${
-              tab === t.id
-                ? "text-[#00abc9] border-b-2 border-[#00abc9]"
-                : "text-[#6b7f9e] hover:text-white"
-            }`}
-          >
-            <span className="text-base leading-none">{t.icon}</span>
-            {t.label}
-          </button>
-        ))}
-      </div>
+          {/* Mobile: tab bar + tab content */}
+          <div className="lg:hidden flex flex-col flex-1">
+            <div className="flex border-b border-white/8 bg-[#0d1525] overflow-x-auto scrollbar-hide">
+              {TABS.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`flex-1 min-w-[64px] flex flex-col items-center gap-0.5 py-2.5 px-1 text-[10px] font-semibold tracking-wide transition-colors ${
+                    tab === t.id
+                      ? "text-[#00abc9] border-b-2 border-[#00abc9]"
+                      : "text-[#6b7f9e] hover:text-white"
+                  }`}
+                >
+                  <span className="text-base leading-none">{t.icon}</span>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              {tab === "watch"   && <WatchTab   sermon={sermon} />}
+              {tab === "passage" && <PassageTab sermon={sermon} />}
+              {tab === "outline" && <OutlineTab sermon={sermon} />}
+              {tab === "notes"   && <NotesTab   sermon={sermon} />}
+              {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
+            </div>
+          </div>
 
-      {/* ── Tab content ─────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto">
-        {tab === "watch"   && <WatchTab   sermon={sermon} />}
-        {tab === "passage" && <PassageTab sermon={sermon} />}
-        {tab === "outline" && <OutlineTab sermon={sermon} />}
-        {tab === "notes"   && <NotesTab   sermon={sermon} />}
-        {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
+          {/* Desktop: Give + Prayer row below stream */}
+          <div className="hidden lg:block">
+            <WatchTab sermon={sermon} />
+          </div>
+        </div>
+
+        {/* Bulletin sidebar — desktop only ─────────────────────────────── */}
+        <div className="hidden lg:flex flex-col w-[380px] xl:w-[420px] border-l border-white/8 bg-[#0a1120] overflow-y-auto">
+          {/* Sermon header */}
+          <div className="px-6 pt-6 pb-4 border-b border-white/8">
+            {sermon.passage && (
+              <a
+                href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity block mb-1"
+              >
+                {sermon.passage}
+              </a>
+            )}
+            <h2 className="text-white font-bold text-lg leading-snug" style={{ letterSpacing: "-0.02em" }}>
+              {sermon.title}
+            </h2>
+            <p className="text-[#6b7f9e] text-xs mt-1">Follow along · {service?.label ?? "Live Service"}</p>
+          </div>
+
+          {/* Bulletin tab bar */}
+          <div className="flex border-b border-white/8">
+            {(["outline", "passage", "notes", "prayer"] as Tab[]).map((t) => {
+              const meta = TABS.find((x) => x.id === t)!;
+              return (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`flex-1 py-2.5 text-[11px] font-semibold tracking-wide transition-colors ${
+                    tab === t
+                      ? "text-[#00abc9] border-b-2 border-[#00abc9]"
+                      : "text-[#6b7f9e] hover:text-white"
+                  }`}
+                >
+                  {meta.icon} {meta.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Bulletin tab content */}
+          <div className="flex-1 overflow-y-auto">
+            {(tab === "watch" || tab === "outline") && <OutlineTab sermon={sermon} />}
+            {tab === "passage" && <PassageTab sermon={sermon} />}
+            {tab === "notes"   && <NotesTab   sermon={sermon} />}
+            {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
+          </div>
+        </div>
       </div>
     </div>
   );
