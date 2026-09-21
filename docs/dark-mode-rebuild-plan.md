@@ -612,3 +612,93 @@ step.
 
 The Playwright sweep is also deliberately absent from CI: dark mode legitimately fails its own contrast
 assertion until Phase 4, and adding a job that always fails would contradict the reasoning above.
+
+---
+
+## 9. Phase 3 — complete
+
+**This is the phase where the site actually starts responding to the theme.**
+
+### Scope change, made deliberately
+
+The plan had Phase 3 as chrome plus route shells only, with component interiors in Phase 4. Measuring
+first showed that would have shipped something **worse than before**: navy-as-text outnumbers
+navy-as-background 448 to 15, and there were ~79 non-shell `bg-white` instances, so sweeping only the
+shells would have given dark-mode visitors a dark page covered in white patches with invisible navy card
+text. The default theme is `system`, so that is real visitors on dark-mode phones. Phase 4's *mechanical*
+layer therefore came forward into this phase. Phase 4 keeps the genuinely bespoke files.
+
+### What shipped
+
+| Area | Change |
+|---|---|
+| Navbar drawer | Off all 15 `isDark` branches. The only `isDark` uses left in the app are the toggle's own icon and label, both `mounted`-gated, neither a colour. **No colour decision anywhere now comes from JS.** |
+| Drawer shell | `--surface-raised` — identical in light, `#162030` in dark instead of brand navy, which also stops it clashing with the bar it slides from |
+| Footer | `bg-brand-navy`, not `--surface`: it is deliberately navy in *both* themes and is not a page surface |
+| "Plan a Visit" ×2 | Were inline `background:#00abc9; color:white` — 2.74:1 — so Phase 1's `.btn-primary` fix never reached them |
+| Route shells | All 26 `min-h-screen bg-white` → `bg-surface`. That metric is now **0** |
+| The sweep | ~800 literals migrated by **role**, not by value |
+| Clearstream form | 13 invisible labels in dark; also fixed a 2.74:1 submit button and 2.81:1 placeholder that were failing in *light* mode |
+
+**The distinction the whole phase turns on:** navy-as-TEXT becomes `--fg` and inverts; navy-as-BACKGROUND
+stays brand navy. Getting that backwards would flip a navy hero to pale blue in dark mode. Cyan fills were
+classified by what sits on them — a fill carrying white text or a white glyph becomes `--accent-solid`,
+because white on brand cyan fails both the 4.5:1 for text and the 3:1 for a non-text graphic. The 24
+translucent `bg-white/N` chips were left alone: they sit on ground that is dark in both themes.
+
+`/about` needed the sharpest version of this. It has two deliberately-navy bands, and inside those brand
+cyan is legible at 5.65:1 while the darkened `--accent-text` would be a **regression** at 2.4:1. Each of
+its eleven constant usages was resolved by walking the section boundaries to see which band it sits in.
+
+### Result, measured in a real browser
+
+**Every route audited measures 0 invisible-text elements in both themes**, except one decorative step
+counter at exactly 2.00:1 (perceivable, up from 1.52). Routes verified: `/`, `/about`, `/beliefs`, `/bx`,
+`/community`, `/connect`, `/connect/care`, `/connect/stay-connected`, `/give`, `/life-groups`, `/live`,
+`/ministries/kids`, `/ministries/students`, `/sermons`, `/sermons/bts-8`, `/series/[slug]`, `/staff`,
+`/visit`, `/wednesday`, `/who-is-jesus`. `/give` alone went from **50 → 0**.
+
+| Metric | Phase 2 | Phase 3 |
+|---|---|---|
+| `raw-hex` | 1007 | **319** |
+| `arbitrary-color-class` | 957 | **226** |
+| `raw-rgb-fn` | 322 | **245** |
+| `bg-white-route-shell` | 26 | **0** |
+| `js-theme-branch` | 15 | **4** |
+| `unthemed-files` | 61 | **46** |
+
+### Five bugs in my own tooling, all caught by verifying rather than trusting
+
+This is the honest part, and the transferable lesson.
+
+1. **Regexes ending `\]\b` matched nothing.** `\b` asserts nothing between `]` and `"`. Patterns ending
+   in a digit worked, bare ones didn't — so the first pass quietly converted 297 of ~800 and reported
+   success. Found by checking residue counts instead of reading the summary.
+2. **The shape heuristic mis-read sections carrying a `border-b`** as cards. The pre-existing `dark:`
+   variants were ground truth for which surface each element is.
+3. **The contrast probe mis-parsed `oklab()`.** Tailwind v4 emits opacity modifiers as `oklab()`, and
+   taking "the first three numbers" reads L/a/b as R/G/B — so white-at-60% scored as near-black and the
+   footer produced **33 phantom failures** on a page that was clean. Fixed by letting the browser resolve
+   colours through a 1×1 canvas.
+4. **It flagged disabled controls,** which WCAG 1.4.11 explicitly exempts.
+5. **It compared hero text against the page, not the video behind it** — `backdrop()` bailed on a CSS
+   `background-image` but not on a real `<img>`/`<video>`. That was **18 phantom failures on the homepage
+   alone**, every one at exactly 1.00:1.
+
+A contrast probe is mostly an exercise in knowing when it *cannot* judge. Every false positive it emits
+is a future failure someone learns to ignore.
+
+`app/layout.tsx` also got clobbered **twice** by the sweep, which rewrote its `themeColor` meta value to
+`var(--fg)` — meaningless in a `<meta>` attribute — the second time *despite* a comment saying it must
+stay a literal. A sweep needs an explicit exclusion list for non-CSS contexts, not a comment asking it
+politely.
+
+### Left for Phase 4/5, deliberately
+
+Dark hero gradients (theme-invariant art direction), white-on-dark text inside those heroes, data-driven
+series accent colours, the internal analytics dashboard, and `SermonNotes`. That last one matters: most of
+its ~40 literals belong to a standalone **print document** it generates. Paper has no theme, so those must
+stay light-on-white, and separating print from screen is real work rather than a sweep.
+
+Also worth recording: `unthemeable-tailwind-class` (327) has a **legitimate floor**. `text-white/60` on the
+navy footer is correct, not a bug, so that metric will never reach zero and should not be driven there.
