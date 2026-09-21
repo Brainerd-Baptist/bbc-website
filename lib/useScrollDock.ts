@@ -86,18 +86,27 @@ export function useScrollDock({ spacerRef, enabled, debug }: UseScrollDockArgs) 
     [pushLog]
   );
 
+  const enabledRef = useRef(enabled);
   useEffect(() => {
-    if (!enabled) {
-      setState("inline");
-      return;
-    }
+    enabledRef.current = enabled;
+    if (!enabled) setState("inline");
+  }, [enabled, setState]);
 
+  // This listener is attached once and always keeps `rect` current — even
+  // while paused — so the player has a correct "inline" position to render
+  // at from the very first paint. Only the dock/undock *transitions* are
+  // gated behind `enabled` (docking only while actually playing); simply
+  // measuring where the spacer is must never be gated, or the player has
+  // nowhere valid to sit until playback starts.
+  useEffect(() => {
     function measure() {
       tickingRef.current = false;
       const el = spacerRef.current;
       if (!el) return;
       const r = el.getBoundingClientRect();
       setRect({ top: r.top, left: r.left, width: r.width, height: r.height });
+
+      if (!enabledRef.current) return; // stays "inline"; see effect above
 
       setState((prev) => {
         if (prev === "expanded") return prev; // only closed explicitly by the user
@@ -122,7 +131,7 @@ export function useScrollDock({ spacerRef, enabled, debug }: UseScrollDockArgs) 
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, spacerRef]);
+  }, [spacerRef]);
 
   return { state, rect, setState, pushLog, logRef, stateRef };
 }

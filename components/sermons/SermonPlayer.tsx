@@ -142,9 +142,19 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
     setState(isVisible ? "inline" : "docked");
   }, [setState]);
 
-  // ── Plyr init — unchanged from the pre-#7 version, plus lifecycle logging ──
+  // ── Plyr init ──────────────────────────────────────────────────────────
+  // Depends on `mounted`, not just [youtubeId, storageKey]: the player now
+  // lives in a portal that only exists in the DOM once `mounted` flips true
+  // a tick after first render. Without `mounted` in the deps, this effect's
+  // very first run — before the portal has committed — found `plyrHostRef.
+  // current` null, bailed out, and (since youtubeId/storageKey never
+  // changed again on that page) never got a second chance to attach. Plyr
+  // silently never took over, leaving the raw YouTube iframe showing its
+  // own default chrome (forced captions, cards, branding) instead of the
+  // site's skin — and since docking is driven entirely by Plyr's play/pause
+  // events, it also never docked.
   useEffect(() => {
-    if (!plyrHostRef.current || !youtubeId) return;
+    if (!mounted || !plyrHostRef.current || !youtubeId) return;
 
     let destroyed = false;
     let savedPos = 0;
@@ -171,8 +181,25 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
           showinfo: 0,
           modestbranding: 1,
           iv_load_policy: 3,
+          // Explicitly ask YouTube not to force captions on. This can still
+          // be overridden by the viewer's own YouTube/Google account-level
+          // "always show captions" accessibility setting — that preference
+          // lives on their account, not in the embed, and no embed param
+          // can override it. Giving them a real "captions" control below is
+          // the honest fix for that case.
+          cc_load_policy: 0,
         },
-        controls: ["play-large", "play", "progress", "current-time", "duration", "mute", "volume", "fullscreen"],
+        controls: [
+          "play-large",
+          "play",
+          "progress",
+          "current-time",
+          "duration",
+          "mute",
+          "volume",
+          "captions",
+          "fullscreen",
+        ],
         keyboard: { focused: true, global: true },
         hideControls: true,
         resetOnEnd: false,
@@ -234,7 +261,7 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
       if (p?.destroy) p.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [youtubeId, storageKey]);
+  }, [mounted, youtubeId, storageKey]);
 
   const targetRect = useMemo(
     () => getTargetRect(state, spacerRect, viewport, bottomOffset),
