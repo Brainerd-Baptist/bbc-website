@@ -7,17 +7,16 @@ import {
   getAllSeries,
   formatDate,
 } from "@/lib/sanity";
-import { ALL_SERIES as FALLBACK_SERIES } from "@/lib/sermons";
-import { SERMONS as FALLBACK_SERMONS } from "@/lib/sermons";
+import { ALL_SERIES as FALLBACK_SERIES, SERMONS as FALLBACK_SERMONS } from "@/lib/sermons";
 
 export const revalidate = 300;
 
 // Pre-generate series slugs at build time
 export async function generateStaticParams() {
-  const series = await getAllSeries().catch(() => []);
-  const fallback = FALLBACK_SERIES.map((s) => ({ slug: s.id }));
-  const sanity   = series.map((s) => ({ slug: s.slug.current }));
-  return [...new Map([...fallback, ...sanity].map((s) => [s.slug, s])).values()];
+  const sanitySeries = await getAllSeries().catch(() => []);
+  const sanityParams  = sanitySeries.map((s) => ({ slug: s.slug.current }));
+  const staticParams  = FALLBACK_SERIES.map((s) => ({ slug: s.id }));
+  return [...sanityParams, ...staticParams];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
