@@ -2,7 +2,7 @@
 
 /**
  * Wraps Navbar / Footer conditionally.
- * Pages under /sermons/*/notes are standalone printable pages —
+ * Pages under /sermons/[slug]/notes are standalone printable pages —
  * they get no site chrome.
  */
 
