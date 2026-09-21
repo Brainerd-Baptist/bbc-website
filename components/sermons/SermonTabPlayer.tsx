@@ -99,7 +99,7 @@ export default function SermonTabPlayer({
           {/* ── Key passage chip — only when we have a real structured outline below ── */}
           {passages.length > 0 && outlineType !== "scripture" && (
             <div style={{ marginBottom: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.375rem 0.625rem", alignItems: "center" }}>
-              <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,32,91,0.3)", marginRight: "0.25rem" }}>
+              <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-subtle)", marginRight: "0.25rem" }}>
                 Scripture
               </span>
               {passages.slice(0, 2).map((p) => (
@@ -108,7 +108,7 @@ export default function SermonTabPlayer({
                   href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(p)}&version=CSB`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontSize: "0.8rem", color: "rgba(0,32,91,0.6)", textDecoration: "none", fontWeight: 500 }}
+                  style={{ fontSize: "0.8rem", color: "var(--fg-muted)", textDecoration: "none", fontWeight: 500 }}
                 >
                   {p}
                 </a>
@@ -120,7 +120,7 @@ export default function SermonTabPlayer({
           {hasOutline && (
             <div>
               {showScriptureLabel && (
-                <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.75rem", marginBottom: "1rem", lineHeight: "1.625" }}>
+                <p style={{ color: "var(--fg-muted)", fontSize: "0.75rem", marginBottom: "1rem", lineHeight: "1.625" }}>
                   Passages from this message
                 </p>
               )}
@@ -155,7 +155,7 @@ export default function SermonTabPlayer({
                     fontWeight: 700,
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
-                    color: "rgba(0,32,91,0.3)",
+                    color: "var(--fg-subtle)",
                     marginBottom: "0.75rem",
                   }}>
                     Key Phrases
@@ -164,7 +164,7 @@ export default function SermonTabPlayer({
                     {highlights.map((phrase, i) => (
                       <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", fontSize: "0.8rem" }}>
                         <span style={{ color: accentColor, fontWeight: 700, flexShrink: 0, marginTop: "0.1rem" }}>›</span>
-                        <span style={{ color: "rgba(0,32,91,0.65)", fontStyle: "italic" }}>{phrase}</span>
+                        <span style={{ color: "var(--fg-muted)", fontStyle: "italic" }}>{phrase}</span>
                       </li>
                     ))}
                   </ul>
@@ -186,7 +186,7 @@ export default function SermonTabPlayer({
                   gap: "0.5rem",
                   fontSize: "0.75rem",
                   fontWeight: 600,
-                  color: "rgba(0,32,91,0.5)",
+                  color: "var(--fg-muted)",
                   textDecoration: "none",
                   padding: "0.5rem 0.875rem",
                   borderRadius: "9999px",

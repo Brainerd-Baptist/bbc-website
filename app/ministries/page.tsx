@@ -33,7 +33,7 @@ const MINISTRIES = [
     key: "lifegroups",
     name: "Life Groups",
     ages: "All Ages",
-    color: "#00abc9",
+    color: "var(--accent-text)",
     photo: "/carousel/life-groups-1.jpg",
     href: "/life-groups",
     body: "The local church is best experienced in a smaller circle. Life Groups meet weekly — in homes and around tables — for Bible study, prayer, and the kind of community you can't get on Sunday morning alone.",
@@ -120,7 +120,7 @@ export default function MinistriesPage() {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
             At Brainerd Baptist
           </p>
           <div className="flex justify-center mb-6">
@@ -188,7 +188,7 @@ export default function MinistriesPage() {
 
                   <p
                     className="text-xs font-semibold tracking-widest uppercase mb-4"
-                    style={{ color: "rgba(0,32,91,0.4)" }}
+                    style={{ color: "var(--fg-muted)" }}
                   >
                     {detail}
                   </p>

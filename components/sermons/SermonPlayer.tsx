@@ -93,7 +93,7 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/40 group-hover:bg-black/55 transition-colors">
               <span
                 className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-active:scale-95"
-                style={{ background: "rgba(0,171,201,0.9)", boxShadow: "0 0 40px rgba(0,171,201,0.4)" }}
+                style={{ background: "var(--accent-bg)", boxShadow: "0 0 40px rgba(0,171,201,0.4)" }}
               >
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="white" style={{ marginLeft: 3 }}>
                   <path d="M3 1.5l16 9.5-16 9.5z" />

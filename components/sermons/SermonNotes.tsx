@@ -218,7 +218,7 @@ function ToolBtn({
         display: "inline-flex", alignItems: "center", justifyContent: "center",
         width: 34, height: 34, borderRadius: 7, border: "none", cursor: "pointer",
         background: active ? `${accentColor}18` : "transparent",
-        color: active ? accentColor : danger ? "rgba(180,40,30,0.4)" : "rgba(0,32,91,0.45)",
+        color: active ? accentColor : danger ? "rgba(180,40,30,0.4)" : "var(--fg-muted)",
         transition: "background 0.12s, color 0.12s",
         flexShrink: 0, WebkitTapHighlightColor: "transparent",
       }}
@@ -457,13 +457,13 @@ export default function SermonNotes({
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
             </svg>
-            <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,32,91,0.35)" }}>
+            <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-muted)" }}>
               Your Notes
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
             {wordCount > 0 && (
-              <span style={{ fontSize: "0.65rem", color: "rgba(0,32,91,0.3)", fontWeight: 500 }}>
+              <span style={{ fontSize: "0.65rem", color: "var(--fg-subtle)", fontWeight: 500 }}>
                 {wordCount.toLocaleString()} {wordCount === 1 ? "word" : "words"}
               </span>
             )}
@@ -483,7 +483,7 @@ export default function SermonNotes({
                   style={{
                     background: shareOpen ? `${accentColor}12` : "none",
                     border: "none", cursor: "pointer", padding: "0.2rem 0.5rem",
-                    color: shareLabel === "Copied!" ? accentColor : "rgba(0,32,91,0.35)",
+                    color: shareLabel === "Copied!" ? accentColor : "var(--fg-muted)",
                     display: "flex", alignItems: "center", gap: "0.3rem",
                     fontSize: "0.65rem", fontWeight: 600, transition: "color 0.15s",
                     WebkitTapHighlightColor: "transparent", borderRadius: 6,
@@ -500,7 +500,7 @@ export default function SermonNotes({
                 {shareOpen && (
                   <div style={{
                     position: "absolute", right: 0, top: "calc(100% + 6px)",
-                    background: "#fff", border: "1px solid rgba(0,32,91,0.1)",
+                    background: "var(--surface-raised)", border: "1px solid rgba(0,32,91,0.1)",
                     borderRadius: "0.75rem", boxShadow: "0 8px 24px rgba(0,32,91,0.12)",
                     minWidth: 190, zIndex: 50, overflow: "hidden", padding: "6px",
                   }}>
@@ -590,7 +590,7 @@ export default function SermonNotes({
             <div style={{
               position: "absolute", top: "1rem", left: "1.125rem",
               pointerEvents: "none", fontSize: "0.9rem", lineHeight: 1.8,
-              color: "rgba(0,32,91,0.25)", fontStyle: "italic", userSelect: "none",
+              color: "var(--fg-subtle)", fontStyle: "italic", userSelect: "none",
             }}>
               Take notes as you listen…
             </div>
@@ -601,8 +601,8 @@ export default function SermonNotes({
         {!isMobile && (
           <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap" }}>
             {[{ keys: "⌘B", label: "Bold" }, { keys: "⌘I", label: "Italic" }, { keys: "⌘U", label: "Underline" }, { keys: "Tab", label: "Indent" }, { keys: "⌘Z", label: "Undo" }].map(({ keys, label }) => (
-              <span key={keys} style={{ fontSize: "0.6rem", color: "rgba(0,32,91,0.25)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                <kbd style={{ fontFamily: "system-ui, sans-serif", background: "rgba(0,32,91,0.05)", border: "1px solid rgba(0,32,91,0.1)", borderRadius: "3px", padding: "1px 4px", fontSize: "0.6rem" }}>{keys}</kbd>
+              <span key={keys} style={{ fontSize: "0.6rem", color: "var(--fg-subtle)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                <kbd style={{ fontFamily: "system-ui, sans-serif", background: "var(--hover-subtle)", border: "1px solid rgba(0,32,91,0.1)", borderRadius: "3px", padding: "1px 4px", fontSize: "0.6rem" }}>{keys}</kbd>
                 {label}
               </span>
             ))}

@@ -130,7 +130,7 @@ export default function MinistriesSection() {
           <div className="flex items-center justify-between mb-12">
             <p
               className="font-condensed font-700 tracking-widest uppercase text-xs"
-              style={{ color: "#00abc9" }}
+              style={{ color: "var(--accent-text)" }}
             >
               Ministries
             </p>

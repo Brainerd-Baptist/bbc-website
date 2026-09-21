@@ -71,7 +71,7 @@ export default function VisitPage() {
                 <p className="font-condensed font-900 text-white leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
                   8:30 AM
                 </p>
-                <p className="font-condensed font-700 mt-2" style={{ color: "#00abc9", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
+                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent-text)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
                   Choir &amp; Orchestra
                 </p>
               </div>
@@ -91,7 +91,7 @@ export default function VisitPage() {
                 <p className="font-condensed font-900 text-white leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
                   11:00 AM
                 </p>
-                <p className="font-condensed font-700 mt-2" style={{ color: "#00abc9", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
+                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent-text)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
                   Band Led
                 </p>
               </div>
@@ -109,7 +109,7 @@ export default function VisitPage() {
             />
             <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(7,16,30,0.92) 0%, rgba(7,16,30,0.65) 55%, rgba(7,16,30,0.2) 100%)" }} />
             <div className="absolute inset-0 flex flex-col justify-center px-8">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "#00abc9" }}>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent-text)" }}>
                 9:45 AM · Between Services
               </p>
               <p className="text-white font-condensed font-800 text-2xl">Life Groups</p>
@@ -156,7 +156,7 @@ export default function VisitPage() {
               <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-border bg-surface-raised hover:border-accent/30 transition-colors">
                 <span
                   className="font-condensed font-900 leading-none flex-shrink-0 mt-0.5"
-                  style={{ fontSize: "2.5rem", color: "#00abc9", opacity: 0.35, letterSpacing: "-0.03em" }}
+                  style={{ fontSize: "2.5rem", color: "var(--accent-text)", opacity: 0.35, letterSpacing: "-0.03em" }}
                 >
                   {item.num}
                 </span>

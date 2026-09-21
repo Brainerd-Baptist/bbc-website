@@ -127,7 +127,7 @@ export default async function AnalyticsPage() {
   const border  = "1px solid rgba(0,32,91,0.08)";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fff", paddingBottom: "4rem" }}>
+    <div style={{ minHeight: "100vh", background: "var(--surface-raised)", paddingBottom: "4rem" }}>
 
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, #00142a 0%, ${navy} 100%)`, padding: "5rem 1.5rem 2.5rem" }}>
@@ -151,12 +151,12 @@ export default async function AnalyticsPage() {
         {noData && (
           <div style={{ background: cardBg, border, borderRadius: "1rem", padding: "3rem", textAlign: "center" }}>
             <p style={{ color: navy, fontWeight: 600, marginBottom: "0.5rem" }}>No play data yet</p>
-            <p style={{ color: "rgba(0,32,91,0.5)", fontSize: "0.875rem" }}>
+            <p style={{ color: "var(--fg-muted)", fontSize: "0.875rem" }}>
               Play tracking is live — data will appear here as sermons are played.
             </p>
-            <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.75rem", marginTop: "1.5rem" }}>
-              Make sure <code style={{ background: "rgba(0,32,91,0.07)", padding: "2px 6px", borderRadius: "4px" }}>SUPABASE_URL</code> and{" "}
-              <code style={{ background: "rgba(0,32,91,0.07)", padding: "2px 6px", borderRadius: "4px" }}>SUPABASE_ANON_KEY</code> are set in Vercel.
+            <p style={{ color: "var(--fg-muted)", fontSize: "0.75rem", marginTop: "1.5rem" }}>
+              Make sure <code style={{ background: "var(--hover-subtle)", padding: "2px 6px", borderRadius: "4px" }}>SUPABASE_URL</code> and{" "}
+              <code style={{ background: "var(--hover-subtle)", padding: "2px 6px", borderRadius: "4px" }}>SUPABASE_ANON_KEY</code> are set in Vercel.
             </p>
           </div>
         )}
@@ -173,7 +173,7 @@ export default async function AnalyticsPage() {
                 { label: "Video plays", value: `${pct(split.video, split.total)}%` },
               ].map(({ label, value }) => (
                 <div key={label} style={{ background: cardBg, border, borderRadius: "1rem", padding: "1.25rem 1.5rem" }}>
-                  <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.25rem" }}>{label}</p>
+                  <p style={{ color: "var(--fg-muted)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.25rem" }}>{label}</p>
                   <p style={{ color: navy, fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>{value}</p>
                 </div>
               ))}
@@ -181,9 +181,9 @@ export default async function AnalyticsPage() {
 
             {/* ── Daily plays bar chart ── */}
             <div style={{ background: cardBg, border, borderRadius: "1rem", padding: "1.5rem 1.75rem", marginBottom: "1.5rem" }}>
-              <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1.25rem" }}>Daily Plays — Last 30 Days</p>
+              <p style={{ color: "var(--fg-muted)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1.25rem" }}>Daily Plays — Last 30 Days</p>
               {byDay.length === 0 ? (
-                <p style={{ color: "rgba(0,32,91,0.3)", fontSize: "0.875rem" }}>No plays in this period yet.</p>
+                <p style={{ color: "var(--fg-subtle)", fontSize: "0.875rem" }}>No plays in this period yet.</p>
               ) : (
                 <div style={{ display: "flex", alignItems: "flex-end", gap: "3px", height: "80px" }}>
                   {byDay.map(({ date, count }) => (
@@ -199,7 +199,7 @@ export default async function AnalyticsPage() {
 
             {/* ── Top sermons ── */}
             <div style={{ background: cardBg, border, borderRadius: "1rem", padding: "1.5rem 1.75rem" }}>
-              <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1.25rem" }}>
+              <p style={{ color: "var(--fg-muted)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1.25rem" }}>
                 Top Sermons — All Time
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
@@ -213,14 +213,14 @@ export default async function AnalyticsPage() {
                         {title ?? slug}
                       </a>
                       <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
-                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: navy }}>{starts} <span style={{ color: "rgba(0,32,91,0.35)", fontWeight: 400 }}>plays</span></span>
-                        <span style={{ fontSize: "0.7rem", color: "rgba(0,32,91,0.35)" }}>{pct(halfs, starts)}% to 50%</span>
-                        <span style={{ fontSize: "0.7rem", color: "rgba(0,32,91,0.35)" }}>{pct(completes, starts)}% finished</span>
-                        {audio > 0 && <span style={{ fontSize: "0.65rem", color: "rgba(0,32,91,0.3)" }}>🎧 {audio}</span>}
-                        {video > 0 && <span style={{ fontSize: "0.65rem", color: "rgba(0,32,91,0.3)" }}>▶ {video}</span>}
+                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: navy }}>{starts} <span style={{ color: "var(--fg-muted)", fontWeight: 400 }}>plays</span></span>
+                        <span style={{ fontSize: "0.7rem", color: "var(--fg-muted)" }}>{pct(halfs, starts)}% to 50%</span>
+                        <span style={{ fontSize: "0.7rem", color: "var(--fg-muted)" }}>{pct(completes, starts)}% finished</span>
+                        {audio > 0 && <span style={{ fontSize: "0.65rem", color: "var(--fg-subtle)" }}>🎧 {audio}</span>}
+                        {video > 0 && <span style={{ fontSize: "0.65rem", color: "var(--fg-subtle)" }}>▶ {video}</span>}
                       </div>
                     </div>
-                    <div style={{ height: "4px", background: "rgba(0,32,91,0.06)", borderRadius: "2px", overflow: "hidden" }}>
+                    <div style={{ height: "4px", background: "var(--hover-subtle)", borderRadius: "2px", overflow: "hidden" }}>
                       <div style={{ height: "100%", background: teal, borderRadius: "2px", width: `${pct(starts, maxStarts)}%`, opacity: 0.7 }} />
                     </div>
                   </div>
@@ -232,7 +232,7 @@ export default async function AnalyticsPage() {
 
         {/* Setup instructions */}
         <div style={{ marginTop: "2rem", background: cardBg, border, borderRadius: "1rem", padding: "1.5rem 1.75rem" }}>
-          <p style={{ color: "rgba(0,32,91,0.4)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1rem" }}>Setup Checklist</p>
+          <p style={{ color: "var(--fg-muted)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "1rem" }}>Setup Checklist</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.8rem" }}>
             {[
               { done: !!SUPABASE_URL, label: "SUPABASE_URL set in Vercel" },
@@ -246,7 +246,7 @@ export default async function AnalyticsPage() {
             ))}
           </div>
           {(!SUPABASE_URL || !SUPABASE_KEY) && (
-            <div style={{ marginTop: "1rem", padding: "0.875rem 1rem", background: "rgba(0,32,91,0.04)", borderRadius: "0.5rem", fontSize: "0.75rem", color: "rgba(0,32,91,0.5)" }}>
+            <div style={{ marginTop: "1rem", padding: "0.875rem 1rem", background: "rgba(0,32,91,0.04)", borderRadius: "0.5rem", fontSize: "0.75rem", color: "var(--fg-muted)" }}>
               Add these to Vercel → Project → Settings → Environment Variables:<br />
               <code style={{ display: "block", marginTop: "0.5rem", color: navy }}>SUPABASE_URL = https://brbfutiayugxwkgozouc.supabase.co</code>
               <code style={{ display: "block", marginTop: "0.25rem", color: navy }}>SUPABASE_ANON_KEY = eyJhbGci...</code>

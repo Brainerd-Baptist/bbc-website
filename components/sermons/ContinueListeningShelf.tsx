@@ -78,13 +78,13 @@ export default function ContinueListeningShelf({
         <div className="flex items-center gap-2 mb-4">
           <span
             className="text-[10px] font-bold tracking-widest uppercase"
-            style={{ color: "#00abc9" }}
+            style={{ color: "var(--accent-text)" }}
           >
             Continue Listening
           </span>
           <span
             className="inline-flex items-center gap-1 text-[9px] font-semibold text-white/50 px-2 py-0.5 rounded-full"
-            style={{ background: "rgba(0,171,201,0.12)", color: "#00abc9" }}
+            style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
           >
             {items.length}
           </span>

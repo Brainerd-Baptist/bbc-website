@@ -9,7 +9,7 @@ export default function EmailButton({ email, name }: { email: string; name: stri
     <a
       href={`mailto:${email}`}
       className="inline-flex items-center gap-2 text-sm font-semibold transition-colors"
-      style={{ color: "#00abc9" }}
+      style={{ color: "var(--accent-text)" }}
       aria-label={`Email ${name}`}
     >
       <svg

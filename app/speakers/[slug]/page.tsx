@@ -119,7 +119,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
             ) : (
               <div
                 className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl font-bold"
-                style={{ background: "rgba(0,171,201,0.15)", color: "#00abc9" }}
+                style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
               >
                 {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
               </div>
@@ -127,7 +127,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
             {/* Name / title */}
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: "#00abc9" }}>
+              <p className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: "var(--accent-text)" }}>
                 {info.title}
               </p>
               <h1

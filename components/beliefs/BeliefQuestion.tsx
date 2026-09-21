@@ -50,7 +50,7 @@ export default function BeliefQuestion() {
   return (
     <section className="py-24 px-6" style={{ background: "#00142a" }}>
       <div className="max-w-2xl mx-auto">
-        <p className="eyebrow text-center mb-3" style={{ color: "#00abc9" }}>Have a Question?</p>
+        <p className="eyebrow text-center mb-3" style={{ color: "var(--accent-text)" }}>Have a Question?</p>
         <h2
           className="font-condensed font-900 text-white text-center mb-4"
           style={{ fontSize: "clamp(2.4rem, 6vw, 3.2rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
@@ -63,7 +63,7 @@ export default function BeliefQuestion() {
 
         {answer ? (
           <div className="rounded-2xl p-7 border border-white/10" style={{ background: "rgba(255,255,255,0.05)" }}>
-            <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "#00abc9" }}>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "var(--accent-text)" }}>
               {question}
             </p>
             <p className="text-white/80 text-sm leading-relaxed">{answer}</p>
@@ -110,7 +110,7 @@ export default function BeliefQuestion() {
                 onClick={() => handleAsk()}
                 disabled={!question.trim() || loading}
                 className="absolute bottom-4 right-4 font-condensed font-700 tracking-wide uppercase text-xs text-white px-5 py-2 rounded-full transition-all disabled:opacity-30"
-                style={{ background: "#00abc9" }}
+                style={{ background: "var(--accent)" }}
               >
                 {loading ? "…" : "Ask"}
               </button>

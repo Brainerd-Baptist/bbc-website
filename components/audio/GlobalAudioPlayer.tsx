@@ -474,7 +474,7 @@ export default function GlobalAudioPlayer() {
                   strokeLinecap="round" transform="rotate(-90 12 12)"
                   style={{ transition: "stroke-dasharray 0.9s linear" }} />
               </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold tabular-nums" style={{ color: "#00abc9" }}>
+              <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold tabular-nums" style={{ color: "var(--accent-text)" }}>
                 {upNextCountdown}
               </span>
             </div>

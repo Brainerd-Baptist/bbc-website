@@ -27,7 +27,7 @@ export default function WhoIsJesusPage() {
             }}
           >
             Who Is{" "}
-            <span style={{ color: "#00abc9" }}>Jesus?</span>
+            <span style={{ color: "var(--accent-text)" }}>Jesus?</span>
           </h1>
           <p className="text-white/60 leading-relaxed max-w-lg mx-auto mb-10" style={{ fontSize: "1.1rem" }}>
             Everyone is asking the same questions — just in different words. Here's a way to make sense of them. Walk through the story below and see where you land.
@@ -35,7 +35,7 @@ export default function WhoIsJesusPage() {
           <a
             href="#three-circles"
             className="inline-block font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full transition-colors"
-            style={{ background: "#00abc9", color: "#00142a" }}
+            style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
           >
             Start the Story ↓
           </a>
@@ -90,7 +90,7 @@ export default function WhoIsJesusPage() {
               >
                 <span
                   className="font-condensed font-900 block mb-4"
-                  style={{ fontSize: "2.5rem", color: "#00abc9", opacity: 0.4, letterSpacing: "-0.03em", lineHeight: 1 }}
+                  style={{ fontSize: "2.5rem", color: "var(--accent-text)", opacity: 0.4, letterSpacing: "-0.03em", lineHeight: 1 }}
                 >
                   {item.num}
                 </span>
@@ -129,7 +129,7 @@ export default function WhoIsJesusPage() {
               <Link
                 href="/connect"
                 className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full transition-colors inline-block"
-                style={{ background: "#00abc9", color: "#00142a" }}
+                style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
               >
                 Ask a Question
               </Link>

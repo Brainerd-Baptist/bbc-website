@@ -53,9 +53,9 @@ function Chip({
       onClick={onClick}
       className="w-full text-left px-5 py-4 rounded-xl border-2 transition-all duration-150"
       style={{
-        borderColor: selected ? "#00abc9" : "rgba(0,32,91,0.12)",
-        background: selected ? "rgba(0,171,201,0.06)" : "#ffffff",
-        color: selected ? "#00205B" : "#00205B",
+        borderColor: selected ? "var(--accent)" : "var(--border-strong)",
+        background: selected ? "var(--accent-bg)" : "var(--surface-raised)",
+        color: selected ? "var(--fg)" : "var(--fg)",
       }}
     >
       {children}
@@ -68,7 +68,7 @@ function StepLabel({ num, label }: { num: number; label: string }) {
     <div className="flex items-center gap-3 mb-5">
       <span
         className="font-condensed font-900 leading-none flex-shrink-0"
-        style={{ fontSize: "2rem", color: "#00abc9", opacity: 0.4 }}
+        style={{ fontSize: "2rem", color: "var(--accent-text)", opacity: 0.4 }}
       >
         {num}
       </span>
@@ -175,7 +175,7 @@ export default function SundayPlanner() {
                 <li key={i} className="flex gap-4">
                   <span
                     className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold mt-0.5"
-                    style={{ background: "#00abc9" }}
+                    style={{ background: "var(--accent)" }}
                   >
                     {i + 1}
                   </span>
@@ -188,7 +188,7 @@ export default function SundayPlanner() {
             {result.hasKidsCheckIn && (
               <div
                 className="rounded-xl p-5 mb-6 border-l-4"
-                style={{ background: "rgba(0,171,201,0.06)", borderColor: "#00abc9" }}
+                style={{ background: "var(--accent-bg)", borderColor: "var(--accent)" }}
               >
                 <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.05rem" }}>
                   Skip the check-in line
@@ -317,7 +317,7 @@ export default function SundayPlanner() {
               disabled={!canSubmit || loading}
               className="w-full font-condensed font-700 tracking-wide uppercase text-white py-4 rounded-full transition-all disabled:opacity-40"
               style={{
-                background: canSubmit && !loading ? "#00abc9" : "#00abc9",
+                background: canSubmit && !loading ? "var(--accent)" : "var(--accent)",
                 fontSize: "1rem",
               }}
             >

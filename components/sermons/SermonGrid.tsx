@@ -275,7 +275,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
 
       {/* Progress bar */}
       {positionSecs !== null && positionSecs > 5 && progressPct !== null && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-2xl overflow-hidden" style={{ background: "rgba(0,32,91,0.06)" }}>
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-2xl overflow-hidden" style={{ background: "var(--hover-subtle)" }}>
           <div className="h-full rounded-b-2xl transition-[width] duration-500"
             style={{ width: `${Math.min(100, progressPct)}%`, background: color.accent }} />
         </div>

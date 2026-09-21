@@ -152,7 +152,7 @@ export default function KidsPage() {
             }}
           >
             A great Sunday{" "}
-            <span style={{ color: "#00abc9" }}>starts here.</span>
+            <span style={{ color: "var(--accent-text)" }}>starts here.</span>
           </h1>
           <p
             className="text-white/65 leading-relaxed mb-8 max-w-lg"
@@ -166,7 +166,7 @@ export default function KidsPage() {
             <a
               href="#pre-register"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "#00abc9", color: "#00142a" }}
+              style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >
               Pre-Register Your Family
             </a>
@@ -211,7 +211,7 @@ export default function KidsPage() {
                 {/* Icon */}
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
-                  style={{ background: "rgba(0,171,201,0.08)" }}
+                  style={{ background: "var(--accent-bg)" }}
                 >
                   {icon}
                 </div>
@@ -220,7 +220,7 @@ export default function KidsPage() {
                 <div className="mb-3">
                   <span
                     className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-3 py-1"
-                    style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
+                    style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                   >
                     {ages}
                   </span>
@@ -238,7 +238,7 @@ export default function KidsPage() {
                 {note && (
                   <p
                     className="text-xs font-medium"
-                    style={{ color: "#00abc9" }}
+                    style={{ color: "var(--accent-text)" }}
                   >
                     ↗ {note}
                   </p>
@@ -331,7 +331,7 @@ export default function KidsPage() {
       {/* ── What we teach ─────────────────────────────────── */}
       <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
             What we teach
           </p>
           <h2
@@ -369,7 +369,7 @@ export default function KidsPage() {
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "rgba(0,171,201,0.12)" }}
+                  style={{ background: "var(--accent-bg)" }}
                 >
                   {icon}
                 </div>
@@ -418,7 +418,7 @@ export default function KidsPage() {
                 <span className="text-fg-muted text-sm">6:00 – 7:30 PM</span>
                 <span
                   className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
-                  style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
+                  style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                 >
                   Ages 2 – 5th grade
                 </span>
@@ -569,7 +569,7 @@ export default function KidsPage() {
             <a
               href="#pre-register"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
-              style={{ background: "#00abc9", color: "#00142a" }}
+              style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >
               Pre-Register Your Family
             </a>

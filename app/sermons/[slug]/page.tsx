@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 const ptComponents = {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
-      <p className="leading-relaxed mb-4" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</p>
+      <p className="leading-relaxed mb-4" style={{ color: "var(--fg-muted)" }}>{children}</p>
     ),
     h3: ({ children }: { children?: React.ReactNode }) => (
       <h3 className="font-bold text-lg mt-8 mb-3" style={{ color: "var(--fg)", letterSpacing: "-0.02em" }}>{children}</h3>
@@ -97,15 +97,15 @@ const ptComponents = {
       <h4 className="font-semibold mt-5 mb-2" style={{ color: "rgba(0,32,91,0.85)" }}>{children}</h4>
     ),
     blockquote: ({ children }: { children?: React.ReactNode }) => (
-      <blockquote className="border-l-2 pl-5 my-5 italic" style={{ borderColor: "#00abc9", color: "rgba(0,32,91,0.55)" }}>{children}</blockquote>
+      <blockquote className="border-l-2 pl-5 my-5 italic" style={{ borderColor: "var(--accent)", color: "var(--fg-muted)" }}>{children}</blockquote>
     ),
   },
   list: {
     bullet: ({ children }: { children?: React.ReactNode }) => (
-      <ul className="list-disc list-inside space-y-1.5 mb-4 pl-1" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</ul>
+      <ul className="list-disc list-inside space-y-1.5 mb-4 pl-1" style={{ color: "var(--fg-muted)" }}>{children}</ul>
     ),
     number: ({ children }: { children?: React.ReactNode }) => (
-      <ol className="list-decimal list-inside space-y-1.5 mb-4 pl-1" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</ol>
+      <ol className="list-decimal list-inside space-y-1.5 mb-4 pl-1" style={{ color: "var(--fg-muted)" }}>{children}</ol>
     ),
   },
   marks: {

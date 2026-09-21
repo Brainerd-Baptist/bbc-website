@@ -42,7 +42,7 @@ export default function ScriptureInline({ passage, label, accentColor = "#00abc9
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{
-      background: light ? "#f4f6f9" : "rgba(255,255,255,0.03)",
+      background: light ? "var(--surface-sunken)" : "rgba(255,255,255,0.03)",
       border: `1px solid ${light ? "rgba(0,32,91,0.08)" : "rgba(255,255,255,0.08)"}`,
     }}>
       {/* Header */}

@@ -34,7 +34,7 @@ export default function BXPage() {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
             Brainerd Crossroads
           </p>
           <div className="flex justify-center mb-6">
@@ -45,7 +45,7 @@ export default function BXPage() {
             style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
           >
             The{" "}
-            <span style={{ color: "#00abc9" }}>BX.</span>
+            <span style={{ color: "var(--accent-text)" }}>BX.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
             A 54,000 square foot fitness, recreation, and meeting facility in the
@@ -58,7 +58,7 @@ export default function BXPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition-colors"
-              style={{ background: "#00abc9", color: "white" }}
+              style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
             >
               Become a Member
             </a>
@@ -105,7 +105,7 @@ export default function BXPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-semibold"
-              style={{ color: "#00abc9" }}
+              style={{ color: "var(--accent-text)" }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 21s-8-6.5-8-12a8 8 0 0 1 16 0c0 5.5-8 12-8 12z" /><circle cx="12" cy="9" r="2.5" />
@@ -119,7 +119,7 @@ export default function BXPage() {
             <div className="flex items-center gap-3 mb-6">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ background: "rgba(0,171,201,0.12)", color: "#00abc9" }}
+                style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
                   <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" />
@@ -172,7 +172,7 @@ export default function BXPage() {
                 key={label}
                 className="bg-surface-raised rounded-2xl p-6 border border-border hover:border-accent/30 transition-colors"
               >
-                <div className="w-1.5 h-6 rounded-full mb-4" style={{ background: "#00abc9" }} />
+                <div className="w-1.5 h-6 rounded-full mb-4" style={{ background: "var(--accent)" }} />
                 <h3 className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.1rem" }}>
                   {label}
                 </h3>
@@ -224,11 +224,11 @@ export default function BXPage() {
             className="rounded-2xl overflow-hidden border border-border"
             style={{ background: "var(--surface-sunken)" }}
           >
-            <div className="h-1" style={{ background: "#00abc9" }} />
+            <div className="h-1" style={{ background: "var(--accent)" }} />
             <div className="p-8">
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
-                style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
+                style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6.5 6.5h11M6.5 12h11M6.5 17.5h11M3 6.5h.01M3 12h.01M3 17.5h.01" />
@@ -250,7 +250,7 @@ export default function BXPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all"
-                style={{ borderColor: "rgba(0,171,201,0.4)", color: "#00abc9" }}
+                style={{ borderColor: "rgba(0,171,201,0.4)", color: "var(--accent-text)" }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
@@ -340,7 +340,7 @@ export default function BXPage() {
               <div key={label} className="rounded-2xl p-6 border border-border" style={{ background: "var(--surface-sunken)" }}>
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
+                  style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                 >
                   {icon}
                 </div>
@@ -380,7 +380,7 @@ export default function BXPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition-colors"
-              style={{ background: "#00abc9", color: "white" }}
+              style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
             >
               Room Reservation Request
             </a>
@@ -409,7 +409,7 @@ export default function BXPage() {
           style={{ objectPosition: "center 40%", opacity: 0.22 }}
         />
         <div className="relative max-w-3xl mx-auto text-center">
-          <p className="eyebrow mb-3" style={{ color: "#00abc9" }}>3rd Wednesday · 10:00 AM – 12:00 PM</p>
+          <p className="eyebrow mb-3" style={{ color: "var(--accent-text)" }}>3rd Wednesday · 10:00 AM – 12:00 PM</p>
           <h2
             className="font-condensed font-800 text-white mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}

@@ -97,7 +97,7 @@ export default function ConnectTiles() {
         >
           <span
             className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-accent-text transition-colors"
-            style={{ background: "rgba(0,171,201,0.1)" }}
+            style={{ background: "var(--accent-bg)" }}
           >
             {tile.icon}
           </span>

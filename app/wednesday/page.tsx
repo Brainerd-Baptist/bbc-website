@@ -19,7 +19,7 @@ const PROGRAMS: Program[] = [
     time: "6:00 – 7:30 PM",
     label: "Kids Midweek",
     ages: "Ages 2 – 5th Grade",
-    color: "#00abc9",
+    color: "var(--accent-text)",
     location: "Kids Area — enter from Albemarle Ave, Purple Lot",
     href: "/ministries/kids",
     photo: "/carousel/kids-midweek.jpg",
@@ -118,7 +118,7 @@ export default function WednesdayPage() {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
             Every Wednesday
           </p>
           <div className="flex justify-center mb-6">
@@ -132,7 +132,7 @@ export default function WednesdayPage() {
             }}
           >
             Wednesday Night{" "}
-            <span style={{ color: "#00abc9" }}>at Brainerd.</span>
+            <span style={{ color: "var(--accent-text)" }}>at Brainerd.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
             From kids to college to choir, Wednesday evening is when the whole
@@ -140,13 +140,13 @@ export default function WednesdayPage() {
           </p>
           <div
             className="inline-flex items-center gap-3 rounded-full px-6 py-3"
-            style={{ background: "rgba(0,171,201,0.12)", border: "1px solid rgba(0,171,201,0.25)" }}
+            style={{ background: "var(--accent-bg)", border: "1px solid rgba(0,171,201,0.25)" }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round">
               <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
             </svg>
             <span className="text-white/80 text-sm font-medium">
-              Most programs start between <span style={{ color: "#00abc9" }}>6:00 – 6:15 PM</span>
+              Most programs start between <span style={{ color: "var(--accent-text)" }}>6:00 – 6:15 PM</span>
             </span>
           </div>
         </div>

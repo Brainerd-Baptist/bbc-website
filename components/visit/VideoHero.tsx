@@ -99,7 +99,7 @@ export default function VideoHero() {
             <a
               href="#service-times"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "var(--gold)", color: "#00142a" }}
+              style={{ background: "var(--gold)", color: "var(--accent-fg)" }}
             >
               Service Times
             </a>

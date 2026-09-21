@@ -51,10 +51,10 @@ export default function SpeakerCard({ name, accentColor }: Props) {
         >
           {name}
         </p>
-        <p className="text-xs mt-0.5" style={{ color: "rgba(0,32,91,0.4)" }}>
+        <p className="text-xs mt-0.5" style={{ color: "var(--fg-muted)" }}>
           {info.title}
           {sermonCount > 0 && (
-            <span className="ml-2" style={{ color: "rgba(0,32,91,0.25)" }}>
+            <span className="ml-2" style={{ color: "var(--fg-subtle)" }}>
               · {sermonCount} sermon{sermonCount !== 1 ? "s" : ""}
             </span>
           )}
@@ -65,7 +65,7 @@ export default function SpeakerCard({ name, accentColor }: Props) {
       <svg
         width="14" height="14" viewBox="0 0 14 14" fill="none"
         className="flex-shrink-0 transition-colors"
-        style={{ color: "rgba(0,32,91,0.2)" }}
+        style={{ color: "var(--fg-subtle)" }}
         stroke="currentColor" strokeWidth="1.5"
       >
         <path d="M3 7h8M8 4l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>

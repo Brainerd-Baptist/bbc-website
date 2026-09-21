@@ -200,7 +200,7 @@ export default function BeliefsPage() {
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="py-32 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
-        <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>Brainerd Baptist Church</p>
+        <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>Brainerd Baptist Church</p>
         <h1
           className="font-condensed font-900 text-white"
           style={{ fontSize: "clamp(3.5rem, 10vw, 6rem)", letterSpacing: "-0.03em", lineHeight: 1 }}

@@ -19,7 +19,7 @@ export default function CommunityPage() {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
             Serving Chattanooga
           </p>
           <div className="flex justify-center mb-6">
@@ -30,7 +30,7 @@ export default function CommunityPage() {
             style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
           >
             Brainerd Baptist in the{" "}
-            <span style={{ color: "#00abc9" }}>Community.</span>
+            <span style={{ color: "var(--accent-text)" }}>Community.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto">
             We believe the church exists for the neighborhood. Here&apos;s how
@@ -68,7 +68,7 @@ export default function CommunityPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors"
-                  style={{ background: "#00abc9", color: "white" }}
+                  style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
                 >
                   Room Reservation Request
                 </a>
@@ -87,7 +87,7 @@ export default function CommunityPage() {
                 <div className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ background: "rgba(0,171,201,0.12)", color: "#00abc9" }}
+                    style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 21s-8-6.5-8-12a8 8 0 0 1 16 0c0 5.5-8 12-8 12z" />
@@ -104,7 +104,7 @@ export default function CommunityPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs font-semibold mt-2 inline-block"
-                      style={{ color: "#00abc9" }}
+                      style={{ color: "var(--accent-text)" }}
                     >
                       Get Directions →
                     </a>
@@ -117,7 +117,7 @@ export default function CommunityPage() {
                 <div className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ background: "rgba(0,171,201,0.12)", color: "#00abc9" }}
+                    style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
                       <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" />
@@ -172,13 +172,13 @@ export default function CommunityPage() {
 
             {/* Food Pantry */}
             <div className="bg-surface-raised rounded-2xl overflow-hidden border border-border">
-              <div className="h-1" style={{ background: "#00abc9" }} />
+              <div className="h-1" style={{ background: "var(--accent)" }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/carousel/food-pantry-checkin.jpg" alt="Food pantry volunteers helping community members" className="w-full object-cover" style={{ height: "200px", objectPosition: "center 30%" }} />
               <div className="p-8">
                 <div
                   className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
-                  style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
+                  style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M3 11l19-9-9 19-2-8-8-2z" />
@@ -196,10 +196,10 @@ export default function CommunityPage() {
                   paperwork — just show up.
                 </p>
                 <div className="space-y-1">
-                  <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#00abc9" }}>
+                  <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--accent-text)" }}>
                     3rd Wednesday · 10:00 AM – 12:00 PM
                   </p>
-                  <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "#00abc9" }}>
+                  <p className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--accent-text)" }}>
                     The BX · 4011 Austin St.
                   </p>
                 </div>
@@ -234,7 +234,7 @@ export default function CommunityPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all"
-                  style={{ borderColor: "rgba(0,32,91,0.25)", color: "var(--fg)" }}
+                  style={{ borderColor: "var(--border-strong)", color: "var(--fg)" }}
                 >
                   Submit a Request
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -268,7 +268,7 @@ export default function CommunityPage() {
           <Link
             href="/connect"
             className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full transition-colors inline-block"
-            style={{ background: "#00abc9", color: "white" }}
+            style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
           >
             Get Connected
           </Link>

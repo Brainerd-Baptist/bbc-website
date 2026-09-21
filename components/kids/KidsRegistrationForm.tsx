@@ -169,7 +169,7 @@ export default function KidsRegistrationForm() {
       <div className="rounded-2xl bg-surface-raised border border-border p-10 text-center max-w-xl mx-auto shadow-sm">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-          style={{ background: "rgba(0,171,201,0.10)" }}
+          style={{ background: "var(--accent-bg)" }}
         >
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
             <path
@@ -220,8 +220,8 @@ export default function KidsRegistrationForm() {
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center font-condensed font-800 text-sm transition-colors"
                 style={{
-                  background: s <= step ? "#00abc9" : "rgba(0,32,91,0.08)",
-                  color: s <= step ? "#00142a" : "rgba(0,32,91,0.35)",
+                  background: s <= step ? "var(--accent)" : "var(--hover-subtle)",
+                  color: s <= step ? "var(--accent-fg)" : "var(--fg-muted)",
                 }}
               >
                 {s < step ? (
@@ -242,7 +242,7 @@ export default function KidsRegistrationForm() {
                 <div
                   className="flex-1 h-0.5 mx-2 transition-colors"
                   style={{
-                    background: s < step ? "#00abc9" : "rgba(0,32,91,0.12)",
+                    background: s < step ? "var(--accent)" : "rgba(0,32,91,0.12)",
                   }}
                 />
               )}
@@ -550,7 +550,7 @@ export default function KidsRegistrationForm() {
               setStep((s) => s + 1);
             }}
             className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-            style={{ background: "#00abc9", color: "#00142a" }}
+            style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
           >
             Next
           </button>

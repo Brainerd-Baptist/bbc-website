@@ -58,6 +58,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    // A literal on purpose: this is a <meta> attribute, not CSS, so var()
+    // would not resolve. Keep in step with --surface in the .dark block.
     { media: "(prefers-color-scheme: dark)", color: "#0d1525" },
   ],
 };

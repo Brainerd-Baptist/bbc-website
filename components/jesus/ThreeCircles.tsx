@@ -226,11 +226,11 @@ export default function ThreeCircles() {
         {/* White card wrapping the SVG */}
         <div
           className="w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0 rounded-2xl"
-          style={{ background:"#faf8f4", padding:"20px 16px 16px", boxShadow:"0 4px 28px rgba(0,20,60,0.13)" }}
+          style={{ background: "var(--surface-sunken)", padding:"20px 16px 16px", boxShadow:"0 4px 28px rgba(0,20,60,0.13)" }}
         >
           {idx===0 && (
             <p className="text-center text-xs mb-3 lg:hidden font-condensed tracking-widest"
-              style={{color:"rgba(0,32,91,0.28)"}}>SWIPE TO CONTINUE</p>
+              style={{color: "var(--fg-subtle)"}}>SWIPE TO CONTINUE</p>
           )}
           <svg viewBox={viewBox} className="w-full h-auto" style={{overflow:"visible"}}>
             <defs>

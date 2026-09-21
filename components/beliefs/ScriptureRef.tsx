@@ -94,7 +94,7 @@ export default function ScriptureRef({ reference }: { reference: string }) {
         type="button"
         onClick={handleClick}
         className="text-xs font-semibold tracking-wide underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-        style={{ color: "#00abc9" }}
+        style={{ color: "var(--accent-text)" }}
         aria-expanded={!!popup}
         aria-haspopup="true"
       >
@@ -126,7 +126,7 @@ export default function ScriptureRef({ reference }: { reference: string }) {
 
           <span
             className="block text-xs font-semibold tracking-widest uppercase mb-3"
-            style={{ color: "#00abc9" }}
+            style={{ color: "var(--accent-text)" }}
           >
             {reference}{popup.translation ? ` · ${popup.translation}` : ""}
           </span>
