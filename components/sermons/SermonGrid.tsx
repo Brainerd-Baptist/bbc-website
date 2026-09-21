@@ -57,7 +57,7 @@ function seriesColor(seriesId: string) {
 
 export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }: Props) {
   const searchParams = useSearchParams();
-  const [query, setQuery]     = useState("");
+  const [query, setQuery]     = useState(() => searchParams.get("q") ?? "");
   const [series, setSeries]   = useState(() => searchParams.get("series") ?? "all");
   const [speaker, setSpeaker] = useState("all");
   const [year, setYear]       = useState("all");
@@ -65,6 +65,8 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
   useEffect(() => {
     const s = searchParams.get("series");
     if (s) setSeries(s);
+    const q = searchParams.get("q");
+    if (q) setQuery(q);
   }, [searchParams]);
 
   const filtered = useMemo(() => {
@@ -223,7 +225,17 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
               {sermon.series}
             </span>
             <span className="text-[#00205B]/20 text-[10px]">·</span>
-            <span className="text-[#00205B]/45 text-[10px] font-medium">{sermon.passage}</span>
+            {sermon.passage ? (
+              <a
+                href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-[#00205B]/45 text-[10px] font-medium hover:text-[#00abc9] transition-colors"
+              >
+                {sermon.passage}
+              </a>
+            ) : null}
           </div>
           <h3
             className="text-[#00205B] font-semibold text-base md:text-lg leading-snug mb-1.5 group-hover:text-[#00abc9] transition-colors"

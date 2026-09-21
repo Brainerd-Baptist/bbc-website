@@ -127,3 +127,23 @@ export function formatDate(iso: string): string {
 // Remove this once sermons are entered in Sanity Studio
 
 export { SERMONS as FALLBACK_SERMONS } from "./sermons";
+
+/** All sermons for a specific series slug */
+export async function getSermonsBySeries(seriesSlug: string): Promise<SanitySermon[]> {
+  return sanityClient.fetch(
+    `*[_type == "sermon" && series->slug.current == $seriesSlug] | order(date asc) { ${SERMON_FIELDS} }`,
+    { seriesSlug },
+    { next: { revalidate: 300 } }
+  );
+}
+
+/** Single series by slug */
+export async function getSeriesBySlug(slug: string): Promise<SanitySeries | null> {
+  return sanityClient.fetch(
+    `*[_type == "series" && slug.current == $slug][0] {
+      _id, title, slug, description, accentColor, bgColor, active
+    }`,
+    { slug },
+    { next: { revalidate: 3600 } }
+  );
+}
