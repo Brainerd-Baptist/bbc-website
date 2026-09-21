@@ -371,6 +371,17 @@ body {
 .nav-ctl:hover {
   background-color: var(--nav-hover);
 }
+/* The wordmark paints --nav-ink directly rather than inheriting currentColor.
+   Inheriting looked right and was not: --nav-ink is applied to .nav-ctl and
+   .nav-bar-line, NOT to the nav element, so the logo Link inherited the page's
+   own colour. Over the dark hero that gave a navy mark on a dark ground —
+   chrome was "transparent", --nav-ink was #fff, and the mark was navy anyway.
+   The hamburger was always correct precisely because it paints the variable
+   instead of inheriting, so the wordmark now does the same. Covers all four
+   states: transparent (white), glass light (navy), glass dark (light ink). */
+.bbc-nav .bbc-wordmark {
+  background-color: var(--nav-ink);
+}
 .nav-bar-line {
   background-color: var(--nav-ink);
   transition: background-color 0.3s;
