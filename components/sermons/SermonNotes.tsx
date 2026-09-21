@@ -50,7 +50,7 @@ function buildPrintHTML({
   passage: string; accentColor: string; notesHtml: string;
 }) {
   const dateStr   = formatDateLong(date);
-  const metaParts = [series, dateStr, speaker, passage].filter(Boolean);
+  const metaParts = [dateStr, speaker, passage].filter(Boolean);
 
   return `<!DOCTYPE html>
 <html lang="en">
