@@ -7,6 +7,12 @@ interface Props {
   title: string;
 }
 
+// Floating mini-player: when the video scrolls out of view while playing,
+// it docks to a small fixed box instead of disappearing. Bottom offset
+// clears GlobalAudioPlayer's mini bar (~72px) when that's also showing.
+const DOCK_WIDTH = 240;
+const DOCK_ASPECT = 9 / 16;
+
 function formatTime(secs: number): string {
   const m = Math.floor(secs / 60);
   const s = Math.floor(secs % 60);
@@ -14,6 +20,7 @@ function formatTime(secs: number): string {
 }
 
 export default function SermonPlayer({ youtubeId, title }: Props) {
+  const wrapperRef    = useRef<HTMLDivElement>(null);
   const containerRef  = useRef<HTMLDivElement>(null);
   const playerRef     = useRef<unknown>(null);
   const saveTimerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -21,6 +28,14 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
   const [resumeFrom, setResumeFrom]       = useState<number | null>(null);
   const [showToast, setShowToast]         = useState(false);
   const [toastDismissed, setToastDismissed] = useState(false);
+
+  // ── Floating mini-player state ──────────────────────────────────────────
+  const [isPlaying, setIsPlaying]     = useState(false);
+  const [isVisible, setIsVisible]     = useState(true);
+  const [dismissed, setDismissed]     = useState(false);
+  const [placeholderH, setPlaceholderH] = useState<number | null>(null);
+
+  const docked = isPlaying && !isVisible && !dismissed;
 
   const storageKey = `bbc-sermon-pos-${youtubeId}`;
 
@@ -108,7 +123,12 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
       // ── Clear position on ended ─────────────────────────────────────
       player.on("ended", () => {
         try { localStorage.removeItem(storageKey); } catch { /* no-op */ }
+        setIsPlaying(false);
       });
+
+      // ── Track play state for the floating mini-player ───────────────
+      player.on("play",  () => setIsPlaying(true));
+      player.on("pause", () => setIsPlaying(false));
     }
 
     init();
@@ -121,12 +141,79 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
     };
   }, [youtubeId, storageKey]);
 
+  // ── Watch whether the player is on-screen ───────────────────────────────
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting) setDismissed(false); // scrolling back resets a manual close
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // ── Reserve layout space while docked so the page doesn't jump ─────────
+  useEffect(() => {
+    if (docked && wrapperRef.current && placeholderH === null) {
+      setPlaceholderH(wrapperRef.current.getBoundingClientRect().height);
+    }
+    if (!docked && placeholderH !== null) {
+      setPlaceholderH(null);
+    }
+  }, [docked, placeholderH]);
+
+  const closeDock = useCallback(() => {
+    const player = playerRef.current as { pause?: () => void } | null;
+    player?.pause?.();
+    setDismissed(true);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={wrapperRef} style={docked && placeholderH ? { minHeight: placeholderH } : undefined}>
       <div
         ref={containerRef}
-        className="relative w-full rounded-2xl overflow-hidden border border-white/8 bbc-plyr"
+        className={
+          docked
+            ? "bbc-plyr rounded-xl overflow-hidden border border-white/12 shadow-2xl"
+            : "relative w-full rounded-2xl overflow-hidden border border-white/8 bbc-plyr"
+        }
+        style={
+          docked
+            ? {
+                position: "fixed",
+                zIndex: 50,
+                width: DOCK_WIDTH,
+                height: DOCK_WIDTH * DOCK_ASPECT,
+                bottom: 88, // clears GlobalAudioPlayer's mini bar when it's also showing
+                right: 12,
+                transition: "box-shadow 0.2s",
+              }
+            : undefined
+        }
       >
+        {/* Docked header: title + close — sits above the video, doesn't block Plyr's own controls at the bottom */}
+        {docked && (
+          <div
+            className="absolute top-0 inset-x-0 z-10 flex items-center justify-between gap-2 px-2 py-1"
+            style={{ background: "linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0))" }}
+          >
+            <span className="text-white/85 text-[10px] font-semibold truncate leading-tight">{title}</span>
+            <button
+              onClick={closeDock}
+              aria-label="Close floating player"
+              className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/15 transition-colors"
+            >
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M1 1l8 8M9 1L1 9"/>
+              </svg>
+            </button>
+          </div>
+        )}
+
         <div
           data-plyr-provider="youtube"
           data-plyr-embed-id={youtubeId}
