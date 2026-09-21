@@ -41,6 +41,21 @@ function watchUrl(id: string, youtubeId: string, slug: string): string {
   return "/sermons";
 }
 
+// Parses "38:12" / "38" / "38 min" into seconds. Falls back to 3600 (60 min)
+// only when duration is missing entirely — matches ContinueListeningShelf's
+// parseDurationSecs so progress bars agree everywhere they appear.
+function parseDurationSecs(dur?: string): number {
+  if (!dur) return 3600;
+  const clean = dur.replace(/[^0-9:]/g, "");
+  const parts = clean.split(":").map(Number);
+  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+    return parts[0] * 60 + parts[1];
+  }
+  const n = parseFloat(clean);
+  if (!isNaN(n) && n > 0) return n * 60;
+  return 3600;
+}
+
 const SERIES_COLORS: Record<string, { bg: string; accent: string }> = {
   "behind-the-scenes":    { bg: "#1a0d2e", accent: "#a78bfa" },
   "prayer-that-shapes-us":{ bg: "#0f2040", accent: "#00abc9" },
@@ -164,7 +179,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
   };
   const isInternal = !!(sermon.slug || sermon.id);
 
-  const [progress] = useState<number | null>(() => {
+  const [positionSecs] = useState<number | null>(() => {
     try {
       const key = `bbc-ap-${sermon.slug || sermon.id}`;
       const saved = localStorage.getItem(key);
@@ -173,6 +188,8 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
       return null;
     }
   });
+  const durationSecs = parseDurationSecs(sermon.duration);
+  const progressPct = positionSecs !== null ? (positionSecs / durationSecs) * 100 : null;
 
   return (
     <a
@@ -257,10 +274,10 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
       </div>
 
       {/* Progress bar */}
-      {progress !== null && progress > 5 && (
+      {positionSecs !== null && positionSecs > 5 && progressPct !== null && (
         <div className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-2xl overflow-hidden" style={{ background: "rgba(0,32,91,0.06)" }}>
           <div className="h-full rounded-b-2xl transition-[width] duration-500"
-            style={{ width: `${Math.min(100, (progress / 3600) * 100)}%`, background: color.accent }} />
+            style={{ width: `${Math.min(100, progressPct)}%`, background: color.accent }} />
         </div>
       )}
     </a>
