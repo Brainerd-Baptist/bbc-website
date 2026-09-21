@@ -74,11 +74,13 @@ function getEasternState(now: Date): StateInfo {
 
 type Tab = "watch" | "passage" | "outline" | "notes" | "prayer";
 
+// Ordered for mobile thumb reach: the tabs people touch mid-service
+// (Outline, Notes) sit right after Watch, not stranded at the far right.
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "watch",   label: "Watch",   icon: "▶" },
-  { id: "passage", label: "Passage", icon: "📖" },
   { id: "outline", label: "Outline", icon: "📋" },
   { id: "notes",   label: "Notes",   icon: "✏️" },
+  { id: "passage", label: "Passage", icon: "📖" },
   { id: "prayer",  label: "Prayer",  icon: "🙏" },
 ];
 

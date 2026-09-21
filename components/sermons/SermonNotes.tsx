@@ -213,6 +213,7 @@ function ToolBtn({
     <button
       onMouseDown={(e) => { e.preventDefault(); onClick(); }}
       title={title} aria-label={title}
+      className="bbc-toolbtn"
       style={{
         display: "inline-flex", alignItems: "center", justifyContent: "center",
         width: 34, height: 34, borderRadius: 7, border: "none", cursor: "pointer",
@@ -432,6 +433,20 @@ export default function SermonNotes({
         .bbc-notes-editor s { text-decoration-color: rgba(0,32,91,0.3); color: rgba(0,32,91,0.45); }
         .bbc-notes-editor mark { background-color: #fff176; color: #0a1628; border-radius: 2px; padding: 0 2px; }
         .bbc-notes-editor ::selection { background: ${accentColor}25; }
+
+        /* Mobile: bigger tap targets, sticky toolbar so it never scrolls
+           out of reach while typing, and a scroll-fade hint since the
+           toolbar can overflow horizontally on narrow phones. */
+        .bbc-notes-toolbar {
+          position: sticky;
+          top: 0;
+          z-index: 5;
+          -webkit-mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 12px), transparent);
+          mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 12px), transparent);
+        }
+        @media (max-width: 640px) {
+          .bbc-toolbtn { width: 40px !important; height: 40px !important; }
+        }
       `}</style>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
@@ -523,9 +538,10 @@ export default function SermonNotes({
         </div>
 
         {/* ── Toolbar ───────────────────────────────────────────────── */}
-        <div style={{
+        <div className="bbc-notes-toolbar" style={{
           display: "flex", alignItems: "center", gap: "1px",
-          padding: "3px 5px", background: "rgba(255,255,255,0.65)",
+          padding: "3px 5px", background: "rgba(255,255,255,0.92)",
+          backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
           border: "1px solid rgba(0,32,91,0.09)", borderRadius: "0.625rem",
           flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none",
         }}>
