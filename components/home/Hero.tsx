@@ -212,8 +212,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 z-[1]"
         style={{
-          background:
-            "var(--scrim-card) 40%, rgba(0,20,60,0.22) 100%)",
+          background: "var(--scrim-hero)",
         }}
       />
 
@@ -287,7 +286,7 @@ export default function Hero() {
           <div className="flex flex-wrap gap-3 mt-8">
             <Link
               href={c.primaryHref}
-              className="btn-primary shadow-lg shadow-[#00abc9]/25"
+              className="btn-primary shadow-lg shadow-accent/25"
               {...(c.primaryHref.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
               {c.primaryLabel}

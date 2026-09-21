@@ -23,7 +23,7 @@ export default async function SermonBand() {
             </div>
             <Link
               href="/sermons"
-              className="text-sm font-semibold text-accent-text hover:text-[#0090a8] transition-colors flex items-center gap-1.5 shrink-0"
+              className="text-sm font-semibold text-accent-text hover:underline flex items-center gap-1.5 shrink-0"
             >
               All sermons
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
@@ -35,7 +35,7 @@ export default async function SermonBand() {
 
         {/* Featured sermon card */}
         <ScrollReveal delay={100}>
-          <div className="rounded-2xl overflow-hidden border border-gray-100 dark:border-white/8 shadow-lg shadow-black/5 dark:shadow-black/30">
+          <div className="rounded-2xl overflow-hidden border border-border shadow-lg shadow-black/5 dark:shadow-black/30">
             <div className="grid md:grid-cols-5">
 
               {/* Thumbnail / Play */}
@@ -52,7 +52,7 @@ export default async function SermonBand() {
                 ) : (
                   <div
                     className="absolute inset-0"
-                    style={{ background: "linear-gradient(135deg, #00205B 0%, #001840 100%)" }}
+                    style={{ background: "linear-gradient(135deg, var(--color-brand-navy) 0%, var(--color-brand-navy-deep) 100%)" }}
                   />
                 )}
 
@@ -74,7 +74,7 @@ export default async function SermonBand() {
                   className="relative z-10"
                   aria-label={`Watch ${title} on YouTube`}
                 >
-                  <div className="w-16 h-16 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center cursor-pointer transition-all shadow-lg shadow-[#00abc9]/40 hover:scale-105">
+                  <div className="w-16 h-16 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center cursor-pointer transition-all shadow-lg shadow-accent/40 hover:scale-105">
                     <svg width="22" height="22" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}>
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
@@ -90,7 +90,7 @@ export default async function SermonBand() {
                 >
                   {title}
                 </h3>
-                <div className="flex flex-wrap gap-x-5 gap-y-2 text-gray-400 dark:text-gray-500 text-sm mb-6">
+                <div className="flex flex-wrap gap-x-5 gap-y-2 text-fg-muted text-sm mb-6">
                   <span className="flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>

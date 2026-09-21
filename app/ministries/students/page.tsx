@@ -61,7 +61,7 @@ export default function StudentsPage() {
           className="absolute inset-0"
           style={{
             background:
-              "var(--scrim-hero) 30%, rgba(0,16,48,0.82) 70%, rgba(0,16,48,0.97) 100%)",
+              "var(--scrim-hero)",
           }}
         />
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
@@ -126,7 +126,8 @@ export default function StudentsPage() {
             {PILLARS.map(({ label, body }) => (
               <div
                 key={label}
-                className="bg-surface-raised rounded-2xl p-8 border border-border hover:border-[#4a7fcb]/30 transition-colors"
+                className="bg-surface-raised rounded-2xl p-8 border border-border hover:border-[var(--pillar-hue)]/30 transition-colors"
+                style={{ "--pillar-hue": IDENTITY.students.hue } as React.CSSProperties}
               >
                 <div
                   className="w-1 h-10 rounded-full mb-5"

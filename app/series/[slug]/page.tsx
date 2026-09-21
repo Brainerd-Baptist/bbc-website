@@ -245,7 +245,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section
         className="py-14 px-6 border-t border-border"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
           <p className="eyebrow-white mb-3">More from BBC</p>

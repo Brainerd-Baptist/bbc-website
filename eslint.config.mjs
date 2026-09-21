@@ -12,16 +12,21 @@ const eslintConfig = defineConfig([
   // block `bg-[#hex]`, and arbitrary hex is the dominant pattern in this
   // codebase.
   //
-  // Severity is "warn" on purpose. There are hundreds of pre-existing
-  // violations across the ~68 unmigrated files; making this an error today
-  // would mean a permanently red build, and a gate that always fails gets
-  // ignored. scripts/ratchet.mjs counts these and fails only when the count
-  // goes UP. It is promoted to "error" in Phase 6, once the count is zero.
+  // Severity is "error" as of Phase 6. Through the migration it was a warning,
+  // because making it an error while hundreds of violations existed would have
+  // meant a permanently red build, and a gate that always fails gets ignored —
+  // the ratchet held the count down instead. The count is now zero, so the
+  // rule blocks, and `npm run lint:color` is the scoped gate in the verify
+  // chain (bare eslint would drag in 52 unrelated pre-existing errors).
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs}"],
     plugins: { bbc },
     rules: {
-      "bbc/no-raw-color": "warn",
+      // BLOCKING as of Phase 6. It was a warning through the migration, with
+      // the count held down by scripts/ratchet.mjs; the count is now zero, so
+      // the rule becomes an error and the next raw colour fails the build
+      // instead of being absorbed into a baseline.
+      "bbc/no-raw-color": "error",
     },
   },
 

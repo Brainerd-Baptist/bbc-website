@@ -30,7 +30,7 @@ export default function BXPage() {
       <div
         className="pt-32 pb-20 px-6"
         style={{
-          background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
+          background: "var(--brand-band)",
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
@@ -250,7 +250,7 @@ export default function BXPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all"
-                style={{ borderColor: "rgba(0,171,201,0.4)", color: "var(--accent-text)" }}
+                style={{ borderColor: "var(--accent-border)", color: "var(--accent-text)" }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
@@ -397,7 +397,7 @@ export default function BXPage() {
       {/* ── Food Pantry callout ───────────────────────────────── */}
       <section
         className="py-20 px-6 relative overflow-hidden"
-        style={{ background: "#0a1628" }}
+        style={{ background: "var(--theater-sunken)" }}
       >
         {/* Background photo */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

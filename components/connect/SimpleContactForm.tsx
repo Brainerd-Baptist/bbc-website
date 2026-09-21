@@ -154,7 +154,7 @@ export default function SimpleContactForm({
         />
       </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {error && <p className="text-danger-text text-sm">{error}</p>}
 
       <button
         type="submit"

@@ -20,7 +20,7 @@ export default function ConnectBand() {
       </div>
 
       {/* Subtle top border */}
-      <div className="h-px bg-gradient-to-r from-transparent via-[#00abc9]/30 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto section-pad px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

@@ -43,6 +43,45 @@
    should migrate to those rather than reaching for these directly.
    ──────────────────────────────────────────────────────────────── */
 @theme {
+  /* ── Phase 6 lock-in ────────────────────────────────────────────────────
+     Clears Tailwind's default palette. After this `bg-white`, `text-gray-500`
+     and every other default colour utility STOP EXISTING: they emit no CSS,
+     so verify-classes fails the build on them rather than letting a stray
+     `bg-white` quietly pin a surface to white in dark mode — which is the
+     defect that started this rebuild.
+
+     Safe to do now precisely because the codebase has zero default-palette
+     utilities left; it was measured before being switched on, not assumed.
+
+     Known limitation, verified in Phase 2 and unchanged: this does NOT block
+     arbitrary values. `bg-[#fff]` still compiles. The ESLint rule is what
+     closes that hole, which is why it also goes blocking in this phase.
+
+     Must stay first in the block — it clears, then the brand values below
+     re-declare what we actually want. */
+  --color-*: initial;
+
+  /* white and black are re-declared deliberately, and they are the ONLY two
+     default colours that survive.
+
+     `text-white/60` on the navy footer is correct, not residue — Phase 3
+     recorded that this class of usage has a legitimate floor and should not be
+     driven to zero. Those are theme-invariant ink on a permanently dark
+     ground, and the same is true of `black/10` as a gradient stop over
+     photography. Killing them would mean inventing a token per alpha step and
+     changing how a dozen bands look, for no gain.
+
+     What clearing the rest DOES buy: `text-gray-500`, `text-red-500`,
+     `bg-gray-400` and the like stop existing, and the gate found real residue
+     the moment it was switched on — form validation still using red-500 while
+     --danger-text had existed since Phase 4.
+
+     The dangerous case, `bg-white` pinning a surface, is not solved here —
+     white still exists as a colour. The ESLint rule covers that: it rejects
+     white and black on a BACKGROUND utility while allowing them as ink. */
+  --color-white: #fff;
+  --color-black: #000;
+
   --color-brand-navy: #00205b;
   --color-brand-navy-light: #0a2d6e;
   --color-brand-navy-deep: #001340;
@@ -263,6 +302,13 @@
      and dimming it does. So the plate stays light in both themes and
      carries a border so it reads as a deliberate object. */
   --plate:                 #ffffff;
+  /* The plate's paired foreground. --plate shipped without one, and a fill
+     without its text partner is exactly the structural gap this file warns
+     about elsewhere: the next call site reaches for whatever token happens
+     to have the right value, and GiveCTA's white button duly ended up
+     wearing --accent-fg, which means "the ink that belongs on brand cyan".
+     Same value, right invariance, wrong label. 15.47:1 on the plate. */
+  --plate-fg:              #00205b;
 
   /* ── Photo scrims ──────────────────────────────────────────────────────
      A scrim sits BETWEEN a photograph and the text on it. It is not dimming:
@@ -355,22 +401,6 @@
     rgba(0, 12, 28, 0) 100%
   );
 
-  /* ── Compatibility aliases ──────────────────────────────────────────
-     Legacy names still referenced by components, re-pointed at the tokens
-     above so nothing breaks mid-migration. Deleted in Phase 6 once their
-     call sites are migrated. Thirteen further legacy variables were removed
-     outright here — they had zero consumers anywhere in the tree.
-
-     --bbc-navy is the instructive one: a brand-named variable that `.dark`
-     remapped to a LIGHT tint, because it was never actually the brand navy.
-     It was the body text colour all along. It now points at --fg, which is
-     what it always meant. */
-  --bbc-navy:       var(--fg);
-  --bbc-blue:       var(--accent);
-  --bbc-blue-light: var(--color-brand-cyan-light);
-  --bbc-blue-dark:  var(--accent-solid-hover);
-  --gold:           var(--accent);
-  --gray-100:       var(--surface-sunken);
 }
 
 /* ── Tailwind export ────────────────────────────────────────────────────
@@ -426,6 +456,7 @@
   --color-player-tile:        var(--player-tile);
   --color-player-header:      var(--player-header);
   --color-plate:              var(--plate);
+  --color-plate-fg:           var(--plate-fg);
   --color-brand-band-lightest: var(--brand-band-lightest);
   --color-brand-ink:          var(--brand-ink);
   --color-accent-fg:          var(--accent-fg);

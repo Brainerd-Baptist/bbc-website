@@ -274,7 +274,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
           name="howHeard"
         />
         {howHeardError && (
-          <p className="text-red-500 text-xs mt-1">
+          <p className="text-danger-text text-xs mt-1">
             Please select at least one option.
           </p>
         )}
@@ -337,7 +337,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
 
       {/* Error message */}
       {error && (
-        <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+        <p className="text-danger-text text-sm bg-danger-bg border border-danger-border rounded-xl px-4 py-3">
           {error}
         </p>
       )}

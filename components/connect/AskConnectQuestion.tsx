@@ -110,7 +110,7 @@ export default function AskConnectQuestion() {
             </button>
           </div>
 
-          {error && <p className="text-red-500 text-xs text-center mt-3">{error}</p>}
+          {error && <p className="text-danger-text text-xs text-center mt-3">{error}</p>}
 
           <p className="text-center mt-6">
             <Link

@@ -76,14 +76,13 @@ function PhotoCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1280px) 33vw, 400px"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        {/* Gradient overlay. Stays literal: a photo scrim needs three stops at
-            different alphas, and --scrim is a single composited value with its
-            own alpha, so it cannot express a ramp. No token fits. */}
+        {/* Gradient overlay. --scrim-card is the named ramp for text sitting
+            at the bottom of a photo card: dark end at the bottom, clear at the
+            top, so the label reads and the photograph stays at full fidelity. */}
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "var(--scrim-card) 55%, rgba(0,20,42,0.10) 100%)",
+            background: "var(--scrim-card)",
           }}
         />
         {/* Hover ring */}
@@ -172,7 +171,7 @@ export default function MinistriesSection() {
               className="absolute inset-0"
               style={{
                 background:
-                  "var(--scrim-card) 60%, transparent 100%)",
+                  "var(--scrim-card-soft)",
               }}
             />
             {/* Hover ring */}

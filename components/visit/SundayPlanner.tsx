@@ -325,7 +325,7 @@ export default function SundayPlanner() {
             </button>
 
             {error && (
-              <p className="text-sm text-red-500 text-center -mt-4">{error}</p>
+              <p className="text-sm text-danger-text text-center -mt-4">{error}</p>
             )}
           </div>
         )}

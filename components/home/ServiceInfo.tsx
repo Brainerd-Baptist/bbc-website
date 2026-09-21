@@ -15,7 +15,7 @@ export default function ServiceInfo() {
                 <div className="rounded-2xl bg-accent-bg border border-accent/15 p-6">
                   <div className="text-accent-text font-condensed font-900 text-3xl mb-1">8:30 AM</div>
                   <div className="font-semibold text-fg mb-2">Choir & Orchestra</div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                  <p className="text-fg-muted text-sm leading-relaxed">
                     Full choir and orchestra. If you grew up singing hymns out of a book,
                     this one will feel familiar.
                   </p>
@@ -23,16 +23,16 @@ export default function ServiceInfo() {
                 <div className="rounded-2xl bg-accent-bg border border-accent/15 p-6">
                   <div className="text-accent-text font-condensed font-900 text-3xl mb-1">11:00 AM</div>
                   <div className="font-semibold text-fg mb-2">Band-Led</div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                  <p className="text-fg-muted text-sm leading-relaxed">
                     Contemporary band leading worship. Same sermon, same church —
                     different sound.
                   </p>
                 </div>
               </div>
-              <p className="text-gray-400 dark:text-gray-500 text-sm mt-4 italic" style={{ fontFamily: "Georgia, serif" }}>
+              <p className="text-fg-subtle text-sm mt-4 italic" style={{ fontFamily: "Georgia, serif" }}>
                 Both services center on the voices and singing of the congregation.
               </p>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+              <p className="text-fg-muted text-sm mt-1">
                 Life Groups meet at <strong>9:45 AM</strong> between services.
               </p>
             </div>

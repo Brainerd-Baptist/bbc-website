@@ -161,6 +161,7 @@ const CHECKS = [
 
   // Highlighter is theme-invariant, so its text partner is fixed too.
   { fg: "--highlight-fg", on: ["--highlight-bg"], kind: "body", note: "text under a highlight" },
+  { fg: "--plate-fg", on: ["--plate"], kind: "body", note: "ink on the fixed light plate" },
 
   // The audio player's own chrome is dark in both themes.
   { fg: "--fg-on-dark-muted", on: ["--player-bar-opaque"], kind: "body", note: "player transport labels" },

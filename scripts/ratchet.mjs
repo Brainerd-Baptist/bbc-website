@@ -200,6 +200,30 @@ if (updating || !fs.existsSync(BASELINE)) {
   process.exit(0);
 }
 
+/**
+ * Metrics with a LEGITIMATE FLOOR — they will never be zero, and driving them
+ * there would make the site worse, not better. Recorded so nobody mistakes a
+ * non-zero count here for unfinished work.
+ */
+const FLOORS = {
+  "unthemeable-tailwind-class":
+    "`text-white/60` on the navy footer is correct: theme-invariant ink on a " +
+    "permanently dark ground. Zeroing this would mean a token per alpha step " +
+    "and a visual change to a dozen bands, for nothing.",
+  "js-theme-branch":
+    "The theme toggle's own icon and aria-label. You cannot write \"Switch to " +
+    "light mode\" in CSS, so these three must read the resolved theme in JS. " +
+    "They decide an icon and a label, never a colour.",
+  "eslint-errors":
+    "Pre-existing non-colour debt: unescaped entities, react-hooks rules, " +
+    "<img> warnings. Tracked so it cannot grow; not this project's to fix. " +
+    "`npm run lint:color` is the scoped gate that blocks at zero.",
+  "unthemed-files":
+    "Counts files holding any hardcoded colour with no dark: variant, which " +
+    "includes every file whose colour is legitimately theme-invariant. " +
+    "Overlaps the floor above.",
+};
+
 const baseline = JSON.parse(fs.readFileSync(BASELINE, "utf8"));
 const prev = baseline.counts ?? {};
 
@@ -236,6 +260,18 @@ if (regressions > 0) {
   );
   process.exit(1);
 }
+
+// Any metric sitting at a documented floor is reported as such, so a non-zero
+// number here is not read as leftover work by whoever looks next.
+const atFloor = Object.keys(FLOORS).filter((k) => k in current);
+if (atFloor.length) {
+  console.log("\n  Metrics with a documented floor (non-zero is correct):");
+  for (const k of atFloor) {
+    console.log(`    ${k} = ${current[k]}`);
+    console.log(`      ${FLOORS[k]}`);
+  }
+}
+
 console.log(
   improvements > 0
     ? `✓ nothing regressed, ${improvements} metric(s) improved — run \`npm run ratchet:update\` to lock it in`

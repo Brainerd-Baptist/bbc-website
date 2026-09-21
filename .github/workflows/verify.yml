@@ -2,18 +2,24 @@ name: Verify
 
 # Runs the theming rails on every push and pull request.
 #
-# Deliberately NOT gating the Vercel deploy yet. The rails all pass on the
-# current tree locally, but they have never run on a GitHub runner, and
-# blocking deploys on an unproven workflow is how you end up unable to ship a
-# Sunday-morning fix. Once this has a few green runs, make it a required
-# status check on main and add `needs: verify` to the deploy workflow —
-# that is a Phase 6 step in docs/dark-mode-rebuild-plan.md.
+# Phase 6: the static rails now BLOCK. Each one has been proven to fail on a
+# deliberate violation, not just to pass on a clean tree.
+#
+# Vercel still deploys independently of this workflow, on purpose. Vercel's
+# GitHub integration builds on push and there is no `needs:` relationship to
+# hang on it from here; making this a required status check is a setting in the
+# repo, not a file. Given this is a church website, the last word on whether a
+# red rail should block a Sunday-morning fix belongs to a person — so the
+# recommendation is recorded rather than forced:
+#
+#   Settings -> Branches -> main -> require the "verify" and "visual" checks.
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 # A newer push supersedes an in-flight run on the same ref.
 concurrency:
@@ -44,17 +50,98 @@ jobs:
       - name: CSS — no raw colour outside app/tokens.css
         run: npm run lint:css
 
+      - name: Components — no raw colour in app, components, lib
+        run: npm run lint:color
+
       - name: Tailwind — every colour utility actually emits CSS
         run: npm run verify:classes
 
       - name: Contrast — all token pairings meet WCAG AA in both themes
         run: npm run verify:contrast
 
+      - name: Identity palette — every content hue meets AA in both themes
+        run: npm run verify:identity
+
       - name: Ratchet — no theming metric may increase
         run: npm run ratchet
 
-      # Non-blocking: surfaces the remaining raw-colour count in the log so
-      # progress is visible per run. `eslint` exits 0 on warnings.
-      - name: Remaining raw-colour warnings (informational)
-        if: always()
-        run: npx eslint --format stylish || true
+  # ── The layer no lint can reach ────────────────────────────────────────────
+  # A token can be real, compile fine, pass every contrast check, and still be
+  # the wrong token for its surface. Only rendering both themes and looking
+  # catches that. This job also carries the axe pass and the live-toggle
+  # assertion — the toggle is where two real defects hid, because every other
+  # check loads with the theme already set.
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      # No wait-on dependency for one poll loop.
+      - name: Start
+        run: |
+          npm start &
+          for i in $(seq 1 60); do
+            curl -sSf http://localhost:3000 >/dev/null 2>&1 && break
+            sleep 2
+          done
+          curl -sSf http://localhost:3000 >/dev/null
+
+      - name: Dual-theme sweep — nav chrome, contrast, focus, axe, toggle, pixels
+        run: npm run test:visual
+
+      # The diff images are the whole point of a failure here, so keep them.
+      - name: Upload the report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  # ── One-shot: generate the pixel baselines ─────────────────────────────────
+  # Run manually from the Actions tab, download the artifact, and commit
+  # tests/theme.spec.mjs-snapshots/. Then set PIXEL_BASELINE=1 on the visual
+  # job above and the pixel diff starts blocking too.
+  baseline:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Start
+        run: |
+          npm start &
+          for i in $(seq 1 60); do
+            curl -sSf http://localhost:3000 >/dev/null 2>&1 && break
+            sleep 2
+          done
+          curl -sSf http://localhost:3000 >/dev/null
+      - name: Write baselines
+        env:
+          PIXEL_BASELINE: "1"
+        run: npm run test:visual:update || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pixel-baselines
+          path: tests/**/*-snapshots/**
+          retention-days: 14

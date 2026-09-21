@@ -46,6 +46,7 @@ export interface IdentityInk {
 export const IDENTITY: Record<string, IdentityInk> = {
   kids:     { hue: "#c9a84c", light: "#836d31", dark: "#c9a84c", solid: "#8c722a" },
   students: { hue: "#4a7fcb", light: "#4170b3", dark: "#6290d2", solid: "#3c75c7" },
+  serve:    { hue: "#5cb87a", light: "#3e7b52", dark: "#5cb87a", solid: "#408155" },
   missions: { hue: "#e07b54", light: "#a65b3e", dark: "#e07b54", solid: "#c45024" },
   college:  { hue: "#9b6ecc", light: "#845ead", dark: "#a67ed2", solid: "#8f5dc6" },
   adults:   { hue: "#4ab8c4", light: "#317981", dark: "#4ab8c4", solid: "#2d8089" },

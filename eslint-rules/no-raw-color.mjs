@@ -24,6 +24,26 @@
  * and `w-[72ch]` are fine and have nothing to do with theming.
  */
 
+import path from "node:path";
+import { exemptLines } from "../scripts/color-literal-exemptions.mjs";
+
+/**
+ * White and black survive the cleared palette, because `text-white/60` on the
+ * navy footer is correct and so is `black/10` as a gradient stop over a photo.
+ * What is NOT correct is an OPAQUE one as a surface: `bg-white` pinning a
+ * panel to white in dark mode is the original defect this whole rebuild exists
+ * to remove, and clearing the palette cannot catch it while white remains a
+ * colour.
+ *
+ * Only the opaque forms are rejected — `bg-white` and `bg-white/90`+. A
+ * translucent wash like `bg-white/8` over a navy band is a legitimate tint
+ * (the same thing --surface-on-dark expresses) and `bg-black/30` over a photo
+ * is a scrim; flagging those would be noise, and the first draft of this rule
+ * did exactly that.
+ */
+const SURFACE_WHITE_CLASS =
+  /(?:^|\s|:)bg-(?:white|black)(?:\/(?:9\d|100))?(?![\w-/])/g;
+
 /** A colour literal in any CSS-writable form. */
 const COLOR_LITERAL = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklch|oklab)\s*\(/;
 
@@ -105,16 +125,34 @@ const rule = {
     messages: {
       arbitraryClass:
         'Raw colour in a Tailwind arbitrary value: "{{text}}". Use a semantic token utility (bg-surface, text-fg, text-fg-muted, border-border, bg-accent-solid…). Clearing the palette does not catch this, so it has to be caught here.',
+      surfaceWhite:
+        '"{{text}}" uses white or black as a SURFACE. Both are fine as ink on a permanently dark ground (text-white/60 on the navy footer is correct), but a surface must come from a token: bg-surface, bg-surface-raised, bg-surface-sunken, or bg-theater-* / bg-player-* for media chrome. A hardcoded white surface is precisely what breaks dark mode.',
+      hoistedClass:
+        'Raw colour "{{text}}" in a class-name string. Hoisting a class list into a const does not make the colour acceptable — and it hides it from a className-only check, which is how `text-[#00142a]` sat on a card that goes dark in dark mode. Use a token utility.',
       inlineStyle:
         'Raw colour literal "{{text}}" in an inline style. Use var(--token) — e.g. style={{ color: "var(--fg)" }}.',
     },
   },
 
   create(context) {
+    // Regions where a literal is the correct answer are declared as data in
+    // scripts/color-literal-exemptions.mjs, with a reason each. The ratchet
+    // already reads that registry; without this the rule could not go
+    // blocking, because it would flag a satori PNG or a print document that
+    // resolves no CSS variables at all.
+    const rel = path.relative(
+      process.cwd(),
+      context.filename ?? context.getFilename(),
+    );
+    const exempt = exemptLines(rel, context.sourceCode?.getText?.() ?? "");
+    const isExempt = (node) =>
+      exempt === null || exempt.has((node.loc?.start?.line ?? 0) - 1);
+
     return {
       JSXAttribute(node) {
         const name = node.name?.name;
         if (name !== "className" && name !== "class") return;
+        if (isExempt(node)) return;
 
         const value =
           node.value?.type === "JSXExpressionContainer"
@@ -122,6 +160,13 @@ const rule = {
             : node.value;
 
         for (const [text, strNode] of stringsIn(value)) {
+          for (const m of text.matchAll(SURFACE_WHITE_CLASS)) {
+            context.report({
+              node: strNode,
+              messageId: "surfaceWhite",
+              data: { text: m[0].replace(/^[\s:]+/, "") },
+            });
+          }
           for (const m of text.matchAll(ARBITRARY_COLOR_CLASS)) {
             context.report({
               node: strNode,
@@ -134,10 +179,41 @@ const rule = {
         }
       },
 
+      /**
+       * A colour hoisted into a string constant.
+       *
+       * The className visitor above only sees JSX attributes, so
+       * `const inputCls = "... text-[#00142a] ..."` passed clean — and it was
+       * a live inversion bug, near-black ink pinned onto a surface that goes
+       * dark. A rail that a variable name defeats is not a rail.
+       */
+      VariableDeclarator(node) {
+        if (isExempt(node)) return;
+        const name = node.id?.name;
+        if (!name || !/(class|cls|className|styles?)$/i.test(name)) return;
+        for (const [text, strNode] of stringsIn(node.init)) {
+          for (const m of text.matchAll(ARBITRARY_COLOR_CLASS)) {
+            context.report({
+              node: strNode,
+              messageId: "hoistedClass",
+              data: { text: m[0].replace(/^[\s:]+/, "") },
+            });
+          }
+          for (const m of text.matchAll(SURFACE_WHITE_CLASS)) {
+            context.report({
+              node: strNode,
+              messageId: "hoistedClass",
+              data: { text: m[0].replace(/^[\s:]+/, "") },
+            });
+          }
+        }
+      },
+
       /** style={{ … }} on a JSX element. */
       JSXExpressionContainer(node) {
         const attr = node.parent;
         if (attr?.type !== "JSXAttribute" || attr.name?.name !== "style") return;
+        if (isExempt(node)) return;
         const obj = node.expression;
         if (obj?.type !== "ObjectExpression") return;
 

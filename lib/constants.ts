@@ -1,3 +1,4 @@
+import { IDENTITY } from "./identity-colors";
 // ── Site-wide constants ─────────────────────────────────────────────────────
 
 export const SITE = {
@@ -58,7 +59,7 @@ export const MINISTRIES = [
     name: "Kids",
     description:
       "Nursery and preschool care at 8:30, 9:45, and 11:00. Kindergarten and up join their families for worship.",
-    color: "#c9a84c",
+    color: IDENTITY.kids.hue,
     icon: "kids",
   },
   {
@@ -66,7 +67,7 @@ export const MINISTRIES = [
     name: "Students",
     description:
       "Middle and high school students growing in faith together through community and God's Word.",
-    color: "#4a7fcb",
+    color: IDENTITY.students.hue,
     icon: "students",
   },
   {
@@ -74,7 +75,7 @@ export const MINISTRIES = [
     name: "Life Groups",
     description:
       "Small groups meeting across Chattanooga on Sunday mornings and throughout the week.",
-    color: "#5cb87a",
+    color: IDENTITY.serve.hue,
     icon: "lifegroups",
   },
   {
@@ -82,7 +83,7 @@ export const MINISTRIES = [
     name: "Missions",
     description:
       "Carrying the gospel locally and globally — from our neighborhood to the nations.",
-    color: "#e07b54",
+    color: IDENTITY.missions.hue,
     icon: "missions",
   },
   {
@@ -90,7 +91,7 @@ export const MINISTRIES = [
     name: "College + Young Adults",
     description:
       "A community for college students and young adults navigating life and faith together.",
-    color: "#9b6ecc",
+    color: IDENTITY.college.hue,
     icon: "college",
   },
   {
@@ -98,7 +99,7 @@ export const MINISTRIES = [
     name: "Adults",
     description:
       "Opportunities for adults at every stage of life to study Scripture, serve, and grow.",
-    color: "#4ab8c4",
+    color: IDENTITY.adults.hue,
     icon: "adults",
   },
 ];

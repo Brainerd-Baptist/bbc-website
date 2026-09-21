@@ -138,10 +138,10 @@ export default function ClearstreamForm() {
           text-decoration: underline;
         }
         .bbc-cs-form .cs_html_form_error:not(:empty) {
-          color: #ef4444;
+          color: var(--danger-text);
           font-size: 0.8rem;
-          background: rgba(239,68,68,0.06);
-          border: 1px solid rgba(239,68,68,0.2);
+          background: var(--danger-bg);
+          border: 1px solid var(--danger-border);
           border-radius: 0.75rem;
           padding: 0.75rem 1rem;
           margin-bottom: 1rem;

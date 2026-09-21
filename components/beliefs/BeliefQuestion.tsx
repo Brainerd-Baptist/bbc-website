@@ -48,7 +48,7 @@ export default function BeliefQuestion() {
   }
 
   return (
-    <section className="py-24 px-6" style={{ background: "#00142a" }}>
+    <section className="py-24 px-6" style={{ background: "var(--brand-ink)" }}>
       <div className="max-w-2xl mx-auto">
         <p className="eyebrow text-center mb-3" style={{ color: "var(--accent-text)" }}>Have a Question?</p>
         <h2
@@ -62,7 +62,7 @@ export default function BeliefQuestion() {
         </p>
 
         {answer ? (
-          <div className="rounded-2xl p-7 border border-white/10" style={{ background: "rgba(255,255,255,0.05)" }}>
+          <div className="rounded-2xl p-7 border border-white/10" style={{ background: "var(--surface-on-dark)" }}>
             <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "var(--accent-text)" }}>
               {question}
             </p>
@@ -104,7 +104,7 @@ export default function BeliefQuestion() {
                   }
                 }}
                 className="w-full px-5 py-4 rounded-2xl border border-white/15 text-sm text-white placeholder:text-white/25 focus:border-white/30 resize-none"
-                style={{ background: "rgba(255,255,255,0.06)" }}
+                style={{ background: "var(--surface-on-dark)" }}
               />
               <button
                 onClick={() => handleAsk()}
@@ -117,7 +117,7 @@ export default function BeliefQuestion() {
             </div>
 
             {error && (
-              <p className="text-red-400 text-xs text-center mt-3">{error}</p>
+              <p className="text-danger-on-dark text-xs text-center mt-3">{error}</p>
             )}
           </div>
         )}

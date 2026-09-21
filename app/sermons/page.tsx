@@ -107,7 +107,7 @@ export default async function SermonsPage() {
                 {/* Background thumbnail */}
                 <div className="absolute inset-0">
                   <img src={thumbUrl} alt="" className="w-full h-full object-cover opacity-30 group-hover:opacity-40 transition-opacity duration-500" />
-                  <div className="absolute inset-0" style={{ background: "var(--scrim-side) 50%, rgba(7,16,30,0.3) 100%)" }} />
+                  <div className="absolute inset-0" style={{ background: "var(--scrim-side)" }} />
                 </div>
 
                 <div className="relative z-10 flex items-center justify-between gap-6 p-7 md:p-10">

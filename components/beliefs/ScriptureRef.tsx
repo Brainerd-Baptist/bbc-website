@@ -111,7 +111,7 @@ export default function ScriptureRef({ reference }: { reference: string }) {
             ${above ? "bottom-full mb-2" : "top-full mt-2"}
             left-1/2 -translate-x-1/2
           `}
-          style={{ background: "#00142a" }}
+          style={{ background: "var(--brand-ink)" }}
         >
           {/* Arrow */}
           <span
@@ -119,8 +119,8 @@ export default function ScriptureRef({ reference }: { reference: string }) {
               absolute left-1/2 -translate-x-1/2 w-0 h-0
               border-x-[6px] border-x-transparent
               ${above
-                ? "top-full border-t-[7px] border-t-[#00142a]"
-                : "bottom-full border-b-[7px] border-b-[#00142a]"}
+                ? "top-full border-t-[7px] border-t-brand-ink"
+                : "bottom-full border-b-[7px] border-b-brand-ink"}
             `}
           />
 

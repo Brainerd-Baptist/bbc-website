@@ -70,8 +70,7 @@ export default function VideoHero() {
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "var(--scrim-hero) 40%, rgba(0,16,48,0.80) 75%, rgba(0,16,48,0.96) 100%)",
+          background: "var(--scrim-hero)",
         }}
       />
 
@@ -88,7 +87,7 @@ export default function VideoHero() {
             }}
           >
             We&apos;d love to{" "}
-            <span style={{ color: "var(--gold)" }}>have you.</span>
+            <span style={{ color: "var(--accent)" }}>have you.</span>
           </h1>
 
           <p
@@ -102,7 +101,7 @@ export default function VideoHero() {
             <a
               href="#service-times"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "var(--gold)", color: "var(--accent-fg)" }}
+              style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >
               Service Times
             </a>

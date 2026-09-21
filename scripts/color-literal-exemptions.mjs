@@ -98,6 +98,39 @@ export const COLOR_LITERAL_EXEMPTIONS = [
       "the darkened value would be a regression.",
   },
 
+  {
+    file: "lib/sermon.ts",
+    match: /HIGHLIGHT_RE|background-color/,
+    reason:
+      "Not styling at all — a regex that recognises highlight markup in " +
+      "pasted HTML. The colours are patterns being matched, not values being " +
+      "applied, so they cannot be tokens.",
+  },
+  {
+    file: "components/sermons/SermonGrid.tsx",
+    match: /bg: "#|accent: "#/,
+    reason:
+      "SERIES_COLORS: a per-series identity palette. The accent is " +
+      "string-concatenated with alpha (`${color.accent}22`), so it is " +
+      "load-bearing as a hex; each entry also carries an accessible ink pair " +
+      "alongside it.",
+  },
+  {
+    file: "app/sermons/series/[seriesId]/page.tsx",
+    match: /bg: "#|accent: "#/,
+    reason: "The same SERIES_COLORS map; same alpha concatenation.",
+  },
+  {
+    file: "app/series/[slug]/page.tsx",
+    match: /accentColor|bgColor/,
+    reason: "Series accent fallback, concatenated with alpha downstream.",
+  },
+  {
+    file: "app/speakers/[slug]/page.tsx",
+    match: /accentColor/,
+    reason: "Speaker accent fallback, concatenated with alpha downstream.",
+  },
+
   // ── hex required because alpha is string-concatenated onto it ────────────
   // Same mechanism as GlobalAudioPlayer above: `var(--accent)66` is not a
   // colour, so these fallbacks are load-bearing AS STRINGS.
@@ -118,7 +151,7 @@ export const COLOR_LITERAL_EXEMPTIONS = [
   },
   {
     file: "app/sermons/[slug]/page.tsx",
-    match: /accentColor.*\?\? "#/,
+    match: /accentColor/,
     reason:
       "Flows into GlobalAudioPlayer (`${accent}99`) and SpeakerCard " +
       "(accentColor + '33'); converting it breaks both at runtime.",

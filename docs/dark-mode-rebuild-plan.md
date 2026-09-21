@@ -1012,3 +1012,131 @@ properties too and is worth narrowing.
 Lastly, the ratchet only skipped lines that *start* with a comment marker, so a sentence inside a block
 comment mentioning a colour counted as residue — the gate failed on its own documentation. It now tracks
 block-comment state, which also cleared eight other miscounted lines.
+
+---
+
+## 12. Phase 6 — complete. The rebuild is locked.
+
+Regression is now mechanically blocked rather than a matter of discipline.
+
+### The palette is gone
+
+`@theme { --color-*: initial }`. `text-gray-500`, `bg-slate-100` and every other default colour utility
+now emit nothing, so `verify-classes` fails the build on them. It was measured before being switched on —
+the codebase had **zero** default-palette utilities left — and `transparent`, `current` and `inherit` were
+checked against the engine and are unaffected, because Tailwind does not treat them as palette entries.
+
+Two survive deliberately: **white and black**. `text-white/60` on the navy footer is correct — theme-invariant
+ink on a permanently dark ground — and `black/10` as a gradient stop over a photo is a scrim. Zeroing those
+would mean a token per alpha step and a visual change to a dozen bands for no gain, which is what the Phase 3
+note about a legitimate floor was pointing at. The dangerous case is handled instead by the lint rule, which
+rejects an **opaque** `bg-white` or `bg-black` while allowing a translucent wash. The first draft of that
+check flagged `bg-white/8` too; that was noise and was narrowed.
+
+Switching the palette off immediately earned its keep: it surfaced form validation still on `red-500` and
+`bg-red-50` while `--danger-text` and `--danger-bg` had existed since Phase 4, and a `bg-gray-400` status
+dot on the theater page.
+
+### The rails block, and each one is proven to fail
+
+| rail | catches | proven by |
+|---|---|---|
+| `lint:css` | raw colour in CSS outside the token file | injecting `color: #bada55` |
+| `lint:color` | raw colour in components, incl. opaque white surfaces | injecting `bg-[#00205B]` |
+| `verify:classes` | a utility that compiles to nothing | injecting `bg-slate-200` |
+| `verify:contrast` | a token pairing below AA, worst surface in the family | lightening `--fg-muted` to 1.52:1 |
+| `verify:identity` | a content hue unreadable as text | feeding it the raw kids hue, 2.11:1 |
+
+A gate that has only ever passed is not evidence. Each was broken on purpose and confirmed to fail, and the
+first attempt at proving `verify:contrast` did not work because the injection used the wrong indentation and
+silently no-op'd — which is its own reminder that a green run means nothing if the test never ran.
+
+`bbc/no-raw-color` is now **error**, at zero. It runs through `scripts/lint-color.mjs` rather than bare
+`eslint`, because the repo carries 52 pre-existing non-colour errors (unescaped entities, react-hooks, `<img>`)
+and chaining plain `eslint` would make the gate permanently red — the trap that got it pulled from the chain
+in Phase 2. The scoped gate blocks on colour; the unrelated debt stays visible in `npm run lint` without
+holding the build hostage.
+
+### Two holes in the rule, both closed
+
+**The registry.** The rule flagged files the exemption registry already declared correct — a satori PNG, a
+print document, a hex that gets alpha concatenated onto it. It could not go blocking while doing that, so it
+now reads `scripts/color-literal-exemptions.mjs`, the same data the ratchet reads.
+
+**Hoisted class strings.** The rule only inspected JSX `className` and `style` attributes, so
+`const inputCls = "… text-[#00142a] …"` passed clean — and that one was a live inversion bug, near-black ink
+pinned onto a surface that goes dark. A rail a variable name defeats is not a rail. It now also checks string
+constants whose name looks like a class list.
+
+### Counters
+
+| metric | Phase 5 | now |
+|---|---|---|
+| raw-hex | 83 | **0** |
+| raw-rgb-fn | 56 | **0** |
+| arbitrary-color-class | 70 | **0** |
+| bg-white-route-shell | 0 | **0** |
+| unthemeable-tailwind-class | 192 | 177 · floor |
+| js-theme-branch | 4 | 3 · floor |
+| unthemed-files | 34 | 14 · floor |
+| eslint-errors | 53 | 52 · floor |
+
+The plan said all counters would reach zero. Four of them cannot, and the ratchet now **records why** next to
+each so a non-zero number is not mistaken for unfinished work: `text-white/60` on navy is correct; the theme
+toggle's own icon and aria-label must read the resolved theme in JS, because you cannot write "Switch to light
+mode" in CSS; and `eslint-errors` is unrelated debt. Claiming zero there would have meant either damaging the
+site or lying in a config file.
+
+### Deletions, with the owner's approval
+
+`ScriptureInline.tsx` (19 violations, zero importers, superseded by LivePlayer's own verse rendering) and the
+three logo PNGs the mask assets replaced (188KB). Both recoverable from history.
+
+`lib/constants.ts` was repeating six ministry hues that `lib/identity-colors.ts` already owned — a second
+source of truth for colours that need accessible pairings. It now references the table, and the sixth hue
+(`#5cb87a`, which existed only in constants) was measured and added properly.
+
+Also deleted: the six Phase 1 compatibility aliases, after migrating their four remaining consumers. One of
+those consumers was `border-gray-100 dark:border-white/8` — a hand-rolled theme pair that `--border` had been
+able to express on its own since Phase 1.
+
+### A Phase 5 bug the lint rule found
+
+Worth recording because of how it was caught. Six photo scrims were left **malformed** by the Phase 5 sweep:
+`var(--scrim-card) 50%, rgba(7,16,30,0.1) 100%)` — my regex matched only the head of each gradient, leaving an
+orphaned stop list and an unbalanced paren. That is invalid CSS, so those overlays painted **nothing**, and the
+text over them had been unscrimmed since that phase. Neither `verify-contrast` nor `verify-classes` can see an
+invalid inline gradient; it took the colour rule flagging the leftover `rgba(` to expose them.
+
+`--plate` also shipped without a paired foreground, so a white button ended up wearing `--accent-fg` — right
+value, right invariance, wrong label. `--plate-fg` exists now, which is the pairing rule this token file
+already states elsewhere.
+
+### CI
+
+`verify.yml` gained `lint:color` and `verify:identity`, and a second **visual** job that builds the site and
+runs the dual-theme sweep: nav chrome per route, the invisible-text floor, the keyboard focus sweep, an axe
+`color-contrast` pass, and — new — a **live toggle** assertion.
+
+That last one exists because of the Phase 5 addendum: every check before it loaded with the theme already
+preset, which is not how a visitor changes theme, and two real defects lived in exactly that gap. The
+assertion toggles the theme on an open page and fails if any colour that moved on the way out refuses to come
+back.
+
+The pixel baseline is gated behind `PIXEL_BASELINE`, honestly: this sandbox cannot run `next build`
+(`next/font` cannot reach Google Fonts through the egress proxy), so the reference images have to be generated
+on a runner. A `baseline` job does that on manual dispatch; commit the artifact and flip the flag. The other
+five assertions need no baseline and block today.
+
+Vercel still deploys independently. Making `verify` a required status check is a repo **setting**, not a file,
+and on a church website the call about whether a red rail should block a Sunday-morning fix belongs to a
+person — so the recommendation is written into the workflow header rather than forced.
+
+### What remains, deliberately
+
+- **The pixel baseline** — one manual dispatch away.
+- **`unthemeable-tailwind-class` at 177** — the documented floor. Do not drive it to zero.
+- **52 non-colour eslint errors** — real debt, out of scope here, held flat by the ratchet.
+- **62 `transition-all` usages across 34 files** — none currently sits on a rule swap, so none is broken, but
+  `transition-all` animates layout properties and is worth narrowing.
+- **`app/sermons/[slug]/notes/PrintButton.tsx`** — themed, but imported nowhere. Either wire it up or delete it.

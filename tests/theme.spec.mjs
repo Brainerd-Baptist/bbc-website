@@ -24,6 +24,7 @@
  */
 
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 import { ROUTES } from "../scripts/routes.mjs";
 
 const THEMES = ["light", "dark"];
@@ -233,7 +234,75 @@ for (const theme of THEMES) {
           `controls with no visible focus indicator on ${path} (${theme})`,
         ).toEqual([]);
 
-        // 4. Pixel baseline.
+        // 4. axe: colour-contrast, on what the page actually paints.
+        //
+        //    This overlaps assertion 2 on purpose. Assertion 2 is a blunt
+        //    "is it invisible" floor at 1.5:1 that we control; axe applies the
+        //    real WCAG algorithm, including the cases our own probe declines to
+        //    judge. Where they disagree, axe is right.
+        const axe = await new AxeBuilder({ page })
+          .withRules(["color-contrast"])
+          .analyze();
+        const contrastViolations = axe.violations.flatMap((v) =>
+          v.nodes.map((n) => ({
+            impact: v.impact,
+            target: n.target.join(" "),
+            summary: (n.failureSummary || "").split("\n").slice(1, 3).join(" ").trim(),
+          })),
+        );
+        expect(
+          contrastViolations,
+          `axe colour-contrast violations on ${path} (${theme})`,
+        ).toEqual([]);
+
+        // 5. The theme survives being TOGGLED, not just preset.
+        //
+        //    Everything above loads with the theme already in localStorage.
+        //    That is not how a visitor changes theme, and the gap was not
+        //    hypothetical: two real defects lived in it — a wordmark that
+        //    inherited the wrong colour, and identity CTAs that stuck at their
+        //    pre-toggle ink because a transition held the old value. Both
+        //    passed every static gate and every preset-theme render.
+        const stuck = await page.evaluate(async (want) => {
+          const html = document.documentElement;
+          const sample = () =>
+            [...document.querySelectorAll("a,button,p,h1,h2,h3,span")]
+              .filter((e) => (e.textContent || "").trim() && e.children.length === 0)
+              .slice(0, 60)
+              .map((e) => getComputedStyle(e).color);
+          const other = want === "dark" ? "light" : "dark";
+          const before = sample();
+          html.classList.remove(want);
+          html.classList.add(other);
+          await new Promise((r) => setTimeout(r, 700));
+          const mid = sample();
+          html.classList.remove(other);
+          html.classList.add(want);
+          await new Promise((r) => setTimeout(r, 700));
+          const after = sample();
+          // Anything that changed on the way out must change back on the way
+          // in. A value that moved and then refused to return is stuck.
+          let n = 0;
+          for (let i = 0; i < before.length; i++) {
+            if (before[i] !== mid[i] && after[i] !== before[i]) n++;
+          }
+          return n;
+        }, theme);
+        expect(stuck, `elements whose colour did not restore after a live theme toggle on ${path} (${theme})`).toBe(0);
+
+        // 6. Pixel baseline — opt-in.
+        //
+        //    Gated on PIXEL_BASELINE because no baselines are committed yet:
+        //    this sandbox cannot run `next build` (next/font cannot reach
+        //    fonts.googleapis.com through the egress proxy), so the 60-odd
+        //    reference images have to be generated on a runner. Until they
+        //    are, the five assertions above still run and still block — they
+        //    need no baseline, and they are the ones that catch real defects.
+        //
+        //    To create them: run the workflow's `baseline` job, download the
+        //    artifact, commit tests/theme.spec.mjs-snapshots/, then set
+        //    PIXEL_BASELINE=1 in the visual job.
+        test.skip(!process.env.PIXEL_BASELINE, "no committed pixel baseline yet");
         await expect(page).toHaveScreenshot(
           `${theme}${path.replace(/\//g, "_") || "_root"}.png`,
           { fullPage: true, maxDiffPixelRatio: 0.01, animations: "disabled" },

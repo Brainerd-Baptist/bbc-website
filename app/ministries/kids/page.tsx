@@ -137,7 +137,7 @@ export default function KidsPage() {
           className="absolute inset-0"
           style={{
             background:
-              "var(--scrim-hero) 30%, rgba(0,16,48,0.82) 70%, rgba(0,16,48,0.97) 100%)",
+              "var(--scrim-hero)",
           }}
         />
 

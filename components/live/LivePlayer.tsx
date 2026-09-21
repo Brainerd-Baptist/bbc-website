@@ -252,7 +252,7 @@ function ActiveView({
           {service?.label} starts in {Math.floor(secsUntil / 60)}m {secsUntil % 60 < 10 ? `0${secsUntil % 60}` : secsUntil % 60}s</>
         )}
         {state === "post" && (
-          <><span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+          <><span className="w-1.5 h-1.5 rounded-full bg-fg-on-dark-muted" />
           {service ? `Service ended — ${service.label}` : "Service ended"}</>
         )}
       </div>
@@ -661,7 +661,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
         </label>
 
         {status === "error" && (
-          <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
+          <p className="text-danger-on-dark text-sm">Something went wrong. Please try again.</p>
         )}
 
         <button

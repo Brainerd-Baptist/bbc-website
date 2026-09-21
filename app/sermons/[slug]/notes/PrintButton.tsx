@@ -13,22 +13,22 @@ export default function PrintButton() {
         fontWeight: 600,
         letterSpacing: "0.04em",
         textTransform: "uppercase" as const,
-        color: "#fff",
-        background: "linear-gradient(135deg, #00205B 0%, #0a2d6e 100%)",
+        color: "var(--fg-on-dark)",
+        background: "var(--brand-band)",
         border: "none",
         padding: "0.6rem 1.1rem",
         borderRadius: "9999px",
         cursor: "pointer",
-        boxShadow: "0 2px 8px rgba(0,32,91,0.25)",
+        boxShadow: "var(--shadow-md)",
         transition: "opacity 0.15s, box-shadow 0.15s",
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLButtonElement).style.opacity = "0.88";
-        (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 4px 14px rgba(0,32,91,0.35)";
+        (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-sm-hover)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.opacity = "1";
-        (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 2px 8px rgba(0,32,91,0.25)";
+        (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-md)";
       }}
       aria-label="Print or save as PDF"
     >

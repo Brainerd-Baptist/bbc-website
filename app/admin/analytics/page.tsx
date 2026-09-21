@@ -121,25 +121,29 @@ export default async function AnalyticsPage() {
   const maxStarts = Math.max(...bySlug.map((s) => s.starts), 1);
   const maxDay    = Math.max(...byDay.map((d) => d.count), 1);
 
-  const navy    = "#00205B";
-  const teal    = "#00abc9";
-  const cardBg  = "#f4f6f9";
-  const border  = "1px solid rgba(0,32,91,0.08)";
+  // Body/heading ink on the page surface.
+  const fg      = "var(--fg)";
+  // Brand cyan as a decorative mark: the chart fills, and the eyebrow on the
+  // navy header band (5.65:1 there — --accent-text would be a regression).
+  const accent  = "var(--accent)";
+  // These panels are cards on the page surface, whatever their light value was.
+  const cardBg  = "var(--surface-raised)";
+  const border  = "1px solid var(--border)";
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--surface-raised)", paddingBottom: "4rem" }}>
+    <div style={{ minHeight: "100vh", background: "var(--surface)", paddingBottom: "4rem" }}>
 
       {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, #00142a 0%, ${navy} 100%)`, padding: "5rem 1.5rem 2.5rem" }}>
+      <div style={{ background: "var(--brand-band)", padding: "5rem 1.5rem 2.5rem" }}>
         <div style={{ maxWidth: "64rem", margin: "0 auto" }}>
-          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", marginBottom: "2rem", textDecoration: "none" }}>
+          <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", color: "var(--fg-on-dark-muted)", fontSize: "0.8rem", marginBottom: "2rem", textDecoration: "none" }}>
             ← Brainerd Baptist
           </a>
-          <p style={{ color: teal, fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.5rem" }}>Internal</p>
-          <h1 style={{ color: "#fff", fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "clamp(1.75rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", lineHeight: 1.05, margin: 0 }}>
+          <p style={{ color: accent, fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.5rem" }}>Internal</p>
+          <h1 style={{ color: "var(--fg-on-dark)", fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "clamp(1.75rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", lineHeight: 1.05, margin: 0 }}>
             Sermon Analytics
           </h1>
-          <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+          <p style={{ color: "var(--fg-on-dark-muted)", fontSize: "0.8rem", marginTop: "0.5rem" }}>
             Last 30 days · refreshes every 5 min
           </p>
         </div>
@@ -150,7 +154,7 @@ export default async function AnalyticsPage() {
         {/* No data state */}
         {noData && (
           <div style={{ background: cardBg, border, borderRadius: "1rem", padding: "3rem", textAlign: "center" }}>
-            <p style={{ color: navy, fontWeight: 600, marginBottom: "0.5rem" }}>No play data yet</p>
+            <p style={{ color: fg, fontWeight: 600, marginBottom: "0.5rem" }}>No play data yet</p>
             <p style={{ color: "var(--fg-muted)", fontSize: "0.875rem" }}>
               Play tracking is live — data will appear here as sermons are played.
             </p>
@@ -174,7 +178,7 @@ export default async function AnalyticsPage() {
               ].map(({ label, value }) => (
                 <div key={label} style={{ background: cardBg, border, borderRadius: "1rem", padding: "1.25rem 1.5rem" }}>
                   <p style={{ color: "var(--fg-muted)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.25rem" }}>{label}</p>
-                  <p style={{ color: navy, fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>{value}</p>
+                  <p style={{ color: fg, fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>{value}</p>
                 </div>
               ))}
             </div>
@@ -189,7 +193,7 @@ export default async function AnalyticsPage() {
                   {byDay.map(({ date, count }) => (
                     <div key={date} title={`${date}: ${count} plays`} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", height: "100%" }}>
                       <div style={{ flex: 1, display: "flex", alignItems: "flex-end", width: "100%" }}>
-                        <div style={{ width: "100%", background: teal, borderRadius: "3px 3px 0 0", height: `${Math.max(4, pct(count, maxDay))}%`, opacity: 0.85 }} />
+                        <div style={{ width: "100%", background: accent, borderRadius: "3px 3px 0 0", height: `${Math.max(4, pct(count, maxDay))}%`, opacity: 0.85 }} />
                       </div>
                     </div>
                   ))}
@@ -208,12 +212,12 @@ export default async function AnalyticsPage() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.3rem", gap: "1rem" }}>
                       <a
                         href={`/sermons/${slug}`}
-                        style={{ color: navy, fontSize: "0.85rem", fontWeight: 600, textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                        style={{ color: fg, fontSize: "0.85rem", fontWeight: 600, textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                       >
                         {title ?? slug}
                       </a>
                       <div style={{ display: "flex", gap: "1rem", flexShrink: 0 }}>
-                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: navy }}>{starts} <span style={{ color: "var(--fg-muted)", fontWeight: 400 }}>plays</span></span>
+                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: fg }}>{starts} <span style={{ color: "var(--fg-muted)", fontWeight: 400 }}>plays</span></span>
                         <span style={{ fontSize: "0.7rem", color: "var(--fg-muted)" }}>{pct(halfs, starts)}% to 50%</span>
                         <span style={{ fontSize: "0.7rem", color: "var(--fg-muted)" }}>{pct(completes, starts)}% finished</span>
                         {audio > 0 && <span style={{ fontSize: "0.65rem", color: "var(--fg-subtle)" }}>🎧 {audio}</span>}
@@ -221,7 +225,7 @@ export default async function AnalyticsPage() {
                       </div>
                     </div>
                     <div style={{ height: "4px", background: "var(--hover-subtle)", borderRadius: "2px", overflow: "hidden" }}>
-                      <div style={{ height: "100%", background: teal, borderRadius: "2px", width: `${pct(starts, maxStarts)}%`, opacity: 0.7 }} />
+                      <div style={{ height: "100%", background: accent, borderRadius: "2px", width: `${pct(starts, maxStarts)}%`, opacity: 0.7 }} />
                     </div>
                   </div>
                 ))}
@@ -240,16 +244,16 @@ export default async function AnalyticsPage() {
               { done: all.length > 0,  label: "Sermon play events flowing to Supabase" },
             ].map(({ done, label }) => (
               <div key={label} style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                <span style={{ color: done ? "#22c55e" : "rgba(0,32,91,0.2)", fontWeight: 700 }}>{done ? "✓" : "○"}</span>
-                <span style={{ color: done ? "rgba(0,32,91,0.6)" : "rgba(0,32,91,0.35)" }}>{label}</span>
+                <span style={{ color: done ? "var(--success-text)" : "var(--fg-muted)", fontWeight: 700 }}>{done ? "✓" : "○"}</span>
+                <span style={{ color: done ? "var(--fg)" : "var(--fg-muted)" }}>{label}</span>
               </div>
             ))}
           </div>
           {(!SUPABASE_URL || !SUPABASE_KEY) && (
             <div style={{ marginTop: "1rem", padding: "0.875rem 1rem", background: "var(--hover-subtle)", borderRadius: "0.5rem", fontSize: "0.75rem", color: "var(--fg-muted)" }}>
               Add these to Vercel → Project → Settings → Environment Variables:<br />
-              <code style={{ display: "block", marginTop: "0.5rem", color: navy }}>SUPABASE_URL = https://brbfutiayugxwkgozouc.supabase.co</code>
-              <code style={{ display: "block", marginTop: "0.25rem", color: navy }}>SUPABASE_ANON_KEY = eyJhbGci...</code>
+              <code style={{ display: "block", marginTop: "0.5rem", color: fg }}>SUPABASE_URL = https://brbfutiayugxwkgozouc.supabase.co</code>
+              <code style={{ display: "block", marginTop: "0.25rem", color: fg }}>SUPABASE_ANON_KEY = eyJhbGci...</code>
             </div>
           )}
         </div>

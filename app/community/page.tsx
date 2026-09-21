@@ -15,7 +15,7 @@ export default function CommunityPage() {
       <div
         className="pt-32 pb-20 px-6"
         style={{
-          background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
+          background: "var(--brand-band)",
         }}
       >
         <div className="max-w-4xl mx-auto text-center">

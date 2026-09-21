@@ -87,7 +87,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
       {/* ── Dark gradient hero strip ───────────────────────────────────── */}
       <div
         className="pt-28 pb-16 px-5 md:px-8"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-4xl mx-auto">
 

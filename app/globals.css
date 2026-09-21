@@ -233,13 +233,13 @@ body {
 .blue-divider {
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, var(--bbc-blue), var(--bbc-blue-light));
+  background: linear-gradient(90deg, var(--accent), var(--color-brand-cyan-light));
   border-radius: 2px;
 }
 .gold-divider {
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, var(--bbc-blue), var(--bbc-blue-light));
+  background: linear-gradient(90deg, var(--accent), var(--color-brand-cyan-light));
   border-radius: 2px;
 }
 

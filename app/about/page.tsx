@@ -39,7 +39,7 @@ export default function AboutPage() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(ellipse 80% 60% at 60% 40%, rgba(0,171,201,0.08) 0%, transparent 70%)`,
+            backgroundImage: `radial-gradient(ellipse 80% 60% at 60% 40%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 70%)`,
           }}
         />
 

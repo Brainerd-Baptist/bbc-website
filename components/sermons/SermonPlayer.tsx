@@ -61,7 +61,7 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
       <div
         ref={spacerRef}
         className="relative w-full rounded-2xl overflow-hidden border border-white/8"
-        style={{ aspectRatio: "16 / 9", background: "#07101e" }}
+        style={{ aspectRatio: "16 / 9", background: "var(--player-sheet)" }}
       >
         {showReturnPrompt && (
           <button
@@ -93,7 +93,7 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/40 group-hover:bg-black/55 transition-colors">
               <span
                 className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-active:scale-95"
-                style={{ background: "var(--accent-bg)", boxShadow: "0 0 40px rgba(0,171,201,0.4)" }}
+                style={{ background: "var(--accent-bg)", boxShadow: "0 0 40px color-mix(in srgb, var(--accent) 40%, transparent)" }}
               >
                 <svg width="22" height="22" viewBox="0 0 22 22" style={{ marginLeft: 3, fill: "var(--fg-on-dark)" }}>
                   <path d="M3 1.5l16 9.5-16 9.5z" />
@@ -113,10 +113,10 @@ export default function SermonPlayer({ youtubeId, title, slug }: Props) {
         <div
           className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white"
           style={{
-            background: "rgba(7,16,30,0.92)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            background: "var(--player-bar)",
+            border: "1px solid var(--border-on-dark)",
             backdropFilter: "blur(8px)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+            boxShadow: "var(--shadow-lg)",
             whiteSpace: "nowrap",
           }}
         >

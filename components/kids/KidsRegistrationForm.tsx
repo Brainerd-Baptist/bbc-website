@@ -66,7 +66,7 @@ const EMPTY_PARENT: ParentInfo = {
 };
 
 const inputCls =
-  "w-full rounded-xl border border-border-strong px-4 py-3 text-[#00142a] text-sm placeholder:text-fg-muted focus:border-transparent transition bg-surface-raised";
+  "w-full rounded-xl border border-border-strong px-4 py-3 text-fg text-sm placeholder:text-fg-muted focus:border-transparent transition bg-surface-raised";
 
 const labelCls =
   "block font-condensed font-800 text-fg text-sm mb-1.5 tracking-wide";
@@ -241,7 +241,7 @@ export default function KidsRegistrationForm() {
                 <div
                   className="flex-1 h-0.5 mx-2 transition-colors"
                   style={{
-                    background: s < step ? "var(--accent)" : "rgba(0,32,91,0.12)",
+                    background: s < step ? "var(--accent)" : "var(--border)",
                   }}
                 />
               )}
@@ -316,7 +316,7 @@ export default function KidsRegistrationForm() {
                     <button
                       type="button"
                       onClick={() => removeChild(idx)}
-                      className="text-fg-muted hover:text-red-500 transition-colors text-xs font-condensed font-700 tracking-wide uppercase"
+                      className="text-fg-muted hover:text-danger-text transition-colors text-xs font-condensed font-700 tracking-wide uppercase"
                     >
                       Remove
                     </button>
@@ -470,7 +470,7 @@ export default function KidsRegistrationForm() {
                 type="checkbox"
                 checked={parent.consentToText}
                 onChange={(e) => setP("consentToText", e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded border-border-strong accent-[#00abc9] cursor-pointer flex-shrink-0"
+                className="mt-0.5 w-4 h-4 rounded border-border-strong accent-accent cursor-pointer flex-shrink-0"
               />
               <label
                 htmlFor="consent-text"
@@ -498,7 +498,7 @@ export default function KidsRegistrationForm() {
 
       {/* Error */}
       {error && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="mt-4 rounded-xl border border-danger-border bg-danger-bg px-4 py-3 text-sm text-danger-text">
           {error}
         </div>
       )}
