@@ -7,8 +7,6 @@ export const metadata = {
     "Established in 1928, Brainerd Baptist is a multi-generational community in Chattanooga, TN — gathered to worship, sent to serve, and committed to knowing and being known.",
 };
 
-const TEAL = "#00abc9";
-const NAVY = "#00205B";
 
 const PILLARS = [
   {
@@ -35,7 +33,7 @@ export default function AboutPage() {
       {/* ── Hero ──────────────────────────────────────────────── */}
       <div
         className="relative pt-32 pb-28 px-6 overflow-hidden"
-        style={{ background: NAVY }}
+        style={{ background: "var(--color-brand-navy)" }}
       >
         {/* Faint background texture */}
         <div
@@ -48,7 +46,7 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto relative">
           <p
             className="font-condensed font-700 tracking-widest uppercase text-xs mb-6"
-            style={{ color: TEAL }}
+            style={{ color: "var(--accent)" }}
           >
             About Brainerd Baptist
           </p>
@@ -61,7 +59,7 @@ export default function AboutPage() {
             }}
           >
             Known.{" "}
-            <span style={{ color: TEAL }}>Loved.</span>
+            <span style={{ color: "var(--accent)" }}>Loved.</span>
             {" "}Prayed&nbsp;for.
           </h1>
           <p
@@ -99,7 +97,7 @@ export default function AboutPage() {
               <h2
                 className="font-condensed font-900 mb-5"
                 style={{
-                  color: NAVY,
+                  color: "var(--fg)",
                   fontSize: "clamp(2rem, 4vw, 2.8rem)",
                   letterSpacing: "-0.02em",
                   lineHeight: 1.05,
@@ -134,14 +132,14 @@ export default function AboutPage() {
           <h2
             className="font-condensed font-900 text-center mb-16"
             style={{
-              color: NAVY,
+              color: "var(--fg)",
               fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
               letterSpacing: "-0.02em",
               lineHeight: 1,
             }}
           >
             One purpose.<br />
-            <span style={{ color: TEAL }}>Many expressions.</span>
+            <span style={{ color: "var(--accent-text)" }}>Many expressions.</span>
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -151,7 +149,7 @@ export default function AboutPage() {
                   className="font-condensed font-900 block mb-4"
                   style={{
                     fontSize: "4rem",
-                    color: TEAL,
+                    color: "var(--accent-text)",
                     opacity: 0.12,
                     letterSpacing: "-0.04em",
                     lineHeight: 1,
@@ -162,7 +160,7 @@ export default function AboutPage() {
                 <h3
                   className="font-condensed font-800 mb-3"
                   style={{
-                    color: NAVY,
+                    color: "var(--fg)",
                     fontSize: "1.35rem",
                     letterSpacing: "-0.015em",
                   }}
@@ -181,12 +179,12 @@ export default function AboutPage() {
       {/* ── Purpose statement ──────────────────────────────────── */}
       <section
         className="py-28 px-6"
-        style={{ background: NAVY }}
+        style={{ background: "var(--color-brand-navy)" }}
       >
         <div className="max-w-3xl mx-auto text-center">
           <p
             className="font-condensed font-700 tracking-widest uppercase text-xs mb-8"
-            style={{ color: TEAL }}
+            style={{ color: "var(--accent)" }}
           >
             Why We Exist
           </p>
@@ -199,7 +197,7 @@ export default function AboutPage() {
             }}
           >
             "That all the earth may{" "}
-            <span style={{ color: TEAL }}>know and worship</span>{" "}
+            <span style={{ color: "var(--accent)" }}>know and worship</span>{" "}
             at the feet of Jesus."
           </blockquote>
           <p className="text-white/45 mt-6 text-sm">
@@ -218,7 +216,7 @@ export default function AboutPage() {
               <h2
                 className="font-condensed font-900 mb-5"
                 style={{
-                  color: NAVY,
+                  color: "var(--fg)",
                   fontSize: "clamp(2rem, 4vw, 2.8rem)",
                   letterSpacing: "-0.02em",
                   lineHeight: 1.05,
@@ -266,7 +264,7 @@ export default function AboutPage() {
           <blockquote
             className="font-condensed font-800 mb-6"
             style={{
-              color: NAVY,
+              color: "var(--fg)",
               fontSize: "clamp(1.5rem, 3.5vw, 2.2rem)",
               letterSpacing: "-0.02em",
               lineHeight: 1.15,
@@ -277,7 +275,7 @@ export default function AboutPage() {
           </blockquote>
           <p
             className="font-condensed font-700 tracking-wide uppercase text-xs"
-            style={{ color: TEAL }}
+            style={{ color: "var(--accent-text)" }}
           >
             Curtis Hill · Lead Pastor
           </p>
@@ -291,7 +289,7 @@ export default function AboutPage() {
           <h2
             className="font-condensed font-900 mb-4"
             style={{
-              color: NAVY,
+              color: "var(--fg)",
               fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
               letterSpacing: "-0.02em",
               lineHeight: 1,
@@ -306,7 +304,7 @@ export default function AboutPage() {
             <Link
               href="/visit"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full text-white transition-all hover:-translate-y-0.5"
-              style={{ background: TEAL }}
+              style={{ background: "var(--accent)" }}
             >
               Plan a Visit
             </Link>
@@ -314,8 +312,8 @@ export default function AboutPage() {
               href="/beliefs"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5"
               style={{
-                border: `2px solid ${NAVY}22`,
-                color: NAVY,
+                border: "2px solid var(--border-strong)",
+                color: "var(--fg)",
               }}
             >
               What We Believe

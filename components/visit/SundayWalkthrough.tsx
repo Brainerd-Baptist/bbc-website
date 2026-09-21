@@ -195,7 +195,7 @@ export default function SundayWalkthrough() {
           {/* Step counter */}
           <p
             className="font-condensed text-sm mt-10"
-            style={{ color: "rgba(255,255,255,0.18)" }}
+            style={{ color: "var(--fg-subtle)" }}
           >
             {idx + 1} of {STEPS.length}
           </p>

@@ -138,7 +138,7 @@ export default function BXPage() {
                   <span className="text-sm text-fg-muted">{days}</span>
                   <span
                     className="text-sm font-semibold"
-                    style={{ color: hours === "Closed" ? "rgba(0,32,91,0.35)" : "#00205B" }}
+                    style={{ color: hours === "Closed" ? "var(--fg-subtle)" : "var(--fg)" }}
                   >
                     {hours}
                   </span>

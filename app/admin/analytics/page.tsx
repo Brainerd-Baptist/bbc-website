@@ -246,7 +246,7 @@ export default async function AnalyticsPage() {
             ))}
           </div>
           {(!SUPABASE_URL || !SUPABASE_KEY) && (
-            <div style={{ marginTop: "1rem", padding: "0.875rem 1rem", background: "rgba(0,32,91,0.04)", borderRadius: "0.5rem", fontSize: "0.75rem", color: "var(--fg-muted)" }}>
+            <div style={{ marginTop: "1rem", padding: "0.875rem 1rem", background: "var(--hover-subtle)", borderRadius: "0.5rem", fontSize: "0.75rem", color: "var(--fg-muted)" }}>
               Add these to Vercel → Project → Settings → Environment Variables:<br />
               <code style={{ display: "block", marginTop: "0.5rem", color: navy }}>SUPABASE_URL = https://brbfutiayugxwkgozouc.supabase.co</code>
               <code style={{ display: "block", marginTop: "0.25rem", color: navy }}>SUPABASE_ANON_KEY = eyJhbGci...</code>

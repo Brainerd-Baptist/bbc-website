@@ -317,7 +317,7 @@ export default function GlobalAudioPlayer() {
         </h2>
         <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
           {track.speaker}
-          {track.series ? <span style={{ color: "rgba(255,255,255,0.25)" }}> · {track.series}</span> : null}
+          {track.series ? <span style={{ color: "var(--fg-subtle)" }}> · {track.series}</span> : null}
         </p>
       </div>
 
