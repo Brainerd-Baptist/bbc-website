@@ -463,3 +463,69 @@ it needs to run somewhere with network access (CI or a workstation), not in this
 **Carried forward to Phase 3 as planned:** the drawer still themes itself with `isDark` ternaries. Only
 the top bar was converted here, since that is where the invisible-chrome defect lived. The drawer is
 reachable and correct after hydration; its SSR flash is Phase 3's problem.
+
+---
+
+## 7. Phase 1 — complete (commit `b236617`)
+
+**Decisions applied:** CTA fills → `#008299`; `--accent-text` darkens to `#007b91` on light surfaces
+and returns to full brand cyan in dark; default theme stays `system`.
+
+### What shipped
+
+The full token layer — four surface levels, paired foregrounds, three distinct accent roles, borders,
+shadows, scrim and media tokens — exported via `@theme inline`. The `.dark` block is now **only values**.
+It was previously a set of per-class `.dark .glass { … }` overrides, each one a place to forget a
+component; because the shared utilities consume tokens, re-pointing tokens themes all of them at once.
+That collapse is the whole point of the layer.
+
+`color-scheme` and `themeColor` both landed. Thirteen dead legacy variables deleted; the six with live
+consumers kept as aliases. `--bbc-navy` now points at `--fg`, which is what it always meant.
+
+Verified live in production: `--surface`, `--fg`, `--accent-solid`, `--accent-text`, `--accent-fg` all
+resolve; `color-scheme` reports `light`/`dark` correctly; both `theme-color` metas present;
+`.btn-primary` computes to `rgb(0,130,153)` on white text; `.eyebrow` computes to `rgb(0,123,145)` in
+light and `rgb(0,171,201)` in dark, exactly as designed.
+
+### Checkpoint results
+
+- **CP-a11y** — `scripts/verify-contrast.mjs` parses the real token values out of `globals.css`,
+  resolves `var()` indirection, flattens alpha over the surface each token actually sits on, and checks
+  **52 pairings against AA in both themes. All pass.** It validates against the *worst* surface in each
+  family, per Primer.
+- **CP-a11y (the gate earned its keep)** — it caught two things on first run: the focus ring at 2.74:1,
+  below the 3:1 WCAG 1.4.11 requires of a non-text indicator; and one check of mine that modelled
+  `--fg` on `--accent`, a pairing that does not exist. The latter produced `--accent-fg`, a
+  theme-invariant token for the foreground on brand cyan — using `--fg` there would give
+  light-blue-on-cyan at 1.83:1 in dark mode. Verified the gate fails correctly by lightening
+  `--fg-muted` and confirming a non-zero exit.
+- **CP-static** — `verify-classes` still green across 233 candidates.
+- **CP-build** — `npm run verify` (tsc + classes + contrast) passes; Vercel READY.
+- **CP-visual (no-regression)** — the honest one. Measured low-contrast text on `/give` on the Phase 0
+  deployment and the Phase 1 deployment, same page, same theme: **dark 50 → 50, light 33 → 33.**
+  Identical counts, identical items, identical ratios. Phase 1 changed neither theme's contrast
+  profile, which is what it promised.
+
+  *What those numbers do not prove:* the absolute values come from a quick in-page heuristic whose
+  backdrop resolution cannot see through photos, overlays or blend modes, so they over-count. The
+  trustworthy part is the **delta, which is zero**. The committed Playwright sweep has the better
+  implementation and will produce the authoritative figures in CI.
+
+### Known and expected: dark mode is still broken
+
+Dark mode now has correct surfaces and correct chrome sitting under **hardcoded navy text**. On `/give`
+that is ~50 elements around 1.06:1 — card titles and descriptions in `text-[#00205B]` on a dark
+`.glass` surface. This is not new: `.dark .glass` was already `#162030` before any of this work, so
+navy-on-dark was already invisible. Phase 1 simply measured it. Phase 4 fixes it.
+
+**Consequence for the visual baseline:** the Playwright sweep cannot be committed green yet, because
+dark mode legitimately fails its own contrast assertion on most routes. That is the test correctly
+reporting unfinished work. It goes green as Phase 4 lands, route by route — which makes it a useful
+progress meter rather than a broken build.
+
+### Added to Phase 6 cleanup
+
+Eleven utility classes in `globals.css` have **zero usages** anywhere in the tree: `glow-teal`,
+`glow-navy`, `orb-teal`, `orb-navy`, `text-gradient`, `text-gradient-navy`, `text-gradient-gold`,
+`glass-deep`, `glass-dark-deep`, `glass-light`, `btn-shimmer`, `btn-pulse`, `float`. Dead CSS is the
+same liability the dead `tailwind.config.ts` was. Not removed here to keep this diff reviewable.
