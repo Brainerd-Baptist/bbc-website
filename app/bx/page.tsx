@@ -249,7 +249,7 @@ export default function BXPage() {
                 href="https://drive.google.com/file/d/1x_L_bUQguEI_gZ1kQL5Pgvk_OYawfVA1/view"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all"
+                className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition"
                 style={{ borderColor: "var(--accent-border)", color: "var(--accent-text)" }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -142,7 +142,7 @@ export default function MinistriesSection() {
             </p>
             <Link
               href="/ministries"
-              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-border-on-dark-strong text-fg-on-dark-body hover:border-accent/60 hover:text-accent transition-all shrink-0"
+              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-border-on-dark-strong text-fg-on-dark-body hover:border-accent/60 hover:text-accent transition shrink-0"
             >
               All Ministries →
             </Link>

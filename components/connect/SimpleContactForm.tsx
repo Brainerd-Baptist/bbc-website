@@ -159,7 +159,7 @@ export default function SimpleContactForm({
       <button
         type="submit"
         disabled={submitting}
-        className="w-full sm:w-auto font-condensed font-700 tracking-wide uppercase text-sm text-white px-8 py-3.5 rounded-full transition-all disabled:opacity-50"
+        className="w-full sm:w-auto font-condensed font-700 tracking-wide uppercase text-sm text-white px-8 py-3.5 rounded-full transition disabled:opacity-50"
         style={{ background: "var(--accent)" }}
       >
         {submitting ? "Sending…" : submitLabel}

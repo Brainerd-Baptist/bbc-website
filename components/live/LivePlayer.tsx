@@ -731,7 +731,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
                 )}
                 <div className="absolute inset-0 bg-brand-navy/50" />
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="relative z-10" aria-label={`Watch ${sermon.title}`}>
-                  <div className="w-14 h-14 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center transition-all shadow-lg hover:scale-105">
+                  <div className="w-14 h-14 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center transition shadow-lg hover:scale-105">
                     <svg width="18" height="18" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}><polygon points="5,3 19,12 5,21"/></svg>
                   </div>
                 </a>

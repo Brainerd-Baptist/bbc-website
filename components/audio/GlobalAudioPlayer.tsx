@@ -342,7 +342,7 @@ export default function GlobalAudioPlayer() {
         {/* Skip back */}
         <button
           onClick={() => seek(Math.max(0, currentTime - 15))}
-          className="text-white/60 hover:text-white active:scale-95 transition-all"
+          className="text-white/60 hover:text-white active:scale-95 transition"
           aria-label="Skip back 15 seconds"
         >
           <SkipIcon direction="back" size={34} />
@@ -351,7 +351,7 @@ export default function GlobalAudioPlayer() {
         {/* Play / Pause — giant */}
         <button
           onClick={togglePlay}
-          className="w-20 h-20 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg"
+          className="w-20 h-20 rounded-full flex items-center justify-center transition active:scale-95 shadow-lg"
           style={{ background: accent, boxShadow: `0 0 30px ${accent}55` }}
           aria-label={isPlaying ? "Pause" : "Play"}
         >
@@ -370,7 +370,7 @@ export default function GlobalAudioPlayer() {
         {/* Skip forward */}
         <button
           onClick={() => seek(Math.min(duration, currentTime + 15))}
-          className="text-white/60 hover:text-white active:scale-95 transition-all"
+          className="text-white/60 hover:text-white active:scale-95 transition"
           aria-label="Skip forward 15 seconds"
         >
           <SkipIcon direction="fwd" size={34} />
@@ -385,7 +385,7 @@ export default function GlobalAudioPlayer() {
             <button
               key={s}
               onClick={() => setSpeed(s)}
-              className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full transition-all"
+              className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full transition"
               style={{
                 color: speed === s ? accent : "var(--fg-on-dark-muted)",
                 background: speed === s ? `${accent}20` : "transparent",
@@ -420,7 +420,7 @@ export default function GlobalAudioPlayer() {
               <p className="text-[9px]" style={{ color: "var(--fg-on-dark-muted)" }}>{nextTrack.speaker}</p>
             </div>
             <button onClick={cancelUpNext}
-              className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full hover:bg-white/10 transition-all"
+              className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full hover:bg-white/10 transition"
               style={{ color: "var(--fg-on-dark-muted)", border: "1px solid var(--border-on-dark)" }}>
               Cancel
             </button>
@@ -433,7 +433,7 @@ export default function GlobalAudioPlayer() {
       <div className="px-7 pb-10 flex-shrink-0">
         <button
           onClick={() => { dismiss(); closeExpanded(); }}
-          className="w-full py-3 rounded-2xl text-sm font-semibold transition-all hover:bg-white/10 active:bg-white/15"
+          className="w-full py-3 rounded-2xl text-sm font-semibold transition hover:bg-white/10 active:bg-white/15"
           style={{ color: "var(--fg-on-dark-muted)", border: "1px solid var(--border-on-dark)" }}
         >
           Close Player
@@ -484,7 +484,7 @@ export default function GlobalAudioPlayer() {
               <span className="text-white/30 text-[10px]"> · {nextTrack.speaker}</span>
             </div>
             <button onClick={cancelUpNext}
-              className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full transition-all hover:bg-white/10"
+              className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full transition hover:bg-white/10"
               style={{ color: "var(--fg-on-dark-muted)", border: "1px solid var(--border-on-dark)" }}>
               Cancel
             </button>
@@ -545,7 +545,7 @@ export default function GlobalAudioPlayer() {
           {/* Skip back */}
           <button
             onClick={() => seek(Math.max(0, currentTime - 15))}
-            className="flex-shrink-0 text-white/45 hover:text-white active:scale-95 transition-all"
+            className="flex-shrink-0 text-white/45 hover:text-white active:scale-95 transition"
             aria-label="Skip back 15 seconds"
           >
             <SkipIcon direction="back" />
@@ -554,7 +554,7 @@ export default function GlobalAudioPlayer() {
           {/* Play / Pause */}
           <button
             onClick={togglePlay}
-            className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95"
+            className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition active:scale-95"
             style={{ background: accent }}
             aria-label={isPlaying ? "Pause" : "Play"}
           >
@@ -573,7 +573,7 @@ export default function GlobalAudioPlayer() {
           {/* Skip forward */}
           <button
             onClick={() => seek(Math.min(duration, currentTime + 15))}
-            className="flex-shrink-0 text-white/45 hover:text-white active:scale-95 transition-all"
+            className="flex-shrink-0 text-white/45 hover:text-white active:scale-95 transition"
             aria-label="Skip forward 15 seconds"
           >
             <SkipIcon direction="fwd" />
@@ -583,7 +583,7 @@ export default function GlobalAudioPlayer() {
           <div className="flex-shrink-0">
             <button
               onClick={() => setSpeed(nextSpeed(speed))}
-              className="md:hidden text-[10px] font-bold px-2 py-1 rounded transition-all"
+              className="md:hidden text-[10px] font-bold px-2 py-1 rounded transition"
               style={{ color: speed !== 1 ? accent : "var(--fg-on-dark-muted)", background: speed !== 1 ? `${accent}1e` : "transparent", minWidth: 34 }}
               aria-label={`Playback speed ${speedLabel}, tap to change`}
             >
@@ -594,7 +594,7 @@ export default function GlobalAudioPlayer() {
                 <button
                   key={s}
                   onClick={() => setSpeed(s)}
-                  className="text-[10px] font-semibold px-1.5 py-0.5 rounded transition-all"
+                  className="text-[10px] font-semibold px-1.5 py-0.5 rounded transition"
                   style={{
                     color: speed === s ? accent : "var(--fg-on-dark-muted)",
                     background: speed === s ? `${accent}1e` : "transparent",

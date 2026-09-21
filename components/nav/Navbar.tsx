@@ -119,7 +119,7 @@ export default function Navbar() {
       {/* ── Fixed top bar ──────────────────────────────────────── */}
       <nav
         data-chrome={chrome}
-        className={`bbc-nav fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`bbc-nav fixed top-0 left-0 right-0 z-50 transition duration-500 ${
           chrome === "glass" ? "nav-glass" : ""
         }`}
       >
@@ -142,7 +142,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href="/visit"
-              className="hidden sm:inline-flex font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
+              className="hidden sm:inline-flex font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
             >
               Plan a Visit
             </Link>
@@ -175,7 +175,7 @@ export default function Navbar() {
       <div
         aria-hidden="true"
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-[99] transition-all duration-300 ${
+        className={`fixed inset-0 z-[99] transition duration-300 ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         style={{ background: "var(--scrim)", backdropFilter: "blur(4px)" }}

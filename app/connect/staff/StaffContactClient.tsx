@@ -52,7 +52,7 @@ export default function StaffContactClient() {
           <button
             key={name}
             onClick={() => setSelected(name)}
-            className="flex flex-col items-center gap-2.5 p-4 rounded-2xl border border-border hover:border-accent/40 hover:shadow-sm transition-all text-center group"
+            className="flex flex-col items-center gap-2.5 p-4 rounded-2xl border border-border hover:border-accent/40 hover:shadow-sm transition text-center group"
           >
             <div className="relative w-16 h-16 rounded-full overflow-hidden bg-brand-navy/5 flex-shrink-0">
               {info.photo ? (

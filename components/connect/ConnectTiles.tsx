@@ -93,7 +93,7 @@ export default function ConnectTiles() {
         <Link
           key={tile.href}
           href={tile.href}
-          className="group flex items-start gap-4 rounded-2xl border border-border hover:border-accent/40 bg-surface-raised hover:shadow-md p-6 transition-all duration-200"
+          className="group flex items-start gap-4 rounded-2xl border border-border hover:border-accent/40 bg-surface-raised hover:shadow-md p-6 transition duration-200"
         >
           <span
             className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-accent-text transition-colors"

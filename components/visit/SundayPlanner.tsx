@@ -51,7 +51,7 @@ function Chip({
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left px-5 py-4 rounded-xl border-2 transition-all duration-150"
+      className="w-full text-left px-5 py-4 rounded-xl border-2 transition duration-150"
       style={{
         borderColor: selected ? "var(--accent)" : "var(--border-strong)",
         background: selected ? "var(--accent-bg)" : "var(--surface-raised)",
@@ -315,7 +315,7 @@ export default function SundayPlanner() {
             <button
               onClick={handleSubmit}
               disabled={!canSubmit || loading}
-              className="w-full font-condensed font-700 tracking-wide uppercase text-white py-4 rounded-full transition-all disabled:opacity-40"
+              className="w-full font-condensed font-700 tracking-wide uppercase text-white py-4 rounded-full transition disabled:opacity-40"
               style={{
                 background: canSubmit && !loading ? "var(--accent)" : "var(--accent)",
                 fontSize: "1rem",

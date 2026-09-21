@@ -215,7 +215,7 @@ export default function ThreeCircles() {
       {/* ── Nav — stays dark, floats above the white card ── */}
       <div className="flex items-center justify-between mb-5">
         <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
-          className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
+          className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition"
           style={{ borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)", color:canPrev?"var(--fg-on-dark-muted)":"var(--fg-on-dark-muted)", background:"transparent", cursor:canPrev?"pointer":"not-allowed" }}>
           ← Back
         </button>
@@ -372,7 +372,7 @@ export default function ThreeCircles() {
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-4">
             <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
+              className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition"
               style={{borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)",color:canPrev?"var(--fg-on-dark-muted)":"var(--fg-on-dark-muted)",background:"transparent",cursor:canPrev?"pointer":"not-allowed"}}>
               ← Back
             </button>

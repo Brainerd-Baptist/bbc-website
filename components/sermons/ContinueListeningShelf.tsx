@@ -176,7 +176,7 @@ export default function ContinueListeningShelf({
                     style={{ background: "var(--border-on-dark)" }}
                   >
                     <div
-                      className="h-full rounded-full transition-all"
+                      className="h-full rounded-full transition"
                       style={{ width: `${progress}%`, background: accent }}
                     />
                   </div>

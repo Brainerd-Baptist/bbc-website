@@ -129,7 +129,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
               placeholder="Search by title, passage, or book…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-surface-raised border border-border-strong rounded-xl pl-11 pr-4 py-3.5 text-fg placeholder-fg-muted text-sm focus:border-accent transition-all shadow-sm"
+              className="w-full bg-surface-raised border border-border-strong rounded-xl pl-11 pr-4 py-3.5 text-fg placeholder-fg-muted text-sm focus:border-accent transition shadow-sm"
             />
           </div>
 
@@ -207,7 +207,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
       href={url}
       target={isInternal ? undefined : "_blank"}
       rel={isInternal ? undefined : "noopener noreferrer"}
-      className="group relative flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition-all duration-200"
+      className="group relative flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition duration-200"
       style={{ animationDelay: `${index * 30}ms` }}
     >
       {/* Thumbnail */}
@@ -313,7 +313,7 @@ function Select({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-surface-raised border border-border-strong text-fg-muted text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-border-strong focus:border-accent transition-all shadow-sm"
+        className="appearance-none bg-surface-raised border border-border-strong text-fg-muted text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-border-strong focus:border-accent transition shadow-sm"
         aria-label={label}
       >
         {options.map((o) => (

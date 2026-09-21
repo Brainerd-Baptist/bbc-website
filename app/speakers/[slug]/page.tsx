@@ -218,7 +218,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                   <a
                     key={s.slug || s.date}
                     href={s.slug ? `/sermons/${s.slug}` : "#"}
-                    className="group flex items-center gap-4 p-3 rounded-xl bg-surface-raised border border-border hover:border-accent/30 hover:shadow-sm transition-all"
+                    className="group flex items-center gap-4 p-3 rounded-xl bg-surface-raised border border-border hover:border-accent/30 hover:shadow-sm transition"
                   >
                     {/* Thumbnail */}
                     <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-brand-navy/6">

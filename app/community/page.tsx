@@ -233,7 +233,7 @@ export default function CommunityPage() {
                   href="https://docs.google.com/forms/d/e/1FAIpQLSeKiTsMOeUMVXhV0nXiyZLVg-PvjmSgGebU0JvoViqreq0FVg/viewform"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all"
+                  className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition"
                   style={{ borderColor: "var(--border-strong)", color: "var(--fg)" }}
                 >
                   Submit a Request

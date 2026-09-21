@@ -136,7 +136,7 @@ export default async function SeriesPage({
               <a
                 key={sermon.id}
                 href={url}
-                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition-all duration-200"
+                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition duration-200"
                 style={{ animationDelay: `${i * 25}ms` }}
               >
                 {/* Thumbnail */}

@@ -53,7 +53,7 @@ export default function ServiceInfo() {
                 </div>
                 <Link
                   href="/visit"
-                  className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-accent-solid hover:bg-accent-solid-hover text-white py-3 rounded-full transition-all"
+                  className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-accent-solid hover:bg-accent-solid-hover text-white py-3 rounded-full transition"
                 >
                   Plan Your Visit
                 </Link>

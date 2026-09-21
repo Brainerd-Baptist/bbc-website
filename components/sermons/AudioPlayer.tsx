@@ -161,7 +161,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
             {/* Animated bars icon */}
             <div className="flex items-end gap-0.5 h-4">
               {[3, 5, 4, 6, 3].map((h, i) => (
-                <div key={i} className="w-0.5 rounded-full transition-all duration-150"
+                <div key={i} className="w-0.5 rounded-full transition duration-150"
                   style={{
                     height: activePlaying ? `${h * (i % 2 === 0 ? 1 : 1.3)}px` : "3px",
                     background: accentColor,
@@ -216,7 +216,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
           {/* Play / Pause - center large */}
           <button
             onClick={handlePlay}
-            className="mx-auto w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all active:scale-95 shadow-lg flex-shrink-0"
+            className="mx-auto w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center transition active:scale-95 shadow-lg flex-shrink-0"
             style={{ background: accentColor, boxShadow: `0 4px 24px ${accentColor}44` }}
             aria-label={activePlaying ? "Pause" : "Play"}
           >
@@ -252,7 +252,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
               <button
                 key={s}
                 onClick={() => isActive && setSpeed(s)}
-                className="text-[10px] font-bold px-1.5 py-1 rounded-lg transition-all"
+                className="text-[10px] font-bold px-1.5 py-1 rounded-lg transition"
                 style={{
                   color: (isActive ? spd : 1) === s ? accentColor : dim,
                   background: (isActive ? spd : 1) === s ? `${accentColor}18` : "transparent",

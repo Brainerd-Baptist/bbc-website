@@ -171,7 +171,7 @@ export default async function SermonsPage() {
                 <a
                   key={sr.id}
                   href={`/series/${sr.id}`}
-                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-border-on-dark hover:border-border-on-dark-strong transition-all relative"
+                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-border-on-dark hover:border-border-on-dark-strong transition relative"
                   style={{ background: "var(--brand-band)" }}
                 >
                   {/* Artwork background */}
@@ -243,7 +243,7 @@ export default async function SermonsPage() {
               <a
                 key={p.label}
                 href={p.href}
-                className="text-xs font-semibold text-fg-on-dark-body hover:text-fg-on-dark border border-border-on-dark-strong hover:border-border-on-dark-hover px-5 py-2.5 rounded-full transition-all"
+                className="text-xs font-semibold text-fg-on-dark-body hover:text-fg-on-dark border border-border-on-dark-strong hover:border-border-on-dark-hover px-5 py-2.5 rounded-full transition"
                 style={{ letterSpacing: "0.01em" }}
               >
                 {p.label}

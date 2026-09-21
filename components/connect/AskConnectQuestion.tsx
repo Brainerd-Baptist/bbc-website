@@ -78,7 +78,7 @@ export default function AskConnectQuestion() {
               <button
                 key={q}
                 onClick={() => handleAsk(q)}
-                className="text-xs px-4 py-2 rounded-full border border-border-strong text-fg-muted hover:border-accent/50 hover:text-fg transition-all"
+                className="text-xs px-4 py-2 rounded-full border border-border-strong text-fg-muted hover:border-accent/50 hover:text-fg transition"
               >
                 {q}
               </button>
@@ -103,7 +103,7 @@ export default function AskConnectQuestion() {
             <button
               onClick={() => handleAsk()}
               disabled={!question.trim() || loading}
-              className="absolute bottom-4 right-4 font-condensed font-700 tracking-wide uppercase text-xs text-white px-5 py-2 rounded-full transition-all disabled:opacity-30"
+              className="absolute bottom-4 right-4 font-condensed font-700 tracking-wide uppercase text-xs text-white px-5 py-2 rounded-full transition disabled:opacity-30"
               style={{ background: "var(--accent)" }}
             >
               {loading ? "…" : "Ask"}

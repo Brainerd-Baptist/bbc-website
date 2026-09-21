@@ -95,7 +95,7 @@ export default function SundayWalkthrough() {
           <button
             onClick={() => setIdx(i => Math.max(0, i - 1))}
             disabled={!canPrev}
-            className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
+            className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition"
             style={{
               borderColor: canPrev
                 ? "var(--border-on-dark-strong)"

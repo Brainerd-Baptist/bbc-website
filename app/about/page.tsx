@@ -303,14 +303,14 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full text-white transition-all hover:-translate-y-0.5"
+              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full text-white transition hover:-translate-y-0.5"
               style={{ background: "var(--accent)" }}
             >
               Plan a Visit
             </Link>
             <Link
               href="/beliefs"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition-all hover:-translate-y-0.5"
+              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition hover:-translate-y-0.5"
               style={{
                 border: "2px solid var(--border-strong)",
                 color: "var(--fg)",

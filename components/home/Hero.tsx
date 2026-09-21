@@ -221,7 +221,7 @@ export default function Hero() {
         <div className="max-w-2xl">
           {/* Eyebrow */}
           <p
-            className="eyebrow-white mb-4 transition-all duration-700"
+            className="eyebrow-white mb-4 transition duration-700"
             style={{ opacity: content ? 1 : 0, transform: content ? "none" : "translateY(8px)" }}
           >
             {c.eyebrow}
@@ -229,7 +229,7 @@ export default function Hero() {
 
           {/* Headline */}
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5 transition-all duration-700"
+            className="font-condensed font-900 text-white leading-none mb-5 transition duration-700"
             style={{
               fontSize: "clamp(3.2rem, 8vw, 5.5rem)",
               letterSpacing: "-0.01em",
@@ -242,7 +242,7 @@ export default function Hero() {
 
           {/* Supporting text */}
           <p
-            className="text-white/70 leading-relaxed mb-8 max-w-lg transition-all duration-700"
+            className="text-white/70 leading-relaxed mb-8 max-w-lg transition duration-700"
             style={{
               fontFamily: isSundayMorning ? "var(--font-barlow), sans-serif" : "Georgia, serif",
               fontSize: "1.1rem",

@@ -119,9 +119,9 @@ export default function ConnectBand() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/40 rounded-xl px-5 py-4 transition-all duration-200"
+                  className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/40 rounded-xl px-5 py-4 transition duration-200"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent-text shrink-0 group-hover:bg-accent-solid group-hover:text-white transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent-text shrink-0 group-hover:bg-accent-solid group-hover:text-white transition">
                     {item.icon}
                   </div>
                   <div className="flex-1 min-w-0">

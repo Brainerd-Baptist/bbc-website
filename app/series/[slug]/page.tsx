@@ -156,7 +156,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
             return (
               <div
                 key={sermon.id}
-                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition-all duration-200"
+                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition duration-200"
               >
                 {/* Episode number + thumbnail — links to sermon.
                     Kept (smaller) on mobile instead of hidden: the series
@@ -251,7 +251,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
           <p className="eyebrow-white mb-3">More from BBC</p>
           <Link
             href="/sermons"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white border border-white/20 hover:border-white/40 px-6 py-3 rounded-full transition-all"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-white/70 hover:text-white border border-white/20 hover:border-white/40 px-6 py-3 rounded-full transition"
           >
             Browse All Sermons
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">

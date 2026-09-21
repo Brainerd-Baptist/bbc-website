@@ -1140,3 +1140,47 @@ person — so the recommendation is written into the workflow header rather than
 - **62 `transition-all` usages across 34 files** — none currently sits on a rule swap, so none is broken, but
   `transition-all` animates layout properties and is worth narrowing.
 - **`app/sermons/[slug]/notes/PrintButton.tsx`** — themed, but imported nowhere. Either wire it up or delete it.
+
+---
+
+## 13. Post-Phase-6 cleanup
+
+The two loose ends that were mine to close.
+
+**`transition-all` → `transition`, 60 sites across 32 files.** Verified against the engine first:
+Tailwind's bare `transition` covers colour, opacity, box-shadow, transform, filter and backdrop-filter —
+everything visual — and excludes the layout properties that cause jank. Then checked that nothing actually
+relied on animating one: a first pass flagged 24 sites, all of which turned out to be `hover:border-accent/40`
+and `hover:text-fg`, i.e. border and text *colour*, which `transition` handles. A precise second pass found
+**zero** sites animating a property `transition` cannot. So the swap loses nothing and drops the layout
+thrash.
+
+This matters beyond performance. The Phase 5 bug where identity CTAs stuck at their pre-toggle ink was a
+transition holding a stale value across a rule swap; `transition-all` made every element a candidate for
+that class of bug. None of the 60 sat on a rule swap, so none was broken — but the exposure is gone now.
+
+**`PrintButton.tsx` deleted.** Themed in Phase 6, imported nowhere. It was not an unwired component:
+`NotesEditor.tsx:740` already renders a Print button calling `window.print()` with the same `.btn .btn-ghost`
+styling as its siblings, so this was a superseded duplicate — the same situation as `ScriptureInline`.
+
+### The two that are not mine to do
+
+1. **Pixel baselines.** GitHub → Actions → "Verify" → Run workflow. That fires the `baseline` job, which
+   builds the site on a runner and writes the reference images. Download the `pixel-baselines` artifact,
+   commit `tests/theme.spec.mjs-snapshots/`, then set `PIXEL_BASELINE: "1"` on the `visual` job. The other
+   five assertions in that suite already block without it.
+
+   This cannot be done from a sandbox session: `next build` needs `next/font` to reach Google Fonts, which
+   the egress proxy blocks, and the GitHub API is not reachable from here either — so neither building the
+   images locally nor dispatching the workflow remotely is possible.
+
+2. **Make `verify` a required status check.** Settings → Branches → `main` → require "verify" and "visual".
+   Deliberately not forced from a config file: on a church website, whether a red rail should block a
+   Sunday-morning fix is a judgement call that belongs to a person.
+
+### Still open, not picked up
+
+52 eslint errors, none colour-related: 21 `react/no-unescaped-entities` (cosmetic), 14
+`react-hooks/set-state-in-effect` and 11 `react-hooks/refs` (real bug classes), 4
+`@next/next/no-html-link-for-pages` (these break client-side navigation), 1 `react-hooks/purity`, 1
+`no-explicit-any`. Held flat by the ratchet so they cannot grow.

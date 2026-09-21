@@ -85,7 +85,7 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
             <a
               key={s.id}
               href={s.href}
-              className="group flex gap-3 rounded-xl overflow-hidden border border-border hover:border-accent/25 bg-surface-raised hover:shadow-sm transition-all p-3"
+              className="group flex gap-3 rounded-xl overflow-hidden border border-border hover:border-accent/25 bg-surface-raised hover:shadow-sm transition p-3"
             >
               {/* Thumbnail */}
               {s.youtubeId && (
