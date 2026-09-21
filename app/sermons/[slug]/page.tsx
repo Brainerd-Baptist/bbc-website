@@ -264,8 +264,8 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       >
         <div className="max-w-4xl mx-auto">
           <a href="/sermons"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors mb-8">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+            className="inline-flex items-center gap-2 text-white/65 hover:text-white text-sm font-semibold transition-colors mb-8 -ml-2 py-2 pl-2 pr-3 rounded-lg hover:bg-white/5 active:bg-white/10">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.25">
               <path d="M11 7H3M6 4L3 7l3 3"/>
             </svg>
             All Sermons

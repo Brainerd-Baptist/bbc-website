@@ -158,12 +158,15 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                 key={sermon.id}
                 className="group flex gap-0 rounded-2xl overflow-hidden border border-[#00205B]/08 hover:border-[#00abc9]/30 bg-white hover:shadow-md transition-all duration-200"
               >
-                {/* Episode number + thumbnail — links to sermon */}
+                {/* Episode number + thumbnail — links to sermon.
+                    Kept (smaller) on mobile instead of hidden: the series
+                    art is how people recognize the message, not just a
+                    density optimization. */}
                 <a
                   href={url}
                   target={isInternal ? undefined : "_blank"}
                   rel={isInternal ? undefined : "noopener noreferrer"}
-                  className="relative hidden sm:flex flex-shrink-0 w-[130px] md:w-[160px] items-center justify-center overflow-hidden"
+                  className="relative flex flex-shrink-0 w-[76px] sm:w-[130px] md:w-[160px] items-center justify-center overflow-hidden"
                   style={{ background: bgColor }}
                   tabIndex={-1}
                   aria-hidden="true"
@@ -174,20 +177,20 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                       alt={sermon.title}
                       fill
                       className="object-cover opacity-60 group-hover:opacity-75 transition-opacity"
-                      sizes="160px"
+                      sizes="(max-width: 640px) 76px, 160px"
                       unoptimized
                     />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/10" />
                   <div
-                    className="absolute top-2 left-2 text-[10px] font-bold tabular-nums text-white/60 bg-black/30 rounded-md px-1.5 py-0.5"
+                    className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 text-[9px] sm:text-[10px] font-bold tabular-nums text-white/60 bg-black/30 rounded-md px-1 sm:px-1.5 py-0.5"
                   >
                     {i + 1}
                   </div>
-                  <div className="relative z-10 w-9 h-9 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
+                  <div className="relative z-10 w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
                     style={{ background: accentColor + "cc", boxShadow: `0 4px 16px ${accentColor}44` }}
                   >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="white">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="white" className="sm:w-[11px] sm:h-[11px]">
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
                   </div>
