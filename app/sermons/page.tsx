@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { getAllSermons, getAllSeries, FALLBACK_SERMONS } from "@/lib/sanity";
 import { ALL_SERIES as FALLBACK_SERIES } from "@/lib/sermons";
 import SermonGrid from "@/components/sermons/SermonGrid";
+import ContinueListeningShelf, { type SermonForShelf } from "@/components/sermons/ContinueListeningShelf";
 
 export const metadata = {
   title: "Sermons — Brainerd Baptist Church",
@@ -189,6 +190,20 @@ export default async function SermonsPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Continue Listening shelf (client — reads localStorage) ─────── */}
+      <ContinueListeningShelf
+        sermons={sermons.map((s): SermonForShelf => ({
+          id:          s.id,
+          slug:        s.slug,
+          title:       s.title,
+          speaker:     s.speaker,
+          series:      s.series,
+          seriesAccent: s.seriesAccent,
+          youtubeId:   s.youtubeId,
+          duration:    s.duration,
+        }))}
+      />
 
       {/* ── Filter + grid (client component) ─────────────────────────── */}
       <Suspense fallback={null}>

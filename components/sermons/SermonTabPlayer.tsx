@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import SermonPlayer from "./SermonPlayer";
 import AudioPlayer from "./AudioPlayer";
-import { type AudioTrack } from "@/lib/audio-context";
+import { type AudioTrack, useAudio } from "@/lib/audio-context";
 
 interface Props {
   slug: string;
   youtubeId: string;
   title: string;
   audioTrack?: AudioTrack | null;
+  nextTrack?: AudioTrack | null;
   passages?: string[];
   outline: string[];
   outlineType: "structured" | "scripture" | "none";
@@ -23,6 +24,7 @@ export default function SermonTabPlayer({
   youtubeId,
   title,
   audioTrack,
+  nextTrack,
   passages = [],
   outline,
   outlineType,
@@ -30,6 +32,13 @@ export default function SermonTabPlayer({
   highlights = [],
   accentColor,
 }: Props) {
+  const { setNextTrack } = useAudio();
+
+  // Register the next track for autoplay whenever it changes
+  useEffect(() => {
+    setNextTrack(nextTrack ?? null);
+    return () => setNextTrack(null);
+  }, [nextTrack, setNextTrack]);
   const hasMedia = !!(youtubeId || audioTrack);
   const hasOutline = outline.length > 0 || highlights.length > 0 || passages.length > 0;
   // Notes download is available if we have outline content or raw text

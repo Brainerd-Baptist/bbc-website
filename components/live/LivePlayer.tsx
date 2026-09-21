@@ -219,6 +219,19 @@ function ActiveView({
   minutesUntil: number;
 }) {
   const [tab, setTab] = useState<Tab>("watch");
+
+  // ── Second-by-second countdown for pre-service ───────────────────────────
+  const [secsUntil, setSecsUntil] = useState(minutesUntil * 60);
+
+  // Re-sync when the 30s poller delivers a fresh minutesUntil
+  useEffect(() => { setSecsUntil(minutesUntil * 60); }, [minutesUntil]);
+
+  // Tick down every second while in pre-service state
+  useEffect(() => {
+    if (state !== "pre") return;
+    const id = setInterval(() => setSecsUntil((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(id);
+  }, [state]);
   const embedUrl = `https://www.youtube.com/embed/live_stream?channel=${YOUTUBE_CHANNEL_ID}&autoplay=1&rel=0&modestbranding=1`;
 
   return (
@@ -234,7 +247,7 @@ function ActiveView({
         )}
         {state === "pre" && (
           <><span className="w-1.5 h-1.5 rounded-full bg-[#00abc9]" />
-          {service?.label} starts in {minutesUntil} min</>
+          {service?.label} starts in {Math.floor(secsUntil / 60)}m {secsUntil % 60 < 10 ? `0${secsUntil % 60}` : secsUntil % 60}s</>
         )}
         {state === "post" && (
           <><span className="w-1.5 h-1.5 rounded-full bg-gray-400" />

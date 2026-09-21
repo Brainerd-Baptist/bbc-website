@@ -208,6 +208,43 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     duration:   s.duration,
   } : null;
 
+  // ── Resolve next sermon for autoplay ─────────────────────────────────────
+  let nextAudioTrack = null;
+  try {
+    const allSermons = await getAllSermons();
+    const sorted = allSermons
+      .filter((x) => x.slug?.current && x.date)
+      .sort((a, b) => b.date.localeCompare(a.date)); // newest first
+    const currentIdx = sorted.findIndex(
+      (x) => x.slug?.current === slug
+    );
+    if (currentIdx >= 0 && currentIdx < sorted.length - 1) {
+      const nextS = sorted[currentIdx + 1];
+      const podcastMap = await getPodcastAudioMap().catch(() => ({} as Record<string,string>));
+      const nKey = dateToKey(nextS.date);
+      let nextAudioUrl = podcastMap[nKey] ?? "";
+      if (!nextAudioUrl) {
+        const nd = new Date(nextS.date + "T12:00:00Z");
+        nd.setUTCDate(nd.getUTCDate() - 1);
+        nextAudioUrl = podcastMap[dateToKey(nd.toISOString().slice(0, 10))] ?? "";
+      }
+      if (nextAudioUrl) {
+        nextAudioTrack = {
+          title:      nextS.title ?? "",
+          speaker:    nextS.speaker ?? "",
+          series:     nextS.series?.title ?? "",
+          audioUrl:   nextAudioUrl,
+          youtubeId:  nextS.youtubeId ?? "",
+          slug:       nextS.slug?.current ?? "",
+          accentColor: nextS.series?.accentColor ?? "#00abc9",
+          duration:   nextS.duration,
+        };
+      }
+    }
+  } catch {
+    // next sermon resolution is non-critical
+  }
+
   const sermonNotes = isCurtisHill(s.speaker) && s.date
     ? await loadSermonNotes(s.date)
     : { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
@@ -273,6 +310,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             youtubeId={s.youtubeId}
             title={s.title}
             audioTrack={audioTrack}
+            nextTrack={nextAudioTrack}
             passages={allPassages}
             accentColor={accentColor}
             outline={sermonNotes.outline}
