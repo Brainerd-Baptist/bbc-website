@@ -141,7 +141,7 @@ export default function SermonTabPlayer({
                       >
                         {outlineType === "scripture" ? "—" : `${i + 1}.`}
                       </span>
-                      <span style={{ color: "rgba(0,32,91,0.75)" }}>{item}</span>
+                      <span style={{ color: "var(--fg-muted)" }}>{item}</span>
                     </li>
                   ))}
                 </ol>

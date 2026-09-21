@@ -3,8 +3,8 @@
   "recorded": "2026-09-21",
   "counts": {
     "raw-hex": 328,
-    "raw-rgb-fn": 253,
-    "arbitrary-color-class": 227,
+    "raw-rgb-fn": 252,
+    "arbitrary-color-class": 226,
     "unthemeable-tailwind-class": 327,
     "bg-white-route-shell": 0,
     "js-theme-branch": 4,
