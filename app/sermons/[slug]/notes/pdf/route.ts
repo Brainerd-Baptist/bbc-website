@@ -1,8 +1,9 @@
 /**
- * GET /sermons/[slug]/notes/pdf
+ * GET  /sermons/[slug]/notes/pdf  — blank template PDF (no typed notes)
+ * POST /sermons/[slug]/notes/pdf  — filled PDF with user's typed notes
  *
- * Generates and streams a branded sermon notes PDF using @react-pdf/renderer.
- * No headless browser required — pure serverless-safe PDF generation.
+ * Ink-light design: white background, navy text/accents only.
+ * No dark filled bands — minimal ink, maximum readability when printed.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -14,231 +15,255 @@ import { getSermonNotesByDate } from "@/lib/sermon";
 
 export const dynamic = "force-dynamic";
 
-// ── Brand colours ──────────────────────────────────────────────────────────
+// ── Brand tokens ────────────────────────────────────────────────────────────
 const NAVY  = "#00205B";
 const CYAN  = "#00abc9";
 const GREY  = "#8494a9";
-const RULE  = "#d4dae3";
+const RULE  = "#d8dde6";
 const WHITE = "#ffffff";
+const LIGHT = "#f5f7fa";
 
-// ── Styles ─────────────────────────────────────────────────────────────────
+// ── Styles — ink-light ───────────────────────────────────────────────────────
 const s = StyleSheet.create({
   page: {
     fontFamily: "Helvetica",
     backgroundColor: WHITE,
-    paddingBottom: 48,
+    paddingTop: 40,
+    paddingBottom: 52,
+    paddingHorizontal: 52,
   },
 
-  // Header band
+  // ── Header: white bg, navy top border, no filled band ──
   header: {
-    backgroundColor: NAVY,
-    paddingTop: 32,
-    paddingBottom: 28,
-    paddingHorizontal: 48,
+    borderTopWidth: 5,
+    borderTopColor: NAVY,
+    paddingTop: 18,
+    paddingBottom: 14,
+    marginBottom: 0,
   },
-  churchName: {
+  headerMetaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginBottom: 6,
+  },
+  churchEyebrow: {
     fontSize: 7,
     fontFamily: "Helvetica-Bold",
     color: CYAN,
-    letterSpacing: 2.2,
+    letterSpacing: 1.8,
     textTransform: "uppercase",
-    marginBottom: 8,
-  },
-  sermonTitle: {
-    fontSize: 28,
-    fontFamily: "Helvetica-Bold",
-    color: WHITE,
-    lineHeight: 1.1,
-    marginBottom: 10,
-  },
-  metaRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  metaItem: {
-    fontSize: 8.5,
-    color: "rgba(255,255,255,0.55)",
   },
   metaSep: {
-    fontSize: 8.5,
-    color: "rgba(255,255,255,0.25)",
-    marginHorizontal: 4,
+    fontSize: 7,
+    color: "rgba(0,32,91,0.2)",
+  },
+  metaText: {
+    fontSize: 7,
+    color: "rgba(0,32,91,0.4)",
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
+  sermonTitle: {
+    fontSize: 26,
+    fontFamily: "Helvetica-Bold",
+    color: NAVY,
+    lineHeight: 1.1,
+    letterSpacing: -0.3,
   },
 
-  // Cyan accent stripe
+  // ── Cyan stripe ──
   stripe: {
-    height: 4,
+    height: 3,
     backgroundColor: CYAN,
+    marginTop: 14,
+    marginBottom: 20,
   },
 
-  // Body
-  body: {
-    paddingHorizontal: 48,
-    paddingTop: 28,
-  },
-
-  // Passage callout
+  // ── Passage callout ──
   passageBox: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(0,171,201,0.3)",
-    borderRadius: 5,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    marginBottom: 24,
-    backgroundColor: "rgba(0,171,201,0.06)",
+    borderColor: "rgba(0,171,201,0.22)",
+    borderRadius: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 9,
+    marginBottom: 20,
+    backgroundColor: "rgba(0,171,201,0.05)",
     alignSelf: "flex-start",
   },
   passageLabel: {
-    fontSize: 6.5,
+    fontSize: 6,
     fontFamily: "Helvetica-Bold",
     color: GREY,
-    letterSpacing: 1.5,
+    letterSpacing: 1.2,
     textTransform: "uppercase",
-    marginRight: 8,
+    marginRight: 7,
   },
   passageText: {
-    fontSize: 9,
+    fontSize: 8.5,
     fontFamily: "Helvetica-Bold",
     color: NAVY,
   },
 
-  // Section label
-  sectionLabel: {
-    fontSize: 6.5,
+  // ── Section label ──
+  sectionLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 14,
+    gap: 8,
+  },
+  sectionLabelText: {
+    fontSize: 6,
     fontFamily: "Helvetica-Bold",
     color: CYAN,
-    letterSpacing: 2,
+    letterSpacing: 1.8,
     textTransform: "uppercase",
-    marginBottom: 16,
+  },
+  sectionLabelLine: {
+    flex: 1,
+    height: 0.75,
+    backgroundColor: "rgba(0,32,91,0.08)",
   },
 
-  // Outline items
-  outlineList: {
-    gap: 20,
-  },
-  outlineItem: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "flex-start",
-  },
-  outlineNumberCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+  // ── Outline items ──
+  outlineList: { gap: 18 },
+  outlineItem: { flexDirection: "row", gap: 10, alignItems: "flex-start" },
+  outlineCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: NAVY,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
     marginTop: 1,
   },
-  outlineNumberText: {
-    fontSize: 8,
-    fontFamily: "Helvetica-Bold",
-    color: WHITE,
-  },
-  outlineNumberCircleScripture: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+  outlineCircleScripture: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: "rgba(0,32,91,0.25)",
+    borderColor: "rgba(0,32,91,0.2)",
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
     marginTop: 1,
   },
-  outlineNumberDash: {
-    fontSize: 8,
+  outlineNumber: {
+    fontSize: 7.5,
+    fontFamily: "Helvetica-Bold",
+    color: WHITE,
+  },
+  outlineNumberScripture: {
+    fontSize: 7.5,
     color: GREY,
   },
-  outlineContent: {
-    flex: 1,
-  },
+  outlineContent: { flex: 1 },
   outlinePoint: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: "Helvetica-Bold",
     color: NAVY,
     lineHeight: 1.4,
-    marginBottom: 8,
-  },
-  ruleLines: {
-    gap: 8,
-  },
-  ruleLine: {
-    height: 0.75,
-    backgroundColor: RULE,
+    marginBottom: 6,
   },
 
-  // Blank lines (no outline)
-  blankLines: {
-    gap: 10,
+  // ── Typed note area ──
+  typedNoteBox: {
+    backgroundColor: LIGHT,
+    borderRadius: 3,
+    borderLeftWidth: 2,
+    borderLeftColor: "rgba(0,171,201,0.3)",
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    marginBottom: 6,
+  },
+  typedNoteText: {
+    fontSize: 9,
+    color: "#1a2a4a",
+    lineHeight: 1.6,
   },
 
-  // Additional notes section
-  additionalNotes: {
-    marginTop: 28,
+  // ── Rule lines (when no typed notes) ──
+  ruleLines: { gap: 7 },
+  ruleLine: { height: 0.75, backgroundColor: RULE },
+
+  // ── Blank lines ──
+  blankLines: { gap: 9 },
+
+  // ── Additional notes ──
+  additionalSection: { marginTop: 24 },
+  additionalTypedBox: {
+    backgroundColor: LIGHT,
+    borderRadius: 3,
+    padding: 10,
+    minHeight: 48,
+  },
+  additionalTypedText: {
+    fontSize: 9,
+    color: "#1a2a4a",
+    lineHeight: 1.6,
   },
 
-  // Key phrases
+  // ── Key phrases ──
   keyPhrases: {
-    marginTop: 28,
-    paddingTop: 18,
-    borderTopWidth: 1,
+    marginTop: 22,
+    paddingTop: 14,
+    borderTopWidth: 0.75,
     borderTopColor: RULE,
   },
   phraseItem: {
     flexDirection: "row",
-    gap: 8,
-    marginBottom: 8,
+    gap: 7,
+    marginBottom: 7,
     alignItems: "flex-start",
   },
   phraseAccent: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontFamily: "Helvetica-Bold",
     color: CYAN,
-    marginTop: 0,
   },
   phraseText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: GREY,
     fontFamily: "Helvetica-Oblique",
     lineHeight: 1.5,
     flex: 1,
   },
 
-  // Footer
+  // ── Footer ──
   footer: {
-    marginTop: 32,
-    paddingTop: 14,
-    borderTopWidth: 2,
+    marginTop: 28,
+    paddingTop: 10,
+    borderTopWidth: 0.75,
     borderTopColor: RULE,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
   },
   footerChurch: {
-    fontSize: 8.5,
+    fontSize: 8,
     fontFamily: "Helvetica-Bold",
     color: NAVY,
     letterSpacing: 0.5,
     textTransform: "uppercase",
     marginBottom: 2,
   },
-  footerAddress: {
-    fontSize: 7,
-    color: GREY,
-  },
-  footerUrl: {
-    fontSize: 7,
-    fontFamily: "Helvetica-Bold",
-    color: CYAN,
-  },
+  footerAddress: { fontSize: 6.5, color: GREY },
+  footerUrl: { fontSize: 6.5, fontFamily: "Helvetica-Bold", color: CYAN },
 });
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function SectionLabel({ text }: { text: string }) {
+  return React.createElement(
+    View,
+    { style: s.sectionLabelRow },
+    React.createElement(Text, { style: s.sectionLabelText }, text),
+    React.createElement(View, { style: s.sectionLabelLine })
+  );
+}
 
 function RuleLines({ count = 4 }: { count?: number }) {
   return React.createElement(
@@ -250,7 +275,7 @@ function RuleLines({ count = 4 }: { count?: number }) {
   );
 }
 
-// ── PDF Document ────────────────────────────────────────────────────────────
+// ── PDF Document ─────────────────────────────────────────────────────────────
 
 function SermonNotesPDF({
   title,
@@ -261,6 +286,8 @@ function SermonNotesPDF({
   outline,
   outlineType,
   highlights,
+  pointNotes,      // user-typed notes per outline point
+  additionalNotes, // user-typed additional notes
 }: {
   title: string;
   series: string;
@@ -270,6 +297,8 @@ function SermonNotesPDF({
   outline: string[];
   outlineType: "structured" | "scripture" | "none";
   highlights: string[];
+  pointNotes: string[];
+  additionalNotes: string;
 }) {
   const metaParts = [series, formattedDate, speaker].filter(Boolean);
 
@@ -284,140 +313,144 @@ function SermonNotesPDF({
       React.createElement(
         View,
         { style: s.header },
-        React.createElement(Text, { style: s.churchName }, "Brainerd Baptist Church"),
-        React.createElement(Text, { style: s.sermonTitle }, title),
-        metaParts.length > 0 &&
-          React.createElement(
-            View,
-            { style: s.metaRow },
-            ...metaParts.map((part, i) =>
-              React.createElement(
-                React.Fragment,
-                { key: i },
-                i > 0 && React.createElement(Text, { style: s.metaSep }, "·"),
-                React.createElement(Text, { style: s.metaItem }, part)
-              )
-            )
-          )
+        React.createElement(
+          View,
+          { style: s.headerMetaRow },
+          React.createElement(Text, { style: s.churchEyebrow }, "Brainerd Baptist Church"),
+          ...metaParts.flatMap((part, i) => [
+            React.createElement(Text, { key: `sep-${i}`, style: s.metaSep }, "·"),
+            React.createElement(Text, { key: `part-${i}`, style: s.metaText }, part),
+          ])
+        ),
+        React.createElement(Text, { style: s.sermonTitle }, title)
       ),
 
       // ── Cyan stripe ──
       React.createElement(View, { style: s.stripe }),
 
-      // ── Body ──
-      React.createElement(
-        View,
-        { style: s.body },
+      // ── Passage ──
+      passage &&
+        React.createElement(
+          View,
+          { style: s.passageBox },
+          React.createElement(Text, { style: s.passageLabel }, "Key Passage"),
+          React.createElement(Text, { style: s.passageText }, passage)
+        ),
 
-        // Passage callout
-        passage &&
-          React.createElement(
+      // ── Message Notes ──
+      React.createElement(SectionLabel, { text: "Message Notes" }),
+
+      outline.length > 0
+        ? React.createElement(
             View,
-            { style: s.passageBox },
-            React.createElement(Text, { style: s.passageLabel }, "Key Passage"),
-            React.createElement(Text, { style: s.passageText }, passage)
-          ),
-
-        // Section label
-        React.createElement(Text, { style: s.sectionLabel }, "Message Notes"),
-
-        // Outline or blank lines
-        outline.length > 0
-          ? React.createElement(
-              View,
-              { style: s.outlineList },
-              ...outline.map((point, i) =>
+            { style: s.outlineList },
+            ...outline.map((point, i) => {
+              const typed = (pointNotes[i] ?? "").trim();
+              return React.createElement(
+                View,
+                { key: i, style: s.outlineItem },
+                // Circle
+                outlineType === "scripture"
+                  ? React.createElement(
+                      View,
+                      { style: s.outlineCircleScripture },
+                      React.createElement(Text, { style: s.outlineNumberScripture }, "—")
+                    )
+                  : React.createElement(
+                      View,
+                      { style: s.outlineCircle },
+                      React.createElement(Text, { style: s.outlineNumber }, `${i + 1}`)
+                    ),
+                // Content
                 React.createElement(
                   View,
-                  { key: i, style: s.outlineItem },
-                  outlineType === "scripture"
+                  { style: s.outlineContent },
+                  React.createElement(Text, { style: s.outlinePoint }, point),
+                  typed
                     ? React.createElement(
                         View,
-                        { style: s.outlineNumberCircleScripture },
-                        React.createElement(Text, { style: s.outlineNumberDash }, "—")
+                        { style: s.typedNoteBox },
+                        React.createElement(Text, { style: s.typedNoteText }, typed)
                       )
-                    : React.createElement(
-                        View,
-                        { style: s.outlineNumberCircle },
-                        React.createElement(Text, { style: s.outlineNumberText }, `${i + 1}`)
-                      ),
-                  React.createElement(
-                    View,
-                    { style: s.outlineContent },
-                    React.createElement(Text, { style: s.outlinePoint }, point),
-                    React.createElement(RuleLines, { count: 4 })
-                  )
+                    : React.createElement(RuleLines, { count: 3 })
                 )
-              )
+              );
+            })
+          )
+        : // No outline — blank lines or typed notes
+          React.createElement(
+            View,
+            { style: s.blankLines },
+            ...(pointNotes[0]?.trim()
+              ? [React.createElement(
+                  View,
+                  { style: s.typedNoteBox },
+                  React.createElement(Text, { style: s.typedNoteText }, pointNotes[0])
+                )]
+              : Array.from({ length: 14 }).map((_, i) =>
+                  React.createElement(View, { key: i, style: s.ruleLine })
+                ))
+          ),
+
+      // ── Additional Notes ──
+      React.createElement(
+        View,
+        { style: s.additionalSection },
+        React.createElement(SectionLabel, { text: "Additional Notes" }),
+        additionalNotes.trim()
+          ? React.createElement(
+              View,
+              { style: s.additionalTypedBox },
+              React.createElement(Text, { style: s.additionalTypedText }, additionalNotes.trim())
             )
           : React.createElement(
               View,
               { style: s.blankLines },
-              ...Array.from({ length: 12 }).map((_, i) =>
+              ...Array.from({ length: 8 }).map((_, i) =>
                 React.createElement(View, { key: i, style: s.ruleLine })
               )
-            ),
+            )
+      ),
 
-        // Additional notes
+      // ── Key phrases ──
+      highlights.length > 0 &&
         React.createElement(
           View,
-          { style: s.additionalNotes },
-          React.createElement(Text, { style: s.sectionLabel }, "Additional Notes"),
-          React.createElement(
-            View,
-            { style: s.blankLines },
-            ...Array.from({ length: 8 }).map((_, i) =>
-              React.createElement(View, { key: i, style: s.ruleLine })
+          { style: s.keyPhrases },
+          React.createElement(SectionLabel, { text: "Key Phrases" }),
+          ...highlights.map((phrase, i) =>
+            React.createElement(
+              View,
+              { key: i, style: s.phraseItem },
+              React.createElement(Text, { style: s.phraseAccent }, "›"),
+              React.createElement(Text, { style: s.phraseText }, phrase)
             )
           )
         ),
 
-        // Key phrases
-        highlights.length > 0 &&
-          React.createElement(
-            View,
-            { style: s.keyPhrases },
-            React.createElement(Text, { style: s.sectionLabel }, "Key Phrases"),
-            ...highlights.map((phrase, i) =>
-              React.createElement(
-                View,
-                { key: i, style: s.phraseItem },
-                React.createElement(Text, { style: s.phraseAccent }, "›"),
-                React.createElement(Text, { style: s.phraseText }, phrase)
-              )
-            )
-          ),
-
-        // Footer
+      // ── Footer ──
+      React.createElement(
+        View,
+        { style: s.footer },
         React.createElement(
           View,
-          { style: s.footer },
+          null,
+          React.createElement(Text, { style: s.footerChurch }, "Brainerd Baptist Church"),
           React.createElement(
-            View,
-            null,
-            React.createElement(Text, { style: s.footerChurch }, "Brainerd Baptist Church"),
-            React.createElement(
-              Text,
-              { style: s.footerAddress },
-              "300 Brookfield Ave · Chattanooga, TN · Sundays 8:30 & 11:00 AM"
-            )
-          ),
-          React.createElement(Text, { style: s.footerUrl }, "brainerdbaptist.org")
-        )
+            Text,
+            { style: s.footerAddress },
+            "300 Brookfield Ave · Chattanooga, TN · Sundays 8:30 & 11:00 AM"
+          )
+        ),
+        React.createElement(Text, { style: s.footerUrl }, "brainerdbaptist.org")
       )
     )
   );
 }
 
-// ── Route handler ────────────────────────────────────────────────────────────
+// ── Shared sermon resolver ───────────────────────────────────────────────────
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  const { slug } = await params;
-
-  // Resolve sermon metadata
+async function resolveSermon(slug: string) {
   const sanitySermon = await getSermonBySlug(slug).catch(() => null);
   let title = "", series = "", passage = "", speaker = "", date = "";
 
@@ -429,9 +462,7 @@ export async function GET(
     date    = sanitySermon.date    ?? "";
   } else {
     const staticS = SERMONS.find((s) => s.id === slug);
-    if (!staticS) {
-      return new NextResponse("Sermon not found", { status: 404 });
-    }
+    if (!staticS) return null;
     title   = staticS.title;
     series  = staticS.series;
     passage = staticS.passage;
@@ -442,26 +473,31 @@ export async function GET(
   const notes = date ? await getSermonNotesByDate(date) : null;
   const outline: string[]    = notes?.outline    ?? [];
   const highlights: string[] = notes?.highlights ?? [];
-  const outlineType = notes?.outlineType ?? "none";
-
+  const outlineType = (notes?.outlineType ?? "none") as "structured" | "scripture" | "none";
   const formattedDate = date ? formatDate(date) : "";
 
-  // Generate PDF buffer
+  return { title, series, passage, speaker, formattedDate, outline, highlights, outlineType };
+}
+
+async function buildPDF(
+  slug: string,
+  pointNotes: string[],
+  additionalNotes: string
+): Promise<NextResponse> {
+  const sermon = await resolveSermon(slug);
+  if (!sermon) {
+    return new NextResponse("Sermon not found", { status: 404 });
+  }
+
   const buffer = await renderToBuffer(
     React.createElement(SermonNotesPDF, {
-      title,
-      series,
-      passage,
-      speaker,
-      formattedDate,
-      outline,
-      outlineType,
-      highlights,
+      ...sermon,
+      pointNotes,
+      additionalNotes,
     })
   );
 
-  // Safe filename
-  const safeTitle = title.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 60);
+  const safeTitle = sermon.title.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 60);
   const filename  = `${safeTitle}-notes.pdf`;
 
   return new NextResponse(new Uint8Array(buffer), {
@@ -469,7 +505,45 @@ export async function GET(
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${filename}"`,
-      "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+      "Cache-Control": "no-store",
     },
   });
+}
+
+// ── Route handlers ───────────────────────────────────────────────────────────
+
+/** GET — blank template (no typed notes) */
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+  return buildPDF(slug, [], "");
+}
+
+/** POST — filled PDF with user's typed notes */
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
+
+  let pointNotes: string[] = [];
+  let additionalNotes = "";
+
+  try {
+    const body = await req.json();
+    if (Array.isArray(body.pointNotes)) {
+      pointNotes = body.pointNotes.map((n: unknown) =>
+        typeof n === "string" ? n : ""
+      );
+    }
+    if (typeof body.additionalNotes === "string") {
+      additionalNotes = body.additionalNotes;
+    }
+  } catch {
+    // body parse failed — fall through with empty notes
+  }
+
+  return buildPDF(slug, pointNotes, additionalNotes);
 }
