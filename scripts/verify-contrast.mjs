@@ -4,7 +4,7 @@
  *
  * Validates every foreground/background pairing in the semantic token layer
  * against WCAG 2.1 AA, in BOTH themes, by reading the real values out of
- * app/globals.css. Change a token and this tells you what you broke.
+ * app/tokens.css. Change a token and this tells you what you broke.
  *
  * Two rules it encodes that are easy to get wrong:
  *
@@ -27,7 +27,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const CSS = fs.readFileSync(path.join(process.cwd(), "app/globals.css"), "utf8");
+const CSS = fs.readFileSync(path.join(process.cwd(), "app/tokens.css"), "utf8");
 
 // ── colour maths ──────────────────────────────────────────────────────────
 
@@ -149,5 +149,5 @@ if (failures === 0) {
   console.log("✓ all pairings meet WCAG 2.1 AA");
   process.exit(0);
 }
-console.error(`✗ ${failures} pairing(s) below AA — fix the token values in app/globals.css`);
+console.error(`✗ ${failures} pairing(s) below AA — fix the token values in app/tokens.css`);
 process.exit(1);

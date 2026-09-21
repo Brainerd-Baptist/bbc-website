@@ -1,0 +1,289 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — the only file in this project allowed to contain a raw
+   colour value.
+   ═══════════════════════════════════════════════════════════════════════
+
+   Everything else (app/globals.css, every component) must reach colour
+   through var(--token) or a Tailwind utility generated from the @theme
+   export below. Stylelint enforces that: this file is the single entry in
+   its `overrides` exemption list, and raw hex, named colours and bare
+   rgb()/hsl() are errors everywhere else.
+
+   That is the whole reason this file exists separately. While the tokens
+   lived in globals.css — the project's only stylesheet — exempting "the
+   token file" from the lint rules would have exempted every line of CSS in
+   the codebase, and the rail would have been theatre.
+
+   Three tiers, per GitHub Primer's published architecture:
+     1. PRIMITIVES   raw brand values, named for the brand
+     2. SEMANTIC     roles, named for the job (surface / fg / border / accent)
+     3. (no component tier — Radix warns off `CardBg`-style names, because
+        tokens need reuse across call sites)
+
+   Components consume tier 2. Tier 1 exists so tier 2 has something to point
+   at, and so a brand refresh is a change in one place.
+
+   scripts/verify-contrast.mjs reads THIS file, resolves the var()
+   indirection, flattens alpha over the surface each token actually sits on,
+   and checks all 52 foreground/background pairings against WCAG AA in both
+   themes. Change a value here and it will tell you what broke.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Brand primitives ──────────────────────────────────────────────
+   Tailwind v4 is CSS-first and does NOT read a tailwind.config.ts
+   unless you add an explicit `@config` directive. There wasn't one,
+   which is how the old config became dead code: `bg-gold`,
+   `text-navy` and friends were compiling to nothing at all, so those
+   buttons rendered with no background and no text colour. Declaring
+   the palette here is what actually generates those utilities.
+
+   This is the PRIMITIVE tier — raw brand values named for the brand,
+   not for a role. Semantic role tokens (surface / fg / border /
+   accent) get layered on top of these in the next phase, and app code
+   should migrate to those rather than reaching for these directly.
+   ──────────────────────────────────────────────────────────────── */
+@theme {
+  --color-brand-navy: #00205b;
+  --color-brand-navy-light: #0a2d6e;
+  --color-brand-navy-deep: #001340;
+  --color-brand-cyan: #00abc9;
+  --color-brand-cyan-light: #33c1d9;
+  --color-brand-cyan-dark: #0090a8;
+  --color-brand-cyan-pale: #e6f7fb;
+}
+
+/* ── Semantic tokens ────────────────────────────────────────────────────
+   The role layer. Components consume THESE — never the brand primitives
+   above, and never a raw hex.
+
+   Naming follows the convention every system surveyed converges on
+   (shadcn's `-foreground`, Material's `on-*`, Primer's `fgColor-onEmphasis`):
+   if a token can be a background, it has a paired foreground, and using one
+   without the other is the bug. The white-on-white on this site was
+   structurally exactly that — surfaces got themed and the foregrounds
+   inside them did not.
+
+   Four surface levels, not two. Depth in dark mode cannot come from
+   shadows: a shadow darkens its backdrop, and on a near-black backdrop
+   there is almost no luminance left to remove. So raised surfaces step
+   *lighter* and borders carry the separation instead.
+
+   Every foreground is verified against the WORST surface in its family
+   rather than the primary one (Primer's rule). scripts/verify-contrast.mjs
+   enforces that — change a value here and it will tell you what broke.
+   ──────────────────────────────────────────────────────────────────── */
+:root {
+  /* Lets the browser theme what we don't paint: scrollbars, native form
+     controls, date pickers, spellcheck underlines. Its absence is why a
+     dark page still had light-mode inputs and a white scrollbar. */
+  color-scheme: light;
+
+  /* Surfaces, recessed → floating */
+  --surface-sunken:  #f4f6f9;
+  --surface:         #ffffff;
+  --surface-raised:  #ffffff;
+  --surface-overlay: rgba(255, 255, 255, 0.92);
+
+  /* Foregrounds. --fg-subtle is LARGE TEXT ONLY at 3.01:1 — never body copy. */
+  --fg:           #00205b;
+  --fg-muted:     #5d7197;
+  --fg-subtle:    #7f8fad;
+  --fg-on-accent: #ffffff;
+
+  /* Accent — three distinct roles, NOT interchangeable:
+       --accent        brand cyan. Decorative use, and fills that carry
+                       NAVY text (5.65:1, passes).
+       --accent-solid  fills that carry WHITE text. Brand cyan with white is
+                       only 2.74:1 and fails AA, so button fills darken.
+       --accent-text   cyan used AS text on a light surface — 2.74:1 again,
+                       so it darkens here and returns to brand cyan in dark
+                       mode, where it already passes at 5.50:1. */
+  --accent:             #00abc9;
+  --accent-solid:       #008299;
+  --accent-solid-hover: #006d80;
+  --accent-text:        #007b91;
+  --accent-bg:          rgba(0, 171, 201, 0.10);
+  /* The foreground that belongs on --accent. Theme-INVARIANT: brand cyan is
+     a fixed bright colour in both themes, so what reads on it is fixed too
+     (brand navy, 5.65:1). This is Material's `on*Fixed` idea — a pairing that
+     must not flip with the theme. Using --fg here instead would give
+     light-blue-on-cyan at 1.83:1 in dark mode. */
+  --accent-fg:          #00205b;
+
+  /* Borders. --border-input is stronger on purpose: an input's box is often
+     its only affordance, which WCAG 1.4.11 requires to clear 3:1. */
+  --border:        rgba(0, 32, 91, 0.10);
+  --border-strong: rgba(0, 32, 91, 0.22);
+  --border-input:  rgba(0, 32, 91, 0.48);
+  /* Brand cyan as a focus ring on a light surface is 2.74:1 and misses the
+     3:1 that WCAG 1.4.11 requires of a non-text indicator, so the light ring
+     uses the darkened cyan. In dark mode the bright end of the family is the
+     legible one. */
+  --focus-ring:    #007b91;
+
+  /* Media. A scrim goes BETWEEN a photo and the page rather than dimming the
+     photo itself — filtering an image lowers its contrast and hurts the
+     images containing text most. --media-bg stops letterbox bars rendering
+     pure black against a not-pure-black page. */
+  --scrim:    rgba(0, 12, 28, 0.55);
+  --media-bg: #f4f6f9;
+
+  /* Shadows. Tokenised because they are one of the three things that must
+     change per theme (surface, border, shadow). In light mode the shadow
+     carries the depth; in dark mode it goes nearly opaque and decorative
+     while the lighter surface and visible border do the real work. */
+  --shadow-sm: 0 1px 4px rgba(0, 32, 91, 0.06);
+  --shadow-md: 0 2px 8px rgba(0, 32, 91, 0.06);
+  --shadow-lg: 0 16px 40px rgba(0, 32, 91, 0.12), 0 4px 12px rgba(0, 32, 91, 0.08);
+  --shadow-sm-hover: 0 8px 24px rgba(0, 32, 91, 0.10);
+
+  /* ── On-dark content ──────────────────────────────────────────────────
+     Theme-INVARIANT on purpose. These sit on ground that is dark in BOTH
+     themes — a navy band, a hero photo, the scrimmed nav — so they must not
+     flip when the theme does. Radix ships black-a / white-a alpha scales for
+     exactly this case, documented as "designed for overlays and don't change
+     across light and dark theme".
+
+     Getting this wrong is subtle: swapping these to --fg would make white
+     text on a navy hero turn light-blue in dark mode, over ground that never
+     changed. */
+  --fg-on-dark:            #ffffff;
+  --fg-on-dark-muted:      rgba(255, 255, 255, 0.50);
+  --surface-on-dark:       rgba(255, 255, 255, 0.08);
+  --border-on-dark:        rgba(255, 255, 255, 0.12);
+  --border-on-dark-strong: rgba(255, 255, 255, 0.35);
+  --border-on-dark-hover:  rgba(255, 255, 255, 0.70);
+  --hover-on-dark:         rgba(255, 255, 255, 0.08);
+
+  /* ── Nav chrome ───────────────────────────────────────────────────────
+     Consumed by the .bbc-nav[data-chrome] selectors in globals.css. Split so
+     the VALUES live here and only the selector logic lives there.
+
+     --nav-ink-glass and --nav-hover-glass are the theme-dependent pair, and
+     because they are re-pointed in the .dark block below, globals.css needs
+     no `.dark .bbc-nav[…]` selector of its own. The overlay pair is
+     theme-invariant: it floats over a dark hero either way. */
+  --nav-ink-overlay:   var(--fg-on-dark);
+  --nav-hover-overlay: rgba(255, 255, 255, 0.12);
+  --nav-ink-glass:     #00205b;
+  --nav-hover-glass:   rgba(0, 32, 91, 0.07);
+  /* Keeps white chrome above the 3:1 WCAG 1.4.11 wants for non-text UI even
+     over a bright patch of hero photo. Fades out by the bottom of the 64px
+     bar so it reads as a vignette, not a band. */
+  --nav-scrim: linear-gradient(
+    to bottom,
+    rgba(0, 12, 28, 0.50) 0%,
+    rgba(0, 12, 28, 0.22) 55%,
+    rgba(0, 12, 28, 0) 100%
+  );
+
+  /* ── Compatibility aliases ──────────────────────────────────────────
+     Legacy names still referenced by components, re-pointed at the tokens
+     above so nothing breaks mid-migration. Deleted in Phase 6 once their
+     call sites are migrated. Thirteen further legacy variables were removed
+     outright here — they had zero consumers anywhere in the tree.
+
+     --bbc-navy is the instructive one: a brand-named variable that `.dark`
+     remapped to a LIGHT tint, because it was never actually the brand navy.
+     It was the body text colour all along. It now points at --fg, which is
+     what it always meant. */
+  --bbc-navy:       var(--fg);
+  --bbc-blue:       var(--accent);
+  --bbc-blue-light: var(--color-brand-cyan-light);
+  --bbc-blue-dark:  var(--accent-solid-hover);
+  --gold:           var(--accent);
+  --gray-100:       var(--surface-sunken);
+}
+
+/* ── Tailwind export ────────────────────────────────────────────────────
+   Surfaces the semantic tokens as utilities: bg-surface, text-fg,
+   text-fg-muted, border-border, bg-accent-solid, and so on.
+
+   The `inline` keyword is load-bearing. It inlines the var() REFERENCE
+   rather than the resolved value, so the `.dark` overrides propagate at
+   runtime. Without `inline`, Tailwind bakes in whatever the light value was
+   at build time and dark mode silently does nothing.
+   ──────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-surface:            var(--surface);
+  --color-surface-sunken:     var(--surface-sunken);
+  --color-surface-raised:     var(--surface-raised);
+  --color-surface-overlay:    var(--surface-overlay);
+
+  --color-fg:                 var(--fg);
+  --color-fg-muted:           var(--fg-muted);
+  --color-fg-subtle:          var(--fg-subtle);
+  --color-fg-on-accent:       var(--fg-on-accent);
+
+  --color-accent:             var(--accent);
+  --color-accent-solid:       var(--accent-solid);
+  --color-accent-solid-hover: var(--accent-solid-hover);
+  --color-accent-text:        var(--accent-text);
+  --color-accent-bg:          var(--accent-bg);
+  --color-accent-fg:          var(--accent-fg);
+
+  --color-border:             var(--border);
+  --color-border-strong:      var(--border-strong);
+  --color-border-input:       var(--border-input);
+  --color-focus-ring:         var(--focus-ring);
+
+  --color-scrim:              var(--scrim);
+  --color-media-bg:           var(--media-bg);
+}
+
+/* ── The dark value set ──────────────────────────────────────────────
+   This block is now ONLY values. It used to be a pile of per-class
+   `.dark .glass { … }` overrides, each one a place to forget a component.
+   Because the shared utilities above consume tokens, re-pointing the tokens
+   here themes all of them at once — which is the whole reason for the token
+   layer.
+
+   Surfaces get LIGHTER as they rise (sunken → surface → raised → overlay),
+   because a shadow has almost no luminance left to remove on a near-black
+   backdrop. Pure black is deliberately avoided: it leaves no room below the
+   canvas for a sunken surface, it smears against bright content on OLED, and
+   WCAG's ratio maths is least trustworthy in exactly that region.
+   ──────────────────────────────────────────────────────────────────── */
+.dark {
+  color-scheme: dark;
+
+  --surface-sunken:  #0a1020;
+  --surface:         #0d1525;
+  --surface-raised:  #162030;
+  --surface-overlay: #1b2738;
+
+  --fg:           #c8d4e8;
+  --fg-muted:     #838fa2;
+  --fg-subtle:    #647082;
+  --fg-on-accent: #ffffff;
+
+  /* --accent-text returns to full brand cyan here: on a dark surface it
+     already clears AA (5.50:1 against the lightest dark surface), so the
+     light-mode darkening is not needed and the brand reads at full strength. */
+  --accent:             #00abc9;
+  --accent-solid:       #008299;
+  --accent-solid-hover: #006d80;
+  --accent-text:        #00abc9;
+  --accent-bg:          rgba(0, 171, 201, 0.14);
+  --accent-fg:          #00205b; /* theme-invariant — see the light block */
+
+  --border:        rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-input:  rgba(255, 255, 255, 0.34);
+  --focus-ring:    #33c1d9;
+
+  --scrim:    rgba(0, 0, 0, 0.60);
+  --media-bg: #0a1020;
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.30);
+  --shadow-sm-hover: 0 8px 24px rgba(0, 0, 0, 0.40);
+
+  /* The nav's glass surface is dark here, so its chrome inverts. This pair is
+     the reason globals.css needs no `.dark` selector for nav colour.
+     The on-dark family above is deliberately NOT overridden: it sits on
+     ground that was already dark in light mode and has not changed. */
+  --nav-ink-glass:   #c8d4e8;
+  --nav-hover-glass: rgba(255, 255, 255, 0.10);
+}

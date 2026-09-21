@@ -1,0 +1,60 @@
+name: Verify
+
+# Runs the theming rails on every push and pull request.
+#
+# Deliberately NOT gating the Vercel deploy yet. The rails all pass on the
+# current tree locally, but they have never run on a GitHub runner, and
+# blocking deploys on an unproven workflow is how you end up unable to ship a
+# Sunday-morning fix. Once this has a few green runs, make it a required
+# status check on main and add `needs: verify` to the deploy workflow —
+# that is a Phase 6 step in docs/dark-mode-rebuild-plan.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A newer push supersedes an in-flight run on the same ref.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Each rail runs separately rather than through `npm run verify`, so a
+      # failure names itself in the job summary instead of hiding behind a
+      # chained &&.
+
+      - name: Types
+        run: npx tsc --noEmit
+
+      - name: CSS — no raw colour outside app/tokens.css
+        run: npm run lint:css
+
+      - name: Tailwind — every colour utility actually emits CSS
+        run: npm run verify:classes
+
+      - name: Contrast — all token pairings meet WCAG AA in both themes
+        run: npm run verify:contrast
+
+      - name: Ratchet — no theming metric may increase
+        run: npm run ratchet
+
+      # Non-blocking: surfaces the remaining raw-colour count in the log so
+      # progress is visible per run. `eslint` exits 0 on warnings.
+      - name: Remaining raw-colour warnings (informational)
+        if: always()
+        run: npx eslint --format stylish || true

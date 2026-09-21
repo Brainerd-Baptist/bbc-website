@@ -8,11 +8,13 @@
     "start": "next start",
     "lint": "eslint",
     "verify:classes": "node scripts/verify-classes.mjs",
-    "verify": "tsc --noEmit && npm run verify:classes && npm run verify:contrast",
+    "verify": "tsc --noEmit && npm run lint:css && npm run verify:classes && npm run verify:contrast && npm run ratchet",
     "verify:contrast": "node scripts/verify-contrast.mjs",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
-    "lint:baseline": "eslint --format json | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const n=JSON.parse(s).reduce((a,f)=>a+f.errorCount,0);console.log('eslint errors:',n);})\""
+    "lint:css": "stylelint \"app/**/*.css\"",
+    "ratchet": "node scripts/ratchet.mjs",
+    "ratchet:update": "node scripts/ratchet.mjs --update"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.127.0",
@@ -49,6 +51,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "stylelint": "^17.15.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

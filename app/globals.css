@@ -1,169 +1,11 @@
 @import "tailwindcss";
 
+/* All colour lives in tokens.css — see the header there for why it is a
+   separate file. Imported before the utilities below so they can consume it. */
+@import "./tokens.css";
+
 /* ── Tailwind v4: enable dark-mode via .dark class on <html> ──── */
 @variant dark (&:where(.dark, .dark *));
-
-/* ── Brand primitives ──────────────────────────────────────────────
-   Tailwind v4 is CSS-first and does NOT read a tailwind.config.ts
-   unless you add an explicit `@config` directive. There wasn't one,
-   which is how the old config became dead code: `bg-gold`,
-   `text-navy` and friends were compiling to nothing at all, so those
-   buttons rendered with no background and no text colour. Declaring
-   the palette here is what actually generates those utilities.
-
-   This is the PRIMITIVE tier — raw brand values named for the brand,
-   not for a role. Semantic role tokens (surface / fg / border /
-   accent) get layered on top of these in the next phase, and app code
-   should migrate to those rather than reaching for these directly.
-   ──────────────────────────────────────────────────────────────── */
-@theme {
-  --color-brand-navy: #00205b;
-  --color-brand-navy-light: #0a2d6e;
-  --color-brand-navy-deep: #001340;
-  --color-brand-cyan: #00abc9;
-  --color-brand-cyan-light: #33c1d9;
-  --color-brand-cyan-dark: #0090a8;
-  --color-brand-cyan-pale: #e6f7fb;
-}
-
-/* ── Semantic tokens ────────────────────────────────────────────────────
-   The role layer. Components consume THESE — never the brand primitives
-   above, and never a raw hex.
-
-   Naming follows the convention every system surveyed converges on
-   (shadcn's `-foreground`, Material's `on-*`, Primer's `fgColor-onEmphasis`):
-   if a token can be a background, it has a paired foreground, and using one
-   without the other is the bug. The white-on-white on this site was
-   structurally exactly that — surfaces got themed and the foregrounds
-   inside them did not.
-
-   Four surface levels, not two. Depth in dark mode cannot come from
-   shadows: a shadow darkens its backdrop, and on a near-black backdrop
-   there is almost no luminance left to remove. So raised surfaces step
-   *lighter* and borders carry the separation instead.
-
-   Every foreground is verified against the WORST surface in its family
-   rather than the primary one (Primer's rule). scripts/verify-contrast.mjs
-   enforces that — change a value here and it will tell you what broke.
-   ──────────────────────────────────────────────────────────────────── */
-:root {
-  /* Lets the browser theme what we don't paint: scrollbars, native form
-     controls, date pickers, spellcheck underlines. Its absence is why a
-     dark page still had light-mode inputs and a white scrollbar. */
-  color-scheme: light;
-
-  /* Surfaces, recessed → floating */
-  --surface-sunken:  #f4f6f9;
-  --surface:         #ffffff;
-  --surface-raised:  #ffffff;
-  --surface-overlay: rgba(255, 255, 255, 0.92);
-
-  /* Foregrounds. --fg-subtle is LARGE TEXT ONLY at 3.01:1 — never body copy. */
-  --fg:           #00205b;
-  --fg-muted:     #5d7197;
-  --fg-subtle:    #7f8fad;
-  --fg-on-accent: #ffffff;
-
-  /* Accent — three distinct roles, NOT interchangeable:
-       --accent        brand cyan. Decorative use, and fills that carry
-                       NAVY text (5.65:1, passes).
-       --accent-solid  fills that carry WHITE text. Brand cyan with white is
-                       only 2.74:1 and fails AA, so button fills darken.
-       --accent-text   cyan used AS text on a light surface — 2.74:1 again,
-                       so it darkens here and returns to brand cyan in dark
-                       mode, where it already passes at 5.50:1. */
-  --accent:             #00abc9;
-  --accent-solid:       #008299;
-  --accent-solid-hover: #006d80;
-  --accent-text:        #007b91;
-  --accent-bg:          rgba(0, 171, 201, 0.10);
-  /* The foreground that belongs on --accent. Theme-INVARIANT: brand cyan is
-     a fixed bright colour in both themes, so what reads on it is fixed too
-     (brand navy, 5.65:1). This is Material's `on*Fixed` idea — a pairing that
-     must not flip with the theme. Using --fg here instead would give
-     light-blue-on-cyan at 1.83:1 in dark mode. */
-  --accent-fg:          #00205b;
-
-  /* Borders. --border-input is stronger on purpose: an input's box is often
-     its only affordance, which WCAG 1.4.11 requires to clear 3:1. */
-  --border:        rgba(0, 32, 91, 0.10);
-  --border-strong: rgba(0, 32, 91, 0.22);
-  --border-input:  rgba(0, 32, 91, 0.48);
-  /* Brand cyan as a focus ring on a light surface is 2.74:1 and misses the
-     3:1 that WCAG 1.4.11 requires of a non-text indicator, so the light ring
-     uses the darkened cyan. In dark mode the bright end of the family is the
-     legible one. */
-  --focus-ring:    #007b91;
-
-  /* Media. A scrim goes BETWEEN a photo and the page rather than dimming the
-     photo itself — filtering an image lowers its contrast and hurts the
-     images containing text most. --media-bg stops letterbox bars rendering
-     pure black against a not-pure-black page. */
-  --scrim:    rgba(0, 12, 28, 0.55);
-  --media-bg: #f4f6f9;
-
-  /* Shadows. Tokenised because they are one of the three things that must
-     change per theme (surface, border, shadow). In light mode the shadow
-     carries the depth; in dark mode it goes nearly opaque and decorative
-     while the lighter surface and visible border do the real work. */
-  --shadow-sm: 0 1px 4px rgba(0, 32, 91, 0.06);
-  --shadow-md: 0 2px 8px rgba(0, 32, 91, 0.06);
-  --shadow-lg: 0 16px 40px rgba(0, 32, 91, 0.12), 0 4px 12px rgba(0, 32, 91, 0.08);
-  --shadow-sm-hover: 0 8px 24px rgba(0, 32, 91, 0.10);
-
-  /* ── Compatibility aliases ──────────────────────────────────────────
-     Legacy names still referenced by components, re-pointed at the tokens
-     above so nothing breaks mid-migration. Deleted in Phase 6 once their
-     call sites are migrated. Thirteen further legacy variables were removed
-     outright here — they had zero consumers anywhere in the tree.
-
-     --bbc-navy is the instructive one: a brand-named variable that `.dark`
-     remapped to a LIGHT tint, because it was never actually the brand navy.
-     It was the body text colour all along. It now points at --fg, which is
-     what it always meant. */
-  --bbc-navy:       var(--fg);
-  --bbc-blue:       var(--accent);
-  --bbc-blue-light: var(--color-brand-cyan-light);
-  --bbc-blue-dark:  var(--accent-solid-hover);
-  --gold:           var(--accent);
-  --gray-100:       var(--surface-sunken);
-}
-
-/* ── Tailwind export ────────────────────────────────────────────────────
-   Surfaces the semantic tokens as utilities: bg-surface, text-fg,
-   text-fg-muted, border-border, bg-accent-solid, and so on.
-
-   The `inline` keyword is load-bearing. It inlines the var() REFERENCE
-   rather than the resolved value, so the `.dark` overrides propagate at
-   runtime. Without `inline`, Tailwind bakes in whatever the light value was
-   at build time and dark mode silently does nothing.
-   ──────────────────────────────────────────────────────────────────── */
-@theme inline {
-  --color-surface:            var(--surface);
-  --color-surface-sunken:     var(--surface-sunken);
-  --color-surface-raised:     var(--surface-raised);
-  --color-surface-overlay:    var(--surface-overlay);
-
-  --color-fg:                 var(--fg);
-  --color-fg-muted:           var(--fg-muted);
-  --color-fg-subtle:          var(--fg-subtle);
-  --color-fg-on-accent:       var(--fg-on-accent);
-
-  --color-accent:             var(--accent);
-  --color-accent-solid:       var(--accent-solid);
-  --color-accent-solid-hover: var(--accent-solid-hover);
-  --color-accent-text:        var(--accent-text);
-  --color-accent-bg:          var(--accent-bg);
-  --color-accent-fg:          var(--accent-fg);
-
-  --color-border:             var(--border);
-  --color-border-strong:      var(--border-strong);
-  --color-border-input:       var(--border-input);
-  --color-focus-ring:         var(--focus-ring);
-
-  --color-scrim:              var(--scrim);
-  --color-media-bg:           var(--media-bg);
-}
 
 * {
   box-sizing: border-box;
@@ -260,18 +102,14 @@ body {
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
 }
-.glass-light {
-  background: var(--accent-bg);
-  border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
-}
 
 /* Cards sitting on an intentionally dark section (a navy band, a photo).
    These are theme-INVARIANT on purpose: the surface beneath them is dark in
    both themes, so they must stay light-on-dark either way. That is what
    Radix's black-a / white-a alpha scales exist for. */
 .glass-dark {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--surface-on-dark);
+  border: 1px solid var(--border-on-dark);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -305,7 +143,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
+  color: var(--fg-on-dark-muted);
 }
 
 /* ── Divider ───────────────────────────────────────────── */
@@ -351,15 +189,15 @@ body {
   font-size: 0.875rem;
   letter-spacing: -0.01em;
   background: transparent;
-  color: #ffffff;
-  border: 1.5px solid rgba(255,255,255,0.35);
+  color: var(--fg-on-dark);
+  border: 1.5px solid var(--border-on-dark-strong);
   padding: 0.75rem 1.75rem;
   border-radius: 9999px;
   transition: border-color 0.2s, background 0.2s;
 }
 .btn-outline-white:hover {
-  border-color: rgba(255,255,255,0.7);
-  background: rgba(255,255,255,0.08);
+  border-color: var(--border-on-dark-hover);
+  background: var(--hover-on-dark);
 }
 .btn-outline-navy {
   font-family: var(--font-inter), sans-serif;
@@ -457,8 +295,8 @@ body {
    logo, toggle and hamburger were literally invisible.
    ───────────────────────────────────────────────────────────────── */
 .bbc-nav {
-  --nav-ink: #ffffff;
-  --nav-hover: rgba(255, 255, 255, 0.12);
+  --nav-ink: var(--nav-ink-overlay);
+  --nav-hover: var(--nav-hover-overlay);
 }
 
 /* Scrim beneath the transparent bar. Without it, white chrome sitting over
@@ -466,21 +304,12 @@ body {
    requires for non-text UI. It fades to nothing by the bottom of the 64px
    bar, so it reads as a natural vignette rather than a hard band. */
 .bbc-nav[data-chrome="transparent"] {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(0, 12, 28, 0.50) 0%,
-    rgba(0, 12, 28, 0.22) 55%,
-    rgba(0, 12, 28, 0) 100%
-  );
+  background-image: var(--nav-scrim);
 }
 
 .bbc-nav[data-chrome="glass"] {
-  --nav-ink: #00205b;
-  --nav-hover: rgba(0, 32, 91, 0.07);
-}
-.dark .bbc-nav[data-chrome="glass"] {
-  --nav-ink: #c8d4e8;
-  --nav-hover: rgba(255, 255, 255, 0.10);
+  --nav-ink: var(--nav-ink-glass);
+  --nav-hover: var(--nav-hover-glass);
 }
 
 .nav-ctl {
@@ -533,104 +362,6 @@ body {
   transform: scale(1.04);
 }
 
-/* ── Gradient text ─────────────────────────────────────── */
-.text-gradient {
-  background: linear-gradient(135deg, #ffffff 0%, #00abc9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-/* Runs from the body foreground into the accent, so in dark mode it goes
-   light-blue → cyan instead of near-invisible navy → cyan. */
-.text-gradient-navy {
-  background: linear-gradient(135deg, var(--fg) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.text-gradient-gold {
-  background: linear-gradient(135deg, #00abc9 0%, #33c1d9 60%, #7dd8ea 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Shimmer button ────────────────────────────────────── */
-.btn-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-.btn-shimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
-}
-.btn-shimmer:hover::after {
-  transform: translateX(100%);
-}
-
-/* ── Enhanced glass (more pronounced) ─────────────────── */
-.glass-deep {
-  background: var(--surface-overlay);
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-/* Theme-invariant, like .glass-dark: this sits on deliberately dark ground
-   (a navy band, a hero photo) in both themes. */
-.glass-dark-deep {
-  background: rgba(0,20,42,0.65);
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* ── Glow effects ──────────────────────────────────────── */
-.glow-teal {
-  box-shadow: 0 0 40px rgba(0,171,201,0.25), 0 0 80px rgba(0,171,201,0.10);
-}
-.glow-navy {
-  box-shadow: 0 0 40px rgba(0,32,91,0.20);
-}
-
-/* ── Pulse ring (for CTAs) ─────────────────────────────── */
-@keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(0,171,201,0.5); }
-  70%  { box-shadow: 0 0 0 12px rgba(0,171,201,0); }
-  100% { box-shadow: 0 0 0 0 rgba(0,171,201,0); }
-}
-.btn-pulse {
-  animation: pulse-ring 2.5s ease infinite;
-}
-
-/* ── Floating animation ────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-.float {
-  animation: float 4s ease-in-out infinite;
-}
-
-/* ── Subtle gradient orbs (background accents) ─────────── */
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  pointer-events: none;
-}
-.orb-teal {
-  background: radial-gradient(circle, rgba(0,171,201,0.18) 0%, transparent 70%);
-}
-.orb-navy {
-  background: radial-gradient(circle, rgba(0,32,91,0.15) 0%, transparent 70%);
-}
-
 /* ── Page transitions (View Transitions API) ───────────── */
 /* Browsers without support (Firefox) see nothing — graceful degradation */
 
@@ -675,60 +406,4 @@ body {
   ::view-transition-new(root) {
     animation: none;
   }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   DARK MODE
-   All overrides live here. Components use dark: Tailwind
-   utilities for bg/text — structural shared classes live below.
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ── The dark value set ──────────────────────────────────────────────
-   This block is now ONLY values. It used to be a pile of per-class
-   `.dark .glass { … }` overrides, each one a place to forget a component.
-   Because the shared utilities above consume tokens, re-pointing the tokens
-   here themes all of them at once — which is the whole reason for the token
-   layer.
-
-   Surfaces get LIGHTER as they rise (sunken → surface → raised → overlay),
-   because a shadow has almost no luminance left to remove on a near-black
-   backdrop. Pure black is deliberately avoided: it leaves no room below the
-   canvas for a sunken surface, it smears against bright content on OLED, and
-   WCAG's ratio maths is least trustworthy in exactly that region.
-   ──────────────────────────────────────────────────────────────────── */
-.dark {
-  color-scheme: dark;
-
-  --surface-sunken:  #0a1020;
-  --surface:         #0d1525;
-  --surface-raised:  #162030;
-  --surface-overlay: #1b2738;
-
-  --fg:           #c8d4e8;
-  --fg-muted:     #838fa2;
-  --fg-subtle:    #647082;
-  --fg-on-accent: #ffffff;
-
-  /* --accent-text returns to full brand cyan here: on a dark surface it
-     already clears AA (5.50:1 against the lightest dark surface), so the
-     light-mode darkening is not needed and the brand reads at full strength. */
-  --accent:             #00abc9;
-  --accent-solid:       #008299;
-  --accent-solid-hover: #006d80;
-  --accent-text:        #00abc9;
-  --accent-bg:          rgba(0, 171, 201, 0.14);
-  --accent-fg:          #00205b; /* theme-invariant — see the light block */
-
-  --border:        rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --border-input:  rgba(255, 255, 255, 0.34);
-  --focus-ring:    #33c1d9;
-
-  --scrim:    rgba(0, 0, 0, 0.60);
-  --media-bg: #0a1020;
-
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.30);
-  --shadow-sm-hover: 0 8px 24px rgba(0, 0, 0, 0.40);
 }
