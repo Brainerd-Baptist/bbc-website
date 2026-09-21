@@ -94,7 +94,7 @@ function getHeroContent(): HeroContent {
   // Default — rest of week
   return {
     eyebrow: "Sundays in Chattanooga",
-    headline: <>Brainerd<br /><span className="text-[#00abc9]">Baptist Church.</span></>,
+    headline: <>Welcome to<br /><span className="text-[#00abc9]">Brainerd.</span></>,
     sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
@@ -159,7 +159,7 @@ export default function Hero() {
   // Server/first-render fallback
   const c = content ?? {
     eyebrow: "Sundays in Chattanooga",
-    headline: <>Brainerd <span className="text-[#00abc9]">Baptist Church.</span></>,
+    headline: <>Welcome to <span className="text-[#00abc9]">Brainerd.</span></>,
     sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
