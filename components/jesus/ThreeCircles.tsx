@@ -202,13 +202,13 @@ export default function ThreeCircles() {
       <div className="flex items-center justify-between mb-5">
         <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
           className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
-          style={{ borderColor:canPrev?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.06)", color:canPrev?"rgba(255,255,255,0.65)":"rgba(255,255,255,0.15)", background:"transparent", cursor:canPrev?"pointer":"not-allowed" }}>
+          style={{ borderColor:canPrev?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.14)", color:canPrev?"rgba(255,255,255,0.65)":"rgba(255,255,255,0.32)", background:"transparent", cursor:canPrev?"pointer":"not-allowed" }}>
           ← Back
         </button>
         <div className="flex items-center gap-2">
           {STEPS.map((s,i)=>(
             <button key={s.id} onClick={()=>setIdx(i)} aria-label={`Step ${i+1}`}
-              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?TEAL:"rgba(255,255,255,0.18)", border:"none", cursor:"pointer", transition:"all .3s ease" }}/>
+              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?TEAL:"rgba(255,255,255,0.32)", border:"none", cursor:"pointer", transition:"all .3s ease" }}/>
           ))}
         </div>
         {canNext
@@ -359,7 +359,7 @@ export default function ThreeCircles() {
           <div className="hidden lg:flex items-center gap-4">
             <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
-              style={{borderColor:canPrev?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.06)",color:canPrev?"rgba(255,255,255,0.6)":"rgba(255,255,255,0.15)",background:"transparent",cursor:canPrev?"pointer":"not-allowed"}}>
+              style={{borderColor:canPrev?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.14)",color:canPrev?"rgba(255,255,255,0.6)":"rgba(255,255,255,0.32)",background:"transparent",cursor:canPrev?"pointer":"not-allowed"}}>
               ← Back
             </button>
             {canNext

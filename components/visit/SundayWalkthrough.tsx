@@ -96,8 +96,8 @@ export default function SundayWalkthrough() {
             disabled={!canPrev}
             className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
             style={{
-              borderColor: canPrev ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.06)",
-              color: canPrev ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.15)",
+              borderColor: canPrev ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.14)",
+              color: canPrev ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.32)",
               background: "transparent",
               cursor: canPrev ? "pointer" : "not-allowed",
             }}
@@ -116,7 +116,7 @@ export default function SundayWalkthrough() {
                   height: 7,
                   borderRadius: 4,
                   padding: 0,
-                  background: i === idx ? TEAL : "rgba(255,255,255,0.18)",
+                  background: i === idx ? TEAL : "rgba(255,255,255,0.32)",
                   border: "none",
                   cursor: "pointer",
                   transition: "all .3s ease",

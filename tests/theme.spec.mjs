@@ -127,6 +127,10 @@ for (const theme of THEMES) {
             const cs = getComputedStyle(el);
             if (cs.visibility === "hidden" || cs.display === "none") continue;
             if (Number(cs.opacity) < 0.15) continue;
+            // WCAG 1.4.11 exempts disabled/inactive controls from the contrast
+            // floor, so flagging them would train people to ignore this test.
+            if (el.disabled || el.getAttribute("aria-disabled") === "true") continue;
+            if (el.closest("[disabled],[aria-disabled='true']")) continue;
             if (cs.webkitTextFillColor === "transparent") continue; // gradient text
             const fgRaw = parseRGBA(cs.color);
             const bg = backdrop(el);
