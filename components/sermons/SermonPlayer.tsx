@@ -33,7 +33,13 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
   const [isPlaying, setIsPlaying]     = useState(false);
   const [isVisible, setIsVisible]     = useState(true);
   const [dismissed, setDismissed]     = useState(false);
-  const [placeholderH, setPlaceholderH] = useState<number | null>(null);
+  // Captured from the IntersectionObserver entry itself, at the moment the
+  // player leaves the viewport — i.e. while it's still in normal flow, before
+  // any docked styling is applied. Measuring it any other way (e.g. in a
+  // follow-up effect, after the wrapper has already collapsed to 0 height)
+  // creates a layout-shift feedback loop: wrapper collapses → page jumps →
+  // observer flips back → undocks → page jumps again, forever.
+  const dockedHeightRef = useRef(0);
 
   const docked = isPlaying && !isVisible && !dismissed;
 
@@ -147,6 +153,11 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
+        // Capture the wrapper's height *before* it potentially goes fixed —
+        // the rect on this entry still reflects normal in-flow layout.
+        if (!entry.isIntersecting && entry.boundingClientRect.height > 0) {
+          dockedHeightRef.current = entry.boundingClientRect.height;
+        }
         setIsVisible(entry.isIntersecting);
         if (entry.isIntersecting) setDismissed(false); // scrolling back resets a manual close
       },
@@ -156,16 +167,6 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
     return () => observer.disconnect();
   }, []);
 
-  // ── Reserve layout space while docked so the page doesn't jump ─────────
-  useEffect(() => {
-    if (docked && wrapperRef.current && placeholderH === null) {
-      setPlaceholderH(wrapperRef.current.getBoundingClientRect().height);
-    }
-    if (!docked && placeholderH !== null) {
-      setPlaceholderH(null);
-    }
-  }, [docked, placeholderH]);
-
   const closeDock = useCallback(() => {
     const player = playerRef.current as { pause?: () => void } | null;
     player?.pause?.();
@@ -173,7 +174,7 @@ export default function SermonPlayer({ youtubeId, title }: Props) {
   }, []);
 
   return (
-    <div className="relative" ref={wrapperRef} style={docked && placeholderH ? { minHeight: placeholderH } : undefined}>
+    <div className="relative" ref={wrapperRef} style={docked && dockedHeightRef.current ? { minHeight: dockedHeightRef.current } : undefined}>
       <div
         ref={containerRef}
         className={
