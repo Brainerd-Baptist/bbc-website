@@ -5,10 +5,6 @@ const nextConfig: NextConfig = {
   // Turbopack can't bundle. Tell Next.js to require() it at runtime instead.
   serverExternalPackages: ["@react-pdf/renderer"],
 
-  // ESLint is run as a separate CI step; don't block the build on it.
-  // Pre-existing violations across many components need a dedicated cleanup pass.
-  eslint: { ignoreDuringBuilds: true },
-
   // Allow YouTube thumbnails and Sanity CDN images
   images: {
     remotePatterns: [
