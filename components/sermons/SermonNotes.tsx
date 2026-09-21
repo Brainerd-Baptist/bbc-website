@@ -32,36 +32,45 @@ function ToolBtn({
   title,
   children,
   accentColor,
+  danger = false,
 }: {
   onClick: () => void;
   active?: boolean;
   title: string;
   children: React.ReactNode;
   accentColor: string;
+  danger?: boolean;
 }) {
   return (
     <button
       onMouseDown={(e) => { e.preventDefault(); onClick(); }}
       title={title}
+      aria-label={title}
       style={{
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
-        width: 30,
-        height: 30,
-        borderRadius: 6,
+        // Larger on mobile for touch targets
+        width: 34,
+        height: 34,
+        borderRadius: 7,
         border: "none",
         cursor: "pointer",
         background: active ? `${accentColor}18` : "transparent",
-        color: active ? accentColor : "rgba(0,32,91,0.45)",
+        color: active ? accentColor : danger ? "rgba(180,40,30,0.4)" : "rgba(0,32,91,0.45)",
         transition: "background 0.12s, color 0.12s",
         flexShrink: 0,
+        WebkitTapHighlightColor: "transparent",
       }}
       onMouseEnter={(e) => {
-        if (!active) (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,32,91,0.06)";
+        const el = e.currentTarget as HTMLButtonElement;
+        if (!active) el.style.background = danger ? "rgba(180,40,30,0.06)" : "rgba(0,32,91,0.06)";
+        if (!active && danger) el.style.color = "rgba(180,40,30,0.75)";
       }}
       onMouseLeave={(e) => {
-        if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+        const el = e.currentTarget as HTMLButtonElement;
+        if (!active) el.style.background = "transparent";
+        if (!active && danger) el.style.color = "rgba(180,40,30,0.4)";
       }}
     >
       {children}
@@ -69,10 +78,131 @@ function ToolBtn({
   );
 }
 
-// ── Divider between toolbar groups ───────────────────────────────────────────
+// ── Thin vertical divider ─────────────────────────────────────────────────────
 function Divider() {
-  return <div style={{ width: 1, height: 18, background: "rgba(0,32,91,0.1)", flexShrink: 0, margin: "0 2px" }} />;
+  return (
+    <div style={{
+      width: 1, height: 20,
+      background: "rgba(0,32,91,0.09)",
+      flexShrink: 0, margin: "0 3px",
+      alignSelf: "center",
+    }} />
+  );
 }
+
+// ── Bold icon ─────────────────────────────────────────────────────────────────
+const IconBold = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+    <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+  </svg>
+);
+
+// ── Italic icon ───────────────────────────────────────────────────────────────
+const IconItalic = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="19" y1="4" x2="10" y2="4"/>
+    <line x1="14" y1="20" x2="5" y2="20"/>
+    <line x1="15" y1="4" x2="9" y2="20"/>
+  </svg>
+);
+
+// ── Underline icon ────────────────────────────────────────────────────────────
+const IconUnderline = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/>
+    <line x1="4" y1="21" x2="20" y2="21"/>
+  </svg>
+);
+
+// ── Strikethrough icon ────────────────────────────────────────────────────────
+const IconStrike = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.3 12H6.7"/>
+    <path d="M10 7.3C10 6 11.3 5 13 5s3 1 3 2.3"/>
+    <path d="M14 16.7c0 1.3-1.3 2.3-3 2.3s-3-1-3-2.3"/>
+  </svg>
+);
+
+// ── Highlight / marker pen icon ───────────────────────────────────────────────
+const IconHighlight = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    {/* Marker body */}
+    <rect x="3" y="12" width="13" height="6" rx="1"/>
+    {/* Tip */}
+    <path d="M16 15l4-4-2-2-4 4"/>
+    {/* Color band at bottom */}
+    <line x1="3" y1="19" x2="16" y2="19" strokeWidth="3" stroke="#f9e000" strokeLinecap="round"/>
+  </svg>
+);
+
+// ── Bullet list icon ──────────────────────────────────────────────────────────
+const IconBullets = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="9" y1="6" x2="20" y2="6"/>
+    <line x1="9" y1="12" x2="20" y2="12"/>
+    <line x1="9" y1="18" x2="20" y2="18"/>
+    <circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+    <circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+    <circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/>
+  </svg>
+);
+
+// ── Indent icon ───────────────────────────────────────────────────────────────
+const IconIndent = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="8" x2="21" y2="8"/>
+    <line x1="9" y1="12" x2="21" y2="12"/>
+    <line x1="9" y1="16" x2="21" y2="16"/>
+    <polyline points="3 12 6 15 3 18"/>
+  </svg>
+);
+
+// ── Outdent icon ──────────────────────────────────────────────────────────────
+const IconOutdent = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="8" x2="21" y2="8"/>
+    <line x1="9" y1="12" x2="21" y2="12"/>
+    <line x1="9" y1="16" x2="21" y2="16"/>
+    <polyline points="7 12 4 15 7 18"/>
+  </svg>
+);
+
+// ── Undo icon ─────────────────────────────────────────────────────────────────
+const IconUndo = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 7v6h6"/>
+    <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+  </svg>
+);
+
+// ── Redo icon ─────────────────────────────────────────────────────────────────
+const IconRedo = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 7v6h-6"/>
+    <path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
+  </svg>
+);
+
+// ── Timestamp / clock icon ────────────────────────────────────────────────────
+const IconClock = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v6l4 2"/>
+  </svg>
+);
+
+// ── Trash icon ────────────────────────────────────────────────────────────────
+const IconTrash = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6"/>
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+    <path d="M10 11v6M14 11v6"/>
+    <path d="M9 6V4h6v2"/>
+  </svg>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle }: Props) {
   const storageKey = `bbc-notes-${slug}`;
@@ -82,12 +212,19 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
   const { track: activeTrack, currentTime: audioTime } = useAudio();
   const isAudioActive = activeTrack?.slug === slug;
 
-  const [saveStatus,   setSaveStatus]   = useState<"saved" | "saving" | "idle">("idle");
-  const [wordCount,    setWordCount]    = useState(0);
-  const [copied,       setCopied]       = useState(false);
+  const [saveStatus,    setSaveStatus]    = useState<"saved" | "saving" | "idle">("idle");
+  const [wordCount,     setWordCount]     = useState(0);
+  const [copied,        setCopied]        = useState(false);
   const [editorFocused, setEditorFocused] = useState(false);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobile,      setIsMobile]      = useState(false);
+
+  const saveTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initialContent = useRef<string>("");
+
+  // Detect mobile (hide ⌘ shortcuts, they're meaningless on touch)
+  useEffect(() => {
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+  }, []);
 
   // Load initial content from localStorage before editor mounts
   useEffect(() => {
@@ -104,11 +241,9 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
     saveTimerRef.current = setTimeout(() => {
       try {
         const isEmpty = !html || html === "<p></p>";
-        if (isEmpty) {
-          localStorage.removeItem(storageKey);
-        } else {
-          localStorage.setItem(storageKey, html);
-        }
+        isEmpty
+          ? localStorage.removeItem(storageKey)
+          : localStorage.setItem(storageKey, html);
         setSaveStatus("saved");
         setTimeout(() => setSaveStatus("idle"), 2000);
       } catch { /* no-op */ }
@@ -118,10 +253,11 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        // Strike is included in StarterKit
         bulletList: {
           keepMarks: true,
           keepAttributes: false,
-          HTMLAttributes: { class: "bbc-notes-bullets" },
+          HTMLAttributes: { class: "bbc-bullets" },
         },
         orderedList: false,
         blockquote: false,
@@ -146,8 +282,7 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
       saveContent(html);
     },
     onCreate({ editor }) {
-      const html = editor.getHTML();
-      setWordCount(countWords(html));
+      setWordCount(countWords(editor.getHTML()));
     },
     onFocus() { setEditorFocused(true); },
     onBlur()  { setEditorFocused(false); },
@@ -170,12 +305,7 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
     if (!editor) return;
     const pos = getCurrentPosition();
     const ts  = pos !== null ? `[${formatTime(pos)}]` : "[--:--]";
-    // Insert as bold text then space so user can type after
-    editor
-      .chain()
-      .focus()
-      .insertContent(`<strong>${ts} </strong>`)
-      .run();
+    editor.chain().focus().insertContent(`<strong>${ts} </strong>`).run();
   }, [editor, getCurrentPosition]);
 
   const copyNotes = useCallback(() => {
@@ -189,8 +319,7 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
   }, [editor, sermonTitle]);
 
   const clearNotes = useCallback(() => {
-    if (!editor) return;
-    if (!editor.getText().trim()) return;
+    if (!editor || !editor.getText().trim()) return;
     if (!confirm("Clear all notes for this sermon?")) return;
     editor.commands.clearContent(true);
     try { localStorage.removeItem(storageKey); } catch { /* no-op */ }
@@ -204,74 +333,63 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
 
   return (
     <>
-      {/* ── Scoped styles ────────────────────────────────────────── */}
+      {/* ── Scoped styles ─────────────────────────────────────────── */}
       <style>{`
         .bbc-notes-editor {
           outline: none;
           min-height: 130px;
           font-size: 0.9rem;
-          line-height: 1.75;
+          line-height: 1.8;
           color: #0a1628;
           font-family: var(--font-inter), system-ui, sans-serif;
           caret-color: ${accentColor};
           word-break: break-word;
         }
-        .bbc-notes-editor p {
-          margin: 0 0 0.25rem 0;
-        }
-        .bbc-notes-editor p:last-child {
-          margin-bottom: 0;
-        }
-        .bbc-notes-editor p.is-editor-empty:first-child::before {
-          content: attr(data-placeholder);
-          float: left;
-          color: rgba(0,32,91,0.25);
-          pointer-events: none;
-          height: 0;
-          font-style: italic;
-        }
-        .bbc-notes-bullets {
-          padding-left: 1.25rem;
-          margin: 0.25rem 0;
+        .bbc-notes-editor p { margin: 0 0 0.2rem 0; }
+        .bbc-notes-editor p:last-child { margin-bottom: 0; }
+
+        /* Bullet lists */
+        .bbc-bullets {
+          padding-left: 1.35rem;
+          margin: 0.2rem 0;
           list-style-type: disc;
         }
-        .bbc-notes-bullets li {
-          margin: 0.1rem 0;
-          color: #0a1628;
-        }
-        .bbc-notes-bullets li p {
-          margin: 0;
-          display: inline;
-        }
-        .bbc-notes-bullets .bbc-notes-bullets {
-          list-style-type: circle;
-          margin-top: 0.1rem;
-        }
-        .bbc-notes-bullets .bbc-notes-bullets .bbc-notes-bullets {
-          list-style-type: square;
-        }
+        .bbc-bullets li { margin: 0.1rem 0; color: #0a1628; }
+        .bbc-bullets li p { margin: 0; display: inline; }
+        .bbc-bullets .bbc-bullets { list-style-type: circle; margin-top: 0.1rem; }
+        .bbc-bullets .bbc-bullets .bbc-bullets { list-style-type: square; }
+
+        /* Formatting marks */
         .bbc-notes-editor strong {
           font-weight: 700;
           color: #00205B;
+        }
+        .bbc-notes-editor em {
+          font-style: italic;
+          color: rgba(0,32,91,0.75);
         }
         .bbc-notes-editor u {
           text-decoration-color: ${accentColor};
           text-underline-offset: 2px;
         }
+        .bbc-notes-editor s {
+          text-decoration-color: rgba(0,32,91,0.3);
+          color: rgba(0,32,91,0.45);
+        }
         .bbc-notes-editor mark {
           background-color: #fff176;
           color: #0a1628;
           border-radius: 2px;
-          padding: 0 1px;
+          padding: 0 2px;
         }
         .bbc-notes-editor ::selection {
-          background: ${accentColor}28;
+          background: ${accentColor}25;
         }
       `}</style>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
 
-        {/* ── Header ─────────────────────────────────────────────── */}
+        {/* ── Header row ─────────────────────────────────────────── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -294,10 +412,7 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
               </span>
             )}
             {saveStatus === "saved" && (
-              <span style={{
-                fontSize: "0.65rem", fontWeight: 600, color: accentColor,
-                display: "flex", alignItems: "center", gap: "0.25rem",
-              }}>
+              <span style={{ fontSize: "0.65rem", fontWeight: 600, color: accentColor, display: "flex", alignItems: "center", gap: "0.25rem" }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
@@ -307,13 +422,13 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
             {hasContent && (
               <button
                 onMouseDown={(e) => { e.preventDefault(); copyNotes(); }}
-                title={copied ? "Copied!" : "Copy notes as plain text"}
+                title="Copy notes as plain text"
                 style={{
-                  background: "none", border: "none", cursor: "pointer",
-                  padding: "0.2rem 0",
+                  background: "none", border: "none", cursor: "pointer", padding: "0.2rem 0",
                   color: copied ? accentColor : "rgba(0,32,91,0.3)",
                   display: "flex", alignItems: "center", gap: "0.3rem",
                   fontSize: "0.65rem", fontWeight: 600, transition: "color 0.15s",
+                  WebkitTapHighlightColor: "transparent",
                 }}
               >
                 {copied
@@ -323,7 +438,7 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
                       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 }
-                {copied ? "Copied" : "Copy"}
+                {copied ? "Copied!" : "Copy"}
               </button>
             )}
           </div>
@@ -333,152 +448,90 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: "2px",
-          padding: "4px 6px",
-          background: "rgba(255,255,255,0.6)",
+          gap: "1px",
+          padding: "3px 5px",
+          background: "rgba(255,255,255,0.65)",
           border: "1px solid rgba(0,32,91,0.09)",
           borderRadius: "0.625rem",
-          flexWrap: "wrap",
+          flexWrap: "nowrap",
+          overflowX: "auto",
+          scrollbarWidth: "none",
         }}>
-          {/* Bold */}
-          <ToolBtn
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            active={editor.isActive("bold")}
-            title="Bold (⌘B)"
-            accentColor={accentColor}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
-            </svg>
+          {/* ── Text formatting ── */}
+          <ToolBtn onClick={() => editor.chain().focus().toggleBold().run()}
+            active={editor.isActive("bold")} title="Bold" accentColor={accentColor}>
+            <IconBold />
           </ToolBtn>
-
-          {/* Underline */}
-          <ToolBtn
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive("underline")}
-            title="Underline (⌘U)"
-            accentColor={accentColor}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/><line x1="4" y1="21" x2="20" y2="21"/>
-            </svg>
+          <ToolBtn onClick={() => editor.chain().focus().toggleItalic().run()}
+            active={editor.isActive("italic")} title="Italic" accentColor={accentColor}>
+            <IconItalic />
           </ToolBtn>
-
-          {/* Highlight */}
-          <ToolBtn
-            onClick={() => editor.chain().focus().toggleHighlight().run()}
-            active={editor.isActive("highlight")}
-            title="Highlight"
-            accentColor={accentColor}
-          >
-            {/* Highlighter icon */}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 11L4 20h16l-5-9z"/>
-              <path d="M12 2L8 8h8l-4-6z"/>
-              <line x1="12" y1="8" x2="12" y2="11"/>
-            </svg>
+          <ToolBtn onClick={() => editor.chain().focus().toggleUnderline().run()}
+            active={editor.isActive("underline")} title="Underline" accentColor={accentColor}>
+            <IconUnderline />
+          </ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().toggleStrike().run()}
+            active={editor.isActive("strike")} title="Strikethrough" accentColor={accentColor}>
+            <IconStrike />
+          </ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().toggleHighlight().run()}
+            active={editor.isActive("highlight")} title="Highlight" accentColor={accentColor}>
+            <IconHighlight />
           </ToolBtn>
 
           <Divider />
 
-          {/* Bullet list */}
-          <ToolBtn
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            active={editor.isActive("bulletList")}
-            title="Bullet list"
-            accentColor={accentColor}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/>
-              <circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/>
-              <circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/>
-              <circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/>
-            </svg>
+          {/* ── Lists & indent ── */}
+          <ToolBtn onClick={() => editor.chain().focus().toggleBulletList().run()}
+            active={editor.isActive("bulletList")} title="Bullet list" accentColor={accentColor}>
+            <IconBullets />
           </ToolBtn>
-
-          {/* Indent (sink list item) */}
-          <ToolBtn
-            onClick={() => editor.chain().focus().sinkListItem("listItem").run()}
-            active={false}
-            title="Indent (Tab)"
-            accentColor={accentColor}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="8" x2="21" y2="8"/>
-              <line x1="9" y1="12" x2="21" y2="12"/>
-              <line x1="9" y1="16" x2="21" y2="16"/>
-              <polyline points="3 12 6 15 3 18"/>
-            </svg>
+          <ToolBtn onClick={() => editor.chain().focus().sinkListItem("listItem").run()}
+            active={false} title="Indent" accentColor={accentColor}>
+            <IconIndent />
           </ToolBtn>
-
-          {/* Outdent (lift list item) */}
-          <ToolBtn
-            onClick={() => editor.chain().focus().liftListItem("listItem").run()}
-            active={false}
-            title="Outdent (Shift+Tab)"
-            accentColor={accentColor}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="8" x2="21" y2="8"/>
-              <line x1="9" y1="12" x2="21" y2="12"/>
-              <line x1="9" y1="16" x2="21" y2="16"/>
-              <polyline points="7 12 4 15 7 18"/>
-            </svg>
+          <ToolBtn onClick={() => editor.chain().focus().liftListItem("listItem").run()}
+            active={false} title="Outdent" accentColor={accentColor}>
+            <IconOutdent />
           </ToolBtn>
 
           <Divider />
 
-          {/* Timestamp */}
-          <ToolBtn
-            onClick={insertTimestamp}
-            active={false}
-            title={`Insert sermon timestamp${isAudioActive && audioTime > 5 ? ` (${formatTime(audioTime)})` : ""}`}
-            accentColor={accentColor}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 6v6l4 2"/>
-            </svg>
+          {/* ── Undo / Redo ── */}
+          <ToolBtn onClick={() => editor.chain().focus().undo().run()}
+            active={false} title="Undo" accentColor={accentColor}>
+            <IconUndo />
+          </ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().redo().run()}
+            active={false} title="Redo" accentColor={accentColor}>
+            <IconRedo />
           </ToolBtn>
 
-          {/* Live timestamp label */}
+          <Divider />
+
+          {/* ── Timestamp ── */}
+          <ToolBtn onClick={insertTimestamp} active={false}
+            title={isAudioActive && audioTime > 5 ? `Insert timestamp (${formatTime(audioTime)})` : "Insert timestamp"}
+            accentColor={accentColor}>
+            <IconClock />
+          </ToolBtn>
           {isAudioActive && audioTime > 5 && (
             <span style={{
-              fontSize: "0.65rem",
-              fontWeight: 600,
-              color: accentColor,
-              marginLeft: "2px",
-              letterSpacing: "0.01em",
-              opacity: 0.8,
+              fontSize: "0.65rem", fontWeight: 700, color: accentColor,
+              marginLeft: 1, letterSpacing: "0.01em", flexShrink: 0, lineHeight: 1,
             }}>
               {formatTime(audioTime)}
             </span>
           )}
 
           {/* Spacer */}
-          <div style={{ flex: 1 }} />
+          <div style={{ flex: 1, minWidth: 4 }} />
 
-          {/* Clear — only when content exists */}
+          {/* ── Clear ── */}
           {hasContent && (
-            <button
-              onMouseDown={(e) => { e.preventDefault(); clearNotes(); }}
-              style={{
-                fontSize: "0.65rem",
-                fontWeight: 500,
-                color: "rgba(0,32,91,0.22)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "0.25rem 0.25rem",
-                letterSpacing: "0.01em",
-                transition: "color 0.15s",
-                flexShrink: 0,
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#c0392b"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "rgba(0,32,91,0.22)"; }}
-            >
-              Clear
-            </button>
+            <ToolBtn onClick={clearNotes} active={false} title="Clear all notes" accentColor={accentColor} danger>
+              <IconTrash />
+            </ToolBtn>
           )}
         </div>
 
@@ -494,50 +547,57 @@ export default function SermonNotes({ slug, youtubeId, accentColor, sermonTitle 
             minHeight: "140px",
             transition: "border-color 0.15s, box-shadow 0.15s",
             boxShadow: editorFocused ? `0 0 0 3px ${accentColor}10` : "none",
+            position: "relative",
           }}
         >
           <EditorContent editor={editor} />
-          {/* Placeholder when empty */}
           {!hasContent && (
             <div style={{
-              position: "relative",
-              marginTop: -28,
+              position: "absolute",
+              top: "1rem",
+              left: "1.125rem",
               pointerEvents: "none",
               fontSize: "0.9rem",
-              lineHeight: 1.75,
+              lineHeight: 1.8,
               color: "rgba(0,32,91,0.25)",
               fontStyle: "italic",
+              userSelect: "none",
             }}>
               Take notes as you listen…
             </div>
           )}
         </div>
 
-        {/* ── Keyboard hint ──────────────────────────────────────── */}
-        <div style={{
-          display: "flex",
-          gap: "0.875rem",
-          flexWrap: "wrap",
-        }}>
-          {[
-            { keys: "⌘B", label: "Bold" },
-            { keys: "⌘U", label: "Underline" },
-            { keys: "Tab", label: "Indent" },
-          ].map(({ keys, label }) => (
-            <span key={keys} style={{ fontSize: "0.6rem", color: "rgba(0,32,91,0.25)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-              <kbd style={{
-                fontFamily: "system-ui, sans-serif",
-                background: "rgba(0,32,91,0.05)",
-                border: "1px solid rgba(0,32,91,0.1)",
-                borderRadius: "3px",
-                padding: "1px 4px",
-                fontSize: "0.6rem",
-                letterSpacing: 0,
-              }}>{keys}</kbd>
-              {label}
-            </span>
-          ))}
-        </div>
+        {/* ── Keyboard hints — desktop only ──────────────────────── */}
+        {!isMobile && (
+          <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap" }}>
+            {[
+              { keys: "⌘B", label: "Bold" },
+              { keys: "⌘I", label: "Italic" },
+              { keys: "⌘U", label: "Underline" },
+              { keys: "Tab", label: "Indent" },
+              { keys: "⌘Z", label: "Undo" },
+            ].map(({ keys, label }) => (
+              <span key={keys} style={{
+                fontSize: "0.6rem", color: "rgba(0,32,91,0.25)",
+                display: "flex", alignItems: "center", gap: "0.3rem",
+              }}>
+                <kbd style={{
+                  fontFamily: "system-ui, sans-serif",
+                  background: "rgba(0,32,91,0.05)",
+                  border: "1px solid rgba(0,32,91,0.1)",
+                  borderRadius: "3px",
+                  padding: "1px 4px",
+                  fontSize: "0.6rem",
+                  letterSpacing: 0,
+                }}>
+                  {keys}
+                </kbd>
+                {label}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
