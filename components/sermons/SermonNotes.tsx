@@ -404,9 +404,8 @@ export default function SermonNotes({
 
   const handleShareBtn = useCallback(() => {
     if (!editor || !editor.getText().trim()) return;
-    if (isMobile && typeof navigator.share === "function") { shareNative(); }
-    else { setShareOpen((o) => !o); }
-  }, [editor, isMobile, shareNative]);
+    setShareOpen((o) => !o);
+  }, [editor]);
 
   const hasContent = wordCount > 0;
   if (!editor) return null;
