@@ -15,6 +15,10 @@
  */
 
 export const YOUTUBE_CHANNEL_ID = "UCEcu35yHidS8fQVwsoSP3zQ";
+// Curated "Sermons" playlist — the homepage card should only ever pull from
+// this, never from the channel's full upload feed (which includes clips,
+// announcements, and anything else posted to the channel).
+export const YOUTUBE_SERMONS_PLAYLIST_ID = "PLmi1s4e0rk_5Mm_vS6JWamVhtkrhfpKt7";
 
 // Root folder: 15eQjQeoGLB2MJ2RxDjLf9fmzN6TlFzSK
 // 2025 subfolder: 1Lxs7IeOguQNdDF00lA_RvCoJeYddFqdu
@@ -312,10 +316,15 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
 
 // ── YouTube RSS ───────────────────────────────────────────────────────────────
 
-/** Fetch the most recently uploaded video ID from the public YouTube RSS feed. */
+/**
+ * Fetch the most recent video ID from the curated "Sermons" playlist's public
+ * RSS feed — NOT the channel's general upload feed. The channel feed includes
+ * every video posted (clips, announcements, etc.), which previously let an
+ * unrelated upload outrank the actual latest sermon on the homepage.
+ */
 async function getLatestYouTubeId(): Promise<string | null> {
   try {
-    const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
+    const url = `https://www.youtube.com/feeds/videos.xml?playlist_id=${YOUTUBE_SERMONS_PLAYLIST_ID}`;
     const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) return null;
 
@@ -323,7 +332,7 @@ async function getLatestYouTubeId(): Promise<string | null> {
     const match = xml.match(/<yt:videoId>([\w-]+)<\/yt:videoId>/);
     return match?.[1] ?? null;
   } catch (err) {
-    console.error("[sermon] YouTube RSS fetch error:", err);
+    console.error("[sermon] YouTube playlist RSS fetch error:", err);
     return null;
   }
 }
