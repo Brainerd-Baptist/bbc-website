@@ -464,7 +464,7 @@ export async function GET(
   const safeTitle = title.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 60);
   const filename  = `${safeTitle}-notes.pdf`;
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",
