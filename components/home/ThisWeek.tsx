@@ -96,10 +96,10 @@ export default function ThisWeek() {
   if (!events && !error) {
     return (
       <section className="section-pad max-w-7xl mx-auto">
-        <div className="h-8 w-48 bg-gray-200 dark:bg-white/10 rounded animate-pulse mb-8" />
+        <div className="h-8 w-48 bg-hover-subtle rounded animate-pulse mb-8" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-28 bg-gray-100 dark:bg-white/5 rounded-2xl animate-pulse" />
+            <div key={i} className="h-28 bg-hover-subtle rounded-2xl animate-pulse" />
           ))}
         </div>
       </section>
@@ -221,7 +221,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
 
         {/* Event name */}
         <p
-          className="font-condensed font-700 leading-tight text-base group-hover:text-[#00abc9] transition-colors duration-200"
+          className="font-condensed font-700 leading-tight text-base group-hover:text-accent-text transition-colors duration-200"
           style={{ color: "var(--fg)" }}
         >
           {ev.name}

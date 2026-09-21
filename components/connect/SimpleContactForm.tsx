@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const inputClass =
-  "border border-[#00205B]/20 rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-[#00abc9]/40 text-[#00205B] bg-white placeholder:text-[#00205B]/40 transition";
+  "border border-border-strong rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent/40 text-fg bg-surface-raised placeholder:text-fg-muted transition";
 
 interface Props {
   /** POST endpoint, e.g. "/api/contact/general" */
@@ -79,16 +79,16 @@ export default function SimpleContactForm({
 
   if (success) {
     return (
-      <div className="rounded-2xl bg-[#00abc9]/10 border border-[#00abc9]/30 px-8 py-10 text-center space-y-3">
+      <div className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
         <div className="flex justify-center">
-          <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#00abc9]/20">
-            <svg className="w-6 h-6 text-[#00abc9]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20">
+            <svg className="w-6 h-6 text-accent-text" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </span>
         </div>
-        <p className="text-[#00205B] font-semibold text-lg">{successTitle}</p>
-        <p className="text-[#00205B]/70 text-sm leading-relaxed max-w-sm mx-auto">{successBody}</p>
+        <p className="text-fg font-semibold text-lg">{successTitle}</p>
+        <p className="text-fg-muted text-sm leading-relaxed max-w-sm mx-auto">{successBody}</p>
       </div>
     );
   }
@@ -97,8 +97,8 @@ export default function SimpleContactForm({
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-[#00205B]">
-            Name <span className="text-[#00abc9]">*</span>
+          <label className="block text-sm font-medium text-fg">
+            Name <span className="text-accent-text">*</span>
           </label>
           <input
             type="text"
@@ -111,8 +111,8 @@ export default function SimpleContactForm({
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-[#00205B]">
-            Email <span className="text-[#00abc9]">*</span>
+          <label className="block text-sm font-medium text-fg">
+            Email <span className="text-accent-text">*</span>
           </label>
           <input
             type="email"
@@ -128,7 +128,7 @@ export default function SimpleContactForm({
 
       {showPhone && (
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-[#00205B]">Phone</label>
+          <label className="block text-sm font-medium text-fg">Phone</label>
           <input
             type="tel"
             autoComplete="tel"
@@ -141,8 +141,8 @@ export default function SimpleContactForm({
       )}
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-[#00205B]">
-          {messageLabel} {messageRequired && <span className="text-[#00abc9]">*</span>}
+        <label className="block text-sm font-medium text-fg">
+          {messageLabel} {messageRequired && <span className="text-accent-text">*</span>}
         </label>
         <textarea
           required={messageRequired}

@@ -323,8 +323,18 @@ body {
   transition: background-color 0.3s;
 }
 
-/* Logo swap. Both wordmarks are in the DOM and CSS reveals one, so the
-   correct mark is already present in the server-rendered HTML. */
+/* Reusable logo pair for ANY surface that is light in light mode and dark in
+   dark mode (the drawer, a card, a panel). Both wordmarks ship and CSS reveals
+   one, so the correct mark is in the server-rendered HTML rather than being
+   chosen by JS after hydration. */
+.logo-on-surface-dark  { display: block; }  /* black wordmark — light theme */
+.logo-on-surface-light { display: none; }   /* white wordmark — dark theme  */
+.dark .logo-on-surface-dark  { display: none; }
+.dark .logo-on-surface-light { display: block; }
+
+/* Logo swap for the nav bar, which additionally depends on data-chrome. Both
+   wordmarks are in the DOM and CSS reveals one, so the correct mark is already
+   present in the server-rendered HTML. */
 .bbc-nav .nav-logo-light { display: block; }
 .bbc-nav .nav-logo-dark  { display: none; }
 .bbc-nav[data-chrome="glass"] .nav-logo-light { display: none; }

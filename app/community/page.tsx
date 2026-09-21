@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CommunityPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div
@@ -40,24 +40,24 @@ export default function CommunityPage() {
       </div>
 
       {/* ── BX Community Center ──────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
               <p className="eyebrow mb-3">Open to the Public</p>
               <h2
-                className="font-condensed font-900 text-[#00205B] mb-5"
+                className="font-condensed font-900 text-fg mb-5"
                 style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
               >
                 The BX Community Center.
               </h2>
-              <p className="text-[#00205B]/60 leading-relaxed mb-6">
+              <p className="text-fg-muted leading-relaxed mb-6">
                 Brainerd Crossroads — the BX — is a 54,000 square foot fitness,
                 recreation, and meeting facility operated by Brainerd Baptist Church
                 and open to everyone in the community. We&apos;re in the Belvoir
                 neighborhood with free parking and easy access to I-24.
               </p>
-              <p className="text-[#00205B]/60 leading-relaxed mb-8">
+              <p className="text-fg-muted leading-relaxed mb-8">
                 The BX offers quality fitness amenities alongside meeting spaces
                 that seat 5 to 500 — banquet tables, chairs, and free Wi-Fi
                 included. A/V systems available for an additional fee.
@@ -74,7 +74,7 @@ export default function CommunityPage() {
                 </a>
                 <a
                   href="tel:4236434978"
-                  className="font-condensed font-700 tracking-wide uppercase text-sm border border-[#00205B]/20 text-[#00205B] px-6 py-3 rounded-full hover:border-[#00205B]/40 transition-colors"
+                  className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-strong text-fg px-6 py-3 rounded-full hover:border-border-strong transition-colors"
                 >
                   (423) 643-4978
                 </a>
@@ -83,7 +83,7 @@ export default function CommunityPage() {
 
             <div className="space-y-4">
               {/* Address */}
-              <div className="rounded-2xl p-6 border border-[#00205B]/8" style={{ background: "#f4f6f9" }}>
+              <div className="rounded-2xl p-6 border border-border" style={{ background: "var(--surface-sunken)" }}>
                 <div className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
@@ -95,8 +95,8 @@ export default function CommunityPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="font-semibold text-[#00205B] text-sm mb-1">Address</p>
-                    <p className="text-[#00205B]/60 text-sm leading-relaxed">
+                    <p className="font-semibold text-fg text-sm mb-1">Address</p>
+                    <p className="text-fg-muted text-sm leading-relaxed">
                       4011 Austin St.<br />Chattanooga, TN 37411
                     </p>
                     <a
@@ -113,7 +113,7 @@ export default function CommunityPage() {
               </div>
 
               {/* Hours */}
-              <div className="rounded-2xl p-6 border border-[#00205B]/8" style={{ background: "#f4f6f9" }}>
+              <div className="rounded-2xl p-6 border border-border" style={{ background: "var(--surface-sunken)" }}>
                 <div className="flex items-start gap-4">
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
@@ -124,7 +124,7 @@ export default function CommunityPage() {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-semibold text-[#00205B] text-sm mb-3">Hours of Operation</p>
+                    <p className="font-semibold text-fg text-sm mb-3">Hours of Operation</p>
                     <div className="space-y-1.5">
                       {[
                         { days: "Mon, Tue, Thu", hours: "6:00 AM – 9:00 PM" },
@@ -133,8 +133,8 @@ export default function CommunityPage() {
                         { days: "Sunday", hours: "Closed" },
                       ].map(({ days, hours }) => (
                         <div key={days} className="flex justify-between text-sm">
-                          <span className="text-[#00205B]/70">{days}</span>
-                          <span className="font-medium text-[#00205B]">{hours}</span>
+                          <span className="text-fg-muted">{days}</span>
+                          <span className="font-medium text-fg">{hours}</span>
                         </div>
                       ))}
                     </div>
@@ -143,7 +143,7 @@ export default function CommunityPage() {
               </div>
 
               {/* Room reservation note */}
-              <p className="text-xs text-[#00205B]/40 px-1">
+              <p className="text-xs text-fg-muted px-1">
                 Room reservations are subject to availability. No Saturday or Sunday reservations.
                 Approved events are contacted for confirmation with full payment and a signed proposal.
               </p>
@@ -153,15 +153,15 @@ export default function CommunityPage() {
       </section>
 
       {/* ── Divider ──────────────────────────────────────────── */}
-      <div className="border-t border-[#00205B]/6" />
+      <div className="border-t border-border" />
 
       {/* ── Food Pantry + Benevolence ────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Practical Help</p>
             <h2
-              className="font-condensed font-900 text-[#00205B]"
+              className="font-condensed font-900 text-fg"
               style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
             >
               Showing up when it counts.
@@ -171,7 +171,7 @@ export default function CommunityPage() {
           <div className="grid md:grid-cols-2 gap-6">
 
             {/* Food Pantry */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/8">
+            <div className="bg-surface-raised rounded-2xl overflow-hidden border border-border">
               <div className="h-1" style={{ background: "#00abc9" }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/carousel/food-pantry-checkin.jpg" alt="Food pantry volunteers helping community members" className="w-full object-cover" style={{ height: "200px", objectPosition: "center 30%" }} />
@@ -185,12 +185,12 @@ export default function CommunityPage() {
                   </svg>
                 </div>
                 <h3
-                  className="font-condensed font-800 text-[#00205B] mb-3"
+                  className="font-condensed font-800 text-fg mb-3"
                   style={{ fontSize: "1.5rem", letterSpacing: "-0.01em" }}
                 >
                   Monthly Food Pantry
                 </h3>
-                <p className="text-[#00205B]/60 text-sm leading-relaxed mb-6">
+                <p className="text-fg-muted text-sm leading-relaxed mb-6">
                   Each month we host a community food pantry at the BX, open to
                   anyone in the neighborhood who needs it. No membership, no
                   paperwork — just show up.
@@ -207,24 +207,24 @@ export default function CommunityPage() {
             </div>
 
             {/* Benevolence */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-[#00205B]/8">
-              <div className="h-1" style={{ background: "#00205B" }} />
+            <div className="bg-surface-raised rounded-2xl overflow-hidden border border-border">
+              <div className="h-1" style={{ background: "var(--color-brand-navy)" }} />
               <div className="p-8">
                 <div
                   className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
-                  style={{ background: "rgba(0,32,91,0.08)", color: "#00205B" }}
+                  style={{ background: "rgba(0,32,91,0.08)", color: "var(--fg)" }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
                 </div>
                 <h3
-                  className="font-condensed font-800 text-[#00205B] mb-3"
+                  className="font-condensed font-800 text-fg mb-3"
                   style={{ fontSize: "1.5rem", letterSpacing: "-0.01em" }}
                 >
                   Community Benevolence
                 </h3>
-                <p className="text-[#00205B]/60 text-sm leading-relaxed mb-6">
+                <p className="text-fg-muted text-sm leading-relaxed mb-6">
                   If you&apos;re facing a utility shutoff or similar hardship,
                   Brainerd Baptist may be able to help. Submit a request using
                   the form below — requests are reviewed on a regular basis.
@@ -234,7 +234,7 @@ export default function CommunityPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all"
-                  style={{ borderColor: "rgba(0,32,91,0.25)", color: "#00205B" }}
+                  style={{ borderColor: "rgba(0,32,91,0.25)", color: "var(--fg)" }}
                 >
                   Submit a Request
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">

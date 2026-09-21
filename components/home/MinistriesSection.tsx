@@ -100,7 +100,7 @@ function PhotoCard({
           <p className="text-white/50 text-sm font-medium tracking-wide mb-3">
             {card.sub}
           </p>
-          <div className="flex items-center gap-1.5 text-[#00abc9] text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center gap-1.5 text-accent-text text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Learn more
             <svg
               width="12"
@@ -136,7 +136,7 @@ export default function MinistriesSection() {
             </p>
             <Link
               href="/ministries"
-              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-white/20 text-white/70 hover:border-[#00abc9]/60 hover:text-[#00abc9] transition-all shrink-0"
+              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-white/20 text-white/70 hover:border-accent/60 hover:text-accent-text transition-all shrink-0"
             >
               All Ministries →
             </Link>
@@ -178,7 +178,7 @@ export default function MinistriesSection() {
                   From nursery to seniors, all in the same building on Sunday morning.
                 </p>
               </div>
-              <div className="flex items-center gap-1.5 text-[#00abc9] text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">
+              <div className="flex items-center gap-1.5 text-accent-text text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">
                 Plan a visit
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M2.5 6h7M6.5 3l3 3-3 3" />

@@ -31,7 +31,7 @@ export default function OtherContactClient() {
   const copy = CATEGORY_COPY[category] ?? CATEGORY_COPY.other;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
       <section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">

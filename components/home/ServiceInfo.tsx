@@ -3,7 +3,7 @@ import ScrollReveal from "./ScrollReveal";
 
 export default function ServiceInfo() {
   return (
-    <section className="bg-white dark:bg-[#0d1525] py-20 px-6 border-b border-gray-100 dark:border-white/5">
+    <section className="bg-surface py-20 px-6 border-b border-border">
       <div className="max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
@@ -12,17 +12,17 @@ export default function ServiceInfo() {
             <div className="md:col-span-2">
               <p className="eyebrow mb-3">Sunday Services</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="rounded-2xl bg-[#f4fcfe] dark:bg-[#162030] border border-[#00abc9]/15 dark:border-white/8 p-6">
-                  <div className="text-[#00abc9] font-condensed font-900 text-3xl mb-1">8:30 AM</div>
-                  <div className="font-semibold text-[#00205B] dark:text-[#c8d4e8] mb-2">Choir & Orchestra</div>
+                <div className="rounded-2xl bg-accent-bg border border-accent/15 p-6">
+                  <div className="text-accent-text font-condensed font-900 text-3xl mb-1">8:30 AM</div>
+                  <div className="font-semibold text-fg mb-2">Choir & Orchestra</div>
                   <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                     Full choir and orchestra. If you grew up singing hymns out of a book,
                     this one will feel familiar.
                   </p>
                 </div>
-                <div className="rounded-2xl bg-[#f4fcfe] dark:bg-[#162030] border border-[#00abc9]/15 dark:border-white/8 p-6">
-                  <div className="text-[#00abc9] font-condensed font-900 text-3xl mb-1">11:00 AM</div>
-                  <div className="font-semibold text-[#00205B] dark:text-[#c8d4e8] mb-2">Band-Led</div>
+                <div className="rounded-2xl bg-accent-bg border border-accent/15 p-6">
+                  <div className="text-accent-text font-condensed font-900 text-3xl mb-1">11:00 AM</div>
+                  <div className="font-semibold text-fg mb-2">Band-Led</div>
                   <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                     Contemporary band leading worship. Same sermon, same church —
                     different sound.
@@ -39,7 +39,7 @@ export default function ServiceInfo() {
 
             {/* Address / Visit CTA */}
             <div className="flex flex-col justify-center">
-              <div className="rounded-2xl bg-[#00205B] text-white p-7 h-full flex flex-col justify-between">
+              <div className="rounded-2xl bg-brand-navy text-white p-7 h-full flex flex-col justify-between">
                 <div>
                   <p className="eyebrow-white mb-3">Find Us</p>
                   <p className="font-condensed font-800 text-xl mb-1">300 Brookfield Ave</p>
@@ -53,7 +53,7 @@ export default function ServiceInfo() {
                 </div>
                 <Link
                   href="/visit"
-                  className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-[#00abc9] hover:bg-[#0090a8] text-white py-3 rounded-full transition-all"
+                  className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-accent-solid hover:bg-accent-solid-hover text-white py-3 rounded-full transition-all"
                 >
                   Plan Your Visit
                 </Link>

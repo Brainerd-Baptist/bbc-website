@@ -51,21 +51,21 @@ export default function AskConnectQuestion() {
   return (
     <div>
       {answer ? (
-        <div className="rounded-2xl p-7 border border-[#00205B]/10 bg-[#00205B]/[0.03]">
-          <p className="text-xs font-semibold tracking-widest uppercase mb-4 text-[#00abc9]">
+        <div className="rounded-2xl p-7 border border-border bg-hover-subtle">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-4 text-accent-text">
             {question}
           </p>
-          <p className="text-[#00205B]/80 text-sm leading-relaxed">{answer}</p>
+          <p className="text-fg text-sm leading-relaxed">{answer}</p>
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2">
             <button
               onClick={handleReset}
-              className="text-[#00205B]/40 text-xs hover:text-[#00205B]/70 transition-colors underline underline-offset-2"
+              className="text-fg-muted text-xs hover:text-fg-muted transition-colors underline underline-offset-2"
             >
               Ask another question
             </button>
             <Link
               href="/connect/staff"
-              className="text-[#00abc9] text-xs font-medium hover:text-[#00205B] transition-colors underline underline-offset-2"
+              className="text-accent-text text-xs font-medium hover:text-fg transition-colors underline underline-offset-2"
             >
               Talk to a person instead
             </Link>
@@ -78,7 +78,7 @@ export default function AskConnectQuestion() {
               <button
                 key={q}
                 onClick={() => handleAsk(q)}
-                className="text-xs px-4 py-2 rounded-full border border-[#00205B]/15 text-[#00205B]/55 hover:border-[#00abc9]/50 hover:text-[#00205B] transition-all"
+                className="text-xs px-4 py-2 rounded-full border border-border-strong text-fg-muted hover:border-accent/50 hover:text-fg transition-all"
               >
                 {q}
               </button>
@@ -98,7 +98,7 @@ export default function AskConnectQuestion() {
                   handleAsk();
                 }
               }}
-              className="w-full px-5 py-4 pr-24 rounded-2xl border border-[#00205B]/20 text-sm text-[#00205B] placeholder:text-[#00205B]/35 focus:outline-none focus:ring-2 focus:ring-[#00abc9]/40 resize-none bg-white"
+              className="w-full px-5 py-4 pr-24 rounded-2xl border border-border-strong text-sm text-fg placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none bg-surface-raised"
             />
             <button
               onClick={() => handleAsk()}
@@ -115,7 +115,7 @@ export default function AskConnectQuestion() {
           <p className="text-center mt-6">
             <Link
               href="/connect/staff"
-              className="text-[#00205B]/40 text-xs hover:text-[#00abc9] transition-colors underline underline-offset-2"
+              className="text-fg-muted text-xs hover:text-accent-text transition-colors underline underline-offset-2"
             >
               Prefer to talk to a person? Contact a pastor or staff member
             </Link>

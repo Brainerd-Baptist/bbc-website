@@ -115,6 +115,10 @@
   --border:        rgba(0, 32, 91, 0.10);
   --border-strong: rgba(0, 32, 91, 0.22);
   --border-input:  rgba(0, 32, 91, 0.48);
+  /* The faint wash under a hovered row or icon button on a page surface.
+     Radix step 4 ("hovered UI element background") — a hover state is a token,
+     not an opacity hack applied at the call site. */
+  --hover-subtle:  rgba(0, 32, 91, 0.06);
   /* Brand cyan as a focus ring on a light surface is 2.74:1 and misses the
      3:1 that WCAG 1.4.11 requires of a non-text indicator, so the light ring
      uses the darkened cyan. In dark mode the bright end of the family is the
@@ -225,6 +229,7 @@
   --color-border:             var(--border);
   --color-border-strong:      var(--border-strong);
   --color-border-input:       var(--border-input);
+  --color-hover-subtle:       var(--hover-subtle);
   --color-focus-ring:         var(--focus-ring);
 
   --color-scrim:              var(--scrim);
@@ -270,6 +275,7 @@
   --border:        rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.18);
   --border-input:  rgba(255, 255, 255, 0.34);
+  --hover-subtle:  rgba(255, 255, 255, 0.08);
   --focus-ring:    #33c1d9;
 
   --scrim:    rgba(0, 0, 0, 0.60);

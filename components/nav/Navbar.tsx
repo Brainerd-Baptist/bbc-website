@@ -152,8 +152,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href="/visit"
-              className="hidden sm:inline-flex font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5"
-              style={{ background: "#00abc9", color: "white" }}
+              className="hidden sm:inline-flex font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
             >
               Plan a Visit
             </Link>
@@ -189,35 +188,44 @@ export default function Navbar() {
         className={`fixed inset-0 z-[99] transition-all duration-300 ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        style={{ background: "rgba(0, 8, 20, 0.55)", backdropFilter: "blur(4px)" }}
+        style={{ background: "var(--scrim)", backdropFilter: "blur(4px)" }}
       />
 
       {/* ── Drawer ─────────────────────────────────────────────── */}
       <aside
-        className={`fixed top-0 right-0 bottom-0 z-[100] w-80 max-w-[90vw] flex flex-col transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 bottom-0 z-[100] w-80 max-w-[90vw] flex flex-col bg-surface-raised transition-transform duration-300 ease-out ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        style={{ background: isDark ? "#00205B" : "#ffffff" }}
         aria-label="Site navigation"
       >
         {/* Drawer header */}
-        <div className={`flex items-center justify-between px-7 py-5 border-b ${isDark ? "border-white/10" : "border-[#00205B]/8"}`}>
+        <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <Link href="/" onClick={() => setMenuOpen(false)}>
+            {/* Both wordmarks ship; CSS reveals one. Keeps the right mark in the
+                server-rendered HTML instead of picking it in JS after mount. */}
             <Image
-              src={isDark ? "/logo-white.png" : "/logo-black.png"}
+              src="/logo-black.png"
               alt="Brainerd Baptist Church"
               width={100}
               height={40}
-              className="h-8 w-auto"
+              className="logo-on-surface-dark h-8 w-auto"
+            />
+            <Image
+              src="/logo-white.png"
+              alt=""
+              aria-hidden="true"
+              width={100}
+              height={40}
+              className="logo-on-surface-light h-8 w-auto"
             />
           </Link>
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
-            className={`p-2 rounded-lg transition-colors ${isDark ? "hover:bg-white/10" : "hover:bg-[#00205B]/6"}`}
+            className="p-2 rounded-lg transition-colors text-fg hover:bg-hover-subtle"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6l12 12" stroke={isDark ? "white" : "#00205B"} strokeWidth="2" strokeLinecap="round" />
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
         </div>
@@ -227,10 +235,7 @@ export default function Navbar() {
           {NAV_GROUPS.map(({ label, links }) => (
             <div key={label}>
               {/* Group label */}
-              <p
-                className="text-xs font-semibold tracking-widest uppercase mb-3"
-                style={{ color: isDark ? "rgba(0,171,201,0.7)" : "rgba(0,32,91,0.40)" }}
-              >
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3 text-fg-muted">
                 {label}
               </p>
               <div className="space-y-1">
@@ -239,15 +244,9 @@ export default function Navbar() {
                     key={href}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors ${
-                      isDark ? "hover:bg-white/8" : "hover:bg-[#00205B]/6"
-                    }`}
+                    className="flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-hover-subtle"
                   >
-                    <span
-                      className={`text-sm font-medium transition-colors ${
-                        isDark ? "text-white/80 group-hover:text-white" : "text-[#00205B]/70 group-hover:text-[#00205B]"
-                      }`}
-                    >
+                    <span className="text-sm font-medium transition-colors text-fg-muted group-hover:text-fg">
                       {linkLabel}
                     </span>
                     <svg
@@ -255,9 +254,7 @@ export default function Navbar() {
                       height="14"
                       viewBox="0 0 14 14"
                       fill="none"
-                      className={`transition-colors ${
-                        isDark ? "text-white/25 group-hover:text-white/60" : "text-[#00205B]/25 group-hover:text-[#00205B]/60"
-                      }`}
+                      className="transition-colors text-fg-subtle group-hover:text-fg-muted"
                     >
                       <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -269,16 +266,15 @@ export default function Navbar() {
         </nav>
 
         {/* Drawer footer */}
-        <div className={`px-7 py-6 border-t ${isDark ? "border-white/10" : "border-[#00205B]/8"}`}>
+        <div className="px-7 py-6 border-t border-border">
           <Link
             href="/visit"
             onClick={() => setMenuOpen(false)}
-            className="w-full font-condensed font-700 tracking-wide uppercase text-sm py-3 rounded-full flex items-center justify-center transition-colors"
-            style={{ background: "#00abc9", color: "white" }}
+            className="w-full font-condensed font-700 tracking-wide uppercase text-sm py-3 rounded-full flex items-center justify-center transition-colors bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
           >
             Plan a Visit
           </Link>
-          <p className={`text-xs text-center mt-4 leading-relaxed ${isDark ? "text-white/35" : "text-[#00205B]/40"}`}>
+          <p className="text-xs text-center mt-4 leading-relaxed text-fg-muted">
             300 Brookfield Ave · Chattanooga, TN<br />
             Sundays · 8:30 AM &amp; 11:00 AM
           </p>

@@ -91,7 +91,7 @@ const ptComponents = {
       <p className="leading-relaxed mb-4" style={{ color: "rgba(0,32,91,0.65)" }}>{children}</p>
     ),
     h3: ({ children }: { children?: React.ReactNode }) => (
-      <h3 className="font-bold text-lg mt-8 mb-3" style={{ color: "#00205B", letterSpacing: "-0.02em" }}>{children}</h3>
+      <h3 className="font-bold text-lg mt-8 mb-3" style={{ color: "var(--fg)", letterSpacing: "-0.02em" }}>{children}</h3>
     ),
     h4: ({ children }: { children?: React.ReactNode }) => (
       <h4 className="font-semibold mt-5 mb-2" style={{ color: "rgba(0,32,91,0.85)" }}>{children}</h4>
@@ -110,19 +110,19 @@ const ptComponents = {
   },
   marks: {
     strong: ({ children }: { children?: React.ReactNode }) => (
-      <strong className="font-semibold" style={{ color: "#00205B" }}>{children}</strong>
+      <strong className="font-semibold" style={{ color: "var(--fg)" }}>{children}</strong>
     ),
     em: ({ children }: { children?: React.ReactNode }) => (
       <em className="italic">{children}</em>
     ),
     scripture: ({ children, value }: { children?: React.ReactNode; value?: { reference?: string } }) => (
       <a href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(value?.reference ?? "")}&version=ESV`}
-        target="_blank" rel="noopener noreferrer" className="text-[#00abc9] hover:underline font-medium">
+        target="_blank" rel="noopener noreferrer" className="text-accent-text hover:underline font-medium">
         {children}
       </a>
     ),
     link: ({ children, value }: { children?: React.ReactNode; value?: { href?: string } }) => (
-      <a href={value?.href} target="_blank" rel="noopener noreferrer" className="text-[#00abc9] hover:underline">
+      <a href={value?.href} target="_blank" rel="noopener noreferrer" className="text-accent-text hover:underline">
         {children}
       </a>
     ),
@@ -256,7 +256,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
   const allPassages = [s.passage, ...(s.passages ?? [])].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Dark gradient hero strip ────────────────────────────────── */}
       <div
@@ -292,7 +292,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                 <a
                   href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(s.passage)}&version=CSB`}
                   target="_blank" rel="noopener noreferrer"
-                  className="text-white/45 text-[10px] font-medium hover:text-[#00abc9] transition-colors"
+                  className="text-white/45 text-[10px] font-medium hover:text-accent-text transition-colors"
                 >
                   {s.passage}
                 </a>
@@ -345,13 +345,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               {s.youtubeId && (
                 <a href={`https://www.youtube.com/watch?v=${s.youtubeId}`}
                   target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#00205B]/50 hover:text-[#00205B] border border-[#00205B]/12 hover:border-[#00205B]/30 px-4 py-2 rounded-full transition-all">
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-fg-muted hover:text-fg border border-border-strong hover:border-border-strong px-4 py-2 rounded-full transition-all">
                   Watch on YouTube
                 </a>
               )}
               {s.audioUrl && (
                 <a href={s.audioUrl} download
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#00205B]/50 hover:text-[#00205B] border border-[#00205B]/12 hover:border-[#00205B]/30 px-4 py-2 rounded-full transition-all">
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-fg-muted hover:text-fg border border-border-strong hover:border-border-strong px-4 py-2 rounded-full transition-all">
                   Download Audio
                 </a>
               )}

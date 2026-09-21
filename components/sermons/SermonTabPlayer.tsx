@@ -63,7 +63,7 @@ export default function SermonTabPlayer({
       {hasMedia && (
         <div
           style={{
-            background: "#f4f6f9",
+            background: "var(--surface-sunken)",
             border: "1px solid rgba(0,32,91,0.08)",
             borderRadius: "1rem",
             overflow: "hidden",
@@ -90,7 +90,7 @@ export default function SermonTabPlayer({
       {(hasOutline || hasNotes) && (
         <div
           style={{
-            background: "#f4f6f9",
+            background: "var(--surface-sunken)",
             border: "1px solid rgba(0,32,91,0.08)",
             borderRadius: "1rem",
             padding: "1.5rem 1.75rem",
@@ -215,7 +215,7 @@ export default function SermonTabPlayer({
       {/* ── Section 3: Personal notes card ─────────────────────────── */}
       <div
         style={{
-          background: "#f4f6f9",
+          background: "var(--surface-sunken)",
           border: "1px solid rgba(0,32,91,0.08)",
           borderRadius: "1rem",
           padding: "1.5rem 1.75rem",

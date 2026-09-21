@@ -8,15 +8,15 @@ export const metadata = {
 
 export default function StaffPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       {/* Header */}
       <div className="pt-28 pb-16 px-5 md:px-8 text-center">
         <p className="eyebrow mb-4">Our Team</p>
-        <h1 className="font-condensed font-800 text-[#00205B] mb-4"
+        <h1 className="font-condensed font-800 text-fg mb-4"
           style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", lineHeight: 1.05 }}>
           Meet the Staff
         </h1>
-        <p className="text-[#00205B]/50 text-base max-w-md mx-auto leading-relaxed">
+        <p className="text-fg-muted text-base max-w-md mx-auto leading-relaxed">
           People serving Brainerd Baptist Church and the surrounding community.
         </p>
       </div>
@@ -42,8 +42,8 @@ export default function StaffPage() {
                         priority={name === "Curtis Hill"}
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-[#00205B]/30"
-                        style={{ background: "#f4f6f9" }}>
+                      <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-fg-subtle"
+                        style={{ background: "var(--surface-sunken)" }}>
                         {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                       </div>
                     )}
@@ -52,11 +52,11 @@ export default function StaffPage() {
                   </div>
 
                   {/* Name + title */}
-                  <p className="text-[#00205B] font-semibold text-sm leading-snug group-hover:text-[#00abc9] transition-colors"
+                  <p className="text-fg font-semibold text-sm leading-snug group-hover:text-accent-text transition-colors"
                     style={{ letterSpacing: "-0.015em" }}>
                     {name}
                   </p>
-                  <p className="text-[#00205B]/45 text-xs mt-0.5">{info.title}</p>
+                  <p className="text-fg-muted text-xs mt-0.5">{info.title}</p>
                 </a>
               );
             })}

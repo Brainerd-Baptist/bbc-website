@@ -75,7 +75,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
     : null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <div className="relative pt-32 pb-16 px-6 overflow-hidden" style={{ background: bgColor }}>
@@ -140,7 +140,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
       <section className="px-5 md:px-8 py-14">
         <div className="max-w-3xl mx-auto space-y-3">
           {sermons.length === 0 && (
-            <p className="text-center text-[#00205B]/35 py-20">No sermons yet in this series.</p>
+            <p className="text-center text-fg-muted py-20">No sermons yet in this series.</p>
           )}
           {sermons.map((sermon, i) => {
             const url = sermon.slug
@@ -156,7 +156,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
             return (
               <div
                 key={sermon.id}
-                className="group flex gap-0 rounded-2xl overflow-hidden border border-[#00205B]/8 hover:border-[#00abc9]/30 bg-white hover:shadow-md transition-all duration-200"
+                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition-all duration-200"
               >
                 {/* Episode number + thumbnail — links to sermon.
                     Kept (smaller) on mobile instead of hidden: the series
@@ -216,12 +216,12 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                       href={url}
                       target={isInternal ? undefined : "_blank"}
                       rel={isInternal ? undefined : "noopener noreferrer"}
-                      className="block text-[#00205B] font-semibold text-base leading-snug mb-1 group-hover:text-[#00abc9] transition-colors"
+                      className="block text-fg font-semibold text-base leading-snug mb-1 group-hover:text-accent-text transition-colors"
                       style={{ letterSpacing: "-0.02em" }}
                     >
                       {sermon.title}
                     </a>
-                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[#00205B]/40 text-xs">
+                    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-fg-muted text-xs">
                       <span>{sermon.speaker}</span>
                       <span>{formatDate(sermon.date)}</span>
                       {sermon.duration && <span>{sermon.duration}</span>}
@@ -230,7 +230,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 
                   <div className="hidden sm:flex shrink-0 items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor"
-                      strokeWidth="2" className="text-[#00abc9]"
+                      strokeWidth="2" className="text-accent-text"
                     >
                       <path d="M3 7h8M8 4l3 3-3 3"/>
                     </svg>
@@ -244,7 +244,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section
-        className="py-14 px-6 border-t border-[#00205B]/6"
+        className="py-14 px-6 border-t border-border"
         style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
       >
         <div className="max-w-2xl mx-auto text-center">

@@ -5,7 +5,7 @@ export const metadata = { title: "Ask a Question — Brainerd Baptist Church" };
 
 export default function AskPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader
         eyebrow="Ask a Quick Question"
         title="What Do You Want to Know?"

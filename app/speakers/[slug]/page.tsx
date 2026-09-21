@@ -82,7 +82,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
   const hasSermons = sermons.length > 0;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Dark gradient hero strip ───────────────────────────────────── */}
       <div
@@ -164,7 +164,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               {info.bio && info.bio.length > 0 && (
                 <div className="space-y-4">
                   {info.bio.map((para, i) => (
-                    <p key={i} className="text-[#00205B]/65 leading-relaxed">
+                    <p key={i} className="text-fg-muted leading-relaxed">
                       {para}
                     </p>
                   ))}
@@ -172,7 +172,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               )}
 
               {!info.bio && (
-                <p className="text-[#00205B]/40 leading-relaxed">
+                <p className="text-fg-muted leading-relaxed">
                   Bio coming soon.
                 </p>
               )}
@@ -182,7 +182,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
             {info.familyPhoto && (
               <div>
                 <p className="eyebrow-muted mb-3">Family</p>
-                <div className="rounded-2xl overflow-hidden shadow-lg border border-[#00205B]/6">
+                <div className="rounded-2xl overflow-hidden shadow-lg border border-border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={info.familyPhoto}
@@ -195,7 +195,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
           </div>
 
           {hasSermons && (
-            <p className="text-[#00205B]/30 text-xs mt-8 font-medium">
+            <p className="text-fg-subtle text-xs mt-8 font-medium">
               {sermons.length} sermon{sermons.length !== 1 ? "s" : ""} at Brainerd Baptist
             </p>
           )}
@@ -204,7 +204,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
       {/* ── Sermons ───────────────────────────────────────────────────── */}
       {hasSermons && (
-        <div className="px-5 md:px-8 pb-24 border-t border-[#00205B]/6 pt-10" style={{ background: "#f4f6f9" }}>
+        <div className="px-5 md:px-8 pb-24 border-t border-border pt-10" style={{ background: "var(--surface-sunken)" }}>
           <div className="max-w-4xl mx-auto">
             <p className="eyebrow-muted mb-6">Sermons</p>
 
@@ -218,10 +218,10 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                   <a
                     key={s.slug || s.date}
                     href={s.slug ? `/sermons/${s.slug}` : "#"}
-                    className="group flex items-center gap-4 p-3 rounded-xl bg-white border border-[#00205B]/6 hover:border-[#00abc9]/30 hover:shadow-sm transition-all"
+                    className="group flex items-center gap-4 p-3 rounded-xl bg-surface-raised border border-border hover:border-accent/30 hover:shadow-sm transition-all"
                   >
                     {/* Thumbnail */}
-                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-[#00205B]/6">
+                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-brand-navy/6">
                       {thumbUrl && (
                         <img
                           src={thumbUrl}
@@ -234,26 +234,26 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                     {/* Meta */}
                     <div className="flex-1 min-w-0">
                       <p
-                        className="text-[#00205B] text-sm font-semibold leading-snug truncate group-hover:text-[#00abc9] transition-colors"
+                        className="text-fg text-sm font-semibold leading-snug truncate group-hover:text-accent-text transition-colors"
                         style={{ letterSpacing: "-0.01em" }}
                       >
                         {s.title}
                       </p>
-                      <p className="text-[#00205B]/40 text-xs mt-0.5 truncate">
+                      <p className="text-fg-muted text-xs mt-0.5 truncate">
                         {s.series && <span style={{ color: s.accentColor }}>{s.series}</span>}
-                        {s.series && s.passage && <span className="text-[#00205B]/20 mx-1.5">·</span>}
+                        {s.series && s.passage && <span className="text-fg-subtle mx-1.5">·</span>}
                         {s.passage}
                       </p>
                     </div>
 
                     {/* Date + arrow */}
                     <div className="flex items-center gap-3 flex-shrink-0">
-                      <span className="text-[#00205B]/30 text-xs hidden sm:block">
+                      <span className="text-fg-subtle text-xs hidden sm:block">
                         {s.date ? formatDate(s.date) : ""}
                       </span>
                       <svg
                         width="12" height="12" viewBox="0 0 12 12" fill="none"
-                        className="text-[#00205B]/20 group-hover:text-[#00abc9] transition-colors"
+                        className="text-fg-subtle group-hover:text-accent-text transition-colors"
                         stroke="currentColor" strokeWidth="1.5"
                       >
                         <path d="M2 6h8M7 3l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -270,7 +270,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
       {!hasSermons && (
         <div className="px-5 md:px-8 pb-24">
           <div className="max-w-4xl mx-auto">
-            <p className="text-[#00205B]/30 text-sm">No sermons on record yet.</p>
+            <p className="text-fg-subtle text-sm">No sermons on record yet.</p>
           </div>
         </div>
       )}

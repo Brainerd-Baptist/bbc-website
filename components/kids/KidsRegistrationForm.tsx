@@ -66,10 +66,10 @@ const EMPTY_PARENT: ParentInfo = {
 };
 
 const inputCls =
-  "w-full rounded-xl border border-[#00205B]/20 px-4 py-3 text-[#00142a] text-sm placeholder:text-[#00205B]/35 focus:outline-none focus:ring-2 focus:ring-[#00abc9] focus:border-transparent transition bg-white";
+  "w-full rounded-xl border border-border-strong px-4 py-3 text-[#00142a] text-sm placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition bg-surface-raised";
 
 const labelCls =
-  "block font-condensed font-800 text-[#00205B] text-sm mb-1.5 tracking-wide";
+  "block font-condensed font-800 text-fg text-sm mb-1.5 tracking-wide";
 
 function Field({
   label,
@@ -84,7 +84,7 @@ function Field({
     <div>
       <label className={labelCls}>
         {label}
-        {required && <span className="text-[#00abc9] ml-0.5">*</span>}
+        {required && <span className="text-accent-text ml-0.5">*</span>}
       </label>
       {children}
     </div>
@@ -166,7 +166,7 @@ export default function KidsRegistrationForm() {
   if (submitted) {
     const count = children.length;
     return (
-      <div className="rounded-2xl bg-white border border-[#00205B]/10 p-10 text-center max-w-xl mx-auto shadow-sm">
+      <div className="rounded-2xl bg-surface-raised border border-border p-10 text-center max-w-xl mx-auto shadow-sm">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
           style={{ background: "rgba(0,171,201,0.10)" }}
@@ -182,12 +182,12 @@ export default function KidsRegistrationForm() {
           </svg>
         </div>
         <h3
-          className="font-condensed font-900 text-[#00205B] mb-3"
+          className="font-condensed font-900 text-fg mb-3"
           style={{ fontSize: "1.75rem", letterSpacing: "-0.01em" }}
         >
           {count === 1 ? "You're registered!" : `${count} kids registered!`}
         </h3>
-        <p className="text-[#00205B]/60 leading-relaxed mb-8">
+        <p className="text-fg-muted leading-relaxed mb-8">
           We&apos;ll see you Sunday. Look for a welcome text if you opted in.
           Your {count === 1 ? "child" : "children"} will be in our system before
           you arrive — first-time check-in takes about 60 seconds.
@@ -195,7 +195,7 @@ export default function KidsRegistrationForm() {
         <button
           onClick={resetForm}
           className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-          style={{ background: "#00205B", color: "white" }}
+          style={{ background: "var(--color-brand-navy)", color: "white" }}
         >
           Register Another Family
         </button>
@@ -249,12 +249,12 @@ export default function KidsRegistrationForm() {
             </div>
           ))}
         </div>
-        <p className="text-[#00205B]/50 text-xs font-condensed font-700 tracking-wide uppercase">
+        <p className="text-fg-muted text-xs font-condensed font-700 tracking-wide uppercase">
           Step {step} of 3 &mdash; {stepLabel}
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#00205B]/10 p-8 shadow-sm">
+      <div className="bg-surface-raised rounded-2xl border border-border p-8 shadow-sm">
         {/* Step 1 — Parent Info */}
         {step === 1 && (
           <div className="space-y-5">
@@ -307,24 +307,24 @@ export default function KidsRegistrationForm() {
             {children.map((child, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-[#00205B]/10 p-5 space-y-4 relative"
+                className="rounded-xl border border-border p-5 space-y-4 relative"
               >
                 {children.length > 1 && (
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-condensed font-800 text-[#00205B]/50 text-xs tracking-wide uppercase">
+                    <span className="font-condensed font-800 text-fg-muted text-xs tracking-wide uppercase">
                       Child {idx + 1}
                     </span>
                     <button
                       type="button"
                       onClick={() => removeChild(idx)}
-                      className="text-[#00205B]/35 hover:text-red-500 transition-colors text-xs font-condensed font-700 tracking-wide uppercase"
+                      className="text-fg-muted hover:text-red-500 transition-colors text-xs font-condensed font-700 tracking-wide uppercase"
                     >
                       Remove
                     </button>
                   </div>
                 )}
                 {children.length === 1 && (
-                  <p className="font-condensed font-800 text-[#00205B]/50 text-xs tracking-wide uppercase mb-1">
+                  <p className="font-condensed font-800 text-fg-muted text-xs tracking-wide uppercase mb-1">
                     Child Information
                   </p>
                 )}
@@ -384,7 +384,7 @@ export default function KidsRegistrationForm() {
             <button
               type="button"
               onClick={addChild}
-              className="w-full rounded-xl border-2 border-dashed border-[#00205B]/15 py-3 text-sm font-condensed font-700 tracking-wide text-[#00205B]/40 hover:border-[#00abc9]/50 hover:text-[#00abc9] transition-colors"
+              className="w-full rounded-xl border-2 border-dashed border-border-strong py-3 text-sm font-condensed font-700 tracking-wide text-fg-muted hover:border-accent/50 hover:text-accent-text transition-colors"
             >
               + Add Another Child
             </button>
@@ -471,13 +471,13 @@ export default function KidsRegistrationForm() {
                 type="checkbox"
                 checked={parent.consentToText}
                 onChange={(e) => setP("consentToText", e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded border-[#00205B]/30 accent-[#00abc9] cursor-pointer flex-shrink-0"
+                className="mt-0.5 w-4 h-4 rounded border-border-strong accent-[#00abc9] cursor-pointer flex-shrink-0"
               />
               <label
                 htmlFor="consent-text"
-                className="text-sm text-[#00205B]/65 leading-relaxed cursor-pointer"
+                className="text-sm text-fg-muted leading-relaxed cursor-pointer"
               >
-                <span className="font-condensed font-800 text-[#00205B]">
+                <span className="font-condensed font-800 text-fg">
                   Receive text updates
                 </span>{" "}
                 about your child while in our care. Opt out anytime.
@@ -509,7 +509,7 @@ export default function KidsRegistrationForm() {
         {step > 1 ? (
           <button
             onClick={() => setStep((s) => s - 1)}
-            className="font-condensed font-700 tracking-wide uppercase text-sm border border-[#00205B]/20 text-[#00205B] px-6 py-3 rounded-full hover:border-[#00205B]/40 transition-colors"
+            className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-strong text-fg px-6 py-3 rounded-full hover:border-border-strong transition-colors"
           >
             Back
           </button>
@@ -566,7 +566,7 @@ export default function KidsRegistrationForm() {
             }
             onClick={handleSubmit}
             className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ background: "#00205B", color: "white" }}
+            style={{ background: "var(--color-brand-navy)", color: "white" }}
           >
             {submitting ? "Submitting…" : "Submit Registration"}
           </button>

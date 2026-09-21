@@ -74,7 +74,7 @@ function StatCard({ stat, delay, started }: { stat: Stat; delay: number; started
   return (
     <div className="flex flex-col items-center text-center px-4">
       <div
-        className="font-condensed font-900 text-[#00abc9] tabular-nums leading-none mb-1"
+        className="font-condensed font-900 text-accent-text tabular-nums leading-none mb-1"
         style={{ fontSize: "clamp(2.4rem, 5vw, 3.5rem)" }}
       >
         {stat.prefix ?? ""}

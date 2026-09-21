@@ -5,7 +5,7 @@ export const metadata = { title: "Contact a Staff Member — Brainerd Baptist Ch
 
 export default function StaffContactPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader
         eyebrow="Contact a Pastor or Staff Member"
         title="Who Would You Like to Reach?"

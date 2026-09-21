@@ -17,7 +17,7 @@ export default function SpeakerCard({ name, accentColor }: Props) {
     <a
       href={`/speakers/${slug}`}
       className="group flex items-center gap-4 p-4 rounded-xl transition-all"
-      style={{ border: "1px solid rgba(0,32,91,0.08)", background: "#f4f6f9" }}
+      style={{ border: "1px solid rgba(0,32,91,0.08)", background: "var(--surface-sunken)" }}
     >
       {/* Avatar — photo if available, else initials */}
       <div
@@ -47,7 +47,7 @@ export default function SpeakerCard({ name, accentColor }: Props) {
       <div className="flex-1 min-w-0">
         <p
           className="font-semibold text-sm leading-snug"
-          style={{ color: "#00205B", letterSpacing: "-0.01em" }}
+          style={{ color: "var(--fg)", letterSpacing: "-0.01em" }}
         >
           {name}
         </p>

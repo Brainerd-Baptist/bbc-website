@@ -524,7 +524,7 @@ export default function GlobalAudioPlayer() {
               </svg>
             </div>
             <div className="min-w-0">
-              <p className="text-white text-xs font-semibold leading-tight truncate group-hover:text-[#00abc9] transition-colors" style={{ letterSpacing: "-0.01em" }}>
+              <p className="text-white text-xs font-semibold leading-tight truncate group-hover:text-accent-text transition-colors" style={{ letterSpacing: "-0.01em" }}>
                 {track.title}
               </p>
               <p className="text-white/35 text-[10px] truncate mt-0.5">{track.speaker}</p>

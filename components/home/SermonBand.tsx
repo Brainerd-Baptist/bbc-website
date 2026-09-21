@@ -10,20 +10,20 @@ export default async function SermonBand() {
   const date = formatSermonDate(sermon.date);
 
   return (
-    <section className="bg-white dark:bg-[#0d1525] section-pad border-b border-gray-100 dark:border-white/5">
+    <section className="bg-surface section-pad border-b border-border">
       <div className="max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
               <p className="eyebrow mb-3">Latest Sermon</p>
               <div className="blue-divider mb-5" />
-              <h2 className="h-section text-[#00205B] dark:text-[#c8d4e8]">
+              <h2 className="h-section text-fg">
                 Hear from God&apos;s Word
               </h2>
             </div>
             <Link
               href="/sermons"
-              className="text-sm font-semibold text-[#00abc9] hover:text-[#0090a8] transition-colors flex items-center gap-1.5 shrink-0"
+              className="text-sm font-semibold text-accent-text hover:text-[#0090a8] transition-colors flex items-center gap-1.5 shrink-0"
             >
               All sermons
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
@@ -39,7 +39,7 @@ export default async function SermonBand() {
             <div className="grid md:grid-cols-5">
 
               {/* Thumbnail / Play */}
-              <div className="md:col-span-2 min-h-[240px] relative flex items-center justify-center bg-[#00205B]">
+              <div className="md:col-span-2 min-h-[240px] relative flex items-center justify-center bg-brand-navy">
                 {thumbnail ? (
                   <Image
                     src={thumbnail}
@@ -57,11 +57,11 @@ export default async function SermonBand() {
                 )}
 
                 {/* Dark overlay */}
-                <div className="absolute inset-0 bg-[#00205B]/40" />
+                <div className="absolute inset-0 bg-brand-navy/40" />
 
                 {/* Series chip */}
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="text-[10px] font-semibold tracking-widest uppercase text-[#00abc9] bg-black/30 border border-[#00abc9]/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                  <span className="text-[10px] font-semibold tracking-widest uppercase text-accent-text bg-black/30 border border-accent/30 px-3 py-1 rounded-full backdrop-blur-sm">
                     Latest
                   </span>
                 </div>
@@ -74,7 +74,7 @@ export default async function SermonBand() {
                   className="relative z-10"
                   aria-label={`Watch ${title} on YouTube`}
                 >
-                  <div className="w-16 h-16 rounded-full bg-[#00abc9] hover:bg-[#0090a8] flex items-center justify-center cursor-pointer transition-all shadow-lg shadow-[#00abc9]/40 hover:scale-105">
+                  <div className="w-16 h-16 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center cursor-pointer transition-all shadow-lg shadow-[#00abc9]/40 hover:scale-105">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
@@ -83,9 +83,9 @@ export default async function SermonBand() {
               </div>
 
               {/* Info panel */}
-              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center bg-white dark:bg-[#162030]">
+              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center bg-surface-raised ">
                 <h3
-                  className="font-condensed font-800 text-[#00205B] dark:text-[#c8d4e8] text-2xl md:text-3xl leading-tight mb-4"
+                  className="font-condensed font-800 text-fg text-2xl md:text-3xl leading-tight mb-4"
                   style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
                 >
                   {title}
@@ -104,7 +104,7 @@ export default async function SermonBand() {
                     {date}
                   </span>
                   {passage && (
-                    <span className="flex items-center gap-1.5 text-[#00abc9]">
+                    <span className="flex items-center gap-1.5 text-accent-text">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                       </svg>

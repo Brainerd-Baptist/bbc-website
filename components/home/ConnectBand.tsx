@@ -4,7 +4,7 @@ import { LEAD_PASTOR } from "@/lib/constants";
 
 export default function ConnectBand() {
   return (
-    <section className="relative overflow-hidden" style={{ background: "#00205B" }}>
+    <section className="relative overflow-hidden" style={{ background: "var(--color-brand-navy)" }}>
       {/* Logo mark watermark — top right */}
       {/* mix-blend-mode:screen makes the white background transparent on dark navy,
           leaving only the white logo lines visible */}
@@ -26,7 +26,7 @@ export default function ConnectBand() {
           <ScrollReveal>
             <div>
               <p className="eyebrow-white mb-5">From Our Pastor</p>
-              <div className="w-10 h-1 rounded-full bg-[#00abc9] mb-8" />
+              <div className="w-10 h-1 rounded-full bg-accent mb-8" />
 
               <blockquote
                 className="text-white/85 leading-relaxed mb-8"
@@ -42,7 +42,7 @@ export default function ConnectBand() {
 
               <div className="flex items-center gap-4">
                 {/* Pastor avatar placeholder — replace with <Image> when photo is ready */}
-                <div className="w-12 h-12 rounded-full bg-[#00abc9]/20 border border-[#00abc9]/30 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00abc9" strokeWidth="1.5">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
@@ -116,16 +116,16 @@ export default function ConnectBand() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#00abc9]/40 rounded-xl px-5 py-4 transition-all duration-200"
+                  className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/40 rounded-xl px-5 py-4 transition-all duration-200"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#00abc9]/15 flex items-center justify-center text-[#00abc9] shrink-0 group-hover:bg-[#00abc9] group-hover:text-white transition-all">
+                  <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent-text shrink-0 group-hover:bg-accent-solid group-hover:text-white transition-all">
                     {item.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-condensed font-700 text-white text-base">{item.label}</p>
                     <p className="text-white/50 text-sm leading-snug">{item.desc}</p>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/25 group-hover:text-[#00abc9] transition-colors shrink-0">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-white/25 group-hover:text-accent-text transition-colors shrink-0">
                     <path d="M3 7h8M8 4l3 3-3 3"/>
                   </svg>
                 </Link>

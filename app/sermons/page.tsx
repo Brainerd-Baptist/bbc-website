@@ -63,7 +63,7 @@ export default async function SermonsPage() {
   ).sort((a, b) => Number(b) - Number(a));
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Header ────────────────────────────────────────────────────── */}
       <div
@@ -217,7 +217,7 @@ export default async function SermonsPage() {
 
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}
       <section
-        className="py-16 px-6 border-t border-[#00205B]/6"
+        className="py-16 px-6 border-t border-border"
         style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
       >
         <div className="max-w-2xl mx-auto text-center">

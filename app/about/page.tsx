@@ -30,7 +30,7 @@ const PILLARS = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <div
@@ -76,7 +76,7 @@ export default function AboutPage() {
       </div>
 
       {/* ── Founded section ────────────────────────────────────── */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Image */}
@@ -107,14 +107,14 @@ export default function AboutPage() {
               >
                 A church that's been here a while — and plans to stay.
               </h2>
-              <p className="text-[#00205B]/60 leading-relaxed mb-4">
+              <p className="text-fg-muted leading-relaxed mb-4">
                 Brainerd Baptist has been part of this neighborhood for nearly
                 a century. Through generations, the city has changed around us.
                 What hasn't changed is the reason we gather: the Word of God,
                 the worship of Jesus, and the love of the saints for one
                 another.
               </p>
-              <p className="text-[#00205B]/60 leading-relaxed">
+              <p className="text-fg-muted leading-relaxed">
                 We're not a campus. We're not a brand. We're a church — a
                 multi-generational family of people raising kids, navigating
                 hard seasons, and doing life together in the name of Jesus.
@@ -169,7 +169,7 @@ export default function AboutPage() {
                 >
                   {p.heading}
                 </h3>
-                <p className="text-[#00205B]/60 leading-relaxed text-sm">
+                <p className="text-fg-muted leading-relaxed text-sm">
                   {p.body}
                 </p>
               </div>
@@ -209,7 +209,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── The BX + Sunday snapshot ───────────────────────────── */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Text first on this side */}
@@ -226,14 +226,14 @@ export default function AboutPage() {
               >
                 A church where people actually know each other.
               </h2>
-              <p className="text-[#00205B]/60 leading-relaxed mb-4">
+              <p className="text-fg-muted leading-relaxed mb-4">
                 Sunday is the anchor — but the community doesn't stop there.
                 Life Groups meet throughout the week across the city. The BX
                 is a gathering place for fitness, meetings, and just showing
                 up. People here tend to do life together in the ordinary,
                 unremarkable ways that actually form community over time.
               </p>
-              <p className="text-[#00205B]/60 leading-relaxed">
+              <p className="text-fg-muted leading-relaxed">
                 The goal isn't a great church experience. It's gospel
                 community — raising families, navigating hard seasons, and
                 staying in it for the long haul.
@@ -285,7 +285,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white text-center">
+      <section className="py-24 px-6 bg-surface text-center">
         <div className="max-w-xl mx-auto">
           <p className="eyebrow mb-4">Come See for Yourself</p>
           <h2
@@ -299,7 +299,7 @@ export default function AboutPage() {
           >
             Sundays at 8:30 &amp; 11:00 AM
           </h2>
-          <p className="text-[#00205B]/50 mb-10">
+          <p className="text-fg-muted mb-10">
             300 Brookfield Ave · Chattanooga, TN 37411
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

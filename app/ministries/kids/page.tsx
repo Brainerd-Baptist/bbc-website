@@ -116,7 +116,7 @@ const CHECKIN_STEPS = [
 // ── Page ─────────────────────────────────────────────────────
 export default function KidsPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section
@@ -181,7 +181,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Age groups ─────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Every age, every Sunday</p>
@@ -189,14 +189,14 @@ export default function KidsPage() {
               className="font-condensed font-900"
               style={{
                 fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
-                color: "#00205B",
+                color: "var(--fg)",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.05,
               }}
             >
               Where does my kid go?
             </h2>
-            <p className="text-[#00205B]/55 mt-4 max-w-md mx-auto text-sm leading-relaxed">
+            <p className="text-fg-muted mt-4 max-w-md mx-auto text-sm leading-relaxed">
               Each environment is designed for where kids are developmentally —
               not just what grade they&apos;re in.
             </p>
@@ -206,7 +206,7 @@ export default function KidsPage() {
             {AGE_GROUPS.map(({ icon, label, ages, body, note }) => (
               <div
                 key={label}
-                className="bg-white rounded-2xl p-8 border border-[#00205B]/8 hover:border-[#00abc9]/30 transition-colors"
+                className="bg-surface-raised rounded-2xl p-8 border border-border hover:border-accent/30 transition-colors"
               >
                 {/* Icon */}
                 <div
@@ -227,12 +227,12 @@ export default function KidsPage() {
                 </div>
 
                 <h3
-                  className="font-condensed font-800 text-[#00205B] mb-3"
+                  className="font-condensed font-800 text-fg mb-3"
                   style={{ fontSize: "1.5rem", letterSpacing: "-0.01em" }}
                 >
                   {label}
                 </h3>
-                <p className="text-[#00205B]/60 text-sm leading-relaxed mb-4">
+                <p className="text-fg-muted text-sm leading-relaxed mb-4">
                   {body}
                 </p>
                 {note && (
@@ -250,7 +250,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Check-in & Safety ─────────────────────────────── */}
-      <section id="checkin" className="py-24 px-6 bg-white">
+      <section id="checkin" className="py-24 px-6 bg-surface">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-start">
 
@@ -258,7 +258,7 @@ export default function KidsPage() {
             <div>
               <p className="eyebrow mb-3">Your first question, answered</p>
               <h2
-                className="font-condensed font-900 text-[#00205B] mb-5"
+                className="font-condensed font-900 text-fg mb-5"
                 style={{
                   fontSize: "clamp(2.2rem, 5vw, 3rem)",
                   letterSpacing: "-0.02em",
@@ -267,19 +267,19 @@ export default function KidsPage() {
               >
                 We take safety seriously.
               </h2>
-              <p className="text-[#00205B]/55 leading-relaxed mb-6">
+              <p className="text-fg-muted leading-relaxed mb-6">
                 Every volunteer is background-checked and trained before they
                 ever work with a child. We use a secure check-in and matching
                 label system — your child doesn&apos;t leave without it.
               </p>
-              <p className="text-[#00205B]/55 leading-relaxed mb-4">
+              <p className="text-fg-muted leading-relaxed mb-4">
                 If this is your first Sunday, arrive 10–15 minutes early. A
                 team member will meet you at the kiosk and walk you through
                 everything, including a quick look at the room your child will
                 be in.
               </p>
-              <p className="text-[#00205B]/55 leading-relaxed mb-8">
-                <span className="font-medium text-[#00205B]/75">Getting here:</span>{" "}
+              <p className="text-fg-muted leading-relaxed mb-8">
+                <span className="font-medium text-fg">Getting here:</span>{" "}
                 Enter from Albemarle Ave and park in the Purple Lot — the Kids
                 entrance is just inside.
               </p>
@@ -287,13 +287,13 @@ export default function KidsPage() {
                 <a
                   href="#pre-register"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2"
-                  style={{ background: "#00205B", color: "white" }}
+                  style={{ background: "var(--color-brand-navy)", color: "white" }}
                 >
                   Pre-Register Online
                 </a>
                 <Link
                   href="/visit"
-                  className="font-condensed font-700 tracking-wide uppercase text-sm border border-[#00205B]/20 text-[#00205B] px-6 py-3 rounded-full hover:border-[#00205B]/40 transition-colors"
+                  className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-strong text-fg px-6 py-3 rounded-full hover:border-border-strong transition-colors"
                 >
                   Plan Your Visit
                 </Link>
@@ -305,19 +305,19 @@ export default function KidsPage() {
               {CHECKIN_STEPS.map(({ num, heading, body }) => (
                 <div key={num} className="flex gap-5 items-start">
                   <div
-                    className="flex-shrink-0 font-condensed font-800 text-[#00abc9] opacity-40 mt-0.5"
+                    className="flex-shrink-0 font-condensed font-800 text-accent-text opacity-40 mt-0.5"
                     style={{ fontSize: "2rem", lineHeight: 1 }}
                   >
                     {num}
                   </div>
                   <div>
                     <h3
-                      className="font-condensed font-700 text-[#00205B] mb-1"
+                      className="font-condensed font-700 text-fg mb-1"
                       style={{ fontSize: "1.15rem" }}
                     >
                       {heading}
                     </h3>
-                    <p className="text-[#00205B]/55 text-sm leading-relaxed">
+                    <p className="text-fg-muted text-sm leading-relaxed">
                       {body}
                     </p>
                   </div>
@@ -329,7 +329,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── What we teach ─────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#00205B" }}>
+      <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-4xl mx-auto text-center">
           <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>
             What we teach
@@ -388,13 +388,13 @@ export default function KidsPage() {
       </section>
 
       {/* ── Wednesday Midweek ─────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <p className="eyebrow mb-3">Wednesday nights</p>
               <h2
-                className="font-condensed font-900 text-[#00205B] mb-5"
+                className="font-condensed font-900 text-fg mb-5"
                 style={{
                   fontSize: "clamp(2rem, 5vw, 3rem)",
                   letterSpacing: "-0.02em",
@@ -403,7 +403,7 @@ export default function KidsPage() {
               >
                 Kids midweek.
               </h2>
-              <p className="text-[#00205B]/55 leading-relaxed mb-4">
+              <p className="text-fg-muted leading-relaxed mb-4">
                 We meet Wednesday evenings for Bible stories, worship, games,
                 and small group time — a mid-week anchor for your kids during
                 the school year.
@@ -412,10 +412,10 @@ export default function KidsPage() {
                 className="inline-flex items-center gap-3 rounded-xl px-5 py-3"
                 style={{ background: "white", border: "1px solid rgba(0,32,91,0.10)" }}
               >
-                <span className="font-condensed font-800 text-[#00abc9]" style={{ fontSize: "1.2rem" }}>
+                <span className="font-condensed font-800 text-accent-text" style={{ fontSize: "1.2rem" }}>
                   Wednesday
                 </span>
-                <span className="text-[#00205B]/50 text-sm">6:00 – 7:30 PM</span>
+                <span className="text-fg-muted text-sm">6:00 – 7:30 PM</span>
                 <span
                   className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
                   style={{ background: "rgba(0,171,201,0.10)", color: "#00abc9" }}
@@ -437,12 +437,12 @@ export default function KidsPage() {
       </section>
 
       {/* ── Staff ─────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-surface">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Our Team</p>
             <h2
-              className="font-condensed font-900 text-[#00205B]"
+              className="font-condensed font-900 text-fg"
               style={{
                 fontSize: "clamp(2rem, 5vw, 3rem)",
                 letterSpacing: "-0.02em",
@@ -468,7 +468,7 @@ export default function KidsPage() {
               <div key={name} className="text-center" style={{ width: "180px" }}>
                 <div
                   className="w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden"
-                  style={{ background: "#f4f6f9" }}
+                  style={{ background: "var(--surface-sunken)" }}
                 >
                   {photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -487,12 +487,12 @@ export default function KidsPage() {
                   )}
                 </div>
                 <h3
-                  className="font-condensed font-800 text-[#00205B]"
+                  className="font-condensed font-800 text-fg"
                   style={{ fontSize: "1.1rem" }}
                 >
                   {name}
                 </h3>
-                <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mt-1">
+                <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mt-1">
                   {title}
                 </p>
               </div>
@@ -524,12 +524,12 @@ export default function KidsPage() {
       </section>
 
       {/* ── Pre-Register Form ─────────────────────────────── */}
-      <section id="pre-register" className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section id="pre-register" className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Pre-Register Your Family</p>
             <h2
-              className="font-condensed font-900 text-[#00205B] mb-4"
+              className="font-condensed font-900 text-fg mb-4"
               style={{
                 fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
                 letterSpacing: "-0.02em",
@@ -538,7 +538,7 @@ export default function KidsPage() {
             >
               Skip the line on Sunday.
             </h2>
-            <p className="text-[#00205B]/55 leading-relaxed max-w-md mx-auto">
+            <p className="text-fg-muted leading-relaxed max-w-md mx-auto">
               Fill this out once — we&apos;ll have your family in our system before
               you arrive. First-time check-in takes about 60 seconds.
             </p>
@@ -548,11 +548,11 @@ export default function KidsPage() {
       </section>
 
       {/* ── First-time CTA ─────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-surface">
         <div className="max-w-3xl mx-auto text-center">
           <p className="eyebrow mb-3">Ready to visit?</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] mb-5"
+            className="font-condensed font-900 text-fg mb-5"
             style={{
               fontSize: "clamp(2.2rem, 5vw, 3rem)",
               letterSpacing: "-0.02em",
@@ -561,7 +561,7 @@ export default function KidsPage() {
           >
             We&apos;d love to meet your family.
           </h2>
-          <p className="text-[#00205B]/55 leading-relaxed mb-8 max-w-md mx-auto">
+          <p className="text-fg-muted leading-relaxed mb-8 max-w-md mx-auto">
             Pre-register online and your first check-in takes about 60 seconds.
             Or just show up — we&apos;ll walk you through everything at the kiosk.
           </p>
@@ -575,18 +575,18 @@ export default function KidsPage() {
             </a>
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-[#00205B]/20 text-[#00205B] px-8 py-4 rounded-full hover:border-[#00205B]/40 transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-strong text-fg px-8 py-4 rounded-full hover:border-border-strong transition-colors"
             >
               Plan Your Visit
             </Link>
           </div>
 
           {/* Contact fallback */}
-          <p className="text-[#00205B]/35 text-xs mt-8">
+          <p className="text-fg-muted text-xs mt-8">
             Questions? Email us at{" "}
             <a
               href="mailto:kids@brainerdbaptist.org"
-              className="underline underline-offset-2 hover:text-[#00205B]/55 transition-colors"
+              className="underline underline-offset-2 hover:text-fg-muted transition-colors"
             >
               kids@brainerdbaptist.org
             </a>

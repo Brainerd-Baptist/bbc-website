@@ -5,7 +5,7 @@ export const metadata = { title: "Get in Touch — Brainerd Baptist Church" };
 
 export default function GeneralContactPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader
         eyebrow="Get in Touch"
         title="Send Us a Message"

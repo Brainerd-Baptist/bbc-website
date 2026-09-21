@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function WhoIsJesusPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Dark gradient hero strip ────────────────────────────── */}
       <section
@@ -45,18 +45,18 @@ export default function WhoIsJesusPage() {
       {/* ── Three Circles Interactive ───────────────────────────── */}
       <section id="three-circles" className="px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-3xl p-8 md:p-12 border border-[#00205B]/8 shadow-sm">
+          <div className="rounded-3xl p-8 md:p-12 border border-border shadow-sm">
             <ThreeCircles />
           </div>
         </div>
       </section>
 
       {/* ── Who Is Jesus (theology) ─────────────────────────────── */}
-      <section className="px-6 pb-20" style={{ background: "#f4f6f9" }}>
+      <section className="px-6 pb-20" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto pt-16">
           <p className="eyebrow-muted text-center mb-4">More on Jesus</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] text-center mb-14"
+            className="font-condensed font-900 text-fg text-center mb-14"
             style={{
               fontSize: "clamp(2.5rem, 6vw, 4rem)",
               letterSpacing: "-0.02em",
@@ -86,7 +86,7 @@ export default function WhoIsJesusPage() {
             ].map((item) => (
               <div
                 key={item.num}
-                className="bg-white rounded-2xl p-7 border border-[#00205B]/6 shadow-sm"
+                className="bg-surface-raised rounded-2xl p-7 border border-border shadow-sm"
               >
                 <span
                   className="font-condensed font-900 block mb-4"
@@ -95,12 +95,12 @@ export default function WhoIsJesusPage() {
                   {item.num}
                 </span>
                 <h3
-                  className="font-condensed font-800 text-[#00205B] mb-3"
+                  className="font-condensed font-800 text-fg mb-3"
                   style={{ fontSize: "1.4rem", letterSpacing: "-0.01em" }}
                 >
                   {item.title}
                 </h3>
-                <p className="text-[#00205B]/55 text-sm leading-relaxed">{item.body}</p>
+                <p className="text-fg-muted text-sm leading-relaxed">{item.body}</p>
               </div>
             ))}
           </div>

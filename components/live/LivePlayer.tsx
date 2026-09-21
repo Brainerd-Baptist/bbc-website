@@ -241,14 +241,14 @@ function ActiveView({
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={`flex items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
-        state === "live" ? "bg-[#00abc9]" : state === "post" ? "bg-[#1a2a40]" : "bg-[#00205B]"
+        state === "live" ? "bg-accent" : state === "post" ? "bg-[#1a2a40]" : "bg-brand-navy"
       }`}>
         {state === "live" && (
-          <><span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+          <><span className="w-1.5 h-1.5 rounded-full bg-surface-raised animate-pulse" />
           We&apos;re Live — {service?.label}</>
         )}
         {state === "pre" && (
-          <><span className="w-1.5 h-1.5 rounded-full bg-[#00abc9]" />
+          <><span className="w-1.5 h-1.5 rounded-full bg-accent" />
           {service?.label} starts in {Math.floor(secsUntil / 60)}m {secsUntil % 60 < 10 ? `0${secsUntil % 60}` : secsUntil % 60}s</>
         )}
         {state === "post" && (
@@ -297,7 +297,7 @@ function ActiveView({
                   onClick={() => setTab(t.id)}
                   className={`flex-1 min-w-[64px] flex flex-col items-center gap-0.5 py-2.5 px-1 text-[10px] font-semibold tracking-wide transition-colors ${
                     tab === t.id
-                      ? "text-[#00abc9] border-b-2 border-[#00abc9]"
+                      ? "text-accent-text border-b-2 border-accent"
                       : "text-[#6b7f9e] hover:text-white"
                   }`}
                 >
@@ -330,7 +330,7 @@ function ActiveView({
                 href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity block mb-1"
+                className="text-accent-text text-xs font-semibold tracking-widest uppercase hover:opacity-75 transition-opacity block mb-1"
               >
                 {sermon.passage}
               </a>
@@ -351,7 +351,7 @@ function ActiveView({
                   onClick={() => setTab(t)}
                   className={`flex-1 py-2.5 text-[11px] font-semibold tracking-wide transition-colors ${
                     tab === t
-                      ? "text-[#00abc9] border-b-2 border-[#00abc9]"
+                      ? "text-accent-text border-b-2 border-accent"
                       : "text-[#6b7f9e] hover:text-white"
                   }`}
                 >
@@ -381,7 +381,7 @@ function WatchTab({ sermon }: { sermon: SermonData }) {
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
       {sermon.passage && (
-        <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-2">
+        <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">
           {sermon.passage}
         </p>
       )}
@@ -423,7 +423,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-1">
+      <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">
         Scripture
       </p>
       <h3 className="text-lg font-bold text-white mb-5">{sermon.passage}</h3>
@@ -443,7 +443,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
             href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#00abc9] underline"
+            className="text-accent-text underline"
           >
             Read on Bible Gateway →
           </a>
@@ -486,7 +486,7 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-1">
+      <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">
         {isScripture ? "Scripture Journey" : "Sermon Outline"}
       </p>
       <h3 className="text-lg font-bold text-white mb-1">{sermon.title}</h3>
@@ -501,7 +501,7 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
         {sermon.outline.map((point, i) => (
           <li key={i} className="flex gap-3">
             <span
-              className="mt-0.5 w-5 h-5 rounded-full bg-[#00205B] text-[#00abc9] text-[10px] font-bold flex items-center justify-center shrink-0"
+              className="mt-0.5 w-5 h-5 rounded-full bg-brand-navy text-accent-text text-[10px] font-bold flex items-center justify-center shrink-0"
             >
               {i + 1}
             </span>
@@ -529,7 +529,7 @@ function NotesTab({ sermon }: { sermon: SermonData }) {
     <div className="px-5 py-6 max-w-xl mx-auto flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase">My Notes</p>
+          <p className="text-accent-text text-xs font-semibold tracking-widest uppercase">My Notes</p>
           <p className="text-[11px] text-[#4a5568] mt-0.5">Saved automatically</p>
         </div>
         <div className="flex gap-2">
@@ -554,7 +554,7 @@ function NotesTab({ sermon }: { sermon: SermonData }) {
         value={notes}
         onChange={(e) => save(e.target.value)}
         placeholder={`Notes for "${sermon.title}"…\n\nWrite anything you want to remember from today's message.`}
-        className="w-full h-60 rounded-xl bg-white/5 border border-white/10 text-sm text-[#c8d4e8] placeholder-[#4a5568] p-4 resize-none focus:outline-none focus:border-[#00abc9]/50 transition-colors leading-relaxed"
+        className="w-full h-60 rounded-xl bg-white/5 border border-white/10 text-sm text-[#c8d4e8] placeholder-[#4a5568] p-4 resize-none focus:outline-none focus:border-accent/50 transition-colors leading-relaxed"
       />
 
       <p className="text-[10px] text-[#4a5568]">
@@ -582,7 +582,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
   if (status === "sent") {
     return (
       <div className="px-5 py-14 max-w-xl mx-auto text-center">
-        <div className="w-12 h-12 rounded-full bg-[#00abc9]/20 flex items-center justify-center mx-auto mb-4 text-2xl">
+        <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4 text-2xl">
           🙏
         </div>
         <h3 className="text-lg font-bold text-white mb-2">We&apos;re praying for you</h3>
@@ -595,7 +595,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-1">Prayer Request</p>
+      <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">Prayer Request</p>
       <p className="text-[#6b7f9e] text-sm mb-5">
         Our prayer team reviews every request during and after the service.
       </p>
@@ -603,7 +603,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold text-[#6b7f9e] mb-1.5 uppercase tracking-wide">
-            Your Name <span className="text-[#00abc9]">*</span>
+            Your Name <span className="text-accent-text">*</span>
           </label>
           <input
             type="text"
@@ -611,13 +611,13 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
             onChange={(e) => setName(e.target.value)}
             required
             placeholder="First name is fine"
-            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-[#00abc9]/60 transition-colors"
+            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-accent/60 transition-colors"
           />
         </div>
 
         <div>
           <label className="block text-xs font-semibold text-[#6b7f9e] mb-1.5 uppercase tracking-wide">
-            Prayer Request <span className="text-[#00abc9]">*</span>
+            Prayer Request <span className="text-accent-text">*</span>
           </label>
           <textarea
             value={request}
@@ -625,7 +625,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
             required
             placeholder="Share what's on your heart…"
             rows={4}
-            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-[#00abc9]/60 transition-colors resize-none leading-relaxed"
+            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-accent/60 transition-colors resize-none leading-relaxed"
           />
         </div>
 
@@ -638,7 +638,7 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-[#00abc9]/60 transition-colors"
+            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-accent/60 transition-colors"
           />
         </div>
 
@@ -702,7 +702,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
               Watch Latest Sermon
             </a>
-            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#00abc9] hover:text-white transition-colors">
+            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:text-white transition-colors">
               Plan a Visit
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>
@@ -716,20 +716,20 @@ function OffHours({ sermon }: { sermon: SermonData }) {
           <p className="text-xs font-semibold tracking-widest uppercase text-[#6b7f9e] mb-5 text-center">Most Recent Sermon</p>
           <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl shadow-black/40 bg-[#162030]">
             <div className="grid md:grid-cols-5">
-              <div className="md:col-span-2 relative min-h-[200px] bg-[#00205B] flex items-center justify-center">
+              <div className="md:col-span-2 relative min-h-[200px] bg-brand-navy flex items-center justify-center">
                 {sermon.thumbnail && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={sermon.thumbnail} alt={sermon.title} className="absolute inset-0 w-full h-full object-cover opacity-70" />
                 )}
-                <div className="absolute inset-0 bg-[#00205B]/50" />
+                <div className="absolute inset-0 bg-brand-navy/50" />
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="relative z-10" aria-label={`Watch ${sermon.title}`}>
-                  <div className="w-14 h-14 rounded-full bg-[#00abc9] hover:bg-[#0090a8] flex items-center justify-center transition-all shadow-lg hover:scale-105">
+                  <div className="w-14 h-14 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center transition-all shadow-lg hover:scale-105">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
                   </div>
                 </a>
               </div>
               <div className="md:col-span-3 p-7 md:p-9 flex flex-col justify-center">
-                {sermon.passage && <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
+                {sermon.passage && <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">{sermon.title}</h3>
                 <p className="text-sm text-[#6b7f9e] mb-5">{date} · Curtis Hill</p>
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm inline-block self-start">
@@ -752,13 +752,13 @@ function OffHours({ sermon }: { sermon: SermonData }) {
             ].map((svc) => (
               <div key={svc.time} className="rounded-xl border border-white/8 bg-white/4 p-6">
                 <span className="text-2xl font-bold text-white block mb-1">{svc.time}</span>
-                <span className="text-[#00abc9] text-sm font-semibold block">{svc.style}</span>
+                <span className="text-accent-text text-sm font-semibold block">{svc.style}</span>
                 <span className="text-[#6b7f9e] text-xs">{svc.note}</span>
               </div>
             ))}
           </div>
           <div className="mt-7 text-center">
-            <a href="/plan-your-visit" className="text-sm font-semibold text-[#00abc9] hover:text-white transition-colors inline-flex items-center gap-1.5">
+            <a href="/plan-your-visit" className="text-sm font-semibold text-accent-text hover:text-white transition-colors inline-flex items-center gap-1.5">
               Get directions &amp; parking info
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>

@@ -23,7 +23,7 @@ const INTEREST_OPTIONS = [
 ];
 
 const inputClass =
-  "border border-[#00205B]/20 rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-[#00abc9]/40 text-[#00205B] bg-white placeholder:text-[#00205B]/40 transition";
+  "border border-border-strong rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent/40 text-fg bg-surface-raised placeholder:text-fg-muted transition";
 
 function CheckboxGroup({
   options,
@@ -55,7 +55,7 @@ function CheckboxGroup({
                 className="peer sr-only"
               />
               {/* Custom checkbox box */}
-              <span className="block w-5 h-5 rounded border-2 border-[#00205B]/30 bg-white peer-checked:bg-[#00abc9] peer-checked:border-[#00abc9] transition group-hover:border-[#00abc9]/60" />
+              <span className="block w-5 h-5 rounded border-2 border-border-strong bg-surface-raised peer-checked:bg-accent-solid peer-checked:border-accent transition group-hover:border-accent/60" />
               {/* Checkmark */}
               {checked && (
                 <svg
@@ -71,7 +71,7 @@ function CheckboxGroup({
                 </svg>
               )}
             </span>
-            <span className="text-[#00205B] text-sm leading-snug select-none">
+            <span className="text-fg text-sm leading-snug select-none">
               {opt.label}
             </span>
           </label>
@@ -165,11 +165,11 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
 
   if (success) {
     return (
-      <div className="rounded-2xl bg-[#00abc9]/10 border border-[#00abc9]/30 px-8 py-10 text-center space-y-3">
+      <div className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
         <div className="flex justify-center">
-          <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#00abc9]/20">
+          <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20">
             <svg
-              className="w-6 h-6 text-[#00abc9]"
+              className="w-6 h-6 text-accent-text"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -183,8 +183,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
             </svg>
           </span>
         </div>
-        <p className="text-[#00205B] font-semibold text-lg">You&apos;re all set!</p>
-        <p className="text-[#00205B]/70 text-sm leading-relaxed max-w-sm mx-auto">
+        <p className="text-fg font-semibold text-lg">You&apos;re all set!</p>
+        <p className="text-fg-muted text-sm leading-relaxed max-w-sm mx-auto">
           Thanks! Someone from our team will be in touch soon. We&apos;re glad
           you&apos;re here.
         </p>
@@ -197,8 +197,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
       {/* Name row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-[#00205B]">
-            First name <span className="text-[#00abc9]">*</span>
+          <label className="block text-sm font-medium text-fg">
+            First name <span className="text-accent-text">*</span>
           </label>
           <input
             type="text"
@@ -211,8 +211,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-[#00205B]">
-            Last name <span className="text-[#00abc9]">*</span>
+          <label className="block text-sm font-medium text-fg">
+            Last name <span className="text-accent-text">*</span>
           </label>
           <input
             type="text"
@@ -228,8 +228,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
 
       {/* Email */}
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-[#00205B]">
-          Email <span className="text-[#00abc9]">*</span>
+        <label className="block text-sm font-medium text-fg">
+          Email <span className="text-accent-text">*</span>
         </label>
         <input
           type="email"
@@ -244,8 +244,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
 
       {/* Phone */}
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-[#00205B]">
-          Phone <span className="text-[#00abc9]">*</span>
+        <label className="block text-sm font-medium text-fg">
+          Phone <span className="text-accent-text">*</span>
         </label>
         <input
           type="tel"
@@ -261,11 +261,11 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
       {/* How did you hear about Brainerd? */}
       <div className="space-y-3">
         <div>
-          <p className="text-sm font-medium text-[#00205B]">
+          <p className="text-sm font-medium text-fg">
             How did you hear about Brainerd?{" "}
-            <span className="text-[#00abc9]">*</span>
+            <span className="text-accent-text">*</span>
           </p>
-          <p className="text-xs text-[#00205B]/50 mt-0.5">Select all that apply.</p>
+          <p className="text-xs text-fg-muted mt-0.5">Select all that apply.</p>
         </div>
         <CheckboxGroup
           options={HOW_HEARD_OPTIONS}
@@ -283,10 +283,10 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
       {/* I'm interested in… */}
       <div className="space-y-3">
         <div>
-          <p className="text-sm font-medium text-[#00205B]">
+          <p className="text-sm font-medium text-fg">
             I&apos;m interested in…
           </p>
-          <p className="text-xs text-[#00205B]/50 mt-0.5">
+          <p className="text-xs text-fg-muted mt-0.5">
             Optional — select anything that applies.
           </p>
         </div>
@@ -299,7 +299,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
       </div>
 
       {showMembershipOption && (
-        <label className="flex items-start gap-3 cursor-pointer group rounded-xl border border-[#00205B]/10 hover:border-[#00abc9]/30 p-4 transition-colors">
+        <label className="flex items-start gap-3 cursor-pointer group rounded-xl border border-border hover:border-accent/30 p-4 transition-colors">
           <span className="relative flex-shrink-0 w-5 h-5 mt-0.5">
             <input
               type="checkbox"
@@ -307,7 +307,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
               onChange={(e) => setWantsMembership(e.target.checked)}
               className="peer sr-only"
             />
-            <span className="block w-5 h-5 rounded border-2 border-[#00205B]/30 bg-white peer-checked:bg-[#00abc9] peer-checked:border-[#00abc9] transition group-hover:border-[#00abc9]/60" />
+            <span className="block w-5 h-5 rounded border-2 border-border-strong bg-surface-raised peer-checked:bg-accent-solid peer-checked:border-accent transition group-hover:border-accent/60" />
             {wantsMembership && (
               <svg className="absolute inset-0 m-auto w-3 h-3 text-white pointer-events-none" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="2,6 5,9 10,3" />
@@ -315,15 +315,15 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
             )}
           </span>
           <span>
-            <span className="block text-[#00205B] text-sm font-medium">I&apos;m interested in membership</span>
-            <span className="block text-[#00205B]/50 text-xs mt-0.5">Someone will reach out to walk you through what that looks like.</span>
+            <span className="block text-fg text-sm font-medium">I&apos;m interested in membership</span>
+            <span className="block text-fg-muted text-xs mt-0.5">Someone will reach out to walk you through what that looks like.</span>
           </span>
         </label>
       )}
 
       {/* Anything else? */}
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-[#00205B]">
+        <label className="block text-sm font-medium text-fg">
           Anything else?
         </label>
         <textarea
@@ -347,7 +347,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
         type="submit"
         disabled={submitting}
         className="w-full py-3.5 px-6 rounded-xl font-semibold text-white text-base transition-all
-          bg-[#00abc9] hover:bg-[#00205B] focus:outline-none focus:ring-2 focus:ring-[#00abc9]/50
+          bg-accent hover:bg-brand-navy focus:outline-none focus:ring-2 focus:ring-accent/50
           disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {submitting ? "Sending…" : "Connect with us"}

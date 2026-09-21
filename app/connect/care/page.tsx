@@ -5,7 +5,7 @@ export const metadata = { title: "Care & Support — Brainerd Baptist Church" };
 
 export default function CarePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader
         eyebrow="Care & Support"
         title="We're Here for You"

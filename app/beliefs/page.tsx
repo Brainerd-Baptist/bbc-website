@@ -168,22 +168,22 @@ function BeliefCard({ icon, title, body, verse }: {
 }) {
   const refs = verse.split(" · ");
   return (
-    <div className="flex gap-6 p-7 rounded-2xl border border-[#00205B]/8 bg-white hover:border-[#00abc9]/25 transition-colors">
+    <div className="flex gap-6 p-7 rounded-2xl border border-border bg-surface-raised hover:border-accent/25 transition-colors">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
       <div>
         <h3
-          className="font-condensed font-800 text-[#00205B] mb-2"
+          className="font-condensed font-800 text-fg mb-2"
           style={{ fontSize: "1.4rem", letterSpacing: "-0.01em" }}
         >
           {title}
         </h3>
-        <p className="text-[#00205B]/60 text-sm leading-relaxed mb-3">{body}</p>
+        <p className="text-fg-muted text-sm leading-relaxed mb-3">{body}</p>
         <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
           {refs.map((ref, i) => (
             <span key={ref} className="flex items-center gap-3">
               <ScriptureRef reference={ref} />
               {i < refs.length - 1 && (
-                <span className="text-[#00205B]/20 text-xs select-none">·</span>
+                <span className="text-fg-subtle text-xs select-none">·</span>
               )}
             </span>
           ))}
@@ -196,10 +196,10 @@ function BeliefCard({ icon, title, body, verse }: {
 // ── Page ─────────────────────────────────────────────────────
 export default function BeliefsPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ───────────────────────────────────────────── */}
-      <section className="py-32 px-6 text-center" style={{ background: "#00205B" }}>
+      <section className="py-32 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
         <p className="eyebrow mb-4" style={{ color: "#00abc9" }}>Brainerd Baptist Church</p>
         <h1
           className="font-condensed font-900 text-white"
@@ -213,7 +213,7 @@ export default function BeliefsPage() {
       </section>
 
       {/* ── Beliefs grid ───────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-5">
             {BELIEFS.map((b) => (
@@ -227,14 +227,14 @@ export default function BeliefsPage() {
       <BeliefQuestion />
 
       {/* ── BF&M footnote ──────────────────────────────────── */}
-      <section className="py-10 px-6 bg-white border-t border-[#00205B]/6">
-        <p className="text-center text-[#00205B]/35 text-xs max-w-lg mx-auto leading-relaxed">
+      <section className="py-10 px-6 bg-surface border-t border-border">
+        <p className="text-center text-fg-muted text-xs max-w-lg mx-auto leading-relaxed">
           Brainerd Baptist Church holds to the{" "}
           <a
             href="https://bfm.sbc.net/bfm2000/"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-[#00205B]/55 transition-colors"
+            className="underline underline-offset-2 hover:text-fg-muted transition-colors"
           >
             Baptist Faith &amp; Message 2000
           </a>{" "}

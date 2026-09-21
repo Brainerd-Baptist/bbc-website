@@ -107,7 +107,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
           {/* Search */}
           <div className="relative mb-4">
             <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#00205B]/30 pointer-events-none"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-fg-subtle pointer-events-none"
               width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2"
             >
@@ -118,7 +118,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
               placeholder="Search by title, passage, or book…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-white border border-[#00205B]/12 rounded-xl pl-11 pr-4 py-3.5 text-[#00205B] placeholder-[#00205B]/30 text-sm focus:outline-none focus:border-[#00abc9] focus:ring-2 focus:ring-[#00abc9]/10 transition-all shadow-sm"
+              className="w-full bg-surface-raised border border-border-strong rounded-xl pl-11 pr-4 py-3.5 text-fg placeholder-[#00205B]/30 text-sm focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all shadow-sm"
             />
           </div>
 
@@ -129,13 +129,13 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
             <Select value={year}    onChange={setYear}    label="Year"    options={[{ value: "all", label: "All Years" },    ...allYears.map((y) => ({ value: y, label: y }))]} />
 
             <div className="ml-auto flex items-center gap-4">
-              <span className="text-[#00205B]/35 text-xs tabular-nums">
+              <span className="text-fg-muted text-xs tabular-nums">
                 {filtered.length === sermons.length
                   ? `${sermons.length} sermons`
                   : `${filtered.length} of ${sermons.length}`}
               </span>
               {hasFilters && (
-                <button onClick={clearAll} className="text-[#00abc9] text-xs font-semibold hover:text-[#0090a8] transition-colors">
+                <button onClick={clearAll} className="text-accent-text text-xs font-semibold hover:text-[#0090a8] transition-colors">
                   Clear
                 </button>
               )}
@@ -149,8 +149,8 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
         <div className="max-w-5xl mx-auto">
           {filtered.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-[#00205B]/30 text-lg mb-2">No sermons match your search.</p>
-              <button onClick={clearAll} className="text-[#00abc9] text-sm font-semibold hover:underline">
+              <p className="text-fg-subtle text-lg mb-2">No sermons match your search.</p>
+              <button onClick={clearAll} className="text-accent-text text-sm font-semibold hover:underline">
                 Clear filters
               </button>
             </div>
@@ -196,7 +196,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
       href={url}
       target={isInternal ? undefined : "_blank"}
       rel={isInternal ? undefined : "noopener noreferrer"}
-      className="group relative flex gap-0 rounded-2xl overflow-hidden border border-[#00205B]/8 hover:border-[#00abc9]/30 bg-white hover:shadow-md transition-all duration-200"
+      className="group relative flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition-all duration-200"
       style={{ animationDelay: `${index * 30}ms` }}
     >
       {/* Thumbnail */}
@@ -235,26 +235,26 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
             <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: color.accent }}>
               {sermon.series}
             </span>
-            <span className="text-[#00205B]/20 text-[10px]">·</span>
+            <span className="text-fg-subtle text-[10px]">·</span>
             {sermon.passage ? (
               <a
                 href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="text-[#00205B]/45 text-[10px] font-medium hover:text-[#00abc9] transition-colors"
+                className="text-fg-muted text-[10px] font-medium hover:text-accent-text transition-colors"
               >
                 {sermon.passage}
               </a>
             ) : null}
           </div>
           <h3
-            className="text-[#00205B] font-semibold text-base md:text-lg leading-snug mb-1.5 group-hover:text-[#00abc9] transition-colors"
+            className="text-fg font-semibold text-base md:text-lg leading-snug mb-1.5 group-hover:text-accent-text transition-colors"
             style={{ letterSpacing: "-0.02em" }}
           >
             {sermon.title}
           </h3>
-          <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[#00205B]/40 text-xs">
+          <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-fg-muted text-xs">
             <span>{sermon.speaker}</span>
             <span>{formatDate(sermon.date)}</span>
             {sermon.duration && <span>{sermon.duration}</span>}
@@ -262,11 +262,11 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
         </div>
 
         <div className="hidden sm:flex shrink-0 items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <span className="text-xs font-semibold text-[#00205B]/40 group-hover:text-[#00abc9] transition-colors">
+          <span className="text-xs font-semibold text-fg-muted group-hover:text-accent-text transition-colors">
             {sermon.youtubeId ? "Watch" : "Listen"}
           </span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor"
-            strokeWidth="2" className="text-[#00205B]/25 group-hover:text-[#00abc9] transition-colors"
+            strokeWidth="2" className="text-fg-subtle group-hover:text-accent-text transition-colors"
           >
             <path d="M3 7h8M8 4l3 3-3 3"/>
           </svg>
@@ -302,7 +302,7 @@ function Select({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-white border border-[#00205B]/12 text-[#00205B]/70 text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-[#00205B]/25 focus:outline-none focus:border-[#00abc9] transition-all shadow-sm"
+        className="appearance-none bg-surface-raised border border-border-strong text-fg-muted text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-border-strong focus:outline-none focus:border-accent transition-all shadow-sm"
         aria-label={label}
       >
         {options.map((o) => (
@@ -312,7 +312,7 @@ function Select({
         ))}
       </select>
       <svg
-        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#00205B]/30 pointer-events-none"
+        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-fg-subtle pointer-events-none"
         width="10" height="10" viewBox="0 0 24 24" fill="none"
         stroke="currentColor" strokeWidth="2.5"
       >

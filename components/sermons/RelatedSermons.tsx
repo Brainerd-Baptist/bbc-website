@@ -60,7 +60,7 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
   return (
     <section className="px-5 md:px-8 pb-12">
       <div className="max-w-4xl mx-auto">
-        <div className="border-t border-[#00205B]/8 pt-10 mb-6">
+        <div className="border-t border-border pt-10 mb-6">
           <div className="flex items-center justify-between mb-6">
             <h2
               className="text-[10px] font-semibold tracking-widest uppercase"
@@ -70,7 +70,7 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
             </h2>
             <a
               href={`/series/${seriesId}`}
-              className="text-[11px] font-semibold text-[#00205B]/40 hover:text-[#00abc9] transition-colors inline-flex items-center gap-1"
+              className="text-[11px] font-semibold text-fg-muted hover:text-accent-text transition-colors inline-flex items-center gap-1"
             >
               View all
               <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
@@ -85,11 +85,11 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
             <a
               key={s.id}
               href={s.href}
-              className="group flex gap-3 rounded-xl overflow-hidden border border-[#00205B]/8 hover:border-[#00abc9]/25 bg-white hover:shadow-sm transition-all p-3"
+              className="group flex gap-3 rounded-xl overflow-hidden border border-border hover:border-accent/25 bg-surface-raised hover:shadow-sm transition-all p-3"
             >
               {/* Thumbnail */}
               {s.youtubeId && (
-                <div className="relative flex-shrink-0 w-20 h-[52px] rounded-lg overflow-hidden bg-[#00205B]/10">
+                <div className="relative flex-shrink-0 w-20 h-[52px] rounded-lg overflow-hidden bg-brand-navy/10">
                   <Image
                     src={`https://i.ytimg.com/vi/${s.youtubeId}/hqdefault.jpg`}
                     alt={s.title}
@@ -104,12 +104,12 @@ export default async function RelatedSermons({ currentId, seriesId, accentColor 
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <p
-                  className="text-[#00205B] text-sm font-semibold leading-snug mb-1 line-clamp-2 group-hover:text-[#00abc9] transition-colors"
+                  className="text-fg text-sm font-semibold leading-snug mb-1 line-clamp-2 group-hover:text-accent-text transition-colors"
                   style={{ letterSpacing: "-0.015em" }}
                 >
                   {s.title}
                 </p>
-                <p className="text-[#00205B]/35 text-[11px]">
+                <p className="text-fg-muted text-[11px]">
                   {s.speaker} · {formatDate(s.date)}
                 </p>
               </div>

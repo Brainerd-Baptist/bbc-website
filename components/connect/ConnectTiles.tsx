@@ -93,19 +93,19 @@ export default function ConnectTiles() {
         <Link
           key={tile.href}
           href={tile.href}
-          className="group flex items-start gap-4 rounded-2xl border border-[#00205B]/10 hover:border-[#00abc9]/40 bg-white hover:shadow-md p-6 transition-all duration-200"
+          className="group flex items-start gap-4 rounded-2xl border border-border hover:border-accent/40 bg-surface-raised hover:shadow-md p-6 transition-all duration-200"
         >
           <span
-            className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-[#00abc9] transition-colors"
+            className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-accent-text transition-colors"
             style={{ background: "rgba(0,171,201,0.1)" }}
           >
             {tile.icon}
           </span>
           <div className="min-w-0">
-            <p className="text-[#00205B] font-semibold text-base mb-1 group-hover:text-[#00abc9] transition-colors" style={{ letterSpacing: "-0.01em" }}>
+            <p className="text-fg font-semibold text-base mb-1 group-hover:text-accent-text transition-colors" style={{ letterSpacing: "-0.01em" }}>
               {tile.title}
             </p>
-            <p className="text-[#00205B]/55 text-sm leading-snug">{tile.description}</p>
+            <p className="text-fg-muted text-sm leading-snug">{tile.description}</p>
           </div>
         </Link>
       ))}

@@ -45,9 +45,13 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer style={{ background: "#00205B" }} className="text-white">
+    // The footer is deliberately brand navy in BOTH themes — it is not a page
+    // surface, so it uses the brand primitive rather than --surface, and its
+    // white text stays white. Converting it to --surface/--fg would make it
+    // light in light mode, which is not what it is for.
+    <footer className="bg-brand-navy text-white">
       {/* Top divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-[#00abc9]/20 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-8">
         {/* Main grid */}
@@ -77,7 +81,7 @@ export default function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-white/8 hover:bg-[#00abc9] text-white/60 hover:text-white flex items-center justify-center transition-all duration-200"
+                  className="w-9 h-9 rounded-lg bg-white/8 hover:bg-accent text-white/60 hover:text-white flex items-center justify-center transition-all duration-200"
                 >
                   {s.icon}
                 </a>
@@ -123,7 +127,7 @@ export default function Footer() {
 
             {/* Hispanic Ministry */}
             <div className="mt-6 border-t border-white/10 pt-5">
-              <p className="text-[#00abc9] text-xs font-semibold tracking-widest uppercase mb-2">
+              <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">
                 Ministerio Hispano
               </p>
               <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.address}</p>

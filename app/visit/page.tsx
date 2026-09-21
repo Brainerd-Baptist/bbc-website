@@ -37,21 +37,21 @@ const EXPECT_ITEMS = [
 
 export default function VisitPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       {/* Video hero — stays dark by design */}
       <VideoHero />
 
       {/* ── Service times ──────────────────────────────────── */}
-      <section id="service-times" className="py-24 px-6 bg-white">
+      <section id="service-times" className="py-24 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Sunday Mornings</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] text-center mb-4"
+            className="font-condensed font-900 text-fg text-center mb-4"
             style={{ fontSize: "clamp(3rem, 8vw, 5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             Sunday Services
           </h2>
-          <p className="text-[#00205B]/50 text-center mb-14 max-w-sm mx-auto">
+          <p className="text-fg-muted text-center mb-14 max-w-sm mx-auto">
             Both at 300 Brookfield Ave — Life Groups meet between services at 9:45.
           </p>
 
@@ -142,18 +142,18 @@ export default function VisitPage() {
       <SundayWalkthrough />
 
       {/* ── What to expect ─────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Before You Arrive</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] text-center mb-16"
+            className="font-condensed font-900 text-fg text-center mb-16"
             style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             What to Expect
           </h2>
           <div className="grid sm:grid-cols-2 gap-6">
             {EXPECT_ITEMS.map((item) => (
-              <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-[#00205B]/8 bg-white hover:border-[#00abc9]/30 transition-colors">
+              <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-border bg-surface-raised hover:border-accent/30 transition-colors">
                 <span
                   className="font-condensed font-900 leading-none flex-shrink-0 mt-0.5"
                   style={{ fontSize: "2.5rem", color: "#00abc9", opacity: 0.35, letterSpacing: "-0.03em" }}
@@ -161,10 +161,10 @@ export default function VisitPage() {
                   {item.num}
                 </span>
                 <div>
-                  <h3 className="font-condensed font-800 text-[#00205B] mb-2" style={{ fontSize: "1.35rem", letterSpacing: "-0.01em" }}>
+                  <h3 className="font-condensed font-800 text-fg mb-2" style={{ fontSize: "1.35rem", letterSpacing: "-0.01em" }}>
                     {item.title}
                   </h3>
-                  <p className="text-[#00205B]/55 text-sm leading-relaxed">{item.desc}</p>
+                  <p className="text-fg-muted text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -173,64 +173,64 @@ export default function VisitPage() {
       </section>
 
       {/* ── Worship Care of Kids ───────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Your Kids Matter Here</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] text-center mb-4"
+            className="font-condensed font-900 text-fg text-center mb-4"
             style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             Worship Care for Kids
           </h2>
-          <p className="text-[#00205B]/50 text-center mb-14 max-w-md mx-auto">
+          <p className="text-fg-muted text-center mb-14 max-w-md mx-auto">
             Safe, age-appropriate care so you can worship fully and your kids love coming.
           </p>
           <div className="grid sm:grid-cols-2 gap-5 mb-10">
             {CHILD_CARE.map((c) => (
-              <div key={c.age} className="bg-white rounded-2xl p-7 border-l-4 border-[#00abc9] shadow-sm">
-                <p className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.35rem" }}>{c.age}</p>
-                <p className="text-[#00205B]/55 text-sm">{c.times}</p>
+              <div key={c.age} className="bg-surface-raised rounded-2xl p-7 border-l-4 border-accent shadow-sm">
+                <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>{c.age}</p>
+                <p className="text-fg-muted text-sm">{c.times}</p>
               </div>
             ))}
           </div>
-          <p className="text-[#00205B]/40 text-sm text-center">
+          <p className="text-fg-muted text-sm text-center">
             All volunteers are background-checked and trained. Check-in opens 30 minutes before each service.
           </p>
         </div>
       </section>
 
       {/* ── Find Us ────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-white">
+      <section className="py-24 px-6 bg-surface">
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Getting Here</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] text-center mb-16"
+            className="font-condensed font-900 text-fg text-center mb-16"
             style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             Find Us
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl p-8 border border-[#00205B]/8 bg-white">
-              <p className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.35rem" }}>Brainerd Baptist Church</p>
-              <p className="text-[#00205B]/55 text-sm leading-relaxed mb-6">
+            <div className="rounded-2xl p-8 border border-border bg-surface-raised">
+              <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Brainerd Baptist Church</p>
+              <p className="text-fg-muted text-sm leading-relaxed mb-6">
                 300 Brookfield Ave<br />Chattanooga, TN 37411
               </p>
               <a
                 href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-[#00abc9] hover:bg-[#0090a8] text-white px-6 py-3 rounded-full transition-colors"
+                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-white px-6 py-3 rounded-full transition-colors"
               >
                 Get Directions
               </a>
             </div>
 
-            <div className="rounded-2xl p-8 border-t-4 border-[#00abc9] border border-[#00205B]/8 bg-white">
+            <div className="rounded-2xl p-8 border-t-4 border-accent border border-border bg-surface-raised">
               <p className="eyebrow mb-3">Ministerio Hispano · Hispanic Ministry</p>
-              <p className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
-              <p className="text-[#00205B]/55 text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.address}</p>
-              <p className="text-[#00205B]/55 text-sm mb-5">{HISPANIC_MINISTRY.serviceTime}</p>
-              <p className="text-[#00205B]/40 text-sm italic">
+              <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
+              <p className="text-fg-muted text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.address}</p>
+              <p className="text-fg-muted text-sm mb-5">{HISPANIC_MINISTRY.serviceTime}</p>
+              <p className="text-fg-muted text-sm italic">
                 Bienvenidos a nuestra familia. Un servicio de adoración en español — todos son bienvenidos.
               </p>
             </div>
@@ -239,16 +239,16 @@ export default function VisitPage() {
       </section>
 
       {/* ── Connect form ───────────────────────────────────── */}
-      <section id="connect" className="py-24 px-6 bg-white">
+      <section id="connect" className="py-24 px-6 bg-surface">
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="eyebrow mb-4">Questions? Reach Out.</p>
           <h2
-            className="font-condensed font-900 text-[#00205B] mb-4"
+            className="font-condensed font-900 text-fg mb-4"
             style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             We'd love to hear from you.
           </h2>
-          <p className="text-[#00205B]/55 max-w-md mx-auto">
+          <p className="text-fg-muted max-w-md mx-auto">
             First-time visitor, longtime member, or somewhere in between — our team wants to connect with you.
           </p>
         </div>
@@ -258,7 +258,7 @@ export default function VisitPage() {
       </section>
 
       {/* ── CTA — navy close ───────────────────────────────── */}
-      <section className="py-24 px-6 text-center" style={{ background: "#00205B" }}>
+      <section className="py-24 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-xl mx-auto">
           <h2
             className="font-condensed font-900 text-white mb-4"
@@ -271,7 +271,7 @@ export default function VisitPage() {
           </p>
           <Link
             href="/connect"
-            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-[#00abc9] hover:bg-[#0090a8] text-white px-10 py-4 rounded-full transition-colors"
+            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-white px-10 py-4 rounded-full transition-colors"
           >
             Send Us a Note
           </Link>

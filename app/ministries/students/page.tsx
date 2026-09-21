@@ -42,7 +42,7 @@ const SCHEDULE = [
 // ── Page ─────────────────────────────────────────────────────
 export default function StudentsPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section
@@ -102,12 +102,12 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Three pillars ──────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">What we&apos;re about</p>
             <h2
-              className="font-condensed font-900 text-[#00205B]"
+              className="font-condensed font-900 text-fg"
               style={{
                 fontSize: "clamp(2rem, 5vw, 3rem)",
                 letterSpacing: "-0.02em",
@@ -121,19 +121,19 @@ export default function StudentsPage() {
             {PILLARS.map(({ label, body }) => (
               <div
                 key={label}
-                className="bg-white rounded-2xl p-8 border border-[#00205B]/8 hover:border-[#4a7fcb]/30 transition-colors"
+                className="bg-surface-raised rounded-2xl p-8 border border-border hover:border-[#4a7fcb]/30 transition-colors"
               >
                 <div
                   className="w-1 h-10 rounded-full mb-5"
                   style={{ background: "#4a7fcb" }}
                 />
                 <h3
-                  className="font-condensed font-800 text-[#00205B] mb-3"
+                  className="font-condensed font-800 text-fg mb-3"
                   style={{ fontSize: "1.4rem", letterSpacing: "-0.01em" }}
                 >
                   {label}
                 </h3>
-                <p className="text-[#00205B]/60 text-sm leading-relaxed">{body}</p>
+                <p className="text-fg-muted text-sm leading-relaxed">{body}</p>
               </div>
             ))}
           </div>
@@ -141,12 +141,12 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Schedule ───────────────────────────────────────── */}
-      <section id="schedule" className="py-24 px-6 bg-white">
+      <section id="schedule" className="py-24 px-6 bg-surface">
         <div className="max-w-4xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Find your week</p>
             <h2
-              className="font-condensed font-900 text-[#00205B]"
+              className="font-condensed font-900 text-fg"
               style={{
                 fontSize: "clamp(2rem, 5vw, 3rem)",
                 letterSpacing: "-0.02em",
@@ -160,8 +160,8 @@ export default function StudentsPage() {
             {SCHEDULE.map(({ day, time, label, body }) => (
               <div
                 key={day}
-                className="rounded-2xl p-8 border border-[#00205B]/8"
-                style={{ background: "#f4f6f9" }}
+                className="rounded-2xl p-8 border border-border"
+                style={{ background: "var(--surface-sunken)" }}
               >
                 <div className="flex items-baseline gap-3 mb-4">
                   <span
@@ -170,15 +170,15 @@ export default function StudentsPage() {
                   >
                     {day}
                   </span>
-                  <span className="text-[#00205B]/40 text-sm font-medium">{time}</span>
+                  <span className="text-fg-muted text-sm font-medium">{time}</span>
                 </div>
                 <h3
-                  className="font-condensed font-700 text-[#00205B] mb-2"
+                  className="font-condensed font-700 text-fg mb-2"
                   style={{ fontSize: "1.15rem" }}
                 >
                   {label}
                 </h3>
-                <p className="text-[#00205B]/55 text-sm leading-relaxed">{body}</p>
+                <p className="text-fg-muted text-sm leading-relaxed">{body}</p>
               </div>
             ))}
           </div>
@@ -186,12 +186,12 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Staff ─────────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#f4f6f9" }}>
+      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Our Team</p>
             <h2
-              className="font-condensed font-900 text-[#00205B]"
+              className="font-condensed font-900 text-fg"
               style={{
                 fontSize: "clamp(2rem, 5vw, 3rem)",
                 letterSpacing: "-0.02em",
@@ -236,7 +236,7 @@ export default function StudentsPage() {
                   )}
                 </div>
                 <h3
-                  className="font-condensed font-800 text-[#00205B]"
+                  className="font-condensed font-800 text-fg"
                   style={{ fontSize: "1.1rem" }}
                 >
                   {name}
@@ -251,7 +251,7 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Dark CTA ───────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "#00205B" }}>
+      <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-3xl mx-auto text-center">
           <p className="eyebrow mb-3" style={{ color: "#4a7fcb" }}>
             Ready to plug in?

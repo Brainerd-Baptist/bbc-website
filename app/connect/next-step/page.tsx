@@ -5,7 +5,7 @@ export const metadata = { title: "Take a Next Step — Brainerd Baptist Church" 
 
 export default function NextStepPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader
         eyebrow="Take a Next Step"
         title="Ready to Go Deeper?"

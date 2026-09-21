@@ -93,7 +93,7 @@ export default function ScriptureRef({ reference }: { reference: string }) {
         ref={btnRef}
         type="button"
         onClick={handleClick}
-        className="text-xs font-semibold tracking-wide underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00abc9] rounded"
+        className="text-xs font-semibold tracking-wide underline decoration-dotted underline-offset-2 transition-opacity hover:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
         style={{ color: "#00abc9" }}
         aria-expanded={!!popup}
         aria-haspopup="true"

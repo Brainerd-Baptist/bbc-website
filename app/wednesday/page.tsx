@@ -53,7 +53,7 @@ const PROGRAMS: Program[] = [
     time: "6:15 PM",
     label: "Adult Bible Study",
     ages: "Adults",
-    color: "#00205B",
+    color: "var(--fg)",
     location: "Main Worship Center",
     href: null,
     photo: "/carousel/adult-bible-study.jpg",
@@ -108,7 +108,7 @@ const PROGRAMS: Program[] = [
 
 export default function WednesdayPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero / Header ──────────────────────────────────── */}
       <div
@@ -154,8 +154,8 @@ export default function WednesdayPage() {
 
       {/* ── Quick-glance time bar ──────────────────────────── */}
       <div
-        className="py-5 px-6 border-b border-[#00205B]/8"
-        style={{ background: "#f4f6f9" }}
+        className="py-5 px-6 border-b border-border"
+        style={{ background: "var(--surface-sunken)" }}
       >
         <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-2">
           {PROGRAMS.map(({ key, time, label, color }) => (
@@ -164,9 +164,9 @@ export default function WednesdayPage() {
                 className="w-2 h-2 rounded-full shrink-0"
                 style={{ background: color }}
               />
-              <span className="font-medium text-[#00205B]/80">{label}</span>
-              <span className="text-[#00205B]/40">·</span>
-              <span className="text-[#00205B]/55">{time}</span>
+              <span className="font-medium text-fg">{label}</span>
+              <span className="text-fg-muted">·</span>
+              <span className="text-fg-muted">{time}</span>
             </div>
           ))}
         </div>
@@ -208,7 +208,7 @@ export default function WednesdayPage() {
                 <div>
                   <div className="flex flex-wrap items-baseline gap-3 mb-1">
                     <h2
-                      className="font-condensed font-800 text-[#00205B]"
+                      className="font-condensed font-800 text-fg"
                       style={{ fontSize: "1.6rem", letterSpacing: "-0.01em" }}
                     >
                       {label}
@@ -223,15 +223,15 @@ export default function WednesdayPage() {
 
                   {/* Time + location row */}
                   <div className="flex flex-wrap gap-x-5 gap-y-1 mb-4">
-                    <span className="text-sm font-medium text-[#00205B]/70">
+                    <span className="text-sm font-medium text-fg-muted">
                       <span className="font-condensed font-700" style={{ color }}>
                         {time}
                       </span>
                     </span>
-                    <span className="text-sm text-[#00205B]/45">{location}</span>
+                    <span className="text-sm text-fg-muted">{location}</span>
                   </div>
 
-                  <p className="text-[#00205B]/55 text-sm leading-relaxed">
+                  <p className="text-fg-muted text-sm leading-relaxed">
                     {body}
                   </p>
                 </div>

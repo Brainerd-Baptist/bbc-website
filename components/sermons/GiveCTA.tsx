@@ -18,7 +18,7 @@ export default function GiveCTA() {
         </div>
         <a
           href="https://app.securegive.com/brainerdbaptist/auth/login/sms"
-          className="inline-flex items-center gap-2 flex-shrink-0 px-6 py-3 rounded-xl font-semibold text-sm text-[#00205B] bg-white hover:bg-white/90 transition-colors"
+          className="inline-flex items-center gap-2 flex-shrink-0 px-6 py-3 rounded-xl font-semibold text-sm text-fg bg-surface-raised hover:bg-white/90 transition-colors"
           style={{ letterSpacing: "-0.01em" }}
         >
           Give Online

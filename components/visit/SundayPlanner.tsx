@@ -72,7 +72,7 @@ function StepLabel({ num, label }: { num: number; label: string }) {
       >
         {num}
       </span>
-      <p className="font-condensed font-700 text-[#00205B]" style={{ fontSize: "1.15rem" }}>
+      <p className="font-condensed font-700 text-fg" style={{ fontSize: "1.15rem" }}>
         {label}
       </p>
     </div>
@@ -151,23 +151,23 @@ export default function SundayPlanner() {
   const canSubmit = who.length > 0 && time !== "" && connect !== "";
 
   return (
-    <section className="py-20 px-6" style={{ background: "#f4f6f9" }}>
+    <section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <p className="eyebrow text-center mb-3">Before You Arrive</p>
         <h2
-          className="font-condensed font-900 text-[#00205B] text-center mb-3"
+          className="font-condensed font-900 text-fg text-center mb-3"
           style={{ fontSize: "clamp(2.4rem, 6vw, 3.6rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
         >
           Plan Your First Sunday
         </h2>
-        <p className="text-[#00205B]/50 text-center mb-12 max-w-sm mx-auto text-sm">
+        <p className="text-fg-muted text-center mb-12 max-w-sm mx-auto text-sm">
           Two quick questions and we'll give you a specific plan — where to park, where to go, what to expect.
         </p>
 
         {/* ── Result view ── */}
         {result ? (
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#00205B]/6">
+          <div className="bg-surface-raised rounded-2xl p-8 shadow-sm border border-border">
             {/* Plan bullets */}
             <p className="eyebrow mb-5">Your Sunday Plan</p>
             <ul className="space-y-4 mb-6">
@@ -179,7 +179,7 @@ export default function SundayPlanner() {
                   >
                     {i + 1}
                   </span>
-                  <p className="text-[#00205B]/75 text-sm leading-relaxed">{step}</p>
+                  <p className="text-fg text-sm leading-relaxed">{step}</p>
                 </li>
               ))}
             </ul>
@@ -190,17 +190,17 @@ export default function SundayPlanner() {
                 className="rounded-xl p-5 mb-6 border-l-4"
                 style={{ background: "rgba(0,171,201,0.06)", borderColor: "#00abc9" }}
               >
-                <p className="font-condensed font-800 text-[#00205B] mb-1" style={{ fontSize: "1.05rem" }}>
+                <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.05rem" }}>
                   Skip the check-in line
                 </p>
-                <p className="text-[#00205B]/60 text-sm mb-3">
+                <p className="text-fg-muted text-sm mb-3">
                   Pre-register your kids before Sunday and you'll be in and out of check-in in seconds.
                 </p>
                 <a
                   href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-[#00abc9] hover:bg-[#0090a8] text-white px-5 py-2.5 rounded-full transition-colors"
+                  className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-white px-5 py-2.5 rounded-full transition-colors"
                 >
                   Pre-Register Your Family →
                 </a>
@@ -208,14 +208,14 @@ export default function SundayPlanner() {
             )}
 
             {/* Greeting */}
-            <p className="text-[#00205B]/55 text-sm italic border-t border-[#00205B]/8 pt-5 mb-6">
+            <p className="text-fg-muted text-sm italic border-t border-border pt-5 mb-6">
               {result.greeting}
             </p>
 
             {/* Optional email */}
             {!emailSent ? (
               <div>
-                <p className="text-xs font-semibold text-[#00205B]/40 uppercase tracking-widest mb-3">
+                <p className="text-xs font-semibold text-fg-muted uppercase tracking-widest mb-3">
                   Want this in your inbox?
                 </p>
                 <div className="flex gap-2">
@@ -224,36 +224,36 @@ export default function SundayPlanner() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 px-4 py-2.5 rounded-lg border border-[#00205B]/15 text-sm text-[#00205B] placeholder:text-[#00205B]/30 focus:outline-none focus:border-[#00abc9]"
+                    className="flex-1 px-4 py-2.5 rounded-lg border border-border-strong text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:border-accent"
                   />
                   <button
                     onClick={handleEmailSend}
                     disabled={!email}
                     className="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-colors disabled:opacity-40"
-                    style={{ background: "#00205B" }}
+                    style={{ background: "var(--color-brand-navy)" }}
                   >
                     Send
                   </button>
                 </div>
-                <p className="text-[#00205B]/30 text-xs mt-2">
+                <p className="text-fg-subtle text-xs mt-2">
                   One email, just your plan. Nothing else.
                 </p>
               </div>
             ) : (
-              <p className="text-[#00abc9] text-sm font-semibold">✓ Opening your email app now</p>
+              <p className="text-accent-text text-sm font-semibold">✓ Opening your email app now</p>
             )}
 
             {/* Reset */}
             <button
               onClick={handleReset}
-              className="mt-6 text-[#00205B]/35 text-xs hover:text-[#00205B]/60 transition-colors underline underline-offset-2"
+              className="mt-6 text-fg-muted text-xs hover:text-fg-muted transition-colors underline underline-offset-2"
             >
               Start over
             </button>
           </div>
         ) : (
           /* ── Question view ── */
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-[#00205B]/6 space-y-10">
+          <div className="bg-surface-raised rounded-2xl p-8 shadow-sm border border-border space-y-10">
             {/* Q1 */}
             <div>
               <StepLabel num={1} label="Who's coming with you?" />
@@ -264,10 +264,10 @@ export default function SundayPlanner() {
                     selected={who.includes(opt.id)}
                     onClick={() => toggleWho(opt.id)}
                   >
-                    <span className="font-condensed font-700 text-[#00205B]" style={{ fontSize: "1.05rem" }}>
+                    <span className="font-condensed font-700 text-fg" style={{ fontSize: "1.05rem" }}>
                       {opt.label}
                     </span>
-                    <span className="block text-[#00205B]/45 text-xs mt-0.5">{opt.sub}</span>
+                    <span className="block text-fg-muted text-xs mt-0.5">{opt.sub}</span>
                   </Chip>
                 ))}
               </div>
@@ -283,10 +283,10 @@ export default function SundayPlanner() {
                     selected={time === opt.id}
                     onClick={() => setTime(opt.id)}
                   >
-                    <span className="font-condensed font-700 text-[#00205B]" style={{ fontSize: "1.05rem" }}>
+                    <span className="font-condensed font-700 text-fg" style={{ fontSize: "1.05rem" }}>
                       {opt.label}
                     </span>
-                    <span className="block text-[#00205B]/45 text-xs mt-0.5">{opt.sub}</span>
+                    <span className="block text-fg-muted text-xs mt-0.5">{opt.sub}</span>
                   </Chip>
                 ))}
               </div>
@@ -302,10 +302,10 @@ export default function SundayPlanner() {
                     selected={connect === opt.id}
                     onClick={() => setConnect(opt.id)}
                   >
-                    <span className="font-condensed font-700 text-[#00205B]" style={{ fontSize: "1.05rem" }}>
+                    <span className="font-condensed font-700 text-fg" style={{ fontSize: "1.05rem" }}>
                       {opt.label}
                     </span>
-                    <span className="block text-[#00205B]/45 text-xs mt-0.5">{opt.sub}</span>
+                    <span className="block text-fg-muted text-xs mt-0.5">{opt.sub}</span>
                   </Chip>
                 ))}
               </div>

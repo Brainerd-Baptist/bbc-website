@@ -110,7 +110,7 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export default function MinistriesPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div
@@ -173,7 +173,7 @@ export default function MinistriesPage() {
                 <div>
                   <div className="flex flex-wrap items-baseline gap-3 mb-1">
                     <h2
-                      className="font-condensed font-800 text-[#00205B]"
+                      className="font-condensed font-800 text-fg"
                       style={{ fontSize: "1.6rem", letterSpacing: "-0.01em" }}
                     >
                       {name}
@@ -193,7 +193,7 @@ export default function MinistriesPage() {
                     {detail}
                   </p>
 
-                  <p className="text-[#00205B]/55 text-sm leading-relaxed">
+                  <p className="text-fg-muted text-sm leading-relaxed">
                     {body}
                   </p>
                 </div>

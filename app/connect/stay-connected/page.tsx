@@ -5,7 +5,7 @@ export const metadata = { title: "Stay Connected — Brainerd Baptist Church" };
 
 export default function StayConnectedPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <ConnectSubpageHeader
         eyebrow="Stay Connected"
         title="Get Texts & Emails from Brainerd"
