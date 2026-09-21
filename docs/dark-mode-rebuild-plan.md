@@ -405,16 +405,61 @@ Makes regression mechanically impossible rather than a matter of discipline.
 Verified by script: every `.tsx` and `.css` file under `app/` and `components/` maps to exactly one
 phase. Phases 0, 2, 5 and 6 are cross-cutting and touch files already counted above.
 
-## 5. Open decisions for Josiah
+## 5. Decisions
 
-1. **Primary button color.** White text on brand cyan is 2.74 and fails AA. Three options: darken the
-   fill to `#008299` for white text (brand shifts slightly), keep `#00abc9` with navy text (5.65 AA,
-   brand hue fully intact, different look), or keep cyan+white only for large text ≥24px and use the
-   darkened fill elsewhere. This affects every CTA on the site.
-2. **Eyebrow labels.** Cyan-on-white at 2.74 fails. Switching them to `#007b91` (4.95) is a visible but
-   small change to a very frequently used element.
-3. **Default theme.** Currently `system`. A first-time visitor on a dark-mode phone currently gets a
-   half-broken dark site; after this work they get a correct one. Worth confirming `system` is still
-   wanted versus defaulting to light.
-4. **Sequencing.** Phase 0 delivers visible fixes within a day and is independently valuable. Confirm
-   we start there.
+**Resolved 2026-09-21 (Josiah):**
+
+1. **Primary button color → darken the fill to `#008299`.** Keeps white text, verified 4.51:1 (AA).
+   The deeper cyan applies to *button fills only*; eyebrows, icons, dividers and accents keep the exact
+   brand cyan `#00abc9`. Lands in Phase 1 with the rest of the token work so every CTA changes in one
+   reviewable commit — deliberately **not** bundled into Phase 0.
+   Note the site already contains the accessible inverse pattern: the `bg-brand-cyan text-brand-navy`
+   buttons on `/give`, `/ministries`, `/wednesday`, `/life-groups` and `ConnectSidebar` are navy-on-cyan
+   at 5.65:1 and need no change. Those were among the 23 classes emitting no CSS at all, so they had
+   been rendering unstyled rather than wrong.
+2. **Sequencing → start at Phase 0.** Done; see below.
+
+**Still open:**
+
+3. **Eyebrow labels.** Cyan-on-white at 2.74 fails AA. `#007b91` (4.95) fixes it but is a visible change
+   to a very frequently used element. Decide during Phase 1.
+4. **Default theme.** Currently `system`. A first-time visitor on a dark-mode phone gets a half-broken
+   dark site today and a correct one after this work. Worth confirming `system` is still wanted.
+
+---
+
+## 6. Phase 0 — complete (commit `302c44c`)
+
+All five checkpoints passed.
+
+| Defect | Before | After |
+|---|---|---|
+| Dead `tailwind.config.ts` | 23 class usages emitting zero CSS | Palette ported to `@theme`, usages remapped to `brand-cyan`/`brand-navy`, config deleted |
+| Leading-zero opacity | 45 modifiers emitting zero CSS across 20 files | 0 |
+| Invisible navigation | Logo, toggle and hamburger white-on-white on ~10 routes | Declarative route treatment, CSS-driven, fails safe |
+
+**Checkpoint results**
+
+- **CP-static** — `scripts/verify-classes.mjs` compiles all 233 colour-utility candidates in the tree
+  through the real Tailwind engine: every one emits CSS. The checker was itself verified by injecting a
+  dead-config class, a leading-zero modifier and a nonexistent colour, confirming it reports all three
+  and exits non-zero. Wired up as `npm run verify`.
+- **CP-static** — grep for leading-zero opacity modifiers returns 0.
+- **CP-visual** — the nav bug was confirmed in a real browser against production before the fix
+  (logo and hamburger absent on `/give` and `/connect`, present on `/`), and the route classification was
+  measured the same way rather than grepped.
+- **CP-build** — `tsc --noEmit` clean; ESLint clean apart from the pre-existing `set-state-in-effect`
+  pattern on an untouched `setMounted` line, which predates this work and does not block Vercel.
+- **CP-visual (baseline)** — see the note below.
+
+**Deviation from plan, recorded honestly:** the intended full 31-route light-mode screenshot baseline
+was not captured as a committed artifact. This sandbox's egress denies both the production host and
+Google Fonts, so a local build cannot render faithfully (`next/font/google` fails offline) and
+screenshots taken here would differ from production in font metrics. Visual verification was done
+through a real browser against production instead, which is better evidence but not a diffable
+artifact. **The committed dual-theme Playwright baseline moves to Phase 1**, where it belongs anyway —
+it needs to run somewhere with network access (CI or a workstation), not in this sandbox.
+
+**Carried forward to Phase 3 as planned:** the drawer still themes itself with `isDark` ternaries. Only
+the top bar was converted here, since that is where the invisible-chrome defect lived. The drawer is
+reachable and correct after hydration; its SSR flash is Phase 3's problem.
