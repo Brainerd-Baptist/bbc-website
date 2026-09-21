@@ -970,3 +970,45 @@ where the darkened value would be a **regression** (4.75:1 → 2.63:1).
    `text-white/60` on the navy footer is correct. Unchanged from the Phase 3 note.
 5. `SermonGrid`'s `SERIES_COLORS` now carries an `ink` pair that nothing in that file consumes — every use
    there is decorative. Kept for parity with the series page; drop it if that parity is not wanted.
+
+### Addendum — a bug class the static gates structurally cannot see
+
+Phase 5 was verified in a real browser against the live deploy, and that turned up two defects the five
+gates had all passed.
+
+**1. The masked wordmark was navy on the dark hero.** The mark used `background-color: currentColor` on the
+assumption that the navbar's colour *is* `--nav-ink`. It is not: `--nav-ink` is applied to `.nav-ctl` and
+`.nav-bar-line`, never to the nav element, so the logo link inherited the page's own colour. The
+measurement was unambiguous — `data-chrome="transparent"` over the dark hero, `--nav-ink` resolving to
+white, and the mark computing to `rgb(0,32,91)`. The hamburger was never affected because it *paints* the
+variable rather than inheriting it; the wordmark now does the same.
+
+**2. Identity CTAs rendered their light ink in dark mode, at 3.79:1.** Their sibling labels in the same
+card switched correctly, with identical classes and identical inline variables, and a freshly created
+element with the same markup got it right — which ruled out markup and cascade.
+
+The cause: because the theme flip changes **which rule** supplies `color`, Chromium holds a transitioned
+colour at its pre-flip value — indefinitely, not for the transition's duration. `transition: none` resolved
+it instantly. Narrowing `transition-all` to `transition-colors` did **not** fix it, because `color` is
+still in that set; nor did re-routing through an intermediate custom property. Both were tested live before
+shipping, and both would have looked like plausible fixes on paper.
+
+A themed token is not affected: `text-fg` keeps the same rule and only the variable's value changes, which
+transitions normally. So this is specific to a rule swap, and the property list now lives in the
+`.identity-ink` rule itself — unlayered, so it beats any Tailwind transition utility a call site adds, and
+the hazard cannot be reintroduced by a className.
+
+**Why all five gates missed both.** Every phase so far verified themes by presetting `localStorage` *before*
+load, so nothing ever exercised a live toggle — and a toggle is how visitors actually change the theme.
+`verify-contrast` reads token values, not what a page paints. `verify-classes` proves a class emits CSS.
+The ratchet counts literals. `theme.spec.mjs` renders each theme from a fresh load. None of them models
+"the theme changed while the page was open," which is exactly where both bugs lived.
+
+Two follow-ups, recorded rather than rushed: `theme.spec.mjs` should toggle the theme in a live page and
+re-assert, in addition to its fresh-load passes; and 62 `transition-all` usages remain across 34 files.
+None currently sits on a rule swap, so none is broken today, but `transition-all` animates layout
+properties too and is worth narrowing.
+
+Lastly, the ratchet only skipped lines that *start* with a comment marker, so a sentence inside a block
+comment mentioning a colour counted as residue — the gate failed on its own documentation. It now tracks
+block-comment state, which also cleared eight other miscounted lines.
