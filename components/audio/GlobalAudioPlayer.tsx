@@ -123,9 +123,21 @@ export default function GlobalAudioPlayer() {
   const [dragging, setDragging]   = useState(false);
   const [dragPct, setDragPct]     = useState(0);
   const [expanded, setExpanded]   = useState(false);
+  const [slideIn, setSlideIn]     = useState(false);
 
   // Touch-to-swipe-down to close
   const touchStartY = useRef(0);
+
+  // Animate in when expanded opens
+  useEffect(() => {
+    if (expanded) requestAnimationFrame(() => setSlideIn(true));
+    else setSlideIn(false);
+  }, [expanded]);
+
+  const closeExpanded = useCallback(() => {
+    setSlideIn(false);
+    setTimeout(() => setExpanded(false), 390);
+  }, []);
 
   const pct        = duration > 0 ? currentTime / duration : 0;
   const bufPct     = duration > 0 ? bufferedEnd / duration : 0;
@@ -203,7 +215,7 @@ export default function GlobalAudioPlayer() {
   // Close expanded on Escape
   useEffect(() => {
     if (!expanded) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setExpanded(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeExpanded(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [expanded]);
@@ -219,11 +231,13 @@ export default function GlobalAudioPlayer() {
       className="fixed inset-0 z-[60] flex flex-col"
       style={{
         background: `linear-gradient(160deg, color-mix(in srgb, ${accent} 18%, #080f1e) 0%, #080f1e 50%, #040a14 100%)`,
+        transform: slideIn ? "translateY(0)" : "translateY(100%)",
+        transition: "transform 0.42s cubic-bezier(0.32, 0.72, 0, 1)",
       }}
       onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
       onTouchEnd={(e) => {
         const dy = e.changedTouches[0].clientY - touchStartY.current;
-        if (dy > 60) setExpanded(false); // swipe down to close
+        if (dy > 60) closeExpanded(); // swipe down to close
       }}
     >
       {/* Drag handle */}
@@ -234,7 +248,7 @@ export default function GlobalAudioPlayer() {
       {/* Header row */}
       <div className="flex items-center justify-between px-5 pt-1 pb-2 flex-shrink-0">
         <button
-          onClick={() => setExpanded(false)}
+          onClick={closeExpanded}
           className="w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-white/10 active:bg-white/15"
           aria-label="Collapse player"
         >
@@ -249,7 +263,7 @@ export default function GlobalAudioPlayer() {
 
         <Link
           href={`/sermons/${track.slug}`}
-          onClick={() => setExpanded(false)}
+          onClick={closeExpanded}
           className="w-9 h-9 flex items-center justify-center rounded-full transition-colors hover:bg-white/10"
           aria-label="Go to sermon"
         >
@@ -399,7 +413,7 @@ export default function GlobalAudioPlayer() {
       <div className="flex-1" />
       <div className="px-7 pb-10 flex-shrink-0">
         <button
-          onClick={() => { dismiss(); setExpanded(false); }}
+          onClick={() => { dismiss(); closeExpanded(); }}
           className="w-full py-3 rounded-2xl text-sm font-semibold transition-all hover:bg-white/10 active:bg-white/15"
           style={{ color: "rgba(255,255,255,0.3)", border: "1px solid rgba(255,255,255,0.08)" }}
         >
