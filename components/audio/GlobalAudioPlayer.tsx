@@ -23,31 +23,31 @@ function nextSpeed(current: number) {
 // ── Skip icon ────────────────────────────────────────────────────────────────
 function SkipIcon({ direction, seconds = 15, size = 22 }: { direction: "back" | "fwd"; seconds?: number; size?: number }) {
   const label = String(seconds);
+  // Scale the label font proportionally
+  const fontSize = size <= 24 ? 9 : 13;
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      {direction === "back" ? (
-        <>
-          <path d="M11 17a5 5 0 1 1 0-10H18" />
-          <path d="M15 3l3 4-4 .5" />
-        </>
-      ) : (
-        <>
-          <path d="M13 7a5 5 0 1 1 0 10H6" />
-          <path d="M9 21l-3-4 4-.5" />
-        </>
-      )}
-      <text
-        x="12" y="15.5"
-        fontSize={label.length > 2 ? "5.5" : "6"}
-        textAnchor="middle"
-        fill="currentColor"
-        stroke="none"
-        fontFamily="system-ui, sans-serif"
-        fontWeight="600"
-      >
+    <span className="flex flex-col items-center leading-none" style={{ gap: size > 24 ? 3 : 1 }}>
+      <svg width={size} height={size * 0.72} viewBox="0 0 24 17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {direction === "back" ? (
+          <>
+            {/* CCW arc */}
+            <path d="M17.5 2.5A9 9 0 1 0 20 9" />
+            {/* Arrowhead pointing left/CCW */}
+            <path d="M17.5 2.5L14 1M17.5 2.5L19 6" />
+          </>
+        ) : (
+          <>
+            {/* CW arc */}
+            <path d="M6.5 2.5A9 9 0 1 1 4 9" />
+            {/* Arrowhead pointing right/CW */}
+            <path d="M6.5 2.5L10 1M6.5 2.5L5 6" />
+          </>
+        )}
+      </svg>
+      <span style={{ fontSize, fontWeight: 600, fontFamily: "system-ui, sans-serif", lineHeight: 1 }}>
         {label}
-      </text>
-    </svg>
+      </span>
+    </span>
   );
 }
 
@@ -276,18 +276,37 @@ export default function GlobalAudioPlayer() {
       {/* Artwork */}
       <div className="flex justify-center px-10 py-4 flex-shrink-0">
         <div
-          className="w-full max-w-[280px] aspect-square rounded-3xl flex items-center justify-center shadow-2xl"
+          className="w-full max-w-[280px] aspect-square rounded-3xl overflow-hidden shadow-2xl"
           style={{
-            background: `linear-gradient(135deg, color-mix(in srgb, ${accent} 30%, #0d1a2e) 0%, #0d1a2e 100%)`,
-            border: `1px solid ${accent}33`,
             boxShadow: `0 20px 60px ${accent}30, 0 0 0 1px rgba(255,255,255,0.04)`,
           }}
         >
-          <svg width="72" height="72" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.25 }}>
-            <path d="M9 18V5l12-2v13" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <circle cx="6" cy="18" r="3" stroke="white" strokeWidth="1.5"/>
-            <circle cx="18" cy="16" r="3" stroke="white" strokeWidth="1.5"/>
-          </svg>
+          {track.youtubeId ? (
+            <img
+              src={`https://img.youtube.com/vi/${track.youtubeId}/maxresdefault.jpg`}
+              alt={track.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fall back to hqdefault if maxres not available
+                (e.currentTarget as HTMLImageElement).src =
+                  `https://img.youtube.com/vi/${track.youtubeId}/hqdefault.jpg`;
+              }}
+            />
+          ) : (
+            <div
+              className="w-full h-full flex items-center justify-center"
+              style={{
+                background: `linear-gradient(135deg, color-mix(in srgb, ${accent} 30%, #0d1a2e) 0%, #0d1a2e 100%)`,
+                border: `1px solid ${accent}33`,
+              }}
+            >
+              <svg width="72" height="72" viewBox="0 0 24 24" fill="none" style={{ opacity: 0.25 }}>
+                <path d="M9 18V5l12-2v13" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="6" cy="18" r="3" stroke="white" strokeWidth="1.5"/>
+                <circle cx="18" cy="16" r="3" stroke="white" strokeWidth="1.5"/>
+              </svg>
+            </div>
+          )}
         </div>
       </div>
 
