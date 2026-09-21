@@ -61,6 +61,26 @@
 .identity-border       { border-color: var(--identity-light); }
 .dark .identity-border { border-color: var(--identity-dark); }
 
+/* No colour transition on these elements, and the rule enforces it rather
+   than trusting call sites to remember.
+
+   Diagnosed in a real browser on a live deploy: because the theme flip changes
+   WHICH RULE supplies this colour, Chromium holds a transitioned colour at its
+   pre-flip value — indefinitely, not for the transition's duration. The CTAs
+   here rendered their light ink in dark mode at 3.79:1 while their sibling
+   labels, which carry no transition, switched correctly. `transition: none`
+   resolved it instantly, which is how it was found; narrowing `transition-all`
+   to `transition-colors` did NOT fix it, because `color` is still in that set.
+   Re-routing through an intermediate custom property did not fix it either.
+
+   These rules are unlayered, so this beats any Tailwind transition utility a
+   call site adds and the hazard cannot be reintroduced by a className. Opacity
+   and transform still animate, which is what the hover states actually use. */
+.identity-ink,
+.identity-border {
+  transition-property: opacity, transform, box-shadow;
+}
+
 
 :focus-visible {
   outline: 2px solid var(--focus-ring);
