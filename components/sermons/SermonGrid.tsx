@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { formatDate } from "@/lib/sermons";
@@ -61,13 +61,6 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
   const [series, setSeries]   = useState(() => searchParams.get("series") ?? "all");
   const [speaker, setSpeaker] = useState("all");
   const [year, setYear]       = useState("all");
-
-  useEffect(() => {
-    const s = searchParams.get("series");
-    if (s) setSeries(s);
-    const q = searchParams.get("q");
-    if (q) setQuery(q);
-  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -171,14 +164,15 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
   };
   const isInternal = !!(sermon.slug || sermon.id);
 
-  const [progress, setProgress] = useState<number | null>(null);
-  useEffect(() => {
+  const [progress] = useState<number | null>(() => {
     try {
       const key = `bbc-ap-${sermon.slug || sermon.id}`;
       const saved = localStorage.getItem(key);
-      if (saved) setProgress(parseFloat(saved));
-    } catch {}
-  }, [sermon.slug, sermon.id]);
+      return saved ? parseFloat(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   return (
     <a
