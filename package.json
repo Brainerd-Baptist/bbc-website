@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "verify:classes": "node scripts/verify-classes.mjs",
-    "verify": "tsc --noEmit && eslint && npm run verify:classes"
+    "verify": "tsc --noEmit && npm run verify:classes && npm run verify:contrast",
+    "verify:contrast": "node scripts/verify-contrast.mjs",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "lint:baseline": "eslint --format json | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const n=JSON.parse(s).reduce((a,f)=>a+f.errorCount,0);console.log('eslint errors:',n);})\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.127.0",
@@ -38,6 +42,7 @@
     "styled-components": "^6.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

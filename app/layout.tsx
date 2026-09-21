@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { AudioProvider } from "@/lib/audio-context";
@@ -43,6 +43,23 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
     shortcut: "/icon.png",
   },
+};
+
+/**
+ * Colours the mobile browser chrome and the iOS status-bar area. Without it
+ * that strip stays white while the page below it is dark, which reads as a
+ * rendering bug on a phone.
+ *
+ * Known limitation: the `media` attribute tracks the OS preference, not our
+ * `.dark` class. Someone on a light OS who toggles the site to dark keeps the
+ * light chrome. There is no markup-level fix; values match --surface in each
+ * theme so the common case (OS and site agreeing) is right.
+ */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d1525" },
+  ],
 };
 
 export default function RootLayout({

@@ -114,7 +114,7 @@ export default function ThisWeek() {
   const grouped = groupByDay(events);
 
   return (
-    <section className="py-20 px-6 md:px-12" style={{ background: "var(--gray-100)" }}>
+    <section className="py-20 px-6 md:px-12" style={{ background: "var(--surface-sunken)" }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
@@ -124,13 +124,13 @@ export default function ThisWeek() {
               className="font-condensed font-800 leading-none"
               style={{
                 fontSize: "clamp(2rem, 5vw, 3rem)",
-                color: "var(--bbc-navy)",
+                color: "var(--fg)",
                 letterSpacing: "-0.01em",
               }}
             >
               What&rsquo;s Happening
               <br />
-              <span style={{ color: "var(--bbc-blue)" }}>This Week</span>
+              <span style={{ color: "var(--accent-text)" }}>This Week</span>
             </h2>
           </div>
 
@@ -162,7 +162,7 @@ export default function ThisWeek() {
               {/* Day label */}
               <p
                 className="text-xs font-semibold uppercase tracking-widest mb-3"
-                style={{ color: "var(--bbc-navy)", opacity: 0.45 }}
+                style={{ color: "var(--fg-muted)" }}
               >
                 {day.label}
               </p>
@@ -197,7 +197,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
       {/* Teal left accent bar */}
       <div
         className="w-1 flex-shrink-0 transition-colors duration-200"
-        style={{ background: "var(--bbc-blue)" }}
+        style={{ background: "var(--accent)" }}
       />
 
       {/* Content */}
@@ -206,14 +206,14 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
         {!ev.all_day_event ? (
           <p
             className="text-xs font-semibold tracking-wide mb-1"
-            style={{ color: "var(--bbc-blue)" }}
+            style={{ color: "var(--accent-text)" }}
           >
             {etTime(ev.starts_at)}
           </p>
         ) : (
           <p
             className="text-xs font-semibold tracking-wide mb-1 uppercase"
-            style={{ color: "var(--bbc-blue)" }}
+            style={{ color: "var(--accent-text)" }}
           >
             All day
           </p>
@@ -222,7 +222,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
         {/* Event name */}
         <p
           className="font-condensed font-700 leading-tight text-base group-hover:text-[#00abc9] transition-colors duration-200"
-          style={{ color: "var(--bbc-navy)" }}
+          style={{ color: "var(--fg)" }}
         >
           {ev.name}
         </p>
@@ -231,7 +231,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
         {loc && (
           <p
             className="text-xs mt-1.5 leading-snug"
-            style={{ color: "var(--bbc-navy)", opacity: 0.5 }}
+            style={{ color: "var(--fg-muted)" }}
           >
             {loc}
           </p>
@@ -241,7 +241,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
         {ev.summary && !loc && (
           <p
             className="text-xs mt-1.5 leading-snug line-clamp-2"
-            style={{ color: "var(--bbc-navy)", opacity: 0.5 }}
+            style={{ color: "var(--fg-muted)" }}
           >
             {ev.summary}
           </p>
@@ -257,7 +257,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          style={{ color: "var(--bbc-blue)" }}
+          style={{ color: "var(--accent-text)" }}
         >
           <path d="M3 7h8M8 4l3 3-3 3" />
         </svg>
