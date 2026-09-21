@@ -212,7 +212,7 @@ export default function MinistriesPage() {
                 <div className="shrink-0 self-center">
                   <Link
                     href={href}
-                    className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80 identity-ink identity-border"
+                    className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-colors duration-150 inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80 identity-ink identity-border"
                     style={inkVars(ink)}
                   >
                     {href.startsWith("/ministries/") || href === "/life-groups"

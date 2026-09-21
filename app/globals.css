@@ -46,6 +46,16 @@
    `--identity-ink: var(--identity-light)` would resolve against a value the
    element has not set yet and fall back to nothing. The theme switch has to
    happen in a selector that matches the element carrying the pair. */
+/* NOTE, found in the browser on a live deploy: this two-rule switch changes
+   WHICH rule supplies `color` when the theme flips, and Chromium will stick a
+   `transition-all` element at its pre-toggle colour when that happens — the
+   value never arrives, even seconds later. Setting `transition: none` on the
+   element resolves it instantly, which is how it was identified.
+   A themed token like `text-fg` is not affected: the same rule always supplies
+   the colour there and only the variable's value changes, which transitions
+   normally. So anything wearing .identity-ink must use a SCOPED transition,
+   never `transition-all`. (transition-all is a poor default regardless — it
+   animates layout properties too.) */
 .identity-ink          { color: var(--identity-light); }
 .dark .identity-ink    { color: var(--identity-dark); }
 .identity-border       { border-color: var(--identity-light); }
