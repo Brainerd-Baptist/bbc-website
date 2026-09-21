@@ -309,6 +309,10 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             slug={slug}
             youtubeId={s.youtubeId}
             title={s.title}
+            speaker={s.speaker}
+            series={s.series}
+            date={s.date}
+            passage={s.passage}
             audioTrack={audioTrack}
             nextTrack={nextAudioTrack}
             passages={allPassages}

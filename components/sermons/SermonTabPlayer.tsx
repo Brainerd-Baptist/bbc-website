@@ -10,6 +10,10 @@ interface Props {
   slug: string;
   youtubeId: string;
   title: string;
+  speaker?: string;
+  series?: string;
+  date?: string;
+  passage?: string;
   audioTrack?: AudioTrack | null;
   nextTrack?: AudioTrack | null;
   passages?: string[];
@@ -24,6 +28,10 @@ export default function SermonTabPlayer({
   slug,
   youtubeId,
   title,
+  speaker = "",
+  series = "",
+  date = "",
+  passage = "",
   audioTrack,
   nextTrack,
   passages = [],
@@ -218,6 +226,10 @@ export default function SermonTabPlayer({
           youtubeId={youtubeId || undefined}
           accentColor={accentColor}
           sermonTitle={title}
+          speaker={speaker}
+          series={series}
+          date={date}
+          passage={passage}
         />
       </div>
     </div>
