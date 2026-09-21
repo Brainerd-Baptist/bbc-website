@@ -23,7 +23,7 @@ const INTEREST_OPTIONS = [
 ];
 
 const inputClass =
-  "border border-border-strong rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent/40 text-fg bg-surface-raised placeholder:text-fg-muted transition";
+  "border border-border-strong rounded-xl px-4 py-3 w-full text-fg bg-surface-raised placeholder:text-fg-muted transition";
 
 function CheckboxGroup({
   options,
@@ -347,7 +347,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
         type="submit"
         disabled={submitting}
         className="w-full py-3.5 px-6 rounded-xl font-semibold text-white text-base transition-all
-          bg-accent hover:bg-brand-navy focus:outline-none focus:ring-2 focus:ring-accent/50
+          bg-accent hover:bg-brand-navy
           disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {submitting ? "Sending…" : "Connect with us"}

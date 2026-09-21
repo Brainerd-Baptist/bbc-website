@@ -103,6 +103,18 @@
   --accent-solid-hover: #006d80;
   --accent-text:        #007b91;
   --accent-bg:          rgba(0, 171, 201, 0.10);
+  /* An accent-tinted container edge. Mirrors --danger-border: a tint of the
+     same hue as its matching -bg, so an accent callout reads as one object
+     rather than an accent fill inside a neutral box. */
+  --accent-border:      rgba(0, 171, 201, 0.30);
+
+  /* Highlighter. Theme-INVARIANT on purpose: a highlight is meant to look
+     like ink laid over the text, and every editor that handles this well
+     (Docs, Notion) keeps the swatch recognisable in dark mode rather than
+     inverting it. Because the fill never changes, the text on it never
+     changes either — hence a fixed -fg to go with it. */
+  --highlight-bg:       #fff176;
+  --highlight-fg:       #0a1628;
   /* The foreground that belongs on --accent. Theme-INVARIANT: brand cyan is
      a fixed bright colour in both themes, so what reads on it is fixed too
      (brand navy, 5.65:1). This is Material's `on*Fixed` idea — a pairing that
@@ -119,11 +131,46 @@
      Radix step 4 ("hovered UI element background") — a hover state is a token,
      not an opacity hack applied at the call site. */
   --hover-subtle:  rgba(0, 32, 91, 0.06);
-  /* Brand cyan as a focus ring on a light surface is 2.74:1 and misses the
-     3:1 that WCAG 1.4.11 requires of a non-text indicator, so the light ring
-     uses the darkened cyan. In dark mode the bright end of the family is the
-     legible one. */
-  --focus-ring:    #007b91;
+  /* ── Focus ring ───────────────────────────────────────────────────────
+     Theme-INVARIANT, and that is the point. A focusable element on this site
+     can sit on the light page, a sunken band, any of the four dark surfaces,
+     a navy band or a hero photo — in EITHER theme. A ring tuned to the page
+     background is therefore invisible somewhere, whichever background you
+     tune it to.
+
+     #008ba3 was solved for rather than picked: it is the cyan-family value
+     with the best worst-case contrast across all seven surfaces the site
+     actually uses, clearing the 3:1 that WCAG 1.4.11 requires of a non-text
+     indicator on every one of them (worst case 3.71 on the sunken band).
+     Brand cyan itself fails on light surfaces at 2.74.
+
+          light page 4.02   sunken 3.71   dark canvas 4.54   raised 4.07
+          overlay 3.75      navy band 3.85   deep navy hero 4.61            */
+  --focus-ring:    #008ba3;
+
+  /* ── Feedback ─────────────────────────────────────────────────────────
+     Status colours were scattered literals (#ef4444, #22c55e, #f59e0b,
+     #e5484d …) that could not respond to the theme, so an error message went
+     from readable to nearly invisible when the surface went dark.
+
+     Each value was solved for, not picked: the -text variants clear 4.5:1
+     against the WORST surface in their family, and the -solid fills clear
+     4.5:1 carrying white text. Note every seed FAILED as a fill with white
+     text (danger 3.91, success 2.28, warning 2.15), which is exactly the
+     trap the brand cyan CTA fell into. */
+  --danger-text:   #ca3f44;
+  --danger-solid:  #d34247;
+  --danger-bg:     rgba(229, 72, 77, 0.10);
+  --danger-border: rgba(229, 72, 77, 0.30);
+  --success-text:  #16823e;
+  --success-solid: #178841;
+  --success-bg:    rgba(34, 197, 94, 0.10);
+  --warning-text:  #9d6507;
+  --warning-solid: #a46a07;
+  --warning-bg:    rgba(245, 158, 11, 0.12);
+  /* White reads on all three -solid fills; kept as its own token so a call
+     site never has to guess. */
+  --feedback-fg:   #ffffff;
 
   /* Media. A scrim goes BETWEEN a photo and the page rather than dimming the
      photo itself — filtering an image lowers its contrast and hurts the
@@ -152,12 +199,91 @@
      text on a navy hero turn light-blue in dark mode, over ground that never
      changed. */
   --fg-on-dark:            #ffffff;
-  --fg-on-dark-muted:      rgba(255, 255, 255, 0.50);
+  /* Softened white for sustained reading on a dark canvas — a full #ffffff
+     paragraph on near-black haloes badly. White is for headings and emphasis;
+     this is for body copy. */
+  --fg-on-dark-body:       rgba(255, 255, 255, 0.86);
+  /* 0.54, not 0.50: at 0.50 this measured 4.36:1 against the lightest stop
+     of the navy band gradient (#0a2d6e) — under AA. Validated against the
+     worst backdrop in the family, per Primer's rule, not the typical one. */
+  --fg-on-dark-muted:      rgba(255, 255, 255, 0.54);
   --surface-on-dark:       rgba(255, 255, 255, 0.08);
   --border-on-dark:        rgba(255, 255, 255, 0.12);
-  --border-on-dark-strong: rgba(255, 255, 255, 0.35);
+  /* 0.38: at 0.35 a control boundary measured 2.87:1 on the navy band's
+     lightest stop, under the 3:1 that SC 1.4.11 requires of a boundary
+     that is the control's only affordance. */
+  --border-on-dark-strong: rgba(255, 255, 255, 0.38);
   --border-on-dark-hover:  rgba(255, 255, 255, 0.70);
   --hover-on-dark:         rgba(255, 255, 255, 0.08);
+  /* A press state has to be distinguishable from hover, and
+     --surface-on-dark happens to equal --hover-on-dark, so using it for
+     :active made the press invisible. */
+  --hover-on-dark-strong:  rgba(255, 255, 255, 0.14);
+
+  /* Danger ink for a permanently-dark ground. The themed --danger-text
+     cannot serve here: its light-mode value (#ca3f44) measures 2.67:1 on
+     these grounds, so a dark HUD in light mode would show an unreadable
+     error. Same danger hue, lightened to clear AA on the worst of them. */
+  --danger-on-dark:        #ef8d90;
+
+  /* Theater surfaces.
+     The live-stream page is dark in BOTH themes, the way every player that
+     does this well behaves — YouTube's theater mode, Netflix, Church Online
+     Platform. A white page wrapped around a dark video reads as a mistake.
+     It is also load-bearing: lib/nav-treatment.ts classifies /live as an
+     overlay route from a measured backdrop of L 0.01, so the navbar floats
+     there with white ink. If this surface followed the theme, light mode
+     would put white ink on a white page — the exact invisible-chrome defect
+     Phase 0 existed to fix. Hence theme-invariant, like the footer's navy. */
+  /* The navy feature band. A gradient rather than flat navy, and repeated
+     across feature cards, so it belongs in one place. Theme-invariant for
+     the same reason the footer's navy is: it is a branded band, not a
+     page surface. Validate on-dark text against its LIGHTEST stop. */
+  --brand-band:            linear-gradient(135deg, #00142a 0%, #00205b 60%, #0a2d6e 100%);
+  /* The band's lightest stop, named so the contrast gate can check against
+     it. A gradient has no single value to read, so without this the worst
+     case on the band is simply unverifiable — which is how the muted ink
+     sat at 4.36:1 unnoticed. Keep in step with the stop above. */
+  --brand-band-lightest:   #0a2d6e;
+
+  /* Two more permanently-dark grounds that were already in the design and
+     had no token, so a migration kept reaching for --brand-band and
+     quietly turned flat sections into gradients. They are distinct
+     treatments, not variants to be normalised:
+       --brand-ink       a flat, deepest navy strip (stats, ministries grid)
+       --brand-band-deep the closing-CTA band, used on three pages */
+  --brand-ink:             #00142a;
+  --brand-band-deep:       linear-gradient(135deg, #0f2040 0%, #0a1628 100%);
+  /* lightest stop of --brand-band-deep, for the contrast gate */
+  --brand-band-deep-lightest: #0f2040;
+
+  /* A fixed light plate for artwork that was drawn for white — the same
+     idea as a figure printed on paper inside a dark page. Inverting such
+     artwork does not work (its own palette is tuned for a light ground),
+     and dimming it does. So the plate stays light in both themes and
+     carries a border so it reads as a deliberate object. */
+  --plate:                 #ffffff;
+
+  --theater-bg:            #0d1525;
+  --theater-sunken:        #0a1120;
+  --theater-raised:        #162030;
+  --theater-glow:          rgba(0, 33, 91, 0.60);
+
+  /* The global audio player's own chrome. Deeper than the theater
+     surfaces because it floats over page content rather than being the
+     page, and dark in both themes for the same reason Spotify's and
+     Apple Music's player bars are: the transport is one persistent
+     object, and having it invert under the user mid-track is worse than
+     having it disagree with a light page. */
+  --player-bar:            rgba(5, 12, 26, 0.97);
+  /* The bar's colour with its alpha resolved, for the contrast gate: a
+     translucent token cannot be checked without knowing what is behind
+     it, and at 0.97 what is behind it barely matters. */
+  --player-bar-opaque:     #050c1a;
+  --player-sheet:          #080f1e;
+  --player-sheet-deep:     #040a14;
+  --player-tile:           #0d1a2e;
+  --player-header:         rgba(0, 32, 91, 0.55);
 
   /* ── Nav chrome ───────────────────────────────────────────────────────
      Consumed by the .bbc-nav[data-chrome] selectors in globals.css. Split so
@@ -224,6 +350,35 @@
   --color-accent-solid-hover: var(--accent-solid-hover);
   --color-accent-text:        var(--accent-text);
   --color-accent-bg:          var(--accent-bg);
+  --color-accent-border:      var(--accent-border);
+  --color-highlight-bg:       var(--highlight-bg);
+  --color-highlight-fg:       var(--highlight-fg);
+  /* The on-dark family, exported so it is usable as `text-fg-on-dark-muted`
+     and friends. Until now only the CSS variables existed, so every
+     consumer reached for `text-white/50`-style classes instead and the
+     intent was invisible. */
+  --color-fg-on-dark:         var(--fg-on-dark);
+  --color-fg-on-dark-body:    var(--fg-on-dark-body);
+  --color-fg-on-dark-muted:   var(--fg-on-dark-muted);
+  --color-surface-on-dark:    var(--surface-on-dark);
+  --color-border-on-dark:     var(--border-on-dark);
+  --color-border-on-dark-strong: var(--border-on-dark-strong);
+  --color-border-on-dark-hover:  var(--border-on-dark-hover);
+  --color-hover-on-dark:      var(--hover-on-dark);
+  --color-hover-on-dark-strong: var(--hover-on-dark-strong);
+  --color-danger-on-dark:     var(--danger-on-dark);
+  --color-theater-bg:         var(--theater-bg);
+  --color-theater-sunken:     var(--theater-sunken);
+  --color-theater-raised:     var(--theater-raised);
+  --color-theater-glow:       var(--theater-glow);
+  --color-player-bar:         var(--player-bar);
+  --color-player-sheet:       var(--player-sheet);
+  --color-player-sheet-deep:  var(--player-sheet-deep);
+  --color-player-tile:        var(--player-tile);
+  --color-player-header:      var(--player-header);
+  --color-plate:              var(--plate);
+  --color-brand-band-lightest: var(--brand-band-lightest);
+  --color-brand-ink:          var(--brand-ink);
   --color-accent-fg:          var(--accent-fg);
 
   --color-border:             var(--border);
@@ -234,6 +389,18 @@
 
   --color-scrim:              var(--scrim);
   --color-media-bg:           var(--media-bg);
+
+  --color-danger-text:        var(--danger-text);
+  --color-danger-solid:       var(--danger-solid);
+  --color-danger-bg:          var(--danger-bg);
+  --color-danger-border:      var(--danger-border);
+  --color-success-text:       var(--success-text);
+  --color-success-solid:      var(--success-solid);
+  --color-success-bg:         var(--success-bg);
+  --color-warning-text:       var(--warning-text);
+  --color-warning-solid:      var(--warning-solid);
+  --color-warning-bg:         var(--warning-bg);
+  --color-feedback-fg:        var(--feedback-fg);
 }
 
 /* ── The dark value set ──────────────────────────────────────────────
@@ -270,6 +437,7 @@
   --accent-solid-hover: #006d80;
   --accent-text:        #00abc9;
   --accent-bg:          rgba(0, 171, 201, 0.14);
+  --accent-border:      rgba(0, 171, 201, 0.38);
   --accent-fg:          #00205b; /* theme-invariant — see the light block */
 
   --border:        rgba(255, 255, 255, 0.10);
@@ -277,6 +445,19 @@
   --border-input:  rgba(255, 255, 255, 0.34);
   --hover-subtle:  rgba(255, 255, 255, 0.08);
   --focus-ring:    #33c1d9;
+
+
+  /* Feedback inverts: the -text variants lighten so they clear 4.5:1 against
+     the lightest dark surface. success and warning are already light enough
+     at their seed values. The -solid fills do NOT change — white has to stay
+     readable on them, and that is a property of the fill, not the theme. */
+  --danger-text:   #e86064;
+  --success-text:  #22c55e;
+  --warning-text:  #f59e0b;
+  --danger-bg:     rgba(229, 72, 77, 0.16);
+  --danger-border: rgba(229, 72, 77, 0.38);
+  --success-bg:    rgba(34, 197, 94, 0.16);
+  --warning-bg:    rgba(245, 158, 11, 0.18);
 
   --scrim:    rgba(0, 0, 0, 0.60);
   --media-bg: #0a1020;

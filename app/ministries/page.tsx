@@ -116,23 +116,26 @@ export default function MinistriesPage() {
       <div
         className="pt-32 pb-20 px-6"
         style={{
-          background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
+          background: "var(--brand-band)",
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
+          {/* On the navy band, cyan must stay FULL brand cyan (5.65:1).
+              --accent-text darkens for light surfaces and would read 3.2:1
+              here — see docs/token-mapping-rules.md. */}
+          <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
             At Brainerd Baptist
           </p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5"
+            className="font-condensed font-900 text-fg-on-dark leading-none mb-5"
             style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
           >
             Ministries
           </h1>
-          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto">
+          <p className="text-fg-on-dark-muted text-lg leading-relaxed max-w-2xl mx-auto">
             There is a place for every person, at every stage of life. Explore
             the ministries that make up the life of our church.
           </p>
@@ -164,7 +167,7 @@ export default function MinistriesPage() {
                 {/* Icon */}
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: `${color}18`, color }}
+                  style={{ background: `color-mix(in srgb, ${color} 9%, transparent)`, color }}
                 >
                   {ICONS[key]}
                 </div>
@@ -203,7 +206,7 @@ export default function MinistriesPage() {
                   <Link
                     href={href}
                     className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80"
-                    style={{ borderColor: `${color}50`, color }}
+                    style={{ borderColor: `color-mix(in srgb, ${color} 31%, transparent)`, color }}
                   >
                     {href.startsWith("/ministries/") || href === "/life-groups"
                       ? "Learn More"
@@ -222,33 +225,34 @@ export default function MinistriesPage() {
       {/* ── CTA band ─────────────────────────────────────────── */}
       <section
         className="py-20 px-6"
-        style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
+        style={{ background: "var(--brand-band-deep)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
-          <p className="eyebrow mb-4">New Here?</p>
+          {/* Dark CTA band — full brand cyan, not --accent-text. */}
+          <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>New Here?</p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h2
-            className="font-condensed font-800 text-white mb-4"
+            className="font-condensed font-800 text-fg-on-dark mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)" }}
           >
             Not sure where to start?
           </h2>
-          <p className="text-white/55 mb-8 leading-relaxed">
+          <p className="text-fg-on-dark-muted mb-8 leading-relaxed">
             Fill out a connect card and someone from our team will reach out —
             no pressure, just a conversation about where you might fit.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/connect"
-              className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-8 py-3.5 rounded-full transition-colors"
             >
               Connect With Us
             </Link>
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/20 hover:border-white/40 text-white px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-on-dark-strong hover:border-border-on-dark-hover text-fg-on-dark px-8 py-3.5 rounded-full transition-colors"
             >
               Plan Your Visit
             </Link>

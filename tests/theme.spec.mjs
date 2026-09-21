@@ -175,7 +175,65 @@ for (const theme of THEMES) {
         });
         expect(lowContrast, `text with <1.5:1 contrast on ${path} (${theme})`).toEqual([]);
 
-        // 3. Pixel baseline.
+        // 3. Every keyboard-reachable control paints a focus indicator.
+        //
+        //    This is WCAG 2.4.7 and it was failing sitewide: 209 interactive
+        //    elements, 2 with any focus styling, and 11 files calling
+        //    `outline-none` with nothing put back. A static lint cannot catch
+        //    it — the class is real and compiles fine, it just erases the
+        //    indicator — so the only honest check is to press Tab and look.
+        //
+        //    The Tab presses must come from the runner, not from in-page JS:
+        //    a synthetic KeyboardEvent does not move focus at all, and the
+        //    `el.focus()` workaround sets :focus-visible for text inputs but
+        //    not dependably for buttons — so a bare button would pass a check
+        //    built that way. Only real input is trustworthy here.
+        const MAX_TABS = 25;
+        const unringed = [];
+        const seenKeys = new Set();
+        await page.locator("body").click({ position: { x: 2, y: 2 } }).catch(() => {});
+        for (let i = 0; i < MAX_TABS; i++) {
+          await page.keyboard.press("Tab");
+          const info = await page.evaluate(() => {
+            const el = document.activeElement;
+            if (!el || el === document.body || el === document.documentElement) return null;
+            const cs = getComputedStyle(el);
+            const w = parseFloat(cs.outlineWidth) || 0;
+            const hasOutline =
+              w >= 1 &&
+              cs.outlineStyle !== "none" &&
+              !/transparent|rgba\(0,\s*0,\s*0,\s*0\)/.test(cs.outlineColor);
+            // A ring drawn with box-shadow counts too: Tailwind's ring-* and
+            // the Clearstream form, whose inputs cannot take an outline.
+            const hasShadow = !!cs.boxShadow && cs.boxShadow !== "none";
+            return {
+              key:
+                el.tagName +
+                "|" +
+                (typeof el.className === "string" ? el.className : "") +
+                "|" +
+                (el.textContent || "").trim().slice(0, 24),
+              ok: hasOutline || hasShadow,
+              optedOut: !!el.closest(".focus-ring-custom"),
+              tag: el.tagName.toLowerCase(),
+              label:
+                el.getAttribute("aria-label") ||
+                (el.textContent || "").trim().slice(0, 40) ||
+                el.getAttribute("type") ||
+                "?",
+            };
+          });
+          if (!info) break;
+          if (seenKeys.has(info.key)) break; // focus order wrapped
+          seenKeys.add(info.key);
+          if (!info.ok && !info.optedOut) unringed.push({ tag: info.tag, label: info.label });
+        }
+        expect(
+          unringed,
+          `controls with no visible focus indicator on ${path} (${theme})`,
+        ).toEqual([]);
+
+        // 4. Pixel baseline.
         await expect(page).toHaveScreenshot(
           `${theme}${path.replace(/\//g, "_") || "_root"}.png`,
           { fullPage: true, maxDiffPixelRatio: 0.01, animations: "disabled" },

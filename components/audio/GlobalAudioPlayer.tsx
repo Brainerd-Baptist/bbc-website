@@ -83,9 +83,9 @@ function Scrubber({
         aria-valuemin={0}
         aria-valuemax={100}
       >
-        <div className="absolute inset-x-0 rounded-full" style={{ top: trackTop, height: trackH, background: "rgba(255,255,255,0.12)" }}>
+        <div className="absolute inset-x-0 rounded-full" style={{ top: trackTop, height: trackH, background: "var(--border-on-dark)" }}>
           <div className="absolute top-0 left-0 h-full rounded-full transition-[width] duration-150"
-            style={{ width: `${bufPct * 100}%`, background: "rgba(255,255,255,0.18)" }} />
+            style={{ width: `${bufPct * 100}%`, background: "var(--border-on-dark-strong)" }} />
           <div className="absolute top-0 left-0 h-full rounded-full"
             style={{ width: `${displayPct * 100}%`, background: accent }} />
           <div
@@ -101,7 +101,7 @@ function Scrubber({
         </div>
       </div>
       {large && (
-        <div className="flex justify-between text-[11px] tabular-nums mt-1 px-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>
+        <div className="flex justify-between text-[11px] tabular-nums mt-1 px-0.5" style={{ color: "var(--fg-on-dark-muted)" }}>
           <span>{fmt(currentTime)}</span>
           <span>{fmt(duration)}</span>
         </div>
@@ -230,7 +230,7 @@ export default function GlobalAudioPlayer() {
     <div
       className="fixed inset-0 z-[60] flex flex-col"
       style={{
-        background: `linear-gradient(160deg, color-mix(in srgb, ${accent} 18%, #080f1e) 0%, #080f1e 50%, #040a14 100%)`,
+        background: `linear-gradient(160deg, color-mix(in srgb, ${accent} 18%, var(--player-sheet)) 0%, var(--player-sheet) 50%, var(--player-sheet-deep) 100%)`,
         transform: slideIn ? "translateY(0)" : "translateY(100%)",
         transition: "transform 0.42s cubic-bezier(0.32, 0.72, 0, 1)",
       }}
@@ -242,7 +242,7 @@ export default function GlobalAudioPlayer() {
     >
       {/* Drag handle */}
       <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
-        <div className="w-10 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.2)" }} />
+        <div className="w-10 h-1 rounded-full" style={{ background: "var(--border-on-dark-strong)" }} />
       </div>
 
       {/* Header row */}
@@ -257,7 +257,7 @@ export default function GlobalAudioPlayer() {
           </svg>
         </button>
 
-        <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>
+        <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: "var(--fg-on-dark-muted)" }}>
           Now Playing
         </p>
 
@@ -278,7 +278,7 @@ export default function GlobalAudioPlayer() {
         <div
           className="w-full max-w-[280px] aspect-square rounded-3xl overflow-hidden shadow-2xl"
           style={{
-            boxShadow: `0 20px 60px ${accent}30, 0 0 0 1px rgba(255,255,255,0.04)`,
+            boxShadow: `0 20px 60px ${accent}30, 0 0 0 1px var(--surface-on-dark)`,
           }}
         >
           {track.youtubeId ? (
@@ -296,7 +296,7 @@ export default function GlobalAudioPlayer() {
             <div
               className="w-full h-full flex items-center justify-center"
               style={{
-                background: `linear-gradient(135deg, color-mix(in srgb, ${accent} 30%, #0d1a2e) 0%, #0d1a2e 100%)`,
+                background: `linear-gradient(135deg, color-mix(in srgb, ${accent} 30%, var(--player-tile)) 0%, var(--player-tile) 100%)`,
                 border: `1px solid ${accent}33`,
               }}
             >
@@ -315,7 +315,7 @@ export default function GlobalAudioPlayer() {
         <h2 className="text-white font-bold text-xl leading-tight mb-1" style={{ letterSpacing: "-0.02em" }}>
           {track.title}
         </h2>
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+        <p className="text-sm" style={{ color: "var(--fg-on-dark-muted)" }}>
           {track.speaker}
           {track.series ? <span style={{ color: "var(--fg-subtle)" }}> · {track.series}</span> : null}
         </p>
@@ -387,7 +387,7 @@ export default function GlobalAudioPlayer() {
               onClick={() => setSpeed(s)}
               className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full transition-all"
               style={{
-                color: speed === s ? accent : "rgba(255,255,255,0.3)",
+                color: speed === s ? accent : "var(--fg-on-dark-muted)",
                 background: speed === s ? `${accent}20` : "transparent",
                 border: speed === s ? `1px solid ${accent}44` : "1px solid transparent",
               }}
@@ -401,11 +401,11 @@ export default function GlobalAudioPlayer() {
         {showUpNext && (
           <div
             className="flex items-center gap-3 px-4 py-3 rounded-2xl mb-3"
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+            style={{ background: "var(--surface-on-dark)", border: "1px solid var(--border-on-dark)" }}
           >
             <div className="relative flex-shrink-0 w-7 h-7">
               <svg width="28" height="28" viewBox="0 0 28 28" className="absolute inset-0">
-                <circle cx="14" cy="14" r="12" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+                <circle cx="14" cy="14" r="12" fill="none" style={{ stroke: "var(--border-on-dark)" }} strokeWidth="2" />
                 <circle cx="14" cy="14" r="12" fill="none" stroke={accent} strokeWidth="2"
                   strokeDasharray={`${(upNextCountdown / 5) * 75.4} 75.4`}
                   strokeLinecap="round" transform="rotate(-90 14 14)"
@@ -416,12 +416,12 @@ export default function GlobalAudioPlayer() {
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold truncate" style={{ color: "rgba(255,255,255,0.7)" }}>{nextTrack.title}</p>
-              <p className="text-[9px]" style={{ color: "rgba(255,255,255,0.35)" }}>{nextTrack.speaker}</p>
+              <p className="text-[10px] font-semibold truncate" style={{ color: "var(--fg-on-dark-body)" }}>{nextTrack.title}</p>
+              <p className="text-[9px]" style={{ color: "var(--fg-on-dark-muted)" }}>{nextTrack.speaker}</p>
             </div>
             <button onClick={cancelUpNext}
               className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full hover:bg-white/10 transition-all"
-              style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.12)" }}>
+              style={{ color: "var(--fg-on-dark-muted)", border: "1px solid var(--border-on-dark)" }}>
               Cancel
             </button>
           </div>
@@ -434,7 +434,7 @@ export default function GlobalAudioPlayer() {
         <button
           onClick={() => { dismiss(); closeExpanded(); }}
           className="w-full py-3 rounded-2xl text-sm font-semibold transition-all hover:bg-white/10 active:bg-white/15"
-          style={{ color: "rgba(255,255,255,0.3)", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ color: "var(--fg-on-dark-muted)", border: "1px solid var(--border-on-dark)" }}
         >
           Close Player
         </button>
@@ -451,8 +451,8 @@ export default function GlobalAudioPlayer() {
       <div
         className="fixed bottom-0 inset-x-0 z-50"
         style={{
-          background: "rgba(5, 12, 26, 0.97)",
-          borderTop: "1px solid rgba(255,255,255,0.07)",
+          background: "var(--player-bar)",
+          borderTop: "1px solid var(--border-on-dark)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
         }}
@@ -462,17 +462,17 @@ export default function GlobalAudioPlayer() {
           <div
             className="flex items-center gap-3 px-4 py-2"
             style={{
-              background: "rgba(0,32,91,0.55)",
-              borderBottom: "1px solid rgba(255,255,255,0.06)",
+              background: "var(--player-header)",
+              borderBottom: "1px solid var(--border-on-dark)",
             }}
           >
             <div className="relative flex-shrink-0 w-6 h-6">
               <svg width="24" height="24" viewBox="0 0 24 24" className="absolute inset-0">
-                <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                <circle cx="12" cy="12" r="10" fill="none" stroke="#00abc9" strokeWidth="2"
+                <circle cx="12" cy="12" r="10" fill="none" style={{ stroke: "var(--border-on-dark)" }} strokeWidth="2" />
+                <circle cx="12" cy="12" r="10" fill="none" strokeWidth="2"
                   strokeDasharray={`${(upNextCountdown / 5) * 62.8} 62.8`}
                   strokeLinecap="round" transform="rotate(-90 12 12)"
-                  style={{ transition: "stroke-dasharray 0.9s linear" }} />
+                  style={{ stroke: "var(--accent)", transition: "stroke-dasharray 0.9s linear" }} />
               </svg>
               <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold tabular-nums" style={{ color: "var(--accent-text)" }}>
                 {upNextCountdown}
@@ -485,7 +485,7 @@ export default function GlobalAudioPlayer() {
             </div>
             <button onClick={cancelUpNext}
               className="flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full transition-all hover:bg-white/10"
-              style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.12)" }}>
+              style={{ color: "var(--fg-on-dark-muted)", border: "1px solid var(--border-on-dark)" }}>
               Cancel
             </button>
           </div>
@@ -530,7 +530,7 @@ export default function GlobalAudioPlayer() {
               <p className="text-white/35 text-[10px] truncate mt-0.5">{track.speaker}</p>
             </div>
             {/* Expand chevron hint */}
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" className="flex-shrink-0 mr-1">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ stroke: "var(--border-on-dark-strong)" }} strokeWidth="1.5" strokeLinecap="round" className="flex-shrink-0 mr-1">
               <path d="M2 8L6 4l4 4"/>
             </svg>
           </button>
@@ -584,7 +584,7 @@ export default function GlobalAudioPlayer() {
             <button
               onClick={() => setSpeed(nextSpeed(speed))}
               className="md:hidden text-[10px] font-bold px-2 py-1 rounded transition-all"
-              style={{ color: speed !== 1 ? accent : "rgba(255,255,255,0.4)", background: speed !== 1 ? `${accent}1e` : "transparent", minWidth: 34 }}
+              style={{ color: speed !== 1 ? accent : "var(--fg-on-dark-muted)", background: speed !== 1 ? `${accent}1e` : "transparent", minWidth: 34 }}
               aria-label={`Playback speed ${speedLabel}, tap to change`}
             >
               {speedLabel}
@@ -596,7 +596,7 @@ export default function GlobalAudioPlayer() {
                   onClick={() => setSpeed(s)}
                   className="text-[10px] font-semibold px-1.5 py-0.5 rounded transition-all"
                   style={{
-                    color: speed === s ? accent : "rgba(255,255,255,0.3)",
+                    color: speed === s ? accent : "var(--fg-on-dark-muted)",
                     background: speed === s ? `${accent}1e` : "transparent",
                   }}
                 >

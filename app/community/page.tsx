@@ -251,7 +251,7 @@ export default function CommunityPage() {
       {/* ── Dark CTA ─────────────────────────────────────────── */}
       <section
         className="py-20 px-6"
-        style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
+        style={{ background: "var(--brand-band-deep)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
           <h2

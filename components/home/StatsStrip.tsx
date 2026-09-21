@@ -74,7 +74,7 @@ function StatCard({ stat, delay, started }: { stat: Stat; delay: number; started
   return (
     <div className="flex flex-col items-center text-center px-4">
       <div
-        className="font-condensed font-900 text-accent-text tabular-nums leading-none mb-1"
+        className="font-condensed font-900 text-accent tabular-nums leading-none mb-1"
         style={{ fontSize: "clamp(2.4rem, 5vw, 3.5rem)" }}
       >
         {stat.prefix ?? ""}
@@ -82,11 +82,11 @@ function StatCard({ stat, delay, started }: { stat: Stat; delay: number; started
         {stat.suffix}
       </div>
       <div
-        className="font-condensed font-700 text-white text-base tracking-wide mb-0.5"
+        className="font-condensed font-700 text-fg-on-dark text-base tracking-wide mb-0.5"
       >
         {stat.label}
       </div>
-      <div className="text-white/40 text-xs tracking-wide">{stat.description}</div>
+      <div className="text-fg-on-dark-muted text-xs tracking-wide">{stat.description}</div>
     </div>
   );
 }
@@ -115,19 +115,21 @@ export default function StatsStrip() {
     <section
       ref={ref}
       className="relative overflow-hidden py-16 px-6"
-      style={{ background: "linear-gradient(135deg, #00142a 0%, #001840 100%)" }}
+      /* A branded navy band, not a page surface: it stays navy in both themes,
+         so everything inside it uses the on-dark ink family. */
+      style={{ background: "var(--brand-ink)" }}
     >
       {/* Subtle grid texture */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 39px, #00abc9 39px, #00abc9 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, #00abc9 39px, #00abc9 40px)",
+            "repeating-linear-gradient(0deg, transparent, transparent 39px, var(--accent) 39px, var(--accent) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, var(--accent) 39px, var(--accent) 40px)",
         }}
       />
 
       {/* Teal accent line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-[#00abc9]/40 to-transparent mb-12" />
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent mb-12" />
 
       <div className="relative max-w-5xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
@@ -142,13 +144,13 @@ export default function StatsStrip() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="absolute top-0 bottom-0 w-px bg-white/8"
+            className="absolute top-0 bottom-0 w-px bg-border-on-dark"
             style={{ left: `${(i / 4) * 100}%` }}
           />
         ))}
       </div>
 
-      <div className="h-px bg-gradient-to-r from-transparent via-[#00abc9]/40 to-transparent mt-12" />
+      <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent mt-12" />
     </section>
   );
 }

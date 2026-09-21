@@ -103,7 +103,7 @@ export default function BeliefQuestion() {
                     handleAsk();
                   }
                 }}
-                className="w-full px-5 py-4 rounded-2xl border border-white/15 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/30 resize-none"
+                className="w-full px-5 py-4 rounded-2xl border border-white/15 text-sm text-white placeholder:text-white/25 focus:border-white/30 resize-none"
                 style={{ background: "rgba(255,255,255,0.06)" }}
               />
               <button

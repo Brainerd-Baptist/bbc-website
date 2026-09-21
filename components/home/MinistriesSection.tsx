@@ -76,7 +76,9 @@ function PhotoCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1280px) 33vw, 400px"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        {/* Gradient overlay */}
+        {/* Gradient overlay. Stays literal: a photo scrim needs three stops at
+            different alphas, and --scrim is a single composited value with its
+            own alpha, so it cannot express a ramp. No token fits. */}
         <div
           className="absolute inset-0"
           style={{
@@ -87,20 +89,20 @@ function PhotoCard({
         {/* Hover ring */}
         <div
           className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ boxShadow: "inset 0 0 0 1.5px rgba(0,171,201,0.5)" }}
+          style={{ boxShadow: "inset 0 0 0 1.5px var(--accent-border)" }}
         />
         {/* Label */}
         <div className="absolute bottom-0 left-0 right-0 p-5">
           <p
-            className="font-condensed font-900 text-white mb-0.5 leading-tight"
+            className="font-condensed font-900 text-fg-on-dark mb-0.5 leading-tight"
             style={{ fontSize: "1.35rem", letterSpacing: "-0.02em" }}
           >
             {card.label}
           </p>
-          <p className="text-white/50 text-sm font-medium tracking-wide mb-3">
+          <p className="text-fg-on-dark-muted text-sm font-medium tracking-wide mb-3">
             {card.sub}
           </p>
-          <div className="flex items-center gap-1.5 text-accent-text text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center gap-1.5 text-accent text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             Learn more
             <svg
               width="12"
@@ -122,7 +124,12 @@ function PhotoCard({
 
 export default function MinistriesSection() {
   return (
-    <section className="bg-[#00142a] py-24 px-6">
+    <section
+      className="py-24 px-6"
+      /* A branded navy band, not a page surface: navy in both themes, so every
+         foreground inside it comes from the on-dark family. */
+      style={{ background: "var(--brand-ink)" }}
+    >
       <div className="max-w-7xl mx-auto">
 
         {/* ── Header ── */}
@@ -130,13 +137,13 @@ export default function MinistriesSection() {
           <div className="flex items-center justify-between mb-12">
             <p
               className="font-condensed font-700 tracking-widest uppercase text-xs"
-              style={{ color: "var(--accent-text)" }}
+              style={{ color: "var(--accent)" }}
             >
               Ministries
             </p>
             <Link
               href="/ministries"
-              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-white/20 text-white/70 hover:border-accent/60 hover:text-accent-text transition-all shrink-0"
+              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-border-on-dark-strong text-fg-on-dark-body hover:border-accent/60 hover:text-accent transition-all shrink-0"
             >
               All Ministries →
             </Link>
@@ -158,7 +165,9 @@ export default function MinistriesSection() {
               className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
               priority
             />
-            {/* Subtle vignette — let the photo breathe */}
+            {/* Subtle vignette — let the photo breathe. Literal for the same
+                reason as the card scrim above: a multi-stop alpha ramp has no
+                token. */}
             <div
               className="absolute inset-0"
               style={{
@@ -169,16 +178,16 @@ export default function MinistriesSection() {
             {/* Hover ring */}
             <div
               className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-              style={{ boxShadow: "inset 0 0 0 1.5px rgba(0,171,201,0.45)" }}
+              style={{ boxShadow: "inset 0 0 0 1.5px var(--accent-border)" }}
             />
             {/* Caption */}
             <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
               <div>
-                <p className="text-white/80 text-sm">
+                <p className="text-fg-on-dark-body text-sm">
                   From nursery to seniors, all in the same building on Sunday morning.
                 </p>
               </div>
-              <div className="flex items-center gap-1.5 text-accent-text text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">
+              <div className="flex items-center gap-1.5 text-accent text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">
                 Plan a visit
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M2.5 6h7M6.5 3l3 3-3 3" />

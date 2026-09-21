@@ -23,12 +23,17 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { exemptLines } from "./color-literal-exemptions.mjs";
 
 const ROOT = process.cwd();
 const BASELINE = path.join(ROOT, "scripts/ratchet-baseline.json");
 const SCAN_DIRS = ["app", "components", "lib"];
 
-/** The token file is the sanctioned home for raw colour; never counted. */
+/**
+ * Where raw colour is legitimate. Declared as data in
+ * color-literal-exemptions.mjs, with a reason per entry — see the note at the
+ * top of that file for why this is not a comment in the source it protects.
+ */
 const EXEMPT = new Set(["app/tokens.css"]);
 
 function walk(dir, out = []) {
@@ -49,11 +54,18 @@ const read = (f) => fs.readFileSync(path.join(ROOT, f), "utf8");
 function countMatches(re, filter = () => true) {
   let n = 0;
   for (const f of files.filter(filter)) {
-    for (const line of read(f).split("\n")) {
+    const src = read(f);
+    // Regions where a literal is the correct answer (print documents, <meta>
+    // attributes, the token layer) are not residue and must not be counted —
+    // otherwise the only way to make the number go down is to break them.
+    const exempt = exemptLines(f, src);
+    if (exempt === null) continue;
+    src.split("\n").forEach((line, i) => {
+      if (exempt.has(i)) return;
       const t = line.trim();
-      if (t.startsWith("//") || t.startsWith("*") || t.startsWith("/*")) continue;
+      if (t.startsWith("//") || t.startsWith("*") || t.startsWith("/*")) return;
       n += (line.match(re) ?? []).length;
-    }
+    });
   }
   return n;
 }

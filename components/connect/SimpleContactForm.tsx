@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const inputClass =
-  "border border-border-strong rounded-xl px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent/40 text-fg bg-surface-raised placeholder:text-fg-muted transition";
+  "border border-border-strong rounded-xl px-4 py-3 w-full text-fg bg-surface-raised placeholder:text-fg-muted transition";
 
 interface Props {
   /** POST endpoint, e.g. "/api/contact/general" */

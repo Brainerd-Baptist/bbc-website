@@ -119,13 +119,18 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
     return () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
   }, [dragging, dur, isActive, seek]);
 
-  const bg     = light ? "#f4f6f9"              : "rgba(255,255,255,0.04)";
-  const border = light ? "rgba(0,32,91,0.08)"   : "rgba(255,255,255,0.07)";
-  const muted  = light ? "rgba(0,32,91,0.35)"   : "rgba(255,255,255,0.35)";
-  const dim    = light ? "rgba(0,32,91,0.25)"   : "rgba(255,255,255,0.25)";
-  const track_ = light ? "rgba(0,32,91,0.08)"   : "rgba(255,255,255,0.08)";
-  const buf    = light ? "rgba(0,32,91,0.12)"   : "rgba(255,255,255,0.14)";
-  const strong = light ? "rgba(0,32,91,0.70)"   : "rgba(255,255,255,0.70)";
+  // Two grounds, two ink families. `light` means this player is embedded in a
+  // themed page card, so it follows the theme; the default sits on permanently
+  // dark chrome (a navy band, the theater), so its ink must NOT invert.
+  const bg     = light ? "var(--surface-sunken)" : "var(--surface-on-dark)";
+  const border = light ? "var(--border)"         : "var(--border-on-dark)";
+  const muted  = light ? "var(--fg-muted)"       : "var(--fg-on-dark-muted)";
+  // Control ink. The old 0.25 alpha was below 3:1 on both grounds; the muted
+  // step is the shallowest one that clears it for a 9px label under an icon.
+  const dim    = light ? "var(--fg-muted)"       : "var(--fg-on-dark-muted)";
+  const track_ = light ? "var(--border)"         : "var(--border-on-dark)";
+  const buf    = light ? "var(--border-strong)"  : "var(--border-on-dark-strong)";
+  const strong = light ? "var(--fg)"             : "var(--fg-on-dark-body)";
 
   return (
     <div
@@ -216,12 +221,12 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
             aria-label={activePlaying ? "Pause" : "Play"}
           >
             {activePlaying ? (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="white">
+              <svg width="18" height="18" viewBox="0 0 18 18" style={{ fill: "var(--fg-on-accent)" }}>
                 <rect x="2" y="1" width="5" height="16" rx="2"/>
                 <rect x="11" y="1" width="5" height="16" rx="2"/>
               </svg>
             ) : (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="white" style={{ marginLeft: 2 }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" style={{ fill: "var(--fg-on-accent)", marginLeft: 2 }}>
                 <path d="M4 2l10 6-10 6z"/>
               </svg>
             )}

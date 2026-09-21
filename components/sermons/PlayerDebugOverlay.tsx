@@ -71,6 +71,13 @@ export default function PlayerDebugOverlay({ state, rect, isPlaying, logRef, pus
 
   const entries = [...logRef.current].reverse().slice(0, 60);
 
+  // NOTE: the two pale-red literals below are the only un-tokenised colours
+  // left in this file. This HUD is dark in BOTH themes, and --danger-text is
+  // theme-DEPENDENT: its light-mode value measures 3.92:1 on --player-sheet,
+  // under AA. There is no on-dark danger ink in the token set, so pointing
+  // these at --danger-text would be the same regression the /about page hit
+  // with --accent-text on a navy band. Left literal until such a token exists.
+
   function copyLog() {
     const text = [...logRef.current]
       .map((e) => `${fmtTime(e.t)}  ${e.msg}`)
@@ -93,7 +100,7 @@ export default function PlayerDebugOverlay({ state, rect, isPlaying, logRef, pus
         zIndex: 99999,
         fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
         fontSize: 11,
-        color: "#e6f7ff",
+        color: "var(--fg-on-dark-body)",
         pointerEvents: "auto",
       }}
     >
@@ -101,11 +108,11 @@ export default function PlayerDebugOverlay({ state, rect, isPlaying, logRef, pus
         <button
           onClick={() => setOpen(true)}
           style={{
-            background: "rgba(0,0,0,0.75)",
-            border: "1px solid rgba(255,255,255,0.25)",
+            background: "var(--player-bar)",
+            border: "1px solid var(--border-on-dark-strong)",
             borderRadius: 999,
             padding: "6px 10px",
-            color: "#e6f7ff",
+            color: "var(--fg-on-dark-body)",
             display: "flex",
             alignItems: "center",
             gap: 6,
@@ -113,14 +120,14 @@ export default function PlayerDebugOverlay({ state, rect, isPlaying, logRef, pus
         >
           🐞 {state}
           {errCountRef.current > 0 && (
-            <span style={{ background: "#e5484d", borderRadius: 999, padding: "0 6px" }}>{errCountRef.current}</span>
+            <span style={{ background: "var(--danger-solid)", color: "var(--feedback-fg)", borderRadius: 999, padding: "0 6px" }}>{errCountRef.current}</span>
           )}
         </button>
       ) : (
         <div
           style={{
-            background: "rgba(0,0,0,0.88)",
-            border: "1px solid rgba(255,255,255,0.25)",
+            background: "var(--player-sheet)",
+            border: "1px solid var(--border-on-dark)",
             borderRadius: 10,
             padding: 10,
             width: "min(360px, calc(100vw - 32px))",
@@ -133,16 +140,16 @@ export default function PlayerDebugOverlay({ state, rect, isPlaying, logRef, pus
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <strong>Video player debug</strong>
             <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={copyLog} style={{ color: "#7dd3fc", background: "none", border: "none", padding: 0 }}>
+              <button onClick={copyLog} style={{ color: "var(--accent)", background: "none", border: "none", padding: 0 }}>
                 {copied ? "copied" : "copy log"}
               </button>
-              <button onClick={() => setOpen(false)} style={{ color: "#fca5a5", background: "none", border: "none", padding: 0 }}>
+              <button onClick={() => setOpen(false)} style={{ color: "var(--danger-on-dark)", background: "none", border: "none", padding: 0 }}>
                 close
               </button>
             </div>
           </div>
 
-          <div style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
+          <div style={{ color: "var(--fg-on-dark-body)", lineHeight: 1.5 }}>
             state: <b>{state}</b> · playing: <b>{String(isPlaying)}</b> · errors: <b>{errCountRef.current}</b>
             <br />
             scrollY: {scrollY} · viewport: {vw}×{vh}
@@ -154,16 +161,16 @@ export default function PlayerDebugOverlay({ state, rect, isPlaying, logRef, pus
           <div
             style={{
               overflowY: "auto",
-              borderTop: "1px solid rgba(255,255,255,0.15)",
+              borderTop: "1px solid var(--border-on-dark)",
               paddingTop: 6,
               display: "flex",
               flexDirection: "column",
               gap: 2,
             }}
           >
-            {entries.length === 0 && <span style={{ color: "rgba(255,255,255,0.4)" }}>no events yet</span>}
+            {entries.length === 0 && <span style={{ color: "var(--fg-on-dark-muted)" }}>no events yet</span>}
             {entries.map((e, i) => (
-              <div key={i} style={{ color: e.msg.startsWith("ERROR") || e.msg.startsWith("UNHANDLED") ? "#fca5a5" : "rgba(255,255,255,0.75)" }}>
+              <div key={i} style={{ color: e.msg.startsWith("ERROR") || e.msg.startsWith("UNHANDLED") ? "var(--danger-on-dark)" : "var(--fg-on-dark-body)" }}>
                 {fmtTime(e.t)} {e.msg}
               </div>
             ))}

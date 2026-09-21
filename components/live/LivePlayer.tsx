@@ -237,11 +237,11 @@ function ActiveView({
   const embedUrl = `https://www.youtube.com/embed/live_stream?channel=${YOUTUBE_CHANNEL_ID}&autoplay=1&rel=0&modestbranding=1`;
 
   return (
-    <div className="min-h-screen bg-[#0d1525] text-white flex flex-col">
+    <div className="min-h-screen bg-theater-bg text-fg-on-dark flex flex-col">
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={`flex items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
-        state === "live" ? "bg-accent" : state === "post" ? "bg-[#1a2a40]" : "bg-brand-navy"
+        state === "live" ? "bg-accent" : state === "post" ? "bg-theater-raised" : "bg-brand-navy"
       }`}>
         {state === "live" && (
           <><span className="w-1.5 h-1.5 rounded-full bg-surface-raised animate-pulse" />
@@ -265,8 +265,8 @@ function ActiveView({
           {/* YouTube embed */}
           <div className="relative w-full bg-black" style={{ aspectRatio: "16/9" }}>
             {state === "post" ? (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#0d1525] px-6 text-center">
-                <p className="text-[#6b7f9e] text-sm">The service just ended.</p>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-theater-bg px-6 text-center">
+                <p className="text-fg-on-dark-muted text-sm">The service just ended.</p>
                 <h2 className="text-lg font-bold">The replay uploads to YouTube shortly.</h2>
                 <a
                   href={sermon.watchUrl}
@@ -290,7 +290,7 @@ function ActiveView({
 
           {/* Mobile: tab bar + tab content */}
           <div className="lg:hidden flex flex-col flex-1">
-            <div className="flex border-b border-white/8 bg-[#0d1525] overflow-x-auto scrollbar-hide">
+            <div className="flex border-b border-border-on-dark bg-theater-bg overflow-x-auto scrollbar-hide">
               {TABS.map((t) => (
                 <button
                   key={t.id}
@@ -298,7 +298,7 @@ function ActiveView({
                   className={`flex-1 min-w-[64px] flex flex-col items-center gap-0.5 py-2.5 px-1 text-[10px] font-semibold tracking-wide transition-colors ${
                     tab === t.id
                       ? "text-accent-text border-b-2 border-accent"
-                      : "text-[#6b7f9e] hover:text-white"
+                      : "text-fg-on-dark-muted hover:text-fg-on-dark"
                   }`}
                 >
                   <span className="text-base leading-none">{t.icon}</span>
@@ -322,9 +322,9 @@ function ActiveView({
         </div>
 
         {/* Bulletin sidebar — desktop only ─────────────────────────────── */}
-        <div className="hidden lg:flex flex-col w-[380px] xl:w-[420px] border-l border-white/8 bg-[#0a1120] overflow-y-auto">
+        <div className="hidden lg:flex flex-col w-[380px] xl:w-[420px] border-l border-border-on-dark bg-theater-sunken overflow-y-auto">
           {/* Sermon header */}
-          <div className="px-6 pt-6 pb-4 border-b border-white/8">
+          <div className="px-6 pt-6 pb-4 border-b border-border-on-dark">
             {sermon.passage && (
               <a
                 href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
@@ -335,14 +335,14 @@ function ActiveView({
                 {sermon.passage}
               </a>
             )}
-            <h2 className="text-white font-bold text-lg leading-snug" style={{ letterSpacing: "-0.02em" }}>
+            <h2 className="text-fg-on-dark font-bold text-lg leading-snug" style={{ letterSpacing: "-0.02em" }}>
               {sermon.title}
             </h2>
-            <p className="text-[#6b7f9e] text-xs mt-1">Follow along · {service?.label ?? "Live Service"}</p>
+            <p className="text-fg-on-dark-muted text-xs mt-1">Follow along · {service?.label ?? "Live Service"}</p>
           </div>
 
           {/* Bulletin tab bar */}
-          <div className="flex border-b border-white/8">
+          <div className="flex border-b border-border-on-dark">
             {(["outline", "passage", "notes", "prayer"] as Tab[]).map((t) => {
               const meta = TABS.find((x) => x.id === t)!;
               return (
@@ -352,7 +352,7 @@ function ActiveView({
                   className={`flex-1 py-2.5 text-[11px] font-semibold tracking-wide transition-colors ${
                     tab === t
                       ? "text-accent-text border-b-2 border-accent"
-                      : "text-[#6b7f9e] hover:text-white"
+                      : "text-fg-on-dark-muted hover:text-fg-on-dark"
                   }`}
                 >
                   {meta.icon} {meta.label}
@@ -385,8 +385,8 @@ function WatchTab({ sermon }: { sermon: SermonData }) {
           {sermon.passage}
         </p>
       )}
-      <h2 className="text-xl font-bold text-white mb-1 leading-tight">{sermon.title}</h2>
-      <p className="text-sm text-[#6b7f9e] mb-6">{date} · Curtis Hill</p>
+      <h2 className="text-xl font-bold text-fg-on-dark mb-1 leading-tight">{sermon.title}</h2>
+      <p className="text-sm text-fg-on-dark-muted mb-6">{date} · Curtis Hill</p>
 
       <div className="flex flex-col gap-3">
         <a
@@ -415,7 +415,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
 
   if (!sermon.passage) {
     return (
-      <div className="px-5 py-10 text-center text-[#6b7f9e] text-sm">
+      <div className="px-5 py-10 text-center text-fg-on-dark-muted text-sm">
         No passage listed for this week.
       </div>
     );
@@ -426,18 +426,18 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
       <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">
         Scripture
       </p>
-      <h3 className="text-lg font-bold text-white mb-5">{sermon.passage}</h3>
+      <h3 className="text-lg font-bold text-fg-on-dark mb-5">{sermon.passage}</h3>
 
       {loading && (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-4 bg-white/8 rounded animate-pulse" style={{ width: `${85 - i * 8}%` }} />
+            <div key={i} className="h-4 bg-surface-on-dark rounded animate-pulse" style={{ width: `${85 - i * 8}%` }} />
           ))}
         </div>
       )}
 
       {error && (
-        <p className="text-[#6b7f9e] text-sm">
+        <p className="text-fg-on-dark-muted text-sm">
           Couldn&apos;t load passage.{" "}
           <a
             href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
@@ -454,13 +454,13 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
         <>
           <div className="space-y-2">
             {data.verses.map((v) => (
-              <p key={`${v.chapter}-${v.verse}`} className="text-sm leading-relaxed text-[#c8d4e8]">
-                <sup className="text-[#6b7f9e] text-[10px] mr-1 select-none">{v.verse}</sup>
+              <p key={`${v.chapter}-${v.verse}`} className="text-sm leading-relaxed text-fg-on-dark-body">
+                <sup className="text-fg-on-dark-muted text-[10px] mr-1 select-none">{v.verse}</sup>
                 {v.text}
               </p>
             ))}
           </div>
-          <p className="mt-5 text-[10px] text-[#4a5568] tracking-wide uppercase">
+          <p className="mt-5 text-[10px] text-fg-on-dark-muted tracking-wide uppercase">
             {data.translation_name}
           </p>
         </>
@@ -474,7 +474,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
 function OutlineTab({ sermon }: { sermon: SermonData }) {
   if (!sermon.outline.length) {
     return (
-      <div className="px-5 py-10 text-center text-[#6b7f9e] text-sm">
+      <div className="px-5 py-10 text-center text-fg-on-dark-muted text-sm">
         {sermon.passage
           ? "Outline will appear closer to the service."
           : "Outline will appear when Curtis’s notes are available."}
@@ -489,9 +489,9 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
       <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">
         {isScripture ? "Scripture Journey" : "Sermon Outline"}
       </p>
-      <h3 className="text-lg font-bold text-white mb-1">{sermon.title}</h3>
+      <h3 className="text-lg font-bold text-fg-on-dark mb-1">{sermon.title}</h3>
       {isScripture && (
-        <p className="text-[#6b7f9e] text-xs mb-5">
+        <p className="text-fg-on-dark-muted text-xs mb-5">
           This week&apos;s sermon visits multiple passages. Follow along below.
         </p>
       )}
@@ -505,7 +505,7 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
             >
               {i + 1}
             </span>
-            <span className="text-sm text-[#c8d4e8] leading-snug">{point}</span>
+            <span className="text-sm text-fg-on-dark-body leading-snug">{point}</span>
           </li>
         ))}
       </ol>
@@ -530,20 +530,20 @@ function NotesTab({ sermon }: { sermon: SermonData }) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-accent-text text-xs font-semibold tracking-widest uppercase">My Notes</p>
-          <p className="text-[11px] text-[#4a5568] mt-0.5">Saved automatically</p>
+          <p className="text-[11px] text-fg-on-dark-muted mt-0.5">Saved automatically</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={handleCopy}
             disabled={!notes}
-            className="text-[11px] font-semibold text-[#6b7f9e] hover:text-white disabled:opacity-30 transition-colors px-2 py-1 rounded border border-white/10"
+            className="text-[11px] font-semibold text-fg-on-dark-muted hover:text-fg-on-dark disabled:opacity-30 transition-colors px-2 py-1 rounded border border-border-on-dark"
           >
             {copied ? "Copied!" : "Copy"}
           </button>
           <button
             onClick={() => emailNotes(sermon.title)}
             disabled={!notes}
-            className="text-[11px] font-semibold text-[#6b7f9e] hover:text-white disabled:opacity-30 transition-colors px-2 py-1 rounded border border-white/10"
+            className="text-[11px] font-semibold text-fg-on-dark-muted hover:text-fg-on-dark disabled:opacity-30 transition-colors px-2 py-1 rounded border border-border-on-dark"
           >
             Email
           </button>
@@ -554,10 +554,10 @@ function NotesTab({ sermon }: { sermon: SermonData }) {
         value={notes}
         onChange={(e) => save(e.target.value)}
         placeholder={`Notes for "${sermon.title}"…\n\nWrite anything you want to remember from today's message.`}
-        className="w-full h-60 rounded-xl bg-white/5 border border-white/10 text-sm text-[#c8d4e8] placeholder-[#4a5568] p-4 resize-none focus:outline-none focus:border-accent/50 transition-colors leading-relaxed"
+        className="w-full h-60 rounded-xl bg-surface-on-dark border border-border-on-dark text-sm text-fg-on-dark-body placeholder-fg-on-dark-muted p-4 resize-none focus:border-accent/50 transition-colors leading-relaxed"
       />
 
-      <p className="text-[10px] text-[#4a5568]">
+      <p className="text-[10px] text-fg-on-dark-muted">
         Notes are saved on this device only. Use Email to keep them.
       </p>
     </div>
@@ -585,8 +585,8 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
         <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4 text-2xl">
           🙏
         </div>
-        <h3 className="text-lg font-bold text-white mb-2">We&apos;re praying for you</h3>
-        <p className="text-sm text-[#6b7f9e]">
+        <h3 className="text-lg font-bold text-fg-on-dark mb-2">We&apos;re praying for you</h3>
+        <p className="text-sm text-fg-on-dark-muted">
           Your request has been received. Our prayer team will lift this up.
         </p>
       </div>
@@ -596,13 +596,13 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
       <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-1">Prayer Request</p>
-      <p className="text-[#6b7f9e] text-sm mb-5">
+      <p className="text-fg-on-dark-muted text-sm mb-5">
         Our prayer team reviews every request during and after the service.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-[#6b7f9e] mb-1.5 uppercase tracking-wide">
+          <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
             Your Name <span className="text-accent-text">*</span>
           </label>
           <input
@@ -611,12 +611,12 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
             onChange={(e) => setName(e.target.value)}
             required
             placeholder="First name is fine"
-            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-accent/60 transition-colors"
+            className="w-full rounded-lg bg-surface-on-dark border border-border-on-dark text-sm text-fg-on-dark placeholder-fg-on-dark-muted px-4 py-2.5 focus:border-accent/60 transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#6b7f9e] mb-1.5 uppercase tracking-wide">
+          <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
             Prayer Request <span className="text-accent-text">*</span>
           </label>
           <textarea
@@ -625,20 +625,20 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
             required
             placeholder="Share what's on your heart…"
             rows={4}
-            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-accent/60 transition-colors resize-none leading-relaxed"
+            className="w-full rounded-lg bg-surface-on-dark border border-border-on-dark text-sm text-fg-on-dark placeholder-fg-on-dark-muted px-4 py-2.5 focus:border-accent/60 transition-colors resize-none leading-relaxed"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-[#6b7f9e] mb-1.5 uppercase tracking-wide">
-            Email <span className="text-[#4a5568] font-normal normal-case">(optional — for follow-up)</span>
+          <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
+            Email <span className="text-fg-on-dark-muted font-normal normal-case">(optional — for follow-up)</span>
           </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-[#4a5568] px-4 py-2.5 focus:outline-none focus:border-accent/60 transition-colors"
+            className="w-full rounded-lg bg-surface-on-dark border border-border-on-dark text-sm text-fg-on-dark placeholder-fg-on-dark-muted px-4 py-2.5 focus:border-accent/60 transition-colors"
           />
         </div>
 
@@ -647,9 +647,9 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
             type="checkbox"
             checked={isPrivate}
             onChange={(e) => setIsPrivate(e.target.checked)}
-            className="w-4 h-4 rounded accent-[#00abc9]"
+            className="w-4 h-4 rounded accent-accent"
           />
-          <span className="text-sm text-[#6b7f9e]">Keep this request private (prayer team only)</span>
+          <span className="text-sm text-fg-on-dark-muted">Keep this request private (prayer team only)</span>
         </label>
 
         {status === "error" && (
@@ -674,22 +674,22 @@ function OffHours({ sermon }: { sermon: SermonData }) {
   const date = formatSermonDate(sermon.date);
 
   return (
-    <div className="min-h-screen bg-[#0d1525] text-white">
+    <div className="min-h-screen bg-theater-bg text-fg-on-dark">
       {/* Hero */}
       <div className="relative flex flex-col items-center justify-center text-center px-4 pt-24 pb-16">
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 70% 50% at 50% 30%, rgba(0,33,91,0.6) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse 70% 50% at 50% 30%, var(--theater-glow) 0%, transparent 70%)" }}
         />
         <div className="relative z-10 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 border border-white/10 bg-white/5 rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-[#6b7f9e] mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#6b7f9e]" />
+          <div className="inline-flex items-center gap-2 border border-border-on-dark bg-surface-on-dark rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-fg-on-dark-muted mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-fg-on-dark-muted" />
             Live Sundays 8:30 &amp; 11:00 AM ET
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-fg-on-dark mb-4 leading-tight">
             Watch Brainerd<br className="hidden sm:block" /> Baptist Live
           </h1>
-          <p className="text-[#6b7f9e] text-lg mb-10 leading-relaxed">
+          <p className="text-fg-on-dark-muted text-lg mb-10 leading-relaxed">
             Join us in person or online every Sunday morning.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -702,7 +702,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
               Watch Latest Sermon
             </a>
-            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:text-white transition-colors">
+            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-text hover:text-fg-on-dark transition-colors">
               Plan a Visit
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>
@@ -713,8 +713,8 @@ function OffHours({ sermon }: { sermon: SermonData }) {
       {/* Latest sermon card */}
       {sermon.youtubeId && (
         <div className="max-w-4xl mx-auto px-4 pb-12">
-          <p className="text-xs font-semibold tracking-widest uppercase text-[#6b7f9e] mb-5 text-center">Most Recent Sermon</p>
-          <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl shadow-black/40 bg-[#162030]">
+          <p className="text-xs font-semibold tracking-widest uppercase text-fg-on-dark-muted mb-5 text-center">Most Recent Sermon</p>
+          <div className="rounded-2xl overflow-hidden border border-border-on-dark shadow-xl shadow-black/40 bg-theater-raised">
             <div className="grid md:grid-cols-5">
               <div className="md:col-span-2 relative min-h-[200px] bg-brand-navy flex items-center justify-center">
                 {sermon.thumbnail && (
@@ -730,8 +730,8 @@ function OffHours({ sermon }: { sermon: SermonData }) {
               </div>
               <div className="md:col-span-3 p-7 md:p-9 flex flex-col justify-center">
                 {sermon.passage && <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-3 leading-tight">{sermon.title}</h3>
-                <p className="text-sm text-[#6b7f9e] mb-5">{date} · Curtis Hill</p>
+                <h3 className="text-xl md:text-2xl font-bold text-fg-on-dark mb-3 leading-tight">{sermon.title}</h3>
+                <p className="text-sm text-fg-on-dark-muted mb-5">{date} · Curtis Hill</p>
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm inline-block self-start">
                   Watch Now
                 </a>
@@ -742,23 +742,23 @@ function OffHours({ sermon }: { sermon: SermonData }) {
       )}
 
       {/* Service times */}
-      <div className="border-t border-white/5 py-14 px-4">
+      <div className="border-t border-border-on-dark py-14 px-4">
         <div className="max-w-3xl mx-auto">
-          <p className="text-xs font-semibold tracking-widest uppercase text-[#6b7f9e] mb-7 text-center">Sunday Services</p>
+          <p className="text-xs font-semibold tracking-widest uppercase text-fg-on-dark-muted mb-7 text-center">Sunday Services</p>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
               { time: "8:30 AM", style: "Choir & Orchestra", note: "Traditional format" },
               { time: "11:00 AM", style: "Band-Led Worship",  note: "Contemporary format" },
             ].map((svc) => (
-              <div key={svc.time} className="rounded-xl border border-white/8 bg-white/4 p-6">
-                <span className="text-2xl font-bold text-white block mb-1">{svc.time}</span>
+              <div key={svc.time} className="rounded-xl border border-border-on-dark bg-surface-on-dark p-6">
+                <span className="text-2xl font-bold text-fg-on-dark block mb-1">{svc.time}</span>
                 <span className="text-accent-text text-sm font-semibold block">{svc.style}</span>
-                <span className="text-[#6b7f9e] text-xs">{svc.note}</span>
+                <span className="text-fg-on-dark-muted text-xs">{svc.note}</span>
               </div>
             ))}
           </div>
           <div className="mt-7 text-center">
-            <a href="/plan-your-visit" className="text-sm font-semibold text-accent-text hover:text-white transition-colors inline-flex items-center gap-1.5">
+            <a href="/plan-your-visit" className="text-sm font-semibold text-accent-text hover:text-fg-on-dark transition-colors inline-flex items-center gap-1.5">
               Get directions &amp; parking info
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>

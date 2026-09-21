@@ -98,7 +98,7 @@ export default function AskConnectQuestion() {
                   handleAsk();
                 }
               }}
-              className="w-full px-5 py-4 pr-24 rounded-2xl border border-border-strong text-sm text-fg placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none bg-surface-raised"
+              className="w-full px-5 py-4 pr-24 rounded-2xl border border-border-strong text-sm text-fg placeholder:text-fg-muted resize-none bg-surface-raised"
             />
             <button
               onClick={() => handleAsk()}

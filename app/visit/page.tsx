@@ -68,10 +68,10 @@ export default function VisitPage() {
               />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(7,16,30,0.95) 0%, rgba(7,16,30,0.4) 50%, rgba(7,16,30,0.1) 100%)" }} />
               <div className="absolute bottom-0 left-0 right-0 p-8">
-                <p className="font-condensed font-900 text-white leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
+                <p className="font-condensed font-900 text-fg-on-dark leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
                   8:30 AM
                 </p>
-                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent-text)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
+                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
                   Choir &amp; Orchestra
                 </p>
               </div>
@@ -88,10 +88,10 @@ export default function VisitPage() {
               />
               <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(7,16,30,0.95) 0%, rgba(7,16,30,0.4) 50%, rgba(7,16,30,0.1) 100%)" }} />
               <div className="absolute bottom-0 left-0 right-0 p-8">
-                <p className="font-condensed font-900 text-white leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
+                <p className="font-condensed font-900 text-fg-on-dark leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
                   11:00 AM
                 </p>
-                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent-text)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
+                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
                   Band Led
                 </p>
               </div>
@@ -109,11 +109,11 @@ export default function VisitPage() {
             />
             <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(7,16,30,0.92) 0%, rgba(7,16,30,0.65) 55%, rgba(7,16,30,0.2) 100%)" }} />
             <div className="absolute inset-0 flex flex-col justify-center px-8">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent-text)" }}>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent)" }}>
                 9:45 AM · Between Services
               </p>
-              <p className="text-white font-condensed font-800 text-2xl">Life Groups</p>
-              <p className="text-white/65 text-sm mt-1">Small-group Bible study for all ages — the best way to get connected beyond Sunday.</p>
+              <p className="text-fg-on-dark font-condensed font-800 text-2xl">Life Groups</p>
+              <p className="text-fg-on-dark-muted text-sm mt-1">Small-group Bible study for all ages — the best way to get connected beyond Sunday.</p>
             </div>
           </div>
         </div>
@@ -219,7 +219,7 @@ export default function VisitPage() {
                 href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-white px-6 py-3 rounded-full transition-colors"
+                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-6 py-3 rounded-full transition-colors"
               >
                 Get Directions
               </a>
@@ -261,17 +261,17 @@ export default function VisitPage() {
       <section className="py-24 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-xl mx-auto">
           <h2
-            className="font-condensed font-900 text-white mb-4"
+            className="font-condensed font-900 text-fg-on-dark mb-4"
             style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             Ready to Visit?
           </h2>
-          <p className="text-white/55 mb-10 max-w-sm mx-auto">
+          <p className="text-fg-on-dark-muted mb-10 max-w-sm mx-auto">
             Let us know you're coming — we'd love to welcome you personally.
           </p>
           <Link
             href="/connect"
-            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-white px-10 py-4 rounded-full transition-colors"
+            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
           >
             Send Us a Note
           </Link>

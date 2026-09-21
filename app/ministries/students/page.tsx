@@ -66,7 +66,7 @@ export default function StudentsPage() {
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
           <p className="eyebrow-white mb-4">Students</p>
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5"
+            className="font-condensed font-900 text-fg-on-dark leading-none mb-5"
             style={{
               fontSize: "clamp(3rem, 8vw, 5.5rem)",
               letterSpacing: "-0.02em",
@@ -76,7 +76,7 @@ export default function StudentsPage() {
             <span style={{ color: "#4a7fcb" }}>belong.</span>
           </h1>
           <p
-            className="text-white/65 leading-relaxed mb-8 max-w-lg"
+            className="text-fg-on-dark-muted leading-relaxed mb-8 max-w-lg"
             style={{ fontSize: "1.05rem" }}
           >
             Middle and high school students — known, loved, and prayed for.
@@ -87,13 +87,13 @@ export default function StudentsPage() {
             <a
               href="#schedule"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "#4a7fcb", color: "white" }}
+              style={{ background: "#4a7fcb", color: "var(--fg-on-accent)" }}
             >
               When We Meet
             </a>
             <Link
               href="/connect"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/40 text-white px-7 py-3 rounded-full hover:border-white/70 transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-on-dark-strong text-fg-on-dark px-7 py-3 rounded-full hover:border-border-on-dark-hover transition-colors"
             >
               Get Connected
             </Link>
@@ -217,7 +217,7 @@ export default function StudentsPage() {
               <div key={name} className="text-center" style={{ width: "180px" }}>
                 <div
                   className="w-32 h-32 rounded-full mx-auto mb-4 overflow-hidden"
-                  style={{ background: "white", border: "1px solid rgba(0,32,91,0.08)" }}
+                  style={{ background: "var(--surface-raised)", border: "1px solid var(--border)" }}
                 >
                   {photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -257,7 +257,7 @@ export default function StudentsPage() {
             Ready to plug in?
           </p>
           <h2
-            className="font-condensed font-900 text-white mb-5"
+            className="font-condensed font-900 text-fg-on-dark mb-5"
             style={{
               fontSize: "clamp(2rem, 5vw, 3rem)",
               letterSpacing: "-0.02em",
@@ -266,7 +266,7 @@ export default function StudentsPage() {
           >
             Bring your student on a Wednesday.
           </h2>
-          <p className="text-white/55 leading-relaxed mb-8 max-w-md mx-auto">
+          <p className="text-fg-on-dark-muted leading-relaxed mb-8 max-w-md mx-auto">
             No signup required. Just show up. If you want to connect with a
             leader beforehand, fill out a connect card and we&apos;ll reach out.
           </p>
@@ -274,22 +274,22 @@ export default function StudentsPage() {
             <Link
               href="/connect"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
-              style={{ background: "#4a7fcb", color: "white" }}
+              style={{ background: "#4a7fcb", color: "var(--fg-on-accent)" }}
             >
               Get Connected
             </Link>
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/30 text-white px-8 py-4 rounded-full hover:border-white/50 transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-on-dark-strong text-fg-on-dark px-8 py-4 rounded-full hover:border-border-on-dark-hover transition-colors"
             >
               Plan Your Visit
             </Link>
           </div>
-          <p className="text-white/30 text-xs mt-8">
+          <p className="text-fg-on-dark-muted text-xs mt-8">
             Questions? Email{" "}
             <a
               href="mailto:students@brainerdbaptist.org"
-              className="underline underline-offset-2 hover:text-white/50 transition-colors"
+              className="underline underline-offset-2 hover:text-fg-on-dark transition-colors"
             >
               students@brainerdbaptist.org
             </a>

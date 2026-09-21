@@ -202,21 +202,21 @@ export default function ThreeCircles() {
       <div className="flex items-center justify-between mb-5">
         <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
           className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
-          style={{ borderColor:canPrev?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.14)", color:canPrev?"rgba(255,255,255,0.65)":"rgba(255,255,255,0.32)", background:"transparent", cursor:canPrev?"pointer":"not-allowed" }}>
+          style={{ borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)", color:canPrev?"var(--fg-on-dark-muted)":"var(--fg-on-dark-muted)", background:"transparent", cursor:canPrev?"pointer":"not-allowed" }}>
           ← Back
         </button>
         <div className="flex items-center gap-2">
           {STEPS.map((s,i)=>(
             <button key={s.id} onClick={()=>setIdx(i)} aria-label={`Step ${i+1}`}
-              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?TEAL:"rgba(255,255,255,0.32)", border:"none", cursor:"pointer", transition:"all .3s ease" }}/>
+              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?"var(--accent)":"var(--border-on-dark-strong)", border:"none", cursor:"pointer", transition:"all .3s ease" }}/>
           ))}
         </div>
         {canNext
           ? <button onClick={()=>setIdx(i=>Math.min(STEPS.length-1,i+1))}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-colors"
-              style={{ background:TEAL, color:"#fff", cursor:"pointer" }}>Next →</button>
+              style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)", cursor:"pointer" }}>Next →</button>
           : <a href="/connect" className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full inline-block"
-              style={{ background:TEAL, color:"#fff" }}>Talk →</a>
+              style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)" }}>Talk →</a>
         }
       </div>
 
@@ -226,7 +226,7 @@ export default function ThreeCircles() {
         {/* White card wrapping the SVG */}
         <div
           className="w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0 rounded-2xl"
-          style={{ background: "var(--surface-sunken)", padding:"20px 16px 16px", boxShadow:"0 4px 28px rgba(0,20,60,0.13)" }}
+          style={{ background: "var(--plate)", padding:"20px 16px 16px", boxShadow:"var(--shadow-lg)", border:"1px solid var(--border-on-dark)" }}
         >
           {idx===0 && (
             <p className="text-center text-xs mb-3 lg:hidden font-condensed tracking-widest"
@@ -343,11 +343,11 @@ export default function ThreeCircles() {
           <p className="font-condensed font-900 mb-2" style={{fontSize:"5rem",lineHeight:1,color:TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
             0{step.num}
           </p>
-          <h3 className="font-condensed font-900 text-white mb-4"
+          <h3 className="font-condensed font-900 text-fg-on-dark mb-4"
             style={{fontSize:"clamp(1.9rem,4.5vw,2.6rem)",letterSpacing:"-0.02em",lineHeight:1.05}}>
             {step.title}
           </h3>
-          <p className="text-white/58 leading-relaxed mb-5" style={{fontSize:"1.05rem",maxWidth:420}}>
+          <p className="text-fg-on-dark-body leading-relaxed mb-5" style={{fontSize:"1.05rem",maxWidth:420}}>
             {step.body}
           </p>
           {step.cta && (
@@ -359,17 +359,17 @@ export default function ThreeCircles() {
           <div className="hidden lg:flex items-center gap-4">
             <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
-              style={{borderColor:canPrev?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.14)",color:canPrev?"rgba(255,255,255,0.6)":"rgba(255,255,255,0.32)",background:"transparent",cursor:canPrev?"pointer":"not-allowed"}}>
+              style={{borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)",color:canPrev?"var(--fg-on-dark-muted)":"var(--fg-on-dark-muted)",background:"transparent",cursor:canPrev?"pointer":"not-allowed"}}>
               ← Back
             </button>
             {canNext
               ? <button onClick={()=>setIdx(i=>Math.min(STEPS.length-1,i+1))}
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-2.5 rounded-full transition-colors"
-                  style={{background:TEAL,color:"#fff",cursor:"pointer"}}>Next →</button>
+                  style={{background:"var(--accent-solid)",color:"var(--fg-on-accent)",border:"1px solid var(--border-on-dark)",cursor:"pointer"}}>Next →</button>
               : <a href="/connect" className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-2.5 rounded-full inline-block"
-                  style={{background:TEAL,color:"#fff"}}>Talk to Someone</a>
+                  style={{background:"var(--accent-solid)",color:"var(--fg-on-accent)"}}>Talk to Someone</a>
             }
-            <span className="text-white/22 text-sm font-condensed">{idx+1} / {STEPS.length}</span>
+            <span className="text-fg-on-dark-muted text-sm font-condensed">{idx+1} / {STEPS.length}</span>
           </div>
         </div>
       </div>

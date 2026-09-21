@@ -114,39 +114,39 @@ export default function WednesdayPage() {
       <div
         className="pt-32 pb-20 px-6"
         style={{
-          background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
+          background: "var(--brand-band)",
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
             Every Wednesday
           </p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5"
+            className="font-condensed font-900 text-fg-on-dark leading-none mb-5"
             style={{
               fontSize: "clamp(2.8rem, 8vw, 5.5rem)",
               letterSpacing: "-0.02em",
             }}
           >
             Wednesday Night{" "}
-            <span style={{ color: "var(--accent-text)" }}>at Brainerd.</span>
+            <span style={{ color: "var(--accent)" }}>at Brainerd.</span>
           </h1>
-          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+          <p className="text-fg-on-dark-muted text-lg leading-relaxed max-w-2xl mx-auto mb-6">
             From kids to college to choir, Wednesday evening is when the whole
             church fills the building. Find your night below.
           </p>
           <div
             className="inline-flex items-center gap-3 rounded-full px-6 py-3"
-            style={{ background: "var(--accent-bg)", border: "1px solid rgba(0,171,201,0.25)" }}
+            style={{ background: "var(--accent-bg)", border: "1px solid var(--accent-border)" }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round">
               <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
             </svg>
-            <span className="text-white/80 text-sm font-medium">
-              Most programs start between <span style={{ color: "var(--accent-text)" }}>6:00 – 6:15 PM</span>
+            <span className="text-fg-on-dark-body text-sm font-medium">
+              Most programs start between <span style={{ color: "var(--accent)" }}>6:00 – 6:15 PM</span>
             </span>
           </div>
         </div>
@@ -199,7 +199,7 @@ export default function WednesdayPage() {
                 {/* Icon */}
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: `${color}18`, color }}
+                  style={{ background: `color-mix(in srgb, ${color} 9%, transparent)`, color }}
                 >
                   {icon}
                 </div>
@@ -243,7 +243,7 @@ export default function WednesdayPage() {
                       href={href}
                       className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition-all inline-flex items-center gap-2 whitespace-nowrap"
                       style={{
-                        borderColor: `${color}40`,
+                        borderColor: `color-mix(in srgb, ${color} 25%, transparent)`,
                         color,
                       }}
                     >
@@ -263,20 +263,20 @@ export default function WednesdayPage() {
       {/* ── CTA band ──────────────────────────────────────── */}
       <section
         className="py-20 px-6"
-        style={{ background: "linear-gradient(135deg, #0f2040 0%, #0a1628 100%)" }}
+        style={{ background: "var(--brand-band-deep)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
-          <p className="eyebrow mb-4">New here?</p>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>New here?</p>
           <div className="flex justify-center mb-6">
             <div className="gold-divider" />
           </div>
           <h2
-            className="font-condensed font-800 text-white mb-4"
+            className="font-condensed font-800 text-fg-on-dark mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}
           >
             Just show up on a Wednesday.
           </h2>
-          <p className="text-white/55 mb-8 leading-relaxed">
+          <p className="text-fg-on-dark-muted mb-8 leading-relaxed">
             No signup required for most programs. Pull into the parking lot, find
             your age group from the list above, and someone will point you in the
             right direction.
@@ -284,13 +284,13 @@ export default function WednesdayPage() {
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-8 py-3.5 rounded-full transition-colors"
             >
               Plan Your Visit
             </Link>
             <Link
               href="/connect"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/20 hover:border-white/40 text-white px-8 py-3.5 rounded-full transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-on-dark-strong hover:border-border-on-dark-hover text-fg-on-dark px-8 py-3.5 rounded-full transition-colors"
             >
               Get Connected
             </Link>

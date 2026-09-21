@@ -11,7 +11,7 @@ export const metadata = {
 // ── Thin-line SVG icons ──────────────────────────────────────
 function IconBook() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       <path d="M8 32V10a2 2 0 0 1 2-2h10v24H10a2 2 0 0 1-2-2Z" />
       <path d="M20 8h10a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H20V8Z" />
       <path d="M20 8v24" />
@@ -23,7 +23,7 @@ function IconBook() {
 
 function IconCross() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round">
       <path d="M20 6v28M10 14h20" />
     </svg>
   );
@@ -33,7 +33,7 @@ function IconTrinity() {
   // Classic Trinity symbol — three circles with heavy overlap (Borromean rings style)
   // r=12, centers ~10.5 apart so each pair overlaps by ~13.5px (>half diameter)
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       <circle cx="20" cy="15" r="12" />
       <circle cx="14.5" cy="24" r="12" />
       <circle cx="25.5" cy="24" r="12" />
@@ -43,7 +43,7 @@ function IconTrinity() {
 
 function IconWorship() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       {/* building / gathering */}
       <path d="M6 34h28" />
       <path d="M10 34V18l10-10 10 10v16" />
@@ -55,7 +55,7 @@ function IconWorship() {
 
 function IconWater() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 14c5-5 10 5 16 0s11-5 16 0" />
       <path d="M4 22c5-5 10 5 16 0s11-5 16 0" />
       <path d="M4 30c5-5 10 5 16 0s11-5 16 0" />
@@ -65,7 +65,7 @@ function IconWater() {
 
 function IconCup() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       {/* Chalice */}
       <path d="M3 9h16" />
       <path d="M3 9c1 12 4 16 8 16s7-4 8-16" />
@@ -79,7 +79,7 @@ function IconCup() {
 
 function IconPeople() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       <circle cx="14" cy="12" r="4" />
       <circle cx="26" cy="12" r="4" />
       <path d="M4 34c0-7 4-12 10-12h12c6 0 10 5 10 12" />
@@ -89,7 +89,7 @@ function IconPeople() {
 
 function IconGlobe() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" strokeWidth="1.75" style={{ stroke: "var(--accent)" }} strokeLinecap="round" strokeLinejoin="round">
       <circle cx="20" cy="20" r="14" />
       <path d="M6 20h28" />
       <path d="M20 6c-4 4-6 9-6 14s2 10 6 14" />
@@ -200,14 +200,16 @@ export default function BeliefsPage() {
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="py-32 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
-        <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>Brainerd Baptist Church</p>
+        {/* On a navy band in BOTH themes, so the eyebrow stays full brand cyan:
+            --accent-text darkens for light surfaces and would read 3.72:1 here. */}
+        <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>Brainerd Baptist Church</p>
         <h1
-          className="font-condensed font-900 text-white"
+          className="font-condensed font-900 text-fg-on-dark"
           style={{ fontSize: "clamp(3.5rem, 10vw, 6rem)", letterSpacing: "-0.03em", lineHeight: 1 }}
         >
           What We Believe
         </h1>
-        <p className="text-white/45 mt-6 max-w-md mx-auto text-sm leading-relaxed">
+        <p className="text-fg-on-dark-muted mt-6 max-w-md mx-auto text-sm leading-relaxed">
           Eight things at the center of who we are — what we teach, how we gather, and why it matters.
         </p>
       </section>

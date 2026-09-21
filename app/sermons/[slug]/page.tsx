@@ -94,7 +94,7 @@ const ptComponents = {
       <h3 className="font-bold text-lg mt-8 mb-3" style={{ color: "var(--fg)", letterSpacing: "-0.02em" }}>{children}</h3>
     ),
     h4: ({ children }: { children?: React.ReactNode }) => (
-      <h4 className="font-semibold mt-5 mb-2" style={{ color: "rgba(0,32,91,0.85)" }}>{children}</h4>
+      <h4 className="font-semibold mt-5 mb-2" style={{ color: "var(--fg)" }}>{children}</h4>
     ),
     blockquote: ({ children }: { children?: React.ReactNode }) => (
       <blockquote className="border-l-2 pl-5 my-5 italic" style={{ borderColor: "var(--accent)", color: "var(--fg-muted)" }}>{children}</blockquote>
@@ -261,11 +261,11 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       {/* ── Dark gradient hero strip ────────────────────────────────── */}
       <div
         className="pt-28 pb-12 px-5 md:px-8"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-4xl mx-auto">
           <a href="/sermons"
-            className="inline-flex items-center gap-2 text-white/65 hover:text-white text-sm font-semibold transition-colors mb-8 -ml-2 py-2 pl-2 pr-3 rounded-lg hover:bg-white/5 active:bg-white/10">
+            className="inline-flex items-center gap-2 text-fg-on-dark-body hover:text-fg-on-dark text-sm font-semibold transition-colors mb-8 -ml-2 py-2 pl-2 pr-3 rounded-lg hover:bg-hover-on-dark active:bg-hover-on-dark-strong">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.25">
               <path d="M11 7H3M6 4L3 7l3 3"/>
             </svg>
@@ -288,11 +288,11 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             )}
             {s.passage && (
               <>
-                <span className="text-white/20 text-[10px]">·</span>
+                <span className="text-fg-on-dark-muted text-[10px]">·</span>
                 <a
                   href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(s.passage)}&version=CSB`}
                   target="_blank" rel="noopener noreferrer"
-                  className="text-white/45 text-[10px] font-medium hover:text-accent-text transition-colors"
+                  className="text-fg-on-dark-muted text-[10px] font-medium hover:text-accent transition-colors"
                 >
                   {s.passage}
                 </a>
@@ -300,13 +300,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             )}
           </div>
 
-          <h1 className="text-white mb-4"
+          <h1 className="text-fg-on-dark mb-4"
             style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800,
               fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.03em", lineHeight: 1.05 }}>
             {s.title}
           </h1>
 
-          <div className="flex flex-wrap gap-x-5 gap-y-1 text-white/45 text-sm">
+          <div className="flex flex-wrap gap-x-5 gap-y-1 text-fg-on-dark-muted text-sm">
             <span>{s.speaker}</span>
             <span>{s.date ? (sanitySermon ? formatDate(s.date) : staticFormatDate(s.date)) : ""}</span>
             {s.duration && <span>{s.duration}</span>}
@@ -383,8 +383,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             <div className="grid md:grid-cols-[280px_1fr] gap-8 md:gap-12">
               {s.outline && (s.outline as unknown[]).length > 0 && (
                 <div>
-                  <h2 className="text-xs font-semibold tracking-widest uppercase mb-5"
-                    style={{ color: accentColor }}>Outline</h2>
+                  <h2 className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-5">Outline</h2>
                   <div className="text-sm">
                     <PortableText value={s.outline} components={ptComponents} />
                   </div>
@@ -392,8 +391,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               )}
               {s.notes && (s.notes as unknown[]).length > 0 && (
                 <div>
-                  <h2 className="text-xs font-semibold tracking-widest uppercase mb-5"
-                    style={{ color: accentColor }}>Notes</h2>
+                  <h2 className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-5">Notes</h2>
                   <div className="prose-sm">
                     <PortableText value={s.notes} components={ptComponents} />
                   </div>

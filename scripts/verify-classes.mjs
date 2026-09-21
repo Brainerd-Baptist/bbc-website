@@ -30,7 +30,7 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const CSS_ENTRY = path.join(ROOT, "app/globals.css");
-const SCAN_DIRS = ["app", "components"];
+const SCAN_DIRS = ["app", "components", "lib"];
 
 /** Utility families whose whole job is to emit a colour. */
 const COLOR_PREFIXES =

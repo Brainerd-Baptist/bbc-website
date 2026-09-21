@@ -118,7 +118,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
               placeholder="Search by title, passage, or book…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-surface-raised border border-border-strong rounded-xl pl-11 pr-4 py-3.5 text-fg placeholder-[#00205B]/30 text-sm focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all shadow-sm"
+              className="w-full bg-surface-raised border border-border-strong rounded-xl pl-11 pr-4 py-3.5 text-fg placeholder-fg-muted text-sm focus:border-accent transition-all shadow-sm"
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
                   : `${filtered.length} of ${sermons.length}`}
               </span>
               {hasFilters && (
-                <button onClick={clearAll} className="text-accent-text text-xs font-semibold hover:text-[#0090a8] transition-colors">
+                <button onClick={clearAll} className="text-accent-text text-xs font-semibold hover:underline transition-colors">
                   Clear
                 </button>
               )}
@@ -222,7 +222,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
         <div className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
           style={{ background: color.accent + "cc", boxShadow: `0 4px 20px ${color.accent}44` }}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+          <svg width="13" height="13" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}>
             <polygon points="5,3 19,12 5,21"/>
           </svg>
         </div>
@@ -232,7 +232,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
       <div className="flex-1 px-5 md:px-7 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 min-w-0">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
-            <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: color.accent }}>
+            <span className="text-accent-text text-[10px] font-semibold tracking-widest uppercase">
               {sermon.series}
             </span>
             <span className="text-fg-subtle text-[10px]">·</span>
@@ -302,7 +302,7 @@ function Select({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-surface-raised border border-border-strong text-fg-muted text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-border-strong focus:outline-none focus:border-accent transition-all shadow-sm"
+        className="appearance-none bg-surface-raised border border-border-strong text-fg-muted text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-border-strong focus:border-accent transition-all shadow-sm"
         aria-label={label}
       >
         {options.map((o) => (

@@ -64,7 +64,7 @@ export default function SermonTabPlayer({
         <div
           style={{
             background: "var(--surface-sunken)",
-            border: "1px solid rgba(0,32,91,0.08)",
+            border: "1px solid var(--border)",
             borderRadius: "1rem",
             overflow: "hidden",
           }}
@@ -76,7 +76,7 @@ export default function SermonTabPlayer({
             <div
               style={
                 youtubeId
-                  ? { borderTop: "1px solid rgba(0,32,91,0.06)", padding: "1rem 1.25rem" }
+                  ? { borderTop: "1px solid var(--border)", padding: "1rem 1.25rem" }
                   : { padding: "1rem 1.25rem" }
               }
             >
@@ -91,7 +91,7 @@ export default function SermonTabPlayer({
         <div
           style={{
             background: "var(--surface-sunken)",
-            border: "1px solid rgba(0,32,91,0.08)",
+            border: "1px solid var(--border)",
             borderRadius: "1rem",
             padding: "1.5rem 1.75rem",
           }}
@@ -175,7 +175,7 @@ export default function SermonTabPlayer({
 
           {/* ── Download Notes button ── */}
           {hasNotes && (
-            <div style={{ marginTop: hasOutline ? "1.5rem" : 0, paddingTop: hasOutline ? "1.25rem" : 0, borderTop: hasOutline ? "1px solid rgba(0,32,91,0.07)" : "none" }}>
+            <div style={{ marginTop: hasOutline ? "1.5rem" : 0, paddingTop: hasOutline ? "1.25rem" : 0, borderTop: hasOutline ? "1px solid var(--border)" : "none" }}>
               <a
                 href={`/sermons/${slug}/notes`}
                 target="_blank"
@@ -190,16 +190,16 @@ export default function SermonTabPlayer({
                   textDecoration: "none",
                   padding: "0.5rem 0.875rem",
                   borderRadius: "9999px",
-                  border: "1px solid rgba(0,32,91,0.12)",
+                  border: "1px solid var(--border)",
                   transition: "all 0.15s",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.color = "#00205B";
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(0,32,91,0.3)";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "var(--fg)";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--border-strong)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.color = "rgba(0,32,91,0.5)";
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(0,32,91,0.12)";
+                  (e.currentTarget as HTMLAnchorElement).style.color = "var(--fg-muted)";
+                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--border)";
                 }}
               >
                 {/* Download icon */}
@@ -216,7 +216,7 @@ export default function SermonTabPlayer({
       <div
         style={{
           background: "var(--surface-sunken)",
-          border: "1px solid rgba(0,32,91,0.08)",
+          border: "1px solid var(--border)",
           borderRadius: "1rem",
           padding: "1.5rem 1.75rem",
         }}

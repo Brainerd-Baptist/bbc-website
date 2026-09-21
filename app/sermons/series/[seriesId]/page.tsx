@@ -54,12 +54,12 @@ export default async function SeriesPage({
       {/* ── Dark gradient hero strip ──────────────────────────────────── */}
       <div
         className="pt-28 pb-16 px-6"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-4xl mx-auto">
           <a
             href="/sermons"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm transition-colors mb-10"
+            className="inline-flex items-center gap-2 text-fg-on-dark-muted hover:text-fg-on-dark text-sm transition-colors mb-10"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M11 7H3M6 4L3 7l3 3" />
@@ -76,7 +76,7 @@ export default async function SeriesPage({
           </p>
 
           <h1
-            className="text-white mb-4"
+            className="text-fg-on-dark mb-4"
             style={{
               fontFamily: "var(--font-barlow-condensed), sans-serif",
               fontWeight: 800,
@@ -95,12 +95,12 @@ export default async function SeriesPage({
           )}
 
           {meta?.description && (
-            <p className="text-white/55 text-base leading-relaxed max-w-2xl mb-6">
+            <p className="text-fg-on-dark-body text-base leading-relaxed max-w-2xl mb-6">
               {meta.description}
             </p>
           )}
 
-          <p className="text-white/30 text-xs tabular-nums">
+          <p className="text-fg-on-dark-muted text-xs tabular-nums">
             {sermons.length} sermon{sermons.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -147,7 +147,7 @@ export default async function SeriesPage({
                     className="relative z-10 w-9 h-9 rounded-full flex items-center justify-center transition-transform group-hover:scale-110"
                     style={{ background: color.accent + "cc", boxShadow: `0 4px 20px ${color.accent}44` }}
                   >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="white">
+                    <svg width="12" height="12" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}>
                       <polygon points="5,3 19,12 5,21" />
                     </svg>
                   </div>

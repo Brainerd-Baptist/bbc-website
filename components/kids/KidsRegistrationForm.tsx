@@ -66,7 +66,7 @@ const EMPTY_PARENT: ParentInfo = {
 };
 
 const inputCls =
-  "w-full rounded-xl border border-border-strong px-4 py-3 text-[#00142a] text-sm placeholder:text-fg-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition bg-surface-raised";
+  "w-full rounded-xl border border-border-strong px-4 py-3 text-[#00142a] text-sm placeholder:text-fg-muted focus:border-transparent transition bg-surface-raised";
 
 const labelCls =
   "block font-condensed font-800 text-fg text-sm mb-1.5 tracking-wide";

@@ -406,8 +406,8 @@ export function VideoProvider({ children }: { children: ReactNode }) {
               height: targetRect?.height ?? 0,
               borderRadius: state === "inline" ? 16 : 12,
               overflow: "hidden",
-              background: "#07101e",
-              boxShadow: state === "inline" ? "none" : "0 12px 40px rgba(0,0,0,0.45)",
+              background: "var(--player-sheet)",
+              boxShadow: state === "inline" ? "none" : "var(--shadow-lg)",
               transition,
               visibility: targetRect ? "visible" : "hidden",
             }}
@@ -420,15 +420,15 @@ export function VideoProvider({ children }: { children: ReactNode }) {
             {state === "docked" && (
               <div
                 className="absolute top-0 inset-x-0 flex items-center justify-between px-2 py-1.5 pointer-events-none"
-                style={{ background: "linear-gradient(rgba(0,0,0,0.6), transparent)" }}
+                style={{ background: "linear-gradient(var(--scrim), transparent)" }}
               >
-                <span className="text-[10px] font-semibold text-white/80 truncate pr-2 pointer-events-auto" onClick={expand}>
+                <span className="text-[10px] font-semibold text-fg-on-dark-body truncate pr-2 pointer-events-auto" onClick={expand}>
                   {track.title}
                 </span>
                 <button
                   onClick={closeDock}
-                  className="pointer-events-auto text-white/70 hover:text-white text-xs w-5 h-5 flex items-center justify-center rounded-full"
-                  style={{ background: "rgba(0,0,0,0.4)" }}
+                  className="pointer-events-auto text-fg-on-dark-muted hover:text-fg-on-dark text-xs w-5 h-5 flex items-center justify-center rounded-full"
+                  style={{ background: "var(--scrim)" }}
                   aria-label="Close mini player"
                 >
                   ✕
@@ -439,13 +439,13 @@ export function VideoProvider({ children }: { children: ReactNode }) {
             {state === "expanded" && (
               <div
                 className="absolute top-0 inset-x-0 flex items-center justify-between px-3 py-2"
-                style={{ background: "linear-gradient(rgba(0,0,0,0.65), transparent)" }}
+                style={{ background: "linear-gradient(var(--scrim), transparent)" }}
               >
-                <span className="text-xs font-semibold text-white/85 truncate pr-2">{track.title}</span>
+                <span className="text-xs font-semibold text-fg-on-dark-body truncate pr-2">{track.title}</span>
                 <button
                   onClick={closeExpanded}
-                  className="text-white/70 hover:text-white text-sm w-7 h-7 flex items-center justify-center rounded-full"
-                  style={{ background: "rgba(0,0,0,0.4)" }}
+                  className="text-fg-on-dark-muted hover:text-fg-on-dark text-sm w-7 h-7 flex items-center justify-center rounded-full"
+                  style={{ background: "var(--scrim)" }}
                   aria-label="Collapse player"
                 >
                   ✕
@@ -465,13 +465,13 @@ export function VideoProvider({ children }: { children: ReactNode }) {
             {state === "docked" && progress.duration > 0 && (
               <div
                 className="absolute bottom-0 inset-x-0 pointer-events-none"
-                style={{ height: 3, background: "rgba(255,255,255,0.15)" }}
+                style={{ height: 3, background: "var(--border-on-dark)" }}
               >
                 <div
                   style={{
                     height: "100%",
                     width: `${Math.min(100, (progress.current / progress.duration) * 100)}%`,
-                    background: "#00abc9",
+                    background: "var(--accent)",
                   }}
                 />
               </div>
@@ -479,28 +479,28 @@ export function VideoProvider({ children }: { children: ReactNode }) {
 
             <style>{`
               .bbc-plyr .plyr {
-                --plyr-color-main: #00abc9;
-                --plyr-video-background: #07101e;
+                --plyr-color-main: var(--accent);
+                --plyr-video-background: var(--player-sheet);
                 --plyr-control-radius: 6px;
                 --plyr-range-thumb-height: 12px;
-                --plyr-range-fill-background: #00abc9;
-                --plyr-video-controls-background: linear-gradient(rgba(0,0,0,0), rgba(7,16,30,0.85));
+                --plyr-range-fill-background: var(--accent);
+                --plyr-video-controls-background: linear-gradient(transparent, var(--scrim));
                 width: 100%;
                 height: 100%;
                 border-radius: 0;
                 overflow: hidden;
               }
               .bbc-plyr .plyr__control--overlaid {
-                background: rgba(0, 171, 201, 0.9);
+                background: color-mix(in srgb, var(--accent) 90%, transparent);
                 border-radius: 50%;
                 width: 64px;
                 height: 64px;
-                box-shadow: 0 0 40px rgba(0,171,201,0.4);
+                box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 40%, transparent);
               }
-              .bbc-plyr .plyr__control--overlaid:hover { background: #00abc9; }
+              .bbc-plyr .plyr__control--overlaid:hover { background: var(--accent); }
               .bbc-plyr .plyr__control--overlaid svg { width: 22px; height: 22px; }
               .bbc-plyr .plyr--youtube .plyr__poster { background-size: cover; }
-              .bbc-plyr .plyr__progress input[type="range"]::-webkit-slider-thumb { background: #00abc9; }
+              .bbc-plyr .plyr__progress input[type="range"]::-webkit-slider-thumb { background: var(--accent); }
             `}</style>
           </div>,
           document.body

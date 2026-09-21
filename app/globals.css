@@ -11,6 +11,39 @@
   box-sizing: border-box;
 }
 
+/* ── Focus visibility ───────────────────────────────────────────────────
+   WCAG 2.4.7 (Focus Visible, AA) requires a visible indicator on whatever
+   has keyboard focus. Before this rule the site had 209 interactive elements
+   and exactly 2 with any focus styling — and eleven files called
+   `outline-none`, which actively removes the browser's own ring. A keyboard
+   user, or anyone tabbing through the four signup forms, had no idea where
+   they were.
+
+   Applied once, globally, so it cannot be forgotten on a new component.
+
+   `:focus-visible` rather than `:focus`: the browser then shows the ring for
+   keyboard and assistive-tech focus but not for a mouse click, which is the
+   behaviour that made developers reach for `outline-none` in the first place.
+
+   `outline` rather than `box-shadow`: an outline follows border-radius, is
+   never clipped by an `overflow: hidden` ancestor, and survives on top of a
+   photo. The 2px offset keeps it clear of the element's own border.
+
+   --focus-ring is deliberately theme-invariant; see tokens.css for why one
+   ring beats a per-theme pair here.
+   ──────────────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* A component may legitimately want its own indicator (a filled row, a
+   coloured bar). Opting out is then explicit and greppable, rather than the
+   accidental default `outline-none` produced. */
+.focus-ring-custom:focus-visible {
+  outline: none;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;

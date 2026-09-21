@@ -68,7 +68,7 @@ export default async function SermonsPage() {
       {/* ── Header ────────────────────────────────────────────────────── */}
       <div
         className="pt-32 pb-14 px-6 text-center"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-2xl mx-auto">
           <p className="eyebrow-white mb-4">Hear from God&apos;s Word</p>
@@ -76,12 +76,12 @@ export default async function SermonsPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white mb-4"
+            className="font-condensed font-900 text-fg-on-dark mb-4"
             style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em", lineHeight: 0.95 }}
           >
             Sermons
           </h1>
-          <p className="text-white/60 text-base md:text-lg leading-relaxed mt-5">
+          <p className="text-fg-on-dark-body text-base md:text-lg leading-relaxed mt-5">
             Every sermon works through a book of the Bible verse by verse.
             Search by passage, series, or speaker to find what you need.
           </p>
@@ -93,13 +93,16 @@ export default async function SermonsPage() {
         const hero = sermons[0];
         const slug = hero.slug || hero.id;
         const thumbUrl = `https://img.youtube.com/vi/${hero.youtubeId}/maxresdefault.jpg`;
+        // Series accent stays a 6-digit hex: the badge tint below concatenates
+        // alpha onto it (`${heroAccent}22`), and var(--accent)22 is not a colour.
+        const heroAccent = hero.seriesAccent ?? "#00abc9";
         return (
           <section className="px-5 md:px-8 pb-12">
             <div className="max-w-5xl mx-auto">
               <a
                 href={`/sermons/${slug}`}
                 className="group relative block rounded-3xl overflow-hidden"
-                style={{ background: "#0f1e38" }}
+                style={{ background: "var(--brand-band)" }}
               >
                 {/* Background thumbnail */}
                 <div className="absolute inset-0">
@@ -111,29 +114,29 @@ export default async function SermonsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase rounded-full px-2.5 py-1"
-                        style={{ background: `${hero.seriesAccent ?? "#00abc9"}22`, color: hero.seriesAccent ?? "#00abc9" }}>
+                        style={{ background: `${heroAccent}22`, color: heroAccent }}>
                         <span className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
-                          style={{ background: hero.seriesAccent ?? "#00abc9" }} />
+                          style={{ background: heroAccent }} />
                         Latest Sermon
                       </span>
-                      <span className="text-white/30 text-[10px]">·</span>
-                      <span className="text-white/35 text-[10px] font-medium">{hero.series}</span>
+                      <span className="text-fg-on-dark-muted text-[10px]">·</span>
+                      <span className="text-fg-on-dark-muted text-[10px] font-medium">{hero.series}</span>
                     </div>
 
-                    <h2 className="text-white mb-2"
+                    <h2 className="text-fg-on-dark mb-2"
                       style={{ fontFamily: "var(--font-inter), sans-serif", fontWeight: 800,
                         fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
                       {hero.title}
                     </h2>
 
-                    <p className="text-white/45 text-sm mb-5">
+                    <p className="text-fg-on-dark-muted text-sm mb-5">
                       {hero.speaker} · {hero.passage}
                     </p>
 
-                    <div className="inline-flex items-center gap-2 text-xs font-semibold text-white/80 group-hover:text-white transition-colors">
+                    <div className="inline-flex items-center gap-2 text-xs font-semibold text-fg-on-dark-body group-hover:text-fg-on-dark transition-colors">
                       <span className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
-                        style={{ background: hero.seriesAccent ?? "#00abc9" }}>
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="white" style={{ marginLeft: 1 }}>
+                        style={{ background: heroAccent }}>
+                        <svg width="10" height="10" viewBox="0 0 10 10" style={{ fill: "var(--fg-on-accent)", marginLeft: 1 }}>
                           <path d="M2 1l7 4-7 4z"/>
                         </svg>
                       </span>
@@ -168,8 +171,8 @@ export default async function SermonsPage() {
                 <a
                   key={sr.id}
                   href={`/series/${sr.id}`}
-                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-white/8 hover:border-white/18 transition-all relative"
-                  style={{ background: "#0a1628" }}
+                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-border-on-dark hover:border-border-on-dark-strong transition-all relative"
+                  style={{ background: "var(--brand-band)" }}
                 >
                   {/* Artwork background */}
                   {thumbUrl && (
@@ -182,7 +185,7 @@ export default async function SermonsPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   {/* Sermon count badge */}
                   <div className="relative p-3 h-full flex flex-col justify-end min-h-[140px]">
-                    <p className="text-white/70 text-[10px] font-medium">{count} sermon{count !== 1 ? "s" : ""}</p>
+                    <p className="text-fg-on-dark-muted text-[10px] font-medium">{count} sermon{count !== 1 ? "s" : ""}</p>
                   </div>
                 </a>
               );
@@ -217,18 +220,18 @@ export default async function SermonsPage() {
 
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}
       <section
-        className="py-16 px-6 border-t border-border"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        className="py-16 px-6 border-t border-border-on-dark"
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
           <p className="eyebrow-white mb-3">Subscribe</p>
           <h2
-            className="font-condensed font-800 text-white mb-4"
+            className="font-condensed font-800 text-fg-on-dark mb-4"
             style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em" }}
           >
             Listen Anywhere
           </h2>
-          <p className="text-white/55 text-sm mb-7">
+          <p className="text-fg-on-dark-body text-sm mb-7">
             The Brainerd Baptist sermon podcast is available wherever you listen.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -240,7 +243,7 @@ export default async function SermonsPage() {
               <a
                 key={p.label}
                 href={p.href}
-                className="text-xs font-semibold text-white/60 hover:text-white border border-white/20 hover:border-white/40 px-5 py-2.5 rounded-full transition-all"
+                className="text-xs font-semibold text-fg-on-dark-body hover:text-fg-on-dark border border-border-on-dark-strong hover:border-border-on-dark-hover px-5 py-2.5 rounded-full transition-all"
                 style={{ letterSpacing: "0.01em" }}
               >
                 {p.label}

@@ -71,7 +71,7 @@ export default function ContinueListeningShelf({
   return (
     <section
       className="px-5 md:px-8 py-8"
-      style={{ background: "rgba(0,20,42,0.03)", borderBottom: "1px solid rgba(0,32,91,0.06)" }}
+      style={{ background: "var(--surface-sunken)", borderBottom: "1px solid var(--border)" }}
     >
       <div className="max-w-5xl mx-auto">
         {/* Eyebrow */}
@@ -83,7 +83,7 @@ export default function ContinueListeningShelf({
             Continue Listening
           </span>
           <span
-            className="inline-flex items-center gap-1 text-[9px] font-semibold text-white/50 px-2 py-0.5 rounded-full"
+            className="inline-flex items-center gap-1 text-[9px] font-semibold px-2 py-0.5 rounded-full"
             style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
           >
             {items.length}
@@ -105,14 +105,14 @@ export default function ContinueListeningShelf({
                 className="flex-shrink-0 snap-start group relative block rounded-2xl overflow-hidden transition-transform duration-200 hover:scale-[1.02]"
                 style={{
                   width: 192,
-                  background: "#07101e",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.18)",
+                  background: "var(--player-sheet)",
+                  border: "1px solid var(--border-on-dark)",
+                  boxShadow: "var(--shadow-md)",
                   textDecoration: "none",
                 }}
               >
                 {/* Thumbnail */}
-                <div className="relative" style={{ height: 108, background: "#0a1628" }}>
+                <div className="relative" style={{ height: 108, background: "var(--media-bg)" }}>
                   {thumb && (
                     <img
                       src={thumb}
@@ -121,7 +121,7 @@ export default function ContinueListeningShelf({
                       style={{ opacity: 0.85 }}
                     />
                   )}
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(7,16,30,0.8) 0%, transparent 60%)" }} />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--scrim) 0%, transparent 60%)" }} />
 
                   {/* Play button */}
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -129,7 +129,7 @@ export default function ContinueListeningShelf({
                       className="w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                       style={{ background: accent, boxShadow: `0 0 24px ${accent}66` }}
                     >
-                      <svg width="10" height="12" viewBox="0 0 10 12" fill="white" style={{ marginLeft: 2 }}>
+                      <svg width="10" height="12" viewBox="0 0 10 12" style={{ fill: "var(--fg-on-accent)", marginLeft: 2 }}>
                         <path d="M1 1l8 5-8 5z" />
                       </svg>
                     </div>
@@ -139,8 +139,8 @@ export default function ContinueListeningShelf({
                   <div
                     className="absolute bottom-2 right-2 text-[9px] font-semibold tabular-nums"
                     style={{
-                      color: "rgba(255,255,255,0.8)",
-                      background: "rgba(0,0,0,0.6)",
+                      color: "var(--fg-on-dark-body)",
+                      background: "var(--scrim)",
                       padding: "1px 5px",
                       borderRadius: 4,
                     }}
@@ -160,7 +160,7 @@ export default function ContinueListeningShelf({
                   <p
                     className="text-[11px] font-semibold leading-snug mb-2"
                     style={{
-                      color: "rgba(255,255,255,0.9)",
+                      color: "var(--fg-on-dark)",
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: "vertical",
@@ -173,7 +173,7 @@ export default function ContinueListeningShelf({
                   {/* Progress bar */}
                   <div
                     className="h-0.5 rounded-full overflow-hidden"
-                    style={{ background: "rgba(255,255,255,0.1)" }}
+                    style={{ background: "var(--border-on-dark)" }}
                   >
                     <div
                       className="h-full rounded-full transition-all"

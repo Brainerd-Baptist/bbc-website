@@ -218,19 +218,19 @@ function ToolBtn({
         display: "inline-flex", alignItems: "center", justifyContent: "center",
         width: 34, height: 34, borderRadius: 7, border: "none", cursor: "pointer",
         background: active ? `${accentColor}18` : "transparent",
-        color: active ? accentColor : danger ? "rgba(180,40,30,0.4)" : "var(--fg-muted)",
+        color: active ? accentColor : danger ? "var(--danger-text)" : "var(--fg-muted)",
         transition: "background 0.12s, color 0.12s",
         flexShrink: 0, WebkitTapHighlightColor: "transparent",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLButtonElement;
-        if (!active) el.style.background = danger ? "rgba(180,40,30,0.06)" : "rgba(0,32,91,0.06)";
-        if (!active && danger) el.style.color = "rgba(180,40,30,0.75)";
+        if (!active) el.style.background = danger ? "var(--danger-bg)" : "var(--hover-subtle)";
+        if (!active && danger) el.style.color = "var(--danger-text)";
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLButtonElement;
         if (!active) el.style.background = "transparent";
-        if (!active && danger) el.style.color = "rgba(180,40,30,0.4)";
+        if (!active && danger) el.style.color = "var(--danger-text)";
       }}
     >
       {children}
@@ -239,7 +239,7 @@ function ToolBtn({
 }
 
 function Divider() {
-  return <div style={{ width: 1, height: 20, background: "rgba(0,32,91,0.09)", flexShrink: 0, margin: "0 3px", alignSelf: "center" }} />;
+  return <div style={{ width: 1, height: 20, background: "var(--border)", flexShrink: 0, margin: "0 3px", alignSelf: "center" }} />;
 }
 
 // ── Icons ──────────────────────────────────────────────────────────────────────
@@ -247,7 +247,7 @@ const IconBold      = () => <svg width="15" height="15" viewBox="0 0 24 24" fill
 const IconItalic    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>;
 const IconUnderline = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>;
 const IconStrike    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.3 12H6.7"/><path d="M10 7.3C10 6 11.3 5 13 5s3 1 3 2.3"/><path d="M14 16.7c0 1.3-1.3 2.3-3 2.3s-3-1-3-2.3"/></svg>;
-const IconHighlight = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="12" width="13" height="6" rx="1"/><path d="M16 15l4-4-2-2-4 4"/><line x1="3" y1="19" x2="16" y2="19" strokeWidth="3" stroke="#f9e000" strokeLinecap="round"/></svg>;
+const IconHighlight = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="12" width="13" height="6" rx="1"/><path d="M16 15l4-4-2-2-4 4"/><line x1="3" y1="19" x2="16" y2="19" strokeWidth="3" style={{ stroke: "var(--highlight-bg)" }} strokeLinecap="round"/></svg>;
 const IconBullets   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>;
 const IconIndent    = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="16" x2="21" y2="16"/><polyline points="3 12 6 15 3 18"/></svg>;
 const IconOutdent   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="16" x2="21" y2="16"/><polyline points="7 12 4 15 7 18"/></svg>;
@@ -260,7 +260,7 @@ const popItemStyle: React.CSSProperties = {
   display: "flex", alignItems: "center", gap: "0.625rem",
   width: "100%", padding: "0.5rem 0.75rem",
   background: "transparent", border: "none", cursor: "pointer",
-  fontSize: "0.8rem", fontWeight: 500, color: "rgba(0,32,91,0.7)",
+  fontSize: "0.8rem", fontWeight: 500, color: "var(--fg)",
   textAlign: "left", borderRadius: "0.5rem", transition: "background 0.1s",
   WebkitTapHighlightColor: "transparent", fontFamily: "system-ui, sans-serif",
 };
@@ -414,24 +414,32 @@ export default function SermonNotes({
   return (
     <>
       <style>{`
+        /* contenteditable: the resting outline is suppressed below (a permanent focus
+           box around a note field reads as broken), so it has to come back
+           explicitly on keyboard focus. */
+        .bbc-notes-editor:focus-visible {
+          outline: 2px solid var(--focus-ring);
+          outline-offset: 3px;
+          border-radius: 4px;
+        }
         .bbc-notes-editor {
           outline: none; min-height: 130px;
-          font-size: 0.9rem; line-height: 1.8; color: #0a1628;
+          font-size: 0.9rem; line-height: 1.8; color: var(--fg);
           font-family: var(--font-inter), system-ui, sans-serif;
           caret-color: ${accentColor}; word-break: break-word;
         }
         .bbc-notes-editor p { margin: 0 0 0.2rem 0; }
         .bbc-notes-editor p:last-child { margin-bottom: 0; }
         .bbc-bullets { padding-left: 1.35rem; margin: 0.2rem 0; list-style-type: disc; }
-        .bbc-bullets li { margin: 0.1rem 0; color: #0a1628; }
+        .bbc-bullets li { margin: 0.1rem 0; color: var(--fg); }
         .bbc-bullets li p { margin: 0; display: inline; }
         .bbc-bullets .bbc-bullets { list-style-type: circle; margin-top: 0.1rem; }
         .bbc-bullets .bbc-bullets .bbc-bullets { list-style-type: square; }
-        .bbc-notes-editor strong { font-weight: 700; color: #00205B; }
-        .bbc-notes-editor em { font-style: italic; color: rgba(0,32,91,0.75); }
+        .bbc-notes-editor strong { font-weight: 700; color: var(--fg); }
+        .bbc-notes-editor em { font-style: italic; color: var(--fg-muted); }
         .bbc-notes-editor u { text-decoration-color: ${accentColor}; text-underline-offset: 2px; }
-        .bbc-notes-editor s { text-decoration-color: rgba(0,32,91,0.3); color: rgba(0,32,91,0.45); }
-        .bbc-notes-editor mark { background-color: #fff176; color: #0a1628; border-radius: 2px; padding: 0 2px; }
+        .bbc-notes-editor s { text-decoration-color: var(--border-strong); color: var(--fg-muted); }
+        .bbc-notes-editor mark { background-color: var(--highlight-bg); color: var(--highlight-fg); border-radius: 2px; padding: 0 2px; }
         .bbc-notes-editor ::selection { background: ${accentColor}25; }
 
         /* Mobile: bigger tap targets, sticky toolbar so it never scrolls
@@ -500,13 +508,13 @@ export default function SermonNotes({
                 {shareOpen && (
                   <div style={{
                     position: "absolute", right: 0, top: "calc(100% + 6px)",
-                    background: "var(--surface-raised)", border: "1px solid rgba(0,32,91,0.1)",
-                    borderRadius: "0.75rem", boxShadow: "0 8px 24px rgba(0,32,91,0.12)",
+                    background: "var(--surface-raised)", border: "1px solid var(--border)",
+                    borderRadius: "0.75rem", boxShadow: "var(--shadow-lg)",
                     minWidth: 190, zIndex: 50, overflow: "hidden", padding: "6px",
                   }}>
                     {typeof navigator !== "undefined" && typeof navigator.share === "function" && (
                       <button onClick={shareNative} style={popItemStyle}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,32,91,0.05)")}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
@@ -515,7 +523,7 @@ export default function SermonNotes({
                       </button>
                     )}
                     <button onClick={openPrintView} style={popItemStyle}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,32,91,0.05)")}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
@@ -523,7 +531,7 @@ export default function SermonNotes({
                       Save / Print
                     </button>
                     <button onClick={copyText} style={popItemStyle}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,32,91,0.05)")}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -540,9 +548,9 @@ export default function SermonNotes({
         {/* ── Toolbar ───────────────────────────────────────────────── */}
         <div className="bbc-notes-toolbar" style={{
           display: "flex", alignItems: "center", gap: "1px",
-          padding: "3px 5px", background: "rgba(255,255,255,0.92)",
+          padding: "3px 5px", background: "var(--surface-overlay)",
           backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-          border: "1px solid rgba(0,32,91,0.09)", borderRadius: "0.625rem",
+          border: "1px solid var(--border)", borderRadius: "0.625rem",
           flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none",
         }}>
           <ToolBtn onClick={() => editor.chain().focus().toggleBold().run()}      active={editor.isActive("bold")}      title="Bold"          accentColor={accentColor}><IconBold /></ToolBtn>
@@ -576,8 +584,8 @@ export default function SermonNotes({
         <div
           onClick={() => editor.commands.focus()}
           style={{
-            background: "rgba(255,255,255,0.65)",
-            border: `1.5px solid ${editorFocused ? `${accentColor}50` : "rgba(0,32,91,0.09)"}`,
+            background: "var(--surface-raised)",
+            border: `1.5px solid ${editorFocused ? `${accentColor}50` : "var(--border)"}`,
             borderRadius: "0.875rem", padding: "1rem 1.125rem",
             cursor: "text", minHeight: "140px",
             transition: "border-color 0.15s, box-shadow 0.15s",
@@ -602,7 +610,7 @@ export default function SermonNotes({
           <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap" }}>
             {[{ keys: "⌘B", label: "Bold" }, { keys: "⌘I", label: "Italic" }, { keys: "⌘U", label: "Underline" }, { keys: "Tab", label: "Indent" }, { keys: "⌘Z", label: "Undo" }].map(({ keys, label }) => (
               <span key={keys} style={{ fontSize: "0.6rem", color: "var(--fg-subtle)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                <kbd style={{ fontFamily: "system-ui, sans-serif", background: "var(--hover-subtle)", border: "1px solid rgba(0,32,91,0.1)", borderRadius: "3px", padding: "1px 4px", fontSize: "0.6rem" }}>{keys}</kbd>
+                <kbd style={{ fontFamily: "system-ui, sans-serif", background: "var(--hover-subtle)", border: "1px solid var(--border)", borderRadius: "3px", padding: "1px 4px", fontSize: "0.6rem" }}>{keys}</kbd>
                 {label}
               </span>
             ))}

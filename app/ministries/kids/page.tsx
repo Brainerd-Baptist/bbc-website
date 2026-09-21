@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 // ── Age-group icons ──────────────────────────────────────────
 function IconHeart() {
   return (
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 34s-14-8.5-14-18a8 8 0 0 1 14-5.3A8 8 0 0 1 34 16c0 9.5-14 18-14 18z" />
     </svg>
   );
@@ -19,7 +19,7 @@ function IconHeart() {
 
 function IconStar() {
   return (
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 6l3.8 7.7 8.5 1.2-6.1 6 1.4 8.5L20 25.4l-7.6 4 1.4-8.5-6.1-6 8.5-1.2z" />
     </svg>
   );
@@ -27,7 +27,7 @@ function IconStar() {
 
 function IconBook() {
   return (
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M8 32V10a2 2 0 0 1 2-2h10v24H10a2 2 0 0 1-2-2Z" />
       <path d="M20 8h10a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H20V8Z" />
       <path d="M20 8v24" />
@@ -39,7 +39,7 @@ function IconBook() {
 
 function IconShield() {
   return (
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 6l12 4v10c0 7-5.5 12.5-12 14C13.5 32.5 8 27 8 20V10l12-4z" />
       <path d="M14 20l4 4 8-8" />
     </svg>
@@ -48,7 +48,7 @@ function IconShield() {
 
 function IconTag() {
   return (
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 6H12a2 2 0 0 0-2 2v10l14 14 12-12z" />
       <circle cx="15" cy="15" r="2" />
     </svg>
@@ -57,7 +57,7 @@ function IconTag() {
 
 function IconPerson() {
   return (
-    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="36" height="36" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="20" cy="13" r="5" />
       <path d="M8 34c0-7.7 5.4-13 12-13s12 5.3 12 13" />
     </svg>
@@ -145,17 +145,17 @@ export default function KidsPage() {
         <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-20 pt-40">
           <p className="eyebrow-white mb-4">Kids</p>
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5"
+            className="font-condensed font-900 text-fg-on-dark leading-none mb-5"
             style={{
               fontSize: "clamp(3rem, 8vw, 5.5rem)",
               letterSpacing: "-0.02em",
             }}
           >
             A great Sunday{" "}
-            <span style={{ color: "var(--accent-text)" }}>starts here.</span>
+            <span style={{ color: "var(--accent)" }}>starts here.</span>
           </h1>
           <p
-            className="text-white/65 leading-relaxed mb-8 max-w-lg"
+            className="text-fg-on-dark-muted leading-relaxed mb-8 max-w-lg"
             style={{ fontSize: "1.05rem" }}
           >
             From the nursery through 5th grade, your kids are cared for and
@@ -172,7 +172,7 @@ export default function KidsPage() {
             </a>
             <a
               href="#checkin"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/40 text-white px-7 py-3 rounded-full hover:border-white/70 transition-colors"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border-on-dark-strong text-fg-on-dark px-7 py-3 rounded-full hover:border-border-on-dark-hover transition-colors"
             >
               What to Expect
             </a>
@@ -287,7 +287,7 @@ export default function KidsPage() {
                 <a
                   href="#pre-register"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2"
-                  style={{ background: "var(--color-brand-navy)", color: "white" }}
+                  style={{ background: "var(--color-brand-navy)", color: "var(--fg-on-dark)" }}
                 >
                   Pre-Register Online
                 </a>
@@ -331,11 +331,11 @@ export default function KidsPage() {
       {/* ── What we teach ─────────────────────────────────── */}
       <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
+          <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
             What we teach
           </p>
           <h2
-            className="font-condensed font-900 text-white mb-8"
+            className="font-condensed font-900 text-fg-on-dark mb-8"
             style={{
               fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
               letterSpacing: "-0.02em",
@@ -374,12 +374,12 @@ export default function KidsPage() {
                   {icon}
                 </div>
                 <h3
-                  className="font-condensed font-700 text-white mb-2"
+                  className="font-condensed font-700 text-fg-on-dark mb-2"
                   style={{ fontSize: "1.2rem" }}
                 >
                   {title}
                 </h3>
-                <p className="text-white/55 text-sm leading-relaxed">{body}</p>
+                <p className="text-fg-on-dark-muted text-sm leading-relaxed">{body}</p>
               </div>
             ))}
           </div>
@@ -410,7 +410,7 @@ export default function KidsPage() {
               </p>
               <div
                 className="inline-flex items-center gap-3 rounded-xl px-5 py-3"
-                style={{ background: "white", border: "1px solid rgba(0,32,91,0.10)" }}
+                style={{ background: "var(--surface-raised)", border: "1px solid var(--border)" }}
               >
                 <span className="font-condensed font-800 text-accent-text" style={{ fontSize: "1.2rem" }}>
                   Wednesday
@@ -479,7 +479,7 @@ export default function KidsPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00abc9" strokeWidth="1.75">
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ stroke: "var(--accent)" }} strokeWidth="1.75">
                         <circle cx="20" cy="14" r="6" />
                         <path d="M8 36c0-8 5.4-13 12-13s12 5 12 13" />
                       </svg>

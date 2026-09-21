@@ -2,9 +2,6 @@
 
 import { useState, useRef } from "react";
 
-const TEAL = "#00abc9";
-const NAVY = "#00205B";
-
 const STEPS = [
   {
     num: "01",
@@ -71,19 +68,23 @@ export default function SundayWalkthrough() {
   return (
     <section
       className="py-24 px-6 select-none"
-      style={{ background: "#00142a" }}
+      /* A branded navy band: dark in both themes, so every foreground below
+         comes from the on-dark family rather than --fg. */
+      style={{ background: "var(--brand-ink)" }}
       onTouchStart={onTS}
       onTouchEnd={onTE}
     >
       <div className="max-w-5xl mx-auto">
 
         {/* Section header */}
+        {/* Brand cyan stays full strength on the band — --accent-text darkens
+            for light surfaces and would be a regression here. */}
         <p className="font-condensed font-700 text-center tracking-widest uppercase text-xs mb-3"
-          style={{ color: TEAL }}>
+          style={{ color: "var(--accent)" }}>
           Your First Sunday
         </p>
         <h2
-          className="font-condensed font-900 text-white text-center mb-16"
+          className="font-condensed font-900 text-fg-on-dark text-center mb-16"
           style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
         >
           Step by Step
@@ -96,8 +97,12 @@ export default function SundayWalkthrough() {
             disabled={!canPrev}
             className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition-all"
             style={{
-              borderColor: canPrev ? "rgba(255,255,255,0.22)" : "rgba(255,255,255,0.14)",
-              color: canPrev ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.32)",
+              borderColor: canPrev
+                ? "var(--border-on-dark-strong)"
+                : "var(--border-on-dark)",
+              color: canPrev
+                ? "var(--fg-on-dark-body)"
+                : "var(--fg-on-dark-muted)",
               background: "transparent",
               cursor: canPrev ? "pointer" : "not-allowed",
             }}
@@ -116,7 +121,9 @@ export default function SundayWalkthrough() {
                   height: 7,
                   borderRadius: 4,
                   padding: 0,
-                  background: i === idx ? TEAL : "rgba(255,255,255,0.32)",
+                  background: i === idx
+                    ? "var(--accent)"
+                    : "var(--border-on-dark-strong)",
                   border: "none",
                   cursor: "pointer",
                   transition: "all .3s ease",
@@ -129,7 +136,13 @@ export default function SundayWalkthrough() {
             <button
               onClick={() => setIdx(i => Math.min(STEPS.length - 1, i + 1))}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-colors"
-              style={{ background: TEAL, color: "#fff", cursor: "pointer" }}
+              /* A filled accent button carrying white text: brand cyan is
+                 2.74:1 there, so the fill has to be --accent-solid. */
+              style={{
+                background: "var(--accent-solid)",
+                color: "var(--fg-on-accent)",
+                cursor: "pointer",
+              }}
             >
               Next →
             </button>
@@ -137,7 +150,10 @@ export default function SundayWalkthrough() {
             <a
               href="/connect"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full inline-block"
-              style={{ background: TEAL, color: "#fff" }}
+              style={{
+                background: "var(--accent-solid)",
+                color: "var(--fg-on-accent)",
+              }}
             >
               Connect →
             </a>
@@ -153,7 +169,10 @@ export default function SundayWalkthrough() {
           {/* Step label */}
           <p
             className="font-condensed font-700 tracking-widest uppercase text-xs mb-4"
-            style={{ color: `${TEAL}88` }}
+            /* Was a hex string-concatenated with an alpha suffix, which var()
+               cannot express. The same paint comes from the accent token plus
+               an opacity on this element, which carries only this text. */
+            style={{ color: "var(--accent)", opacity: 0.53 }}
           >
             {step.label}
           </p>
@@ -162,12 +181,12 @@ export default function SundayWalkthrough() {
           <div className="flex items-start gap-5 mb-6">
             <span
               className="font-condensed font-900 leading-none flex-shrink-0"
-              style={{ fontSize: "clamp(4rem, 10vw, 6rem)", color: TEAL, opacity: 0.15, letterSpacing: "-0.04em", lineHeight: 0.85 }}
+              style={{ fontSize: "clamp(4rem, 10vw, 6rem)", color: "var(--accent)", opacity: 0.15, letterSpacing: "-0.04em", lineHeight: 0.85 }}
             >
               {step.num}
             </span>
             <h3
-              className="font-condensed font-900 text-white"
+              className="font-condensed font-900 text-fg-on-dark"
               style={{ fontSize: "clamp(2.2rem, 5vw, 3.2rem)", letterSpacing: "-0.02em", lineHeight: 1.05, paddingTop: "0.15em" }}
             >
               {step.heading}
@@ -177,7 +196,7 @@ export default function SundayWalkthrough() {
           {/* Body */}
           <p
             className="leading-relaxed mb-5"
-            style={{ color: "rgba(255,255,255,0.58)", fontSize: "1.05rem", maxWidth: 520 }}
+            style={{ color: "var(--fg-on-dark-body)", fontSize: "1.05rem", maxWidth: 520 }}
           >
             {step.body}
           </p>
@@ -186,7 +205,7 @@ export default function SundayWalkthrough() {
           {step.note && (
             <p
               className="font-condensed font-700 text-sm"
-              style={{ color: TEAL, letterSpacing: "0.01em" }}
+              style={{ color: "var(--accent)", letterSpacing: "0.01em" }}
             >
               → {step.note}
             </p>
@@ -195,7 +214,9 @@ export default function SundayWalkthrough() {
           {/* Step counter */}
           <p
             className="font-condensed text-sm mt-10"
-            style={{ color: "var(--fg-subtle)" }}
+            /* --fg-subtle is a page-surface foreground: on this band it is
+               navy-on-navy in light mode. Secondary ink on a dark ground. */
+            style={{ color: "var(--fg-on-dark-muted)" }}
           >
             {idx + 1} of {STEPS.length}
           </p>

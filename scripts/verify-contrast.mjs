@@ -82,7 +82,11 @@ function readBlock(selector) {
   return out;
 }
 
-const root = readBlock(":root");
+// The @theme block holds the PRIMITIVE tier (--color-brand-*). Checks that
+// reference a primitive directly — e.g. the focus ring against a navy band —
+// need it resolvable, so it is merged in beneath the semantic layer.
+const primitives = readBlock("@theme");
+const root = { ...primitives, ...readBlock(":root") };
 const dark = { ...root, ...readBlock("\\.dark") };
 
 /** Resolve `var(--x)` indirection (one or more hops) then parse. */
@@ -102,6 +106,25 @@ function resolve(tokens, name, seen = new Set()) {
 
 const SURFACES = ["--surface-sunken", "--surface", "--surface-raised", "--surface-overlay"];
 
+/**
+ * Theme-invariant dark grounds. These are NOT page surfaces — they stay dark in
+ * both themes — so the on-dark ink family has to clear AA against all of them,
+ * and against the WORST (lightest) of them rather than the typical one.
+ * `--brand-band` is a gradient, so its lightest stop is listed explicitly;
+ * a gradient cannot be read as a single token value.
+ */
+const DARK_GROUNDS = [
+  "--color-brand-navy",
+  "--brand-band-lightest",
+  "--brand-band-deep-lightest",
+  "--brand-ink",
+  "--theater-bg",
+  "--theater-sunken",
+  "--theater-raised",
+  "--player-sheet",
+  "--player-tile",
+];
+
 /** kind: "body" needs 4.5, "large" needs 3.0, "ui" needs 3.0 (SC 1.4.11). */
 const CHECKS = [
   { fg: "--fg", on: SURFACES, kind: "body", note: "body text" },
@@ -112,6 +135,36 @@ const CHECKS = [
   { fg: "--accent-fg", on: ["--accent"], kind: "body", note: "the fixed foreground on brand cyan" },
   { fg: "--border-input", on: SURFACES, kind: "ui", note: "input boundary (sole affordance)" },
   { fg: "--focus-ring", on: SURFACES, kind: "ui", note: "focus ring" },
+  // The focus ring is theme-invariant and must clear 3:1 on the navy bands
+  // and hero darks too, not just the page surfaces — a focusable element can
+  // sit on any of them in either theme.
+  { fg: "--focus-ring", on: ["--color-brand-navy"], kind: "ui", note: "focus ring on a navy band" },
+  { fg: "--danger-text", on: SURFACES, kind: "body", note: "error text" },
+  { fg: "--success-text", on: SURFACES, kind: "body", note: "success text" },
+  { fg: "--warning-text", on: SURFACES, kind: "body", note: "warning text" },
+  { fg: "--feedback-fg", on: ["--danger-solid", "--success-solid", "--warning-solid"], kind: "body", note: "text on a feedback fill" },
+
+  // The on-dark family. Theme-invariant, so one pass covers both themes — but
+  // it has to hold on every dark ground the site paints, including the navy
+  // band's lightest gradient stop, which is what caught --fg-on-dark-muted at
+  // 4.36:1 when it was 0.50 alpha.
+  { fg: "--fg-on-dark", on: DARK_GROUNDS, kind: "body", note: "headings on a dark ground" },
+  { fg: "--fg-on-dark-body", on: DARK_GROUNDS, kind: "body", note: "reading text on a dark ground" },
+  { fg: "--fg-on-dark-muted", on: DARK_GROUNDS, kind: "body", note: "secondary text on a dark ground" },
+  { fg: "--border-on-dark-strong", on: DARK_GROUNDS, kind: "ui", note: "control boundary on a dark ground" },
+  { fg: "--focus-ring", on: DARK_GROUNDS, kind: "ui", note: "focus ring on a dark ground" },
+
+  // The illustration plate must read as an object against the dark grounds it
+  // sits on, and the artwork drawn on it must stay legible.
+  { fg: "--plate", on: DARK_GROUNDS, kind: "ui", note: "illustration plate edge" },
+
+  // Highlighter is theme-invariant, so its text partner is fixed too.
+  { fg: "--highlight-fg", on: ["--highlight-bg"], kind: "body", note: "text under a highlight" },
+
+  // The audio player's own chrome is dark in both themes.
+  { fg: "--fg-on-dark-muted", on: ["--player-bar-opaque"], kind: "body", note: "player transport labels" },
+  { fg: "--danger-on-dark", on: DARK_GROUNDS, kind: "body", note: "error text on a dark ground" },
+  { fg: "--danger-on-dark", on: ["--player-bar-opaque"], kind: "body", note: "error text in the player HUD" },
 ];
 
 const MIN = { body: 4.5, large: 3.0, ui: 3.0 };

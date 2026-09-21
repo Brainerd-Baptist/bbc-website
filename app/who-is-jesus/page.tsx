@@ -14,7 +14,7 @@ export default function WhoIsJesusPage() {
       {/* ── Dark gradient hero strip ────────────────────────────── */}
       <section
         className="pt-32 pb-20 px-6 text-center"
-        style={{ background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)" }}
+        style={{ background: "var(--brand-band)" }}
       >
         <div className="max-w-2xl mx-auto">
           <p className="eyebrow-white mb-6">The Central Question</p>
@@ -27,7 +27,7 @@ export default function WhoIsJesusPage() {
             }}
           >
             Who Is{" "}
-            <span style={{ color: "var(--accent-text)" }}>Jesus?</span>
+            <span style={{ color: "var(--accent)" }}>Jesus?</span>
           </h1>
           <p className="text-white/60 leading-relaxed max-w-lg mx-auto mb-10" style={{ fontSize: "1.1rem" }}>
             Everyone is asking the same questions — just in different words. Here's a way to make sense of them. Walk through the story below and see where you land.
@@ -45,7 +45,15 @@ export default function WhoIsJesusPage() {
       {/* ── Three Circles Interactive ───────────────────────────── */}
       <section id="three-circles" className="px-6 py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-3xl p-8 md:p-12 border border-border shadow-sm">
+          <div
+              className="rounded-3xl p-8 md:p-12 shadow-sm"
+              /* ThreeCircles is written for a dark surround — its nav, step
+                 counter and text panel are all on-dark ink. Without this band
+                 they rendered white-on-white in light mode; "← Back" measured
+                 exactly 1.00:1. The band also matches the hero and the closing
+                 card on this page. */
+              style={{ background: "var(--brand-band)" }}
+            >
             <ThreeCircles />
           </div>
         </div>
@@ -90,7 +98,7 @@ export default function WhoIsJesusPage() {
               >
                 <span
                   className="font-condensed font-900 block mb-4"
-                  style={{ fontSize: "2.5rem", color: "var(--accent-text)", opacity: 0.4, letterSpacing: "-0.03em", lineHeight: 1 }}
+                  style={{ fontSize: "2.5rem", color: "var(--accent)", opacity: 0.4, letterSpacing: "-0.03em", lineHeight: 1 }}
                 >
                   {item.num}
                 </span>
@@ -113,7 +121,7 @@ export default function WhoIsJesusPage() {
           <div
             className="rounded-3xl p-10 md:p-14 text-center"
             style={{
-              background: "linear-gradient(135deg, #00142a 0%, #00205B 60%, #0a2d6e 100%)",
+              background: "var(--brand-band)",
             }}
           >
             <h2

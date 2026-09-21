@@ -702,3 +702,131 @@ stay light-on-white, and separating print from screen is real work rather than a
 
 Also worth recording: `unthemeable-tailwind-class` (327) has a **legitimate floor**. `text-white/60` on the
 navy footer is correct, not a bug, so that metric will never reach zero and should not be driven there.
+
+---
+
+## 10. Phase 4 — complete
+
+Clusters 4a–4e, the focus system, feedback and on-dark token families. Not yet deployed.
+
+### The two structural gaps this phase closed
+
+**Focus indicators barely existed.** 209 interactive elements, 2 with any focus styling, and 11 files
+calling `outline-none` with nothing put back — a WCAG 2.4.7 Level AA failure affecting every keyboard
+user. The fix is one unlayered `:focus-visible` rule in `globals.css`, which outranks Tailwind's layered
+utilities (verified by compiling and checking nesting depth, not assumed), so a stray `focus:outline-none`
+can no longer suppress it. `--focus-ring: #008ba3` is theme-invariant and clears 3:1 on all eleven grounds
+the site paints. The redundant per-input rings came out of 9 files so there is one indicator, not two.
+Three scoped `outline: none` cases (two textareas, one contenteditable) got explicit `:focus-visible`
+replacements, since a 1.5px tinted border is not an indicator.
+
+**On-dark ink had one tier and it was wrong.** `--fg-on-dark-muted` at 0.50 alpha measured **4.36:1** on
+the navy band's lightest gradient stop. The family is now `--fg-on-dark` / `-body` (0.86) / `-muted`
+(0.54), plus `--hover-on-dark-strong` because `:active` was reusing a value identical to hover and so
+never showed a press.
+
+### Live accessibility defects found and fixed
+
+These were real, in production, before this phase:
+
+| Where | Measured | Now |
+|---|---|---|
+| `/who-is-jesus` "← Back" | **1.00:1 — invisible** in light mode | on-dark family on a restored band |
+| `/who-is-jesus` step title + body | white on white in light mode | on-dark family |
+| `ThreeCircles` Next/Talk CTA | 2.74:1 | `--accent-solid` + `--fg-on-accent` |
+| `GlobalAudioPlayer` — 11 text uses | 2.59–4.44:1 | `--fg-on-dark-muted`, 5.2–6.1:1 |
+| `LivePlayer` `#4a5568` (×6) | 2.17:1 | `--fg-on-dark-muted` |
+| `LivePlayer` `#6b7f9e` (×24) | 4.02:1 | `--fg-on-dark-muted` |
+| `/sermons` CTA section rule | navy-on-navy, invisible | `--border-on-dark` |
+| `/sermons/[slug]` passage link | 2.4:1 (`--accent-text` on navy) | `--accent`, 5.65:1 |
+| `SermonGrid` series label + "Clear" hover | 2.74:1 / 3.78:1 | `--accent-text` / underline |
+| 4 ministry tiles + CTA borders | **rendered nothing** | see below |
+
+That last row was not a contrast bug but broken CSS. `app/ministries/page.tsx` and `app/wednesday/page.tsx`
+build tints by concatenating alpha onto a data value — `` `${color}18` `` — and three of those data entries
+had been converted to `var(--accent-text)`. `var(--accent-text)18` is not a colour, so those icon tiles had
+no background and those borders fell back to `currentColor`. Fixed with `color-mix`, which accepts a hex or
+a `var()` and so makes the call site indifferent to which the data holds.
+
+### What "dark in both themes" now means explicitly
+
+Three families, all theme-invariant, each with a documented reason rather than a habit:
+
+- `--theater-*` — the live page. Also load-bearing: `lib/nav-treatment.ts` classifies `/live` as an overlay
+  route from a measured backdrop of L 0.01, so the navbar floats there with white ink. If that surface
+  followed the theme, light mode would put white ink on a white page — the exact Phase 0 defect.
+- `--player-*` — the audio transport, for the reason Spotify's and Apple Music's are dark: one persistent
+  object inverting mid-track is worse than disagreeing with a light page.
+- `--brand-band` / `--brand-band-deep` / `--brand-ink` — the navy feature bands. Three distinct
+  treatments, not variants: a migration without `--brand-ink` kept reaching for `--brand-band` and quietly
+  turned flat navy sections into gradients.
+
+`--plate` is the counterpart: a fixed light ground for artwork drawn for white. `ThreeCircles`' diagram
+palette is tuned for a white card, and the card had been converted to `--surface-sunken`, which goes
+near-black in dark mode and erased the illustration.
+
+### Verification
+
+`verify-contrast` went from 84 pairings to **216**, and now checks gradients too — via
+`--brand-band-lightest` and `--brand-band-deep-lightest`, named stops that exist purely so the worst case
+on a gradient is verifiable at all. A gradient has no single value to read, which is how the muted ink sat
+at 4.36:1 unnoticed.
+
+`theme.spec.mjs` gained a keyboard focus sweep: 25 real `Tab` presses per route per theme, asserting a
+visible indicator on each control. The Tab presses come from the runner deliberately — a synthetic
+`KeyboardEvent` does not move focus, and the `el.focus()` workaround sets `:focus-visible` for text inputs
+but not dependably for buttons, so a bare button would pass a check built that way.
+
+`verify-classes` now scans `lib/` as well, which it did not, and immediately earned it: the on-dark family
+had never been exported to `@theme`, so `text-fg-on-dark-muted` compiled to nothing.
+
+### Ratchet
+
+| metric | Phase 3 | Phase 4 |
+|---|---|---|
+| raw-hex | 319 | **106** |
+| raw-rgb-fn | 245 | **80** |
+| arbitrary-color-class | 226 | **79** |
+| unthemeable-tailwind-class | 327 | **192** |
+| unthemed-files | 46 | **38** |
+
+Part of that drop is honesty rather than work: `scripts/color-literal-exemptions.mjs` now declares, with a
+reason each, the places a literal is *correct* — satori/`next/og` PNGs and `@react-pdf` output resolve no
+CSS variables at all; `buildPrintHTML` emits a standalone document; `@media print` blocks re-point tokens
+to ink; and a hex that gets alpha concatenated onto it is load-bearing as a string. This exists because
+`app/layout.tsx` was clobbered twice, the second time despite a comment saying it must stay literal. A
+comment is documentation; a sweep needs data. The ratchet reads that registry, so the counts now measure
+real residue.
+
+`NotesEditor`'s print block shows the payoff of tokens: one reset there makes the whole document print as
+ink on paper from either theme, instead of sending light-grey text to the printer in dark mode.
+
+### Open, with measurements — for Phase 5
+
+1. **Identity palettes fail AA as text in light mode — all eleven.** Per-ministry hues (kids `#c9a84c`
+   2.11:1, adults `#4ab8c4` 2.17:1, missions `#e07b54` 2.72:1, college `#9b6ecc` 3.53:1, students
+   `#4a7fcb` 3.74:1, `#5b7fa6` 3.86:1, `#8b6fae` 3.89:1) and per-series accents (amber `#f59e0b` 1.98:1,
+   emerald `#34d399` 1.78:1, violet `#a78bfa` 2.51:1, slate `#94a3b8` 2.37:1). Several fail 3:1 even as
+   graphics. This needs a dual-tone identity palette — a graphic value and a darker text value per hue,
+   the same split the brand already has in `--accent` / `--accent-text` — not a per-hue token, since the
+   hues are content-driven. A scalable form is `color-mix` against a per-theme mix target.
+2. **Photo scrim ramps have no token.** Multi-stop legibility ramps over photography at
+   `MinistriesSection` (×2), `app/visit/page.tsx` (×3), `ministries/students`, `ministries/kids`,
+   `components/home/Hero.tsx`, `VideoHero.tsx`, `app/sermons/page.tsx`. `--scrim` is a single flat value
+   *and* theme-dependent, so it can express neither the ramp nor a permanently-dark hero. Wants a
+   `--scrim-hero-*` stop set.
+3. **`ThreeCircles`' diagram palette.** TEAL 2.74:1 and RED 4.18:1 on the plate; the SVG labels sit at
+   2.16:1 and want ~0.65 alpha. The circles likely need outlines so the boundaries survive regardless of
+   fill contrast.
+4. **`ScriptureInline.tsx` is dead code** — 24 literals, zero importers; `LivePlayer` has its own inline
+   verse rendering that superseded it. Not themed, on purpose: theming code that never renders would have
+   inflated the numbers. Delete in Phase 6 or revive it deliberately.
+5. **`app/admin/analytics/page.tsx`** — 12 literals, excluded from the visual sweep as internal, but it
+   will look broken in dark mode for whoever opens it.
+
+### Lesson recorded
+
+A CSS comment inside a `<style>{`...`}</style>` JSX template literal must not contain a backtick — it
+closes the string and turns the rest of the file into JSX. Cost one `tsc` cycle to find. Related: my own
+global focus rule initially carried `border-radius: inherit`, which re-shapes the element on focus rather
+than the outline; browsers already curve an outline to its element.

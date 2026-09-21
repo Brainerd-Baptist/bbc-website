@@ -179,7 +179,7 @@ export default function NotesEditor({
 
         .notes-root {
           font-family: var(--font-inter), system-ui, sans-serif;
-          background: #eef1f6;
+          background: var(--surface-sunken);
           min-height: 100vh;
           padding: 2rem 1rem 4rem;
           -webkit-font-smoothing: antialiased;
@@ -198,14 +198,14 @@ export default function NotesEditor({
         .back-link {
           font-size: 0.75rem;
           font-weight: 500;
-          color: rgba(0,32,91,0.45);
+          color: var(--fg-muted);
           text-decoration: none;
           display: flex;
           align-items: center;
           gap: 0.375rem;
           transition: color 0.15s;
         }
-        .back-link:hover { color: #00205B; }
+        .back-link:hover { color: var(--fg); }
 
         .toolbar-actions {
           display: flex;
@@ -214,7 +214,7 @@ export default function NotesEditor({
         }
         .save-indicator {
           font-size: 0.7rem;
-          color: #00abc9;
+          color: var(--accent-text);
           font-weight: 500;
           opacity: 0;
           transition: opacity 0.3s;
@@ -241,33 +241,33 @@ export default function NotesEditor({
         }
         .btn:disabled { opacity: 0.55; cursor: not-allowed; }
         .btn-primary {
-          color: #fff;
-          background: #00205B;
-          box-shadow: 0 2px 8px rgba(0,32,91,0.22);
+          color: var(--fg-on-accent);
+          background: var(--accent-solid);
+          box-shadow: var(--shadow-sm);
         }
-        .btn-primary:hover:not(:disabled) { opacity: 0.88; box-shadow: 0 4px 14px rgba(0,32,91,0.32); }
+        .btn-primary:hover:not(:disabled) { opacity: 0.88; box-shadow: var(--shadow-sm-hover); }
         .btn-ghost {
-          color: rgba(0,32,91,0.5);
+          color: var(--fg-muted);
           background: transparent;
-          border: 1px solid rgba(0,32,91,0.15);
+          border: 1px solid var(--border);
         }
-        .btn-ghost:hover { color: #00205B; border-color: rgba(0,32,91,0.3); }
+        .btn-ghost:hover { color: var(--fg); border-color: var(--border-strong); }
 
         /* ── Paper sheet ── */
         .page {
           max-width: 740px;
           margin: 0 auto;
-          background: #fff;
-          box-shadow: 0 4px 40px rgba(0,20,60,0.12), 0 1px 6px rgba(0,20,60,0.07);
+          background: var(--surface-raised);
+          box-shadow: var(--shadow-lg);
           border-radius: 4px;
           overflow: hidden;
         }
 
         /* ── Ink-light header ── */
         .header-band {
-          background: #fff;
+          background: var(--surface-raised);
           padding: 2rem 2.5rem 1.5rem;
-          border-top: 5px solid #00205B;
+          border-top: 5px solid var(--accent-solid);
           position: relative;
         }
         .header-meta-line {
@@ -281,29 +281,29 @@ export default function NotesEditor({
           font-weight: 700;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #00abc9;
+          color: var(--accent-text);
         }
-        .meta-sep { color: rgba(0,32,91,0.2); font-size: 0.65rem; }
+        .meta-sep { color: var(--fg-subtle); font-size: 0.65rem; }
         .meta-text {
           font-size: 0.65rem;
           font-weight: 500;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: rgba(0,32,91,0.4);
+          color: var(--fg-muted);
         }
 
         .sermon-title {
           font-family: var(--font-barlow-condensed), sans-serif;
           font-size: 2.25rem;
           font-weight: 800;
-          color: #00205B;
+          color: var(--fg);
           line-height: 1.05;
           letter-spacing: -0.01em;
         }
 
         .accent-stripe {
           height: 3px;
-          background: linear-gradient(90deg, #00abc9 0%, rgba(0,171,201,0.2) 100%);
+          background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
         }
 
         /* ── Body ── */
@@ -324,8 +324,8 @@ export default function NotesEditor({
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          background: rgba(0,171,201,0.07);
-          border: 1px solid rgba(0,171,201,0.2);
+          background: var(--accent-bg);
+          border: 1px solid var(--accent-border);
           border-radius: 6px;
           padding: 0.45rem 0.875rem;
         }
@@ -334,16 +334,16 @@ export default function NotesEditor({
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: rgba(0,32,91,0.35);
+          color: var(--fg-subtle);
         }
         .passage-text {
           font-size: 0.82rem;
           font-weight: 600;
-          color: #00205B;
+          color: var(--fg);
         }
         .type-hint {
           font-size: 0.7rem;
-          color: rgba(0,32,91,0.35);
+          color: var(--fg-subtle);
           font-style: italic;
           display: flex;
           align-items: center;
@@ -356,7 +356,7 @@ export default function NotesEditor({
           font-weight: 700;
           letter-spacing: 0.2em;
           text-transform: uppercase;
-          color: #00abc9;
+          color: var(--accent-text);
           margin-bottom: 1.5rem;
           display: flex;
           align-items: center;
@@ -366,7 +366,7 @@ export default function NotesEditor({
           content: '';
           flex: 1;
           height: 1px;
-          background: rgba(0,32,91,0.08);
+          background: var(--border);
         }
 
         /* ── Outline items ── */
@@ -376,8 +376,8 @@ export default function NotesEditor({
           width: 1.875rem;
           height: 1.875rem;
           border-radius: 50%;
-          background: #00205B;
-          color: #fff;
+          background: var(--accent-solid);
+          color: var(--fg-on-accent);
           font-size: 0.72rem;
           font-weight: 700;
           display: flex;
@@ -388,14 +388,14 @@ export default function NotesEditor({
         }
         .outline-number.scripture {
           background: transparent;
-          border: 1.5px solid rgba(0,32,91,0.2);
-          color: rgba(0,32,91,0.35);
+          border: 1.5px solid var(--border-strong);
+          color: var(--fg-subtle);
         }
         .outline-content { flex: 1; min-width: 0; }
         .outline-point {
           font-size: 0.975rem;
           font-weight: 600;
-          color: #00205B;
+          color: var(--fg);
           line-height: 1.45;
           margin-bottom: 0.625rem;
         }
@@ -407,10 +407,10 @@ export default function NotesEditor({
           font-family: var(--font-inter), system-ui, sans-serif;
           font-size: 0.875rem;
           line-height: 1.75;
-          color: #1a2a4a;
+          color: var(--fg);
           background: transparent;
           border: none;
-          border-bottom: 1.5px solid rgba(0,32,91,0.1);
+          border-bottom: 1.5px solid var(--border);
           border-radius: 0;
           resize: none;
           outline: none;
@@ -419,12 +419,21 @@ export default function NotesEditor({
           overflow: hidden;
           display: block;
         }
+        /* The outline: none above kills the browser ring, and a 1.5px tinted border is
+           not a substitute: SC 1.4.11 wants 3:1 on the indicator itself, and a
+           colour-only change is invisible to anyone who can't separate cyan from
+           navy. Put a real ring back for keyboard focus. */
+        .note-textarea:focus-visible,
+        .additional-textarea:focus-visible {
+          outline: 2px solid var(--focus-ring);
+          outline-offset: 2px;
+        }
         .note-textarea:focus {
-          border-bottom-color: #00abc9;
-          background: rgba(0,171,201,0.03);
+          border-bottom-color: var(--accent);
+          background: var(--accent-bg);
         }
         .note-textarea::placeholder {
-          color: rgba(0,32,91,0.2);
+          color: var(--fg-subtle);
           font-style: italic;
         }
 
@@ -436,9 +445,9 @@ export default function NotesEditor({
           font-family: var(--font-inter), system-ui, sans-serif;
           font-size: 0.875rem;
           line-height: 1.75;
-          color: #1a2a4a;
-          background: rgba(0,32,91,0.018);
-          border: 1px solid rgba(0,32,91,0.08);
+          color: var(--fg);
+          background: var(--surface-sunken);
+          border: 1px solid var(--border);
           border-radius: 6px;
           resize: vertical;
           outline: none;
@@ -446,11 +455,11 @@ export default function NotesEditor({
           transition: border-color 0.15s, background 0.15s;
         }
         .additional-textarea:focus {
-          border-color: #00abc9;
-          background: rgba(0,171,201,0.03);
+          border-color: var(--accent);
+          background: var(--accent-bg);
         }
         .additional-textarea::placeholder {
-          color: rgba(0,32,91,0.2);
+          color: var(--fg-subtle);
           font-style: italic;
         }
 
@@ -458,12 +467,12 @@ export default function NotesEditor({
         .key-phrases {
           margin-top: 2.5rem;
           padding-top: 1.75rem;
-          border-top: 1px solid rgba(0,32,91,0.07);
+          border-top: 1px solid var(--border);
         }
         .phrase-list { display: flex; flex-direction: column; gap: 0.625rem; }
         .phrase-item { display: flex; gap: 0.625rem; align-items: flex-start; }
         .phrase-accent {
-          color: #00abc9;
+          color: var(--accent-text);
           font-size: 0.95rem;
           font-weight: 700;
           flex-shrink: 0;
@@ -472,7 +481,7 @@ export default function NotesEditor({
         .phrase-text {
           font-size: 0.85rem;
           font-style: italic;
-          color: rgba(0,32,91,0.55);
+          color: var(--fg-muted);
           line-height: 1.65;
         }
 
@@ -480,7 +489,7 @@ export default function NotesEditor({
         .doc-footer {
           margin-top: 3rem;
           padding-top: 1.25rem;
-          border-top: 1px solid rgba(0,32,91,0.08);
+          border-top: 1px solid var(--border);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -493,17 +502,17 @@ export default function NotesEditor({
           font-weight: 700;
           letter-spacing: 0.05em;
           text-transform: uppercase;
-          color: #00205B;
+          color: var(--fg);
         }
         .footer-address {
           font-size: 0.65rem;
-          color: rgba(0,32,91,0.3);
+          color: var(--fg-subtle);
           margin-top: 0.1rem;
         }
         .footer-url {
           font-size: 0.65rem;
           font-weight: 600;
-          color: #00abc9;
+          color: var(--accent-text);
           text-decoration: none;
         }
 
@@ -520,6 +529,32 @@ export default function NotesEditor({
 
         /* ── Print styles: ink-light ── */
         @media print {
+          /* Paper has no dark mode.
+             Every rule above now takes its colour from a token, so without
+             this reset a visitor printing while the site is in dark mode gets
+             light-grey text on white paper — legible on screen, invisible on
+             the page. Re-pointing the tokens to ink values here fixes the
+             whole document at once, which is the reason to route colour
+             through tokens in the first place. */
+          .notes-root {
+            --surface: #fff;
+            --surface-raised: #fff;
+            --surface-sunken: #fff;
+            --fg: #00205b;
+            --fg-muted: #45557a;
+            --fg-subtle: #6b7a94;
+            --fg-on-accent: #fff;
+            --accent: #00205b;
+            --accent-text: #00205b;
+            --accent-solid: #00205b;
+            --accent-bg: transparent;
+            --accent-border: #ccc;
+            --border: #ccc;
+            --border-strong: #999;
+            --shadow-sm: none;
+            --shadow-sm-hover: none;
+            --shadow-lg: none;
+          }
           .no-print, .top-bar, .bottom-bar, .type-hint { display: none !important; }
           html, body, .notes-root { background: #fff !important; padding: 0 !important; }
           .notes-root { min-height: unset; }

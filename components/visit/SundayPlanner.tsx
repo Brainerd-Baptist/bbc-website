@@ -224,7 +224,7 @@ export default function SundayPlanner() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 px-4 py-2.5 rounded-lg border border-border-strong text-sm text-fg placeholder:text-fg-subtle focus:outline-none focus:border-accent"
+                    className="flex-1 px-4 py-2.5 rounded-lg border border-border-strong text-sm text-fg placeholder:text-fg-subtle focus:border-accent"
                   />
                   <button
                     onClick={handleEmailSend}
