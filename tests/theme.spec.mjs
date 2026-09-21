@@ -59,16 +59,41 @@ for (const theme of THEMES) {
 
         // 2. No text sits on a near-identical background.
         const lowContrast = await page.evaluate(() => {
+          /**
+           * Resolve ANY CSS colour syntax to sRGB by letting the browser parse
+           * it into a 1x1 canvas.
+           *
+           * Hand-parsing the string is a trap, and it bit this test once
+           * already: Tailwind v4 emits opacity modifiers as `oklab(...)`, and
+           * pulling "the first three numbers" out of `oklab(1 0 0 / 0.6)`
+           * yields L/a/b read as R/G/B — so white-at-60% scored as near-black
+           * and the footer produced 33 phantom failures. The canvas knows how
+           * to parse oklab, oklch, colour-mix and anything else the browser
+           * supports; we should not be reimplementing that.
+           */
+          const cv = document.createElement("canvas");
+          cv.width = cv.height = 1;
+          const cx = cv.getContext("2d", { willReadFrequently: true });
+          const parseRGBA = (css) => {
+            try {
+              cx.clearRect(0, 0, 1, 1);
+              cx.fillStyle = css;
+              cx.fillRect(0, 0, 1, 1);
+              const d = cx.getImageData(0, 0, 1, 1).data;
+              return [d[0], d[1], d[2], d[3] / 255];
+            } catch {
+              return null;
+            }
+          };
+
           const lin = (c) => {
             const s = c / 255;
             return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
           };
           const lum = ([r, g, b]) =>
             0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-          const parse = (v) => {
-            const m = String(v).match(/[\d.]+/g);
-            return m && m.length >= 3 ? m.slice(0, 3).map(Number) : null;
-          };
+          /** Composite a translucent foreground over its backdrop. */
+          const over = (f, b) => [0, 1, 2].map((i) => f[i] * f[3] + b[i] * (1 - f[3]));
           const ratio = (a, b) => {
             const [x, y] = [lum(a), lum(b)];
             const [hi, lo] = x > y ? [x, y] : [y, x];
@@ -81,15 +106,12 @@ for (const theme of THEMES) {
             while (n && n !== document.documentElement) {
               const cs = getComputedStyle(n);
               if (cs.backgroundImage !== "none") return null; // can't judge over art
-              const c = parse(cs.backgroundColor);
-              const alpha = Number(
-                (String(cs.backgroundColor).match(/[\d.]+/g) ?? [])[3] ?? 1,
-              );
-              if (c && alpha > 0.5) return c;
+              const c = parseRGBA(cs.backgroundColor);
+              if (c && c[3] > 0.5) return [c[0], c[1], c[2]];
               n = n.parentElement;
             }
-            const c = parse(getComputedStyle(document.body).backgroundColor);
-            return c;
+            const c = parseRGBA(getComputedStyle(document.body).backgroundColor);
+            return c ? [c[0], c[1], c[2]] : null;
           };
 
           const bad = [];
@@ -106,10 +128,10 @@ for (const theme of THEMES) {
             if (cs.visibility === "hidden" || cs.display === "none") continue;
             if (Number(cs.opacity) < 0.15) continue;
             if (cs.webkitTextFillColor === "transparent") continue; // gradient text
-            const fg = parse(cs.color);
+            const fgRaw = parseRGBA(cs.color);
             const bg = backdrop(el);
-            if (!fg || !bg) continue;
-            const c = ratio(fg, bg);
+            if (!fgRaw || !bg) continue;
+            const c = ratio(over(fgRaw, bg), bg);
             // 1.5 is a deliberately loose floor: this catches "invisible",
             // not "slightly under AA". AA is enforced at the token level.
             if (c < 1.5) {
