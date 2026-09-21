@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import SermonPlayer from "./SermonPlayer";
 import AudioPlayer from "./AudioPlayer";
 import { type AudioTrack, useAudio } from "@/lib/audio-context";
+import SermonNotes from "./SermonNotes";
 
 interface Props {
   slug: string;
@@ -203,6 +204,22 @@ export default function SermonTabPlayer({
           )}
         </div>
       )}
+      {/* ── Section 3: Personal notes card ─────────────────────────── */}
+      <div
+        style={{
+          background: "#f4f6f9",
+          border: "1px solid rgba(0,32,91,0.08)",
+          borderRadius: "1rem",
+          padding: "1.5rem 1.75rem",
+        }}
+      >
+        <SermonNotes
+          slug={slug}
+          youtubeId={youtubeId || undefined}
+          accentColor={accentColor}
+          sermonTitle={title}
+        />
+      </div>
     </div>
   );
 }
