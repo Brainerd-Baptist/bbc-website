@@ -154,17 +154,19 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
               : null;
 
             return (
-              <a
+              <div
                 key={sermon.id}
-                href={url}
-                target={isInternal ? undefined : "_blank"}
-                rel={isInternal ? undefined : "noopener noreferrer"}
                 className="group flex gap-0 rounded-2xl overflow-hidden border border-[#00205B]/08 hover:border-[#00abc9]/30 bg-white hover:shadow-md transition-all duration-200"
               >
-                {/* Episode number + thumbnail */}
-                <div
+                {/* Episode number + thumbnail — links to sermon */}
+                <a
+                  href={url}
+                  target={isInternal ? undefined : "_blank"}
+                  rel={isInternal ? undefined : "noopener noreferrer"}
                   className="relative hidden sm:flex flex-shrink-0 w-[130px] md:w-[160px] items-center justify-center overflow-hidden"
                   style={{ background: bgColor }}
+                  tabIndex={-1}
+                  aria-hidden="true"
                 >
                   {thumb && (
                     <Image
@@ -177,7 +179,6 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                     />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/10" />
-                  {/* Episode number badge */}
                   <div
                     className="absolute top-2 left-2 text-[10px] font-bold tabular-nums text-white/60 bg-black/30 rounded-md px-1.5 py-0.5"
                   >
@@ -190,7 +191,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
                   </div>
-                </div>
+                </a>
 
                 {/* Info */}
                 <div className="flex-1 px-5 md:px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 min-w-0">
@@ -201,7 +202,6 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                           href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
                           className="text-[10px] font-semibold hover:underline transition-colors"
                           style={{ color: accentColor }}
                         >
@@ -209,12 +209,15 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                         </a>
                       )}
                     </div>
-                    <h3
-                      className="text-[#00205B] font-semibold text-base leading-snug mb-1 group-hover:text-[#00abc9] transition-colors"
+                    <a
+                      href={url}
+                      target={isInternal ? undefined : "_blank"}
+                      rel={isInternal ? undefined : "noopener noreferrer"}
+                      className="block text-[#00205B] font-semibold text-base leading-snug mb-1 group-hover:text-[#00abc9] transition-colors"
                       style={{ letterSpacing: "-0.02em" }}
                     >
                       {sermon.title}
-                    </h3>
+                    </a>
                     <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[#00205B]/40 text-xs">
                       <span>{sermon.speaker}</span>
                       <span>{formatDate(sermon.date)}</span>
@@ -230,7 +233,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                     </svg>
                   </div>
                 </div>
-              </a>
+              </div>
             );
           })}
         </div>
