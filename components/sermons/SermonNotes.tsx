@@ -181,7 +181,7 @@ function buildPrintHTML({
       <rect x="1" y="7" width="20" height="4" rx="1" fill="#00205B"/>
     </svg>
     <div class="wordmark-text">
-      Brainerd Baptist
+      Brainerd Baptist Church
       <span>Chattanooga, Tennessee</span>
     </div>
   </div>
