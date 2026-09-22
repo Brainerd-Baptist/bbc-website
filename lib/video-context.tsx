@@ -22,6 +22,54 @@ import { useAudio } from "./audio-context";
 import { useScrollDock, type DockState, type DockRect } from "./useScrollDock";
 import PlayerDebugOverlay from "@/components/sermons/PlayerDebugOverlay";
 
+// Bare YouTube IFrame API — no Plyr wrapper. This gets us YouTube's own
+// player chrome (their button set, their fullscreen, and — critically —
+// real native Picture-in-Picture on iOS/Safari, which only shows up when
+// Safari sees YouTube's own unmodified iframe rather than a custom-skinned
+// player). Plyr is still used for the audio player (see audio-context.tsx)
+// — this file only drops it from the video path.
+declare global {
+  interface Window {
+    YT?: {
+      Player: new (el: Element, opts: Record<string, unknown>) => YTPlayerInstance;
+      PlayerState: { PLAYING: number; PAUSED: number; ENDED: number };
+    };
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+interface YTPlayerInstance {
+  playVideo(): void;
+  pauseVideo(): void;
+  seekTo(seconds: number, allowSeekAhead: boolean): void;
+  getCurrentTime(): number;
+  getDuration(): number;
+  getPlayerState(): number;
+  destroy(): void;
+}
+
+let youTubeApiPromise: Promise<NonNullable<Window["YT"]>> | null = null;
+
+function loadYouTubeIframeApi(): Promise<NonNullable<Window["YT"]>> {
+  if (typeof window === "undefined") return Promise.reject(new Error("no window"));
+  if (window.YT?.Player) return Promise.resolve(window.YT);
+  if (youTubeApiPromise) return youTubeApiPromise;
+
+  youTubeApiPromise = new Promise((resolve) => {
+    const prevReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      prevReady?.();
+      resolve(window.YT!);
+    };
+    if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+  });
+  return youTubeApiPromise;
+}
+
 export interface VideoTrack {
   youtubeId: string;
   title: string;
@@ -192,13 +240,16 @@ export function VideoProvider({ children }: { children: ReactNode }) {
     dismissToast();
   }, [track, dismissToast]);
 
-  // ── Plyr init/teardown — keyed on the loaded youtubeId, not on which
-  // page is currently registered, so switching pages while the same video
-  // is active never reinitializes it. ─────────────────────────────────────
+  // ── YouTube IFrame API init/teardown — keyed on the loaded youtubeId, not
+  // on which page is currently registered, so switching pages while the
+  // same video is active never reinitializes it. Same contract the old Plyr
+  // instance offered the rest of this file (pause(), .paused, .currentTime
+  // get/set), so nothing outside this effect had to change. ────────────────
   useEffect(() => {
     if (!mounted || !track || !plyrHostRef.current) return;
 
     let destroyed = false;
+    let pollId: ReturnType<typeof setInterval> | null = null;
     let savedPos = 0;
     const key = `bbc-sermon-pos-${track.youtubeId}`;
     try {
@@ -209,77 +260,103 @@ export function VideoProvider({ children }: { children: ReactNode }) {
     }
 
     async function init() {
-      const Plyr = (await import("plyr")).default;
-      await import("plyr/dist/plyr.css");
+      const YT = await loadYouTubeIframeApi();
       if (destroyed || !plyrHostRef.current) return;
 
-      const div = plyrHostRef.current.querySelector<HTMLElement>("[data-plyr-provider]");
-      if (!div) return;
+      const mount = plyrHostRef.current.querySelector<HTMLElement>("[data-yt-mount]");
+      if (!mount) return;
 
-      const player = new Plyr(div, {
-        youtube: {
-          noCookie: true,
+      const player = new YT.Player(mount, {
+        videoId: track!.youtubeId,
+        host: "https://www.youtube-nocookie.com",
+        width: "100%",
+        height: "100%",
+        playerVars: {
           rel: 0,
-          showinfo: 0,
           modestbranding: 1,
           iv_load_policy: 3,
           cc_load_policy: 0,
+          playsinline: 1,
         },
-        controls: [
-          "play-large", "play", "progress", "current-time", "duration", "mute", "volume", "captions", "fullscreen",
-        ],
-        keyboard: { focused: true, global: true },
-        hideControls: true,
-        resetOnEnd: false,
-        disableContextMenu: false,
-        ratio: "16:9",
-        iconUrl: "/plyr.svg",
+        events: {
+          onReady: () => {
+            pushLog("yt: ready");
+            if (savedPos > 30) {
+              player.seekTo(savedPos, true);
+              setResumeFrom(savedPos);
+              setShowToast(true);
+              setTimeout(() => setShowToast(false), 4000);
+            }
+            // The IFrame API has no native timeupdate event — poll instead.
+            pollId = setInterval(() => {
+              if (destroyed) return;
+              let ct = 0;
+              let dur = 0;
+              try {
+                ct = player.getCurrentTime() || 0;
+                dur = player.getDuration() || 0;
+              } catch {
+                /* not ready yet */
+              }
+              setProgress({ current: ct, duration: dur });
+              if (ct > 5) {
+                try {
+                  localStorage.setItem(key, String(ct));
+                } catch {
+                  /* no-op */
+                }
+              }
+            }, 500);
+          },
+          onStateChange: (e: { data: number }) => {
+            if (e.data === YT.PlayerState.PLAYING) { pushLog("yt: play"); setIsPlaying(true); }
+            else if (e.data === YT.PlayerState.PAUSED) { pushLog("yt: pause"); setIsPlaying(false); }
+            else if (e.data === YT.PlayerState.ENDED) {
+              pushLog("yt: ended");
+              setIsPlaying(false);
+              setProgress({ current: 0, duration: 0 });
+              try {
+                localStorage.removeItem(key);
+              } catch {
+                /* no-op */
+              }
+            }
+          },
+          onError: (e: unknown) => pushLog(`yt: error ${JSON.stringify(e)}`),
+        },
       });
 
-      playerRef.current = player;
-
-      player.on("ready", () => {
-        pushLog("plyr: ready");
-        if (savedPos > 30) {
-          (player as unknown as { currentTime: number }).currentTime = savedPos;
-          setResumeFrom(savedPos);
-          setShowToast(true);
-          setTimeout(() => setShowToast(false), 4000);
-        }
-      });
-
-      player.on("timeupdate", () => {
-        const ct = (player as unknown as { currentTime: number }).currentTime;
-        const dur = (player as unknown as { duration: number }).duration;
-        setProgress({ current: ct || 0, duration: dur || 0 });
-        if (ct && ct > 5) {
+      // Adapt the IFrame API's method-based shape to the small get/pause
+      // surface the rest of this file (dismiss, startOver, visibilitychange
+      // auto-pause) already expects.
+      playerRef.current = {
+        pause: () => player.pauseVideo(),
+        get paused() {
           try {
-            localStorage.setItem(key, String(ct));
+            return player.getPlayerState() !== YT.PlayerState.PLAYING;
           } catch {
-            /* no-op */
+            return true;
           }
-        }
-      });
-
-      player.on("play", () => { pushLog("plyr: play"); setIsPlaying(true); });
-      player.on("pause", () => { pushLog("plyr: pause"); setIsPlaying(false); });
-      player.on("ended", () => {
-        pushLog("plyr: ended");
-        setIsPlaying(false);
-        setProgress({ current: 0, duration: 0 });
-        try {
-          localStorage.removeItem(key);
-        } catch {
-          /* no-op */
-        }
-      });
-      player.on("error", (e: unknown) => pushLog(`plyr: error ${JSON.stringify(e)}`));
+        },
+        get currentTime() {
+          try {
+            return player.getCurrentTime();
+          } catch {
+            return 0;
+          }
+        },
+        set currentTime(t: number) {
+          player.seekTo(t, true);
+        },
+        destroy: () => player.destroy(),
+      };
     }
 
     init();
 
     return () => {
       destroyed = true;
+      if (pollId) clearInterval(pollId);
       const p = playerRef.current as { destroy?: () => void } | null;
       if (p?.destroy) p.destroy();
       playerRef.current = null;
@@ -411,10 +488,10 @@ export function VideoProvider({ children }: { children: ReactNode }) {
               transition,
               visibility: targetRect ? "visible" : "hidden",
             }}
-            className="bbc-plyr"
+            className="bbc-yt-player"
           >
             <div ref={plyrHostRef} className="w-full h-full">
-              <div data-plyr-provider="youtube" data-plyr-embed-id={track.youtubeId} aria-label={track.title} />
+              <div data-yt-mount className="w-full h-full" aria-label={track.title} />
             </div>
 
             {state === "docked" && (
@@ -478,29 +555,12 @@ export function VideoProvider({ children }: { children: ReactNode }) {
             )}
 
             <style>{`
-              .bbc-plyr .plyr {
-                --plyr-color-main: var(--accent);
-                --plyr-video-background: var(--player-sheet);
-                --plyr-control-radius: 6px;
-                --plyr-range-thumb-height: 12px;
-                --plyr-range-fill-background: var(--accent);
-                --plyr-video-controls-background: linear-gradient(transparent, var(--scrim));
+              .bbc-yt-player iframe {
                 width: 100%;
                 height: 100%;
-                border-radius: 0;
-                overflow: hidden;
+                display: block;
+                border: 0;
               }
-              .bbc-plyr .plyr__control--overlaid {
-                background: color-mix(in srgb, var(--accent) 90%, transparent);
-                border-radius: 50%;
-                width: 64px;
-                height: 64px;
-                box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 40%, transparent);
-              }
-              .bbc-plyr .plyr__control--overlaid:hover { background: var(--accent); }
-              .bbc-plyr .plyr__control--overlaid svg { width: 22px; height: 22px; }
-              .bbc-plyr .plyr--youtube .plyr__poster { background-size: cover; }
-              .bbc-plyr .plyr__progress input[type="range"]::-webkit-slider-thumb { background: var(--accent); }
             `}</style>
           </div>,
           document.body
