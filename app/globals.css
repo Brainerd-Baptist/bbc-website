@@ -392,7 +392,7 @@ body {
   100% { transform: translateX(-50%); }
 }
 .photo-strip-track {
-  animation: photo-scroll 48s linear infinite;
+  animation: photo-scroll 75s linear infinite;
 }
 .photo-strip-track:hover {
   animation-play-state: paused;
