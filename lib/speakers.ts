@@ -51,7 +51,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Paul Christensen":  { title: "Associate Pastor for Students",          photo: "christensen_paul_studentspastor",      email: "pchristensen@brainerdbaptist.org" },
   "Micah Frink":       { title: "Associate Pastor for Young Adults",      photo: "frink_micah_youngadultspastor",        email: "mfrink@brainerdbaptist.org" },
   "Abigail Frink":     { title: "Ministry Director for Worship",         photo: "frink_abigail_worshipdirector",        email: "afrink@brainerdbaptist.org" },
-  "Bryan Skinner":     { title: "Worship Pastor",         photo: "skinner_bryan_worshippastor",          email: "bskinner@brainerdbaptist.org" },
+  "Bryan Skinner":     { title: "Associate Pastor for Worship", photo: "skinner_bryan_worshippastor",          email: "bskinner@brainerdbaptist.org" },
   "Ethan Speicher":    { title: "Ministry Director for Member Care",     photo: "speicher_ethan_membercaredirector",    email: "espeicher@brainerdbaptist.org" },
   "Barry Wilks":       { title: "Associate Pastor for Missions",         photo: "wilks_barry_missionspastor",           email: "bwilks@brainerdbaptist.org" },
   "Carlos Betancourt": { title: "Assistant Pastor for Hispanic Ministry", photo: "betancourt_carlos_hispanicpastor",     email: "cbetancourt@brainerdbaptist.org" },
@@ -59,7 +59,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Michelle Hill":     { title: "Ministry Director for Stewardship",     photo: "hill_michelle_stewardshipdirector",    email: "mhill@brainerdbaptist.org" },
   "Jo Bobbitt":        { title: "Ministry Director for the BX",          photo: "bobbitt_jo_bxdirector",               email: "jbobbitt@brainerdbaptist.org" },
   "Brittany Kelly":    { title: "Ministry Director for Kids",            photo: "kelly_brittany_kidsdirector",          email: "bkelly@brainerdbaptist.org" },
-  "Kristi Smith":      { title: "Ministry Coordinator for Kids",         photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org" },
+  "Kristi Smith":      { title: "Parent's Day Out Coordinator",          photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org" },
   "Benjamin Hovies":   { title: "Ministry Director for Adult Discipleship" },
   "Caroline Bell":     { title: "Girls Student Ministry Coordinator" },
   // Guest speakers — no photo
