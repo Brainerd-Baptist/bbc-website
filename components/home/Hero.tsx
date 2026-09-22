@@ -85,7 +85,7 @@ function getHeroContent(): HeroContent {
       sub: "Services at 8:30 AM and 11:00 AM. Life Groups at 9:45. Come as you are.",
       primaryLabel: "Plan Your Visit",
       primaryHref: "/visit",
-      secondaryLabel: "Watch Online",
+      secondaryLabel: "Sermons",
       secondaryHref: "/sermons",
       showCountdown: true,
     };

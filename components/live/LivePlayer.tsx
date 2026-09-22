@@ -698,21 +698,25 @@ function OffHours({ sermon }: { sermon: SermonData }) {
             Watch Brainerd<br className="hidden sm:block" /> Baptist Live
           </h1>
           <p className="text-fg-on-dark-muted text-lg mb-10 leading-relaxed">
-            Join us in person or online every Sunday morning.
+            We&rsquo;d love to have you in the room. Can&rsquo;t make it? Catch up on the
+            sermon here anytime.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="/visit"
+              className="btn-primary inline-flex items-center gap-2"
+            >
+              Plan a Visit
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
+            </a>
             <a
               href={sermon.watchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary inline-flex items-center gap-2"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
               Watch Latest Sermon
-            </a>
-            <a href="/plan-your-visit" className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors">
-              Plan a Visit
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>
           </div>
         </div>
