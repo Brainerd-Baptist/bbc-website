@@ -91,6 +91,49 @@
   --color-brand-cyan-pale: #e6f7fb;
 }
 
+/* ── Spacing & radius ───────────────────────────────────────────────────
+   Phase 1 of the spacing/radius/type token system
+   (docs/spacing-radius-type-plan.md has the audit this is drawn from).
+   Unlike colour, these are NOT theme-dependent -- one value, used in both
+   themes -- so they live in a plain @theme block, not the :root/.dark
+   indirection colour needs.
+
+   Every value below is the modal (most common) EXISTING usage for that
+   role, not an invented number: --spacing-control-x is 1.5rem because
+   px-6 is already the single most common padding class in the codebase
+   (99 sites). Naming it doesn't change what anything looks like today --
+   it means the NEXT change to "how much padding a button gets" is one
+   edit here instead of a find-and-replace across every file that
+   happened to type px-6.
+
+   Tailwind v4 registers a --spacing-<name> token for every spacing-
+   consuming utility (p-, m-, gap-, w-, h-, ...), not just the ones named
+   in each comment below -- that's the platform, not a claim that every
+   one of those utilities is the intended use. The role each token is FOR
+   is documented per-token; use it there.
+
+   A real, intentional tighter or looser variant of the same role stays a
+   plain Tailwind number (gap-2, py-20, p-8, ...) -- these tokens name the
+   default, they don't outlaw the exception. See the plan doc's "one
+   canonical value, not an invented ladder" note. */
+@theme {
+  --spacing-gutter-tight: 0.375rem; /* icon-to-label spacing inside a control */
+  --spacing-gutter:       0.75rem;  /* small siblings -- chips, stat rows */
+  --spacing-gutter-loose: 1rem;     /* cards or list items in a grid/list */
+  --spacing-control-x:    1.5rem;   /* button/pill/badge horizontal padding */
+  --spacing-control-y:    0.75rem;  /* button/pill/badge vertical padding */
+  --spacing-card-pad:     1.75rem;  /* card/panel interior padding */
+  --spacing-section:      6rem;     /* default vertical rhythm between page sections */
+
+  /* rounded-<name>. One-to-one with the five corner treatments already in
+     use, ordered largest (roundest) to smallest. */
+  --radius-control: 9999px;   /* buttons, pills, badges, avatars, player controls -- rounded-full, 136 sites */
+  --radius-card:     1rem;    /* cards, panels, sheets -- rounded-2xl, 79 sites */
+  --radius-panel:    0.75rem; /* secondary containers, larger inputs -- rounded-xl, 39 sites */
+  --radius-input:    0.5rem;  /* form fields, small controls -- rounded-lg, 16 sites */
+  --radius-tag:      0.25rem; /* small chips/tags -- rounded (default), 11 sites */
+}
+
 /* ── Semantic tokens ────────────────────────────────────────────────────
    The role layer. Components consume THESE — never the brand primitives
    above, and never a raw hex.
