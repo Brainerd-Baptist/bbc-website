@@ -20,6 +20,10 @@ const PHOTOS = [
   { src: "/carousel/men-football-catch.jpg",    w: 1400, h:  931, alt: "A man catching a football at a Brainerd Baptist men's ministry event" },
   { src: "/carousel/men-devotional.jpg",        w: 1400, h:  931, alt: "A man leading a devotional at a Brainerd Baptist men's ministry gathering" },
   { src: "/carousel/men-intergen.jpg",          w: 1400, h:  931, alt: "Men of different generations at a Brainerd Baptist men's ministry event" },
+  { src: "/carousel/women-speaker.jpg",         w: 1400, h:  931, alt: "A woman speaking at a Brainerd Baptist women's ministry gathering" },
+  { src: "/carousel/women-intergen.jpg",        w: 1400, h:  931, alt: "Women of different generations sharing a laugh at a Brainerd Baptist women's ministry event" },
+  { src: "/carousel/women-prayer.jpg",          w: 1400, h:  931, alt: "Women praying together at a Brainerd Baptist women's ministry event" },
+  { src: "/carousel/women-laughing.jpg",        w: 1400, h:  931, alt: "Women laughing together at a Brainerd Baptist women's ministry gathering" },
 ];
 
 function PhotoItem({ photo, priority = false }: { photo: (typeof PHOTOS)[0]; priority?: boolean }) {
