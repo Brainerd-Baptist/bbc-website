@@ -127,7 +127,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
             {/* Name / title */}
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold tracking-widest uppercase mb-2" style={{ color: "var(--accent-text)" }}>
+              <p className="label-micro mb-2" style={{ color: "var(--accent-text)" }}>
                 {info.title}
               </p>
               <h1

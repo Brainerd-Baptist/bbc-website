@@ -320,27 +320,64 @@ body {
 .font-condensed { font-family: var(--font-barlow-condensed), sans-serif; }
 .font-serif { font-family: Georgia, 'Times New Roman', serif; }
 
-/* Headline sizes */
+/* Headline sizes -- four tiers, each revised to the clamp() value the
+   codebase actually converged on independently (see
+   docs/spacing-radius-type-plan.md), not the original guessed number.
+   .h-display/.h-hero/.h-section existed but .h-display and .h-hero had
+   zero real callers and .h-section had exactly one; the values below
+   match the 5/6/8-site clusters found when every hand-rolled clamp()
+   heading site-wide was grepped and grouped by exact string. */
 .h-display {
   font-family: var(--font-barlow-condensed), sans-serif;
   font-weight: 800;
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
 }
 .h-hero {
   font-family: var(--font-barlow-condensed), sans-serif;
   font-weight: 800;
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
   line-height: 1.0;
   letter-spacing: -0.02em;
+}
+.h-subsection {
+  font-family: var(--font-barlow-condensed), sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
 }
 .h-section {
   font-family: var(--font-barlow-condensed), sans-serif;
   font-weight: 700;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
   line-height: 1.05;
   letter-spacing: -0.01em;
+}
+/* Card and list-item heading -- the font-condensed font-800 text-xl/text-2xl
+   pattern repeated across visit/give/life-groups/home with no shared class.
+   Spans the same range those hand-typed sizes actually used, rather than
+   forcing every site onto one fixed number. */
+.h-item {
+  font-family: var(--font-barlow-condensed), sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+/* ── Micro label ───────────────────────────────────────── */
+/* One step down from .eyebrow -- the compact uppercase label used on a
+   timestamp, chip, or thumbnail overlay. Replaces a 21-site scatter of
+   text-[8px]/[9px]/[10px]/[11px] paired with inconsistent weight/tracking
+   choices that were all doing this same job. */
+.label-micro {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* ── Photo strip auto-scroll ───────────────────────────── */

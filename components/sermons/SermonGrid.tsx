@@ -243,7 +243,7 @@ function SermonCard({ sermon, index }: { sermon: GridSermon; index: number }) {
       <div className="flex-1 px-5 md:px-7 py-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 min-w-0">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
-            <span className="text-accent-text text-[10px] font-semibold tracking-widest uppercase">
+            <span className="text-accent-text label-micro">
               {sermon.series}
             </span>
             <span className="text-fg-subtle text-[10px]">·</span>

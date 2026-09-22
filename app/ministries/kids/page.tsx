@@ -219,7 +219,7 @@ export default function KidsPage() {
                 {/* Age label pill */}
                 <div className="mb-3">
                   <span
-                    className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-3 py-1"
+                    className="label-micro rounded-full px-3 py-1"
                     style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                   >
                     {ages}
@@ -419,7 +419,7 @@ export default function KidsPage() {
                 </span>
                 <span className="text-fg-muted text-sm">6:00 – 7:30 PM</span>
                 <span
-                  className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                  className="label-micro rounded-full px-2 py-0.5"
                   style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
                 >
                   Ages 2 – 5th grade

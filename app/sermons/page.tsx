@@ -114,7 +114,7 @@ export default async function SermonsPage() {
                 <div className="relative z-10 flex items-center justify-between gap-6 p-7 md:p-10">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-widest uppercase rounded-full px-2.5 py-1"
+                      <span className="inline-flex items-center gap-1.5 label-micro rounded-full px-2.5 py-1"
                           /* `solid` under white, not the hue on a 13% wash of
                              itself -- that pairing fails at every hue. */
                           style={{ background: deriveInk(heroAccent).solid, color: "var(--fg-on-accent)" }}>

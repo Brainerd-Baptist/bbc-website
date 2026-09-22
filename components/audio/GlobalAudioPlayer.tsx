@@ -263,7 +263,7 @@ export default function GlobalAudioPlayer() {
           </svg>
         </button>
 
-        <p className="text-[11px] font-semibold tracking-widest uppercase" style={{ color: "var(--fg-on-dark-muted)" }}>
+        <p className="label-micro" style={{ color: "var(--fg-on-dark-muted)" }}>
           Now Playing
         </p>
 

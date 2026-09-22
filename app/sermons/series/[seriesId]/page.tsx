@@ -87,7 +87,7 @@ export default async function SeriesPage({
               stop #0a2d6e — so these two deliberately keep it, exactly like the
               full-brand-cyan note in app/ministries/page.tsx. `color.ink` is
               for the light surfaces below. See docs/token-mapping-rules.md. */}
-          <p className="text-[11px] font-semibold tracking-widest uppercase mb-3" style={{ color: color.accent }}>
+          <p className="label-micro mb-3" style={{ color: color.accent }}>
             Series
           </p>
 

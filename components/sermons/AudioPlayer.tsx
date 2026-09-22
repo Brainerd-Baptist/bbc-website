@@ -173,7 +173,7 @@ export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "d
                 />
               ))}
             </div>
-            <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: muted }}>Audio</span>
+            <span className="label-micro" style={{ color: muted }}>Audio</span>
           </div>
           <div className="tabular-nums text-xs" style={{ color: muted }}>
             <span style={{ color: strong }}>{fmt(ct)}</span>

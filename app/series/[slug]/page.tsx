@@ -108,7 +108,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
 
           {/* Series eyebrow */}
           <p
-            className="text-[10px] font-bold tracking-widest uppercase mb-4"
+            className="label-micro mb-4"
             style={{ color: inkOn(accentColor, bgColor) }}
           >
             Series

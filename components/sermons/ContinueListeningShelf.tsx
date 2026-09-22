@@ -77,7 +77,7 @@ export default function ContinueListeningShelf({
         {/* Eyebrow */}
         <div className="flex items-center gap-2 mb-4">
           <span
-            className="text-[10px] font-bold tracking-widest uppercase"
+            className="label-micro"
             style={{ color: "var(--accent-text)" }}
           >
             Continue Listening
@@ -152,7 +152,7 @@ export default function ContinueListeningShelf({
                 {/* Info */}
                 <div style={{ padding: "10px 12px 12px" }}>
                   <p
-                    className="text-[9px] font-bold tracking-widest uppercase mb-1 truncate"
+                    className="label-micro mb-1 truncate"
                     style={{ color: accent, opacity: 0.85 }}
                   >
                     {sermon.series}

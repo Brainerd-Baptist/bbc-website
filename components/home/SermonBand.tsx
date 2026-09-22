@@ -61,7 +61,7 @@ export default async function SermonBand() {
 
                 {/* Series chip */}
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="text-[10px] font-semibold tracking-widest uppercase text-accent-text bg-black/30 border border-accent/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                  <span className="label-micro text-accent-text bg-black/30 border border-accent/30 px-3 py-1 rounded-full backdrop-blur-sm">
                     Latest
                   </span>
                 </div>

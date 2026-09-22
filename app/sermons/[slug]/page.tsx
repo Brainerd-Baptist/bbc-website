@@ -277,13 +277,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             {s.seriesSlug ? (
               <a
                 href={`/series/${s.seriesSlug}`}
-                className="text-[10px] font-semibold tracking-widest uppercase hover:opacity-75 identity-ink"
+                className="label-micro hover:opacity-75 identity-ink"
                 style={inkVarsFor(accentColor)}
               >
                 {s.series}
               </a>
             ) : (
-              <span className="text-[10px] font-semibold tracking-widest uppercase identity-ink" style={inkVarsFor(accentColor)}>
+              <span className="label-micro identity-ink" style={inkVarsFor(accentColor)}>
                 {s.series}
               </span>
             )}
