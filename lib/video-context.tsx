@@ -151,6 +151,15 @@ export function VideoProvider({ children }: { children: ReactNode }) {
   const [toastDismissed, setToastDismissed] = useState(false);
   const [debug, setDebug] = useState(false);
   const [progress, setProgress] = useState({ current: 0, duration: 0 });
+  // Whether the real YouTube iframe should exist in the DOM yet. A poster
+  // (thumbnail + play button) shows until this flips true. Without this,
+  // the live cross-origin iframe gets created the instant a sermon page
+  // loads and is then repositioned via inline style on every scroll frame
+  // (see useScrollDock) — iOS Safari can't composite that smoothly and the
+  // whole page feels like it's "dragging" while scrolling, even though
+  // nothing is playing. Matches Plyr's own default click-to-embed behavior
+  // for YouTube, which is what this replaced.
+  const [activated, setActivated] = useState(false);
 
   // Keep the mini-player from stacking on top of the site's audio mini-bar
   // when (rarely) both are showing.
@@ -193,6 +202,7 @@ export function VideoProvider({ children }: { children: ReactNode }) {
     setToastDismissed(false);
     setDebug(false);
     setProgress({ current: 0, duration: 0 });
+    setActivated(false);
   }, [setState]);
 
   // Pause if the tab stays backgrounded for a while. A quick app-switch
@@ -246,7 +256,7 @@ export function VideoProvider({ children }: { children: ReactNode }) {
   // instance offered the rest of this file (pause(), .paused, .currentTime
   // get/set), so nothing outside this effect had to change. ────────────────
   useEffect(() => {
-    if (!mounted || !track || !plyrHostRef.current) return;
+    if (!mounted || !track || !activated || !plyrHostRef.current) return;
 
     let destroyed = false;
     let pollId: ReturnType<typeof setInterval> | null = null;
@@ -277,6 +287,10 @@ export function VideoProvider({ children }: { children: ReactNode }) {
           iv_load_policy: 3,
           cc_load_policy: 0,
           playsinline: 1,
+          // The player is only ever constructed after activation (a poster
+          // tap or an explicit "switch to this video" tap), so getting here
+          // always means the person just asked for playback to start.
+          autoplay: 1,
         },
         events: {
           onReady: () => {
@@ -362,7 +376,7 @@ export function VideoProvider({ children }: { children: ReactNode }) {
       playerRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted, track?.youtubeId]);
+  }, [mounted, track?.youtubeId, activated]);
 
   const registerPage = useCallback((payload: RegisterPagePayload) => {
     setDebug(!!payload.debug);
@@ -372,7 +386,10 @@ export function VideoProvider({ children }: { children: ReactNode }) {
         // (re)attach its spacer as the inline-positioning anchor.
         ownerSlugRef.current = payload.slug;
         spacerRef.current = payload.spacerEl;
-        if (!prev) return { youtubeId: payload.youtubeId, title: payload.title, slug: payload.slug };
+        if (!prev) {
+          setActivated(false);
+          return { youtubeId: payload.youtubeId, title: payload.title, slug: payload.slug };
+        }
         return prev;
       }
       // A different video is already active elsewhere — leave it playing;
@@ -405,6 +422,10 @@ export function VideoProvider({ children }: { children: ReactNode }) {
     setToastDismissed(false);
     setState("inline");
     setTrack(newTrack);
+    // The tap that triggers switchTo (SermonPlayer's "switch to this video"
+    // thumbnail) already *is* the play gesture — go straight to playback
+    // instead of making them tap a second poster.
+    setActivated(true);
   }, [setState]);
 
   const returnToInline = useCallback(() => {
@@ -491,8 +512,35 @@ export function VideoProvider({ children }: { children: ReactNode }) {
             className="bbc-yt-player"
           >
             <div ref={plyrHostRef} className="w-full h-full">
-              <div data-yt-mount className="w-full h-full" aria-label={track.title} />
+              {activated && <div data-yt-mount className="w-full h-full" aria-label={track.title} />}
             </div>
+
+            {!activated && (
+              <button
+                onClick={() => { pushLog("poster: tap to activate"); setActivated(true); }}
+                className="absolute inset-0 group cursor-pointer"
+                aria-label={`Play ${track.title}`}
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${track.youtubeId}/maxresdefault.jpg`}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = `https://img.youtube.com/vi/${track.youtubeId}/hqdefault.jpg`;
+                  }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/55 transition-colors">
+                  <span
+                    className="w-16 h-16 rounded-full flex items-center justify-center transition-transform group-active:scale-95"
+                    style={{ background: "color-mix(in srgb, var(--accent) 90%, transparent)", boxShadow: "0 0 40px color-mix(in srgb, var(--accent) 40%, transparent)" }}
+                  >
+                    <svg width="22" height="22" viewBox="0 0 22 22" style={{ marginLeft: 3, fill: "var(--fg-on-dark)" }}>
+                      <path d="M3 1.5l16 9.5-16 9.5z" />
+                    </svg>
+                  </span>
+                </div>
+              </button>
+            )}
 
             {state === "docked" && (
               <div
