@@ -62,7 +62,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Kristi Smith":      { title: "Parent's Day Out Coordinator",          photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org" },
   "Benjamin Hovies":   { title: "Ministry Director for Adult Discipleship" },
   "Caroline Bell":     { title: "Girls Student Ministry Coordinator" },
-  "Jackson Bowman":    { title: "Ministry Coordinator for Member Care" },
+  "Jackson Bowman":    { title: "Associate Pastor for Member Care" },
 }
 
 /** Returns speaker info or a sensible default */
