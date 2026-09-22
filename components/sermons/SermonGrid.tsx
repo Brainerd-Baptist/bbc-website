@@ -106,24 +106,26 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, 
 
   const hasFilters = query || series !== "all" || speaker !== "all" || year !== "all" || book !== "all";
 
-  // Group the filtered results by series so the page opens as a set of
-  // series sections instead of one long chronological scroll. Group order
-  // follows first-appearance in `filtered`, which is already newest-first,
-  // so the current/most-recent series lands at the top -- same ordering
-  // the "Current & Recent Series" cards above use.
-  const groups = useMemo(() => {
-    const map = new Map<string, { seriesId: string; series: string; sermons: typeof filtered }>();
-    for (const s of filtered) {
+  // Browse mode (no filters): one card per series, newest series first --
+  // click through to /sermons/series/[id] instead of scrolling one long
+  // list. Built from the full unfiltered `sermons` list so counts and
+  // artwork stay put no matter what the filter bar is doing.
+  const seriesCards = useMemo(() => {
+    const map = new Map<string, { seriesId: string; series: string; count: number; youtubeId: string }>();
+    for (const s of sermons) {
       const key = s.seriesId || s.series || "other";
       const existing = map.get(key);
       if (existing) {
-        existing.sermons.push(s);
+        existing.count += 1;
       } else {
-        map.set(key, { seriesId: key, series: s.series || "Other", sermons: [s] });
+        map.set(key, { seriesId: key, series: s.series || "Other", count: 1, youtubeId: s.youtubeId });
       }
     }
     return Array.from(map.values());
-  }, [filtered]);
+  }, [sermons]);
+
+  const [showAllSeries, setShowAllSeries] = useState(false);
+  const visibleSeriesCards = showAllSeries ? seriesCards : seriesCards.slice(0, 8);
 
   function clearAll() {
     setQuery("");
@@ -179,10 +181,28 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, 
         </div>
       </div>
 
-      {/* ── Sermon list ──────────────────────────────────────────────── */}
+      {/* ── Browse-by-series grid, or filtered results ──────────────────── */}
       <section className="pb-24 px-5 md:px-8">
         <div className="max-w-5xl mx-auto">
-          {filtered.length === 0 ? (
+          {!hasFilters ? (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {visibleSeriesCards.map((card) => (
+                  <SeriesCard key={card.seriesId} card={card} />
+                ))}
+              </div>
+              {seriesCards.length > 8 && !showAllSeries && (
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={() => setShowAllSeries(true)}
+                    className="font-condensed font-700 tracking-wide uppercase text-sm bg-fg text-surface hover:opacity-90 px-8 py-3.5 rounded-full transition"
+                  >
+                    Load More Series
+                  </button>
+                </div>
+              )}
+            </>
+          ) : filtered.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-fg-subtle text-lg mb-2">No sermons match your search.</p>
               <button onClick={clearAll} className="text-accent-text text-sm font-semibold hover:underline">
@@ -190,39 +210,61 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, 
               </button>
             </div>
           ) : (
-            <div className="space-y-10">
-              {groups.map((group) => {
-                const color = seriesColor(group.seriesId);
-                return (
-                  <div key={group.seriesId}>
-                    <div className="flex items-baseline gap-2.5 mb-3.5">
-                      <span
-                        className="w-2 h-2 rounded-full flex-shrink-0"
-                        style={{ background: color.accent }}
-                      />
-                      <h2
-                        className="font-condensed font-800 text-fg"
-                        style={{ fontSize: "1.15rem", letterSpacing: "-0.01em" }}
-                      >
-                        {group.series}
-                      </h2>
-                      <span className="text-fg-subtle text-xs tabular-nums">
-                        {group.sermons.length} sermon{group.sermons.length !== 1 ? "s" : ""}
-                      </span>
-                    </div>
-                    <div className="space-y-3">
-                      {group.sermons.map((sermon, i) => (
-                        <SermonCard key={sermon.id} sermon={sermon} index={i} />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="space-y-3">
+              {filtered.map((sermon, i) => (
+                <SermonCard key={sermon.id} sermon={sermon} index={i} />
+              ))}
             </div>
           )}
         </div>
       </section>
     </div>
+  );
+}
+
+// ── Series card (browse grid) ─────────────────────────────────────────────────
+
+function SeriesCard({
+  card,
+}: {
+  card: { seriesId: string; series: string; count: number; youtubeId: string };
+}) {
+  const color = seriesColor(card.seriesId);
+  const thumbUrl = card.youtubeId
+    ? `https://img.youtube.com/vi/${card.youtubeId}/maxresdefault.jpg`
+    : null;
+
+  return (
+    <a
+      href={`/series/${card.seriesId}`}
+      className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-border-on-dark hover:border-border-on-dark-strong transition"
+      style={{ background: color.bg }}
+    >
+      {thumbUrl ? (
+        <img
+          src={thumbUrl}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition duration-300"
+        />
+      ) : (
+        <div
+          className="absolute inset-0"
+          style={{ background: `linear-gradient(135deg, ${color.bg} 0%, ${color.accent}33 100%)` }}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+      <div className="relative h-full flex flex-col justify-end p-4">
+        <h3
+          className="text-fg-on-dark font-condensed font-800 leading-tight mb-1"
+          style={{ fontSize: "1.1rem", letterSpacing: "-0.01em" }}
+        >
+          {card.series}
+        </h3>
+        <p className="text-fg-on-dark-muted text-[11px] font-medium tabular-nums">
+          {card.count} sermon{card.count !== 1 ? "s" : ""}
+        </p>
+      </div>
+    </a>
   );
 }
 
