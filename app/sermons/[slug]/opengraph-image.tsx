@@ -11,7 +11,7 @@ const SERIES_COLORS: Record<string, { bg: string; accent: string }> = {
   "ot-revisited":          { bg: "#1c1209", accent: "#f59e0b" },
   "complete-in-christ":    { bg: "#0d2618", accent: "#34d399" },
   "gods-work-our-work":    { bg: "#00205B", accent: "#00abc9" },
-  "guest-messages":        { bg: "#111827", accent: "#94a3b8" },
+  "standalone-messages":        { bg: "#111827", accent: "#94a3b8" },
 };
 
 export default async function Image({
