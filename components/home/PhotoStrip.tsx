@@ -3,26 +3,29 @@ import Image from "next/image";
 // Height of each photo in the strip
 const STRIP_H = 300;
 
-// Curated selection — mix of ministry contexts and life stages
+// Curated selection — mix of ministry contexts and life stages.
+// Order is hand-interleaved (not grouped by ministry, not randomized at
+// render time) so the strip feels varied on first paint and stays
+// identical between server and client render.
 const PHOTOS = [
   { src: "/carousel/congregation-worship.jpg",  w: 1400, h:  931, alt: "Congregation in worship at Brainerd Baptist" },
+  { src: "/carousel/men-devotional.jpg",        w: 1400, h:  931, alt: "A man leading a devotional at a Brainerd Baptist men's ministry gathering" },
   { src: "/carousel/kids-midweek.jpg",          w: 1400, h:  931, alt: "Kids active in midweek ministry at Brainerd Baptist" },
-  { src: "/carousel/students-1.jpg",            w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
+  { src: "/carousel/women-intergen.jpg",        w: 1400, h:  931, alt: "Women of different generations sharing a laugh at a Brainerd Baptist women's ministry event" },
   { src: "/carousel/food-pantry-wide.jpg",      w: 1400, h:  931, alt: "Brainerd Baptist food pantry serving the community" },
+  { src: "/carousel/men-football-catch.jpg",    w: 1400, h:  931, alt: "A man catching a football at a Brainerd Baptist men's ministry event" },
   { src: "/carousel/choir-orchestra.jpg",       w: 1400, h:  931, alt: "Choir and Orchestra in the sanctuary at Brainerd Baptist" },
+  { src: "/carousel/women-prayer.jpg",          w: 1400, h:  931, alt: "Women praying together at a Brainerd Baptist women's ministry event" },
+  { src: "/carousel/students-1.jpg",            w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
   { src: "/carousel/music-camp-3.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
+  { src: "/carousel/women-speaker.jpg",         w: 1400, h:  931, alt: "A woman speaking at a Brainerd Baptist women's ministry gathering" },
   { src: "/carousel/adult-bible-study.jpg",     w: 1400, h:  931, alt: "Adults in small group Bible study" },
+  { src: "/carousel/men-intergen.jpg",          w: 1400, h:  931, alt: "Men of different generations at a Brainerd Baptist men's ministry event" },
   { src: "/carousel/missions-1.jpg",            w: 1400, h:  787, alt: "Brainerd Baptist Ecuador missions trip 2026" },
+  { src: "/carousel/women-laughing.jpg",        w: 1400, h:  931, alt: "Women laughing together at a Brainerd Baptist women's ministry gathering" },
   { src: "/carousel/food-pantry-checkin.jpg",   w: 1400, h:  931, alt: "Volunteers at the Brainerd Baptist food pantry" },
   { src: "/carousel/music-camp-5.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer camp" },
   { src: "/carousel/missions-2.jpg",            w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
-  { src: "/carousel/men-football-catch.jpg",    w: 1400, h:  931, alt: "A man catching a football at a Brainerd Baptist men's ministry event" },
-  { src: "/carousel/men-devotional.jpg",        w: 1400, h:  931, alt: "A man leading a devotional at a Brainerd Baptist men's ministry gathering" },
-  { src: "/carousel/men-intergen.jpg",          w: 1400, h:  931, alt: "Men of different generations at a Brainerd Baptist men's ministry event" },
-  { src: "/carousel/women-speaker.jpg",         w: 1400, h:  931, alt: "A woman speaking at a Brainerd Baptist women's ministry gathering" },
-  { src: "/carousel/women-intergen.jpg",        w: 1400, h:  931, alt: "Women of different generations sharing a laugh at a Brainerd Baptist women's ministry event" },
-  { src: "/carousel/women-prayer.jpg",          w: 1400, h:  931, alt: "Women praying together at a Brainerd Baptist women's ministry event" },
-  { src: "/carousel/women-laughing.jpg",        w: 1400, h:  931, alt: "Women laughing together at a Brainerd Baptist women's ministry gathering" },
 ];
 
 function PhotoItem({ photo, priority = false }: { photo: (typeof PHOTOS)[0]; priority?: boolean }) {
