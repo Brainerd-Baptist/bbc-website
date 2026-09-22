@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { getAllSermons, getAllSeries, FALLBACK_SERMONS } from "@/lib/sanity";
-import { ALL_SERIES as FALLBACK_SERIES } from "@/lib/sermons";
+import { ALL_SERIES as FALLBACK_SERIES, sortByBibleOrder } from "@/lib/sermons";
 import SermonGrid from "@/components/sermons/SermonGrid";
 import ContinueListeningShelf, { type SermonForShelf } from "@/components/sermons/ContinueListeningShelf";
 import { deriveInk } from "@/lib/identity-colors";
@@ -62,6 +62,9 @@ export default async function SermonsPage() {
   const allYears = Array.from(
     new Set(sermons.map((s) => s.date.slice(0, 4)))
   ).sort((a, b) => Number(b) - Number(a));
+  const allBooks = sortByBibleOrder(
+    Array.from(new Set(sermons.map((s) => s.book).filter(Boolean)))
+  );
 
   return (
     <div className="min-h-screen bg-surface">
@@ -217,6 +220,7 @@ export default async function SermonsPage() {
           allSeries={allSeries}
           allSpeakers={allSpeakers}
           allYears={allYears}
+          allBooks={allBooks}
         />
       </Suspense>
 

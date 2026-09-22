@@ -1303,7 +1303,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2024-06-02",
     passage: "Psalm 16",
-    book: "Psalm",
+    book: "Psalms",
   },
   {
     id: "bf-2-timothy-2024-7",
@@ -1545,7 +1545,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2023-12-10",
     passage: "Psalm 16",
-    book: "Psalm",
+    book: "Psalms",
   },
   {
     id: "bf-guest-messages-5",
@@ -1798,7 +1798,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2023-05-14",
     passage: "Psalm 119",
-    book: "Psalm",
+    book: "Psalms",
   },
   {
     id: "bf-guest-messages-3",
@@ -1809,7 +1809,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2023-05-07",
     passage: "Psalm 1",
-    book: "Psalm",
+    book: "Psalms",
   },
   {
     id: "bf-guest-messages-2",
@@ -1820,7 +1820,7 @@ export const SERMONS: Sermon[] = [
     speaker: "Curtis Hill",
     date: "2023-04-30",
     passage: "Psalm 19",
-    book: "Psalm",
+    book: "Psalms",
   },
   {
     id: "bf-john-2023-10",
@@ -2029,5 +2029,37 @@ export function formatDate(iso: string): string {
     year: "numeric",
     month: "long",
     day: "numeric",
+  });
+}
+
+// ── Bible book order ─────────────────────────────────────────────────────────
+// Canonical Genesis -> Revelation order, so a "Book" filter reads the way a
+// Bible's table of contents does instead of alphabetically (which would
+// scatter "1 Samuel" / "2 Timothy" by their digit and split a testament up).
+
+export const BIBLE_BOOK_ORDER: string[] = [
+  "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+  "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings",
+  "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther",
+  "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon",
+  "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel",
+  "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum",
+  "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi",
+  "Matthew", "Mark", "Luke", "John", "Acts", "Romans",
+  "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+  "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians",
+  "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James",
+  "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation",
+];
+
+/** Sorts book names into canonical Bible order; anything unrecognized sorts last, alphabetically. */
+export function sortByBibleOrder(books: string[]): string[] {
+  return [...books].sort((a, b) => {
+    const ia = BIBLE_BOOK_ORDER.indexOf(a);
+    const ib = BIBLE_BOOK_ORDER.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
   });
 }

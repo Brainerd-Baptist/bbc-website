@@ -31,6 +31,7 @@ interface Props {
   allSeries: { id: string; name: string }[];
   allSpeakers: string[];
   allYears: string[];
+  allBooks: string[];
 }
 
 function thumbnailUrl(youtubeId: string): string {
@@ -81,12 +82,13 @@ function seriesColor(seriesId: string) {
   return SERIES_COLORS[seriesId] ?? DEFAULT_COLOR;
 }
 
-export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }: Props) {
+export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, allBooks }: Props) {
   const searchParams = useSearchParams();
   const [query, setQuery]     = useState(() => searchParams.get("q") ?? "");
   const [series, setSeries]   = useState(() => searchParams.get("series") ?? "all");
   const [speaker, setSpeaker] = useState("all");
   const [year, setYear]       = useState("all");
+  const [book, setBook]       = useState(() => searchParams.get("book") ?? "all");
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -94,20 +96,22 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
       if (series !== "all" && s.seriesId !== series) return false;
       if (speaker !== "all" && s.speaker !== speaker) return false;
       if (year !== "all" && s.date.slice(0, 4) !== year) return false;
+      if (book !== "all" && s.book !== book) return false;
       if (q && ![s.title, s.series, s.speaker, s.passage, s.book].some((f) =>
         f?.toLowerCase().includes(q)
       )) return false;
       return true;
     });
-  }, [sermons, query, series, speaker, year]);
+  }, [sermons, query, series, speaker, year, book]);
 
-  const hasFilters = query || series !== "all" || speaker !== "all" || year !== "all";
+  const hasFilters = query || series !== "all" || speaker !== "all" || year !== "all" || book !== "all";
 
   function clearAll() {
     setQuery("");
     setSeries("all");
     setSpeaker("all");
     setYear("all");
+    setBook("all");
   }
 
   return (
@@ -138,6 +142,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears }
             <Select value={series}  onChange={setSeries}  label="Series"  options={[{ value: "all", label: "All Series" },  ...allSeries.map((s) => ({ value: s.id, label: s.name }))]} />
             <Select value={speaker} onChange={setSpeaker} label="Speaker" options={[{ value: "all", label: "All Speakers" }, ...allSpeakers.map((s) => ({ value: s, label: s }))]} />
             <Select value={year}    onChange={setYear}    label="Year"    options={[{ value: "all", label: "All Years" },    ...allYears.map((y) => ({ value: y, label: y }))]} />
+            <Select value={book}    onChange={setBook}    label="Book"    options={[{ value: "all", label: "All Books" },    ...allBooks.map((b) => ({ value: b, label: b }))]} />
 
             <div className="ml-auto flex items-center gap-4">
               <span className="text-fg-muted text-xs tabular-nums">
