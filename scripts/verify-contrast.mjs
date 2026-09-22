@@ -68,16 +68,22 @@ const ratio = (a, b) => {
 
 // ── token extraction ──────────────────────────────────────────────────────
 
-/** Pull the custom properties out of a top-level rule (`:root` or `.dark`). */
+/** Pull the custom properties out of every top-level rule matching the
+ *  selector (`:root`, `.dark`, or `@theme`), merging them in source order so
+ *  a later redefinition wins as CSS would. A file can legitimately have more
+ *  than one `@theme { }` block -- app/tokens.css has one for colour
+ *  primitives and a separate one for spacing/radius tokens -- so this must
+ *  accumulate across every match rather than keep only the last one, or a
+ *  later block silently hides the properties defined in an earlier block. */
 function readBlock(selector) {
-  // Match the LAST occurrence, so a later redefinition wins as CSS would.
   const re = new RegExp(`${selector}\\s*\\{([\\s\\S]*?)\\n\\}`, "g");
-  let body = null;
-  for (const m of CSS.matchAll(re)) body = m[1];
-  if (body === null) throw new Error(`could not find a ${selector} { … } block`);
+  const matches = [...CSS.matchAll(re)];
+  if (matches.length === 0) throw new Error(`could not find a ${selector} { … } block`);
   const out = {};
-  for (const [, name, value] of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
-    out[name] = value.trim();
+  for (const m of matches) {
+    for (const [, name, value] of m[1].matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
+      out[name] = value.trim();
+    }
   }
   return out;
 }
