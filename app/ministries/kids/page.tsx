@@ -497,8 +497,8 @@ export default function KidsPage() {
       <section className="py-0 overflow-hidden">
         <div className="flex gap-1" style={{ height: "280px" }}>
           {[
-            "/ministries/nursery.jpg",
-            "/ministries/kids.jpg",
+            "/carousel/kids-nursery-table.jpg",
+            "/carousel/kids-reading-table.jpg",
             "/carousel/music-camp-4.jpg",
             "/carousel/kids-preschool-table.jpg",
           ].map((src, i) => (
