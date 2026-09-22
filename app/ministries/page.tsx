@@ -56,14 +56,25 @@ const MINISTRIES = [
   },
   {
     key: "college",
-    name: "College & Young Adults",
-    ages: "Ages 18–30",
+    name: "College Ministry",
+    ages: "College Students",
     color: IDENTITY.college.hue,
     ink: IDENTITY.college,
     photo: null,
     href: "/connect",
-    body: "College and young adult years carry enormous spiritual weight. Groups meet throughout the week around Chattanooga for Scripture, friendship, and figuring out the next chapter together.",
-    detail: "Various off-campus locations",
+    body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow in their faith, and build friendships that go beyond Sunday. We gather together on Sundays and meet in smaller groups throughout the week to encourage one another, study God's Word, and learn what it looks like to follow Jesus in college.",
+    detail: "Sundays · Weekly small groups",
+  },
+  {
+    key: "youngadults",
+    name: "Young Adults",
+    ages: "Post-College",
+    color: IDENTITY.plum.hue,
+    ink: IDENTITY.plum,
+    photo: null,
+    href: "/connect",
+    body: "The years after college can bring a lot of change—new jobs, new friendships, new responsibilities, and new questions about what comes next. Brainerd Young Adults is a place to find community and grow in your faith alongside others who are navigating the same season. We gather for worship and life groups on Sundays, build friendships throughout the week, and seek to live out our faith in the workplace, at home, and in everyday life.",
+    detail: "Sundays · Life groups throughout the week",
   },
   {
     key: "adults",
@@ -104,6 +115,11 @@ const ICONS: Record<string, React.ReactNode> = {
   college: (
     <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M8 32V16l12-6 12 6v16" /><path d="M4 20l16-8 16 8" /><path d="M14 22v8M26 22v8M8 32h24" />
+    </svg>
+  ),
+  youngadults: (
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="8" y="14" width="24" height="18" rx="2" /><path d="M15 14v-3a5 5 0 0 1 10 0v3" /><path d="M8 22h24" />
     </svg>
   ),
   adults: (
