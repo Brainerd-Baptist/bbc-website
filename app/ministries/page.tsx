@@ -49,7 +49,7 @@ const MINISTRIES = [
     ages: "Church-wide",
     color: IDENTITY.missions.hue,
     ink: IDENTITY.missions,
-    photo: "/carousel/missions-1.jpg",
+    photo: "/carousel/missions-istanbul.jpg",
     href: "/connect",
     body: "From East Ridge to East Africa. Brainerd Baptist partners with missionaries and church-planting networks globally, and engages the Brainerd community locally every week.",
     detail: "Local + global partnerships",
