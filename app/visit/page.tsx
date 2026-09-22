@@ -81,9 +81,9 @@ export default function VisitPage() {
             <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: 340 }}>
               <Image
                 src="/visit/service-11am.jpg"
-                alt="11:00 AM service — people engaged with open Bibles"
+                alt="Band-led worship at the 11:00 AM service"
                 fill
-                className="object-cover object-top"
+                className="object-cover object-center"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0" style={{ background: "var(--scrim-card)" }} />
