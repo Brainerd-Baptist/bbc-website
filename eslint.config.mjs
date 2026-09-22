@@ -1,7 +1,8 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
-import bbc from "./eslint-rules/no-raw-color.mjs";
+import bbcColor from "./eslint-rules/no-raw-color.mjs";
+import bbcSpacing from "./eslint-rules/no-raw-spacing.mjs";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -20,13 +21,22 @@ const eslintConfig = defineConfig([
   // chain (bare eslint would drag in 52 unrelated pre-existing errors).
   {
     files: ["**/*.{js,jsx,ts,tsx,mjs}"],
-    plugins: { bbc },
+    plugins: { bbc: bbcColor, "bbc-spacing": bbcSpacing },
     rules: {
       // BLOCKING as of Phase 6. It was a warning through the migration, with
       // the count held down by scripts/ratchet.mjs; the count is now zero, so
       // the rule becomes an error and the next raw colour fails the build
       // instead of being absorbed into a baseline.
       "bbc/no-raw-color": "error",
+
+      // BLOCKING from the day it landed, not phased in as a warning. Unlike
+      // colour (which started at ~950 violations), the spacing/radius/type
+      // audit in docs/spacing-radius-type-plan.md found the baseline was
+      // already zero for arbitrary spacing and radius classes, and the
+      // micro-label scatter this also catches was swept in the same change
+      // that added the rule. There is no migration period to ratchet down
+      // from — see eslint-rules/no-raw-spacing.mjs.
+      "bbc-spacing/no-raw-spacing": "error",
     },
   },
 
@@ -37,6 +47,7 @@ const eslintConfig = defineConfig([
     files: ["scripts/**", "tests/**", "eslint-rules/**"],
     rules: {
       "bbc/no-raw-color": "off",
+      "bbc-spacing/no-raw-spacing": "off",
     },
   },
 

@@ -142,6 +142,10 @@ const METRICS = {
     what: "Tailwind arbitrary colour classes and inline-style colour literals (bbc/no-raw-color)",
     value: () => eslintWarnings("bbc/no-raw-color"),
   },
+  "arbitrary-spacing-radius-class": {
+    what: "arbitrary spacing/radius classes and the micro-label text-size scatter (bbc-spacing/no-raw-spacing)",
+    value: () => eslintWarnings("bbc-spacing/no-raw-spacing"),
+  },
   "unthemeable-tailwind-class": {
     what: "bg-white / text-white / *-gray-N classes with no dark: sibling",
     value: () =>

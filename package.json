@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "verify:classes": "node scripts/verify-classes.mjs",
-    "verify": "tsc --noEmit && npm run lint:css && npm run lint:color && npm run verify:classes && npm run verify:contrast && npm run verify:identity && npm run ratchet",
+    "verify": "tsc --noEmit && npm run lint:css && npm run lint:color && npm run lint:spacing && npm run verify:classes && npm run verify:contrast && npm run verify:identity && npm run ratchet",
     "verify:contrast": "node scripts/verify-contrast.mjs",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
@@ -16,7 +16,8 @@
     "ratchet": "node scripts/ratchet.mjs",
     "ratchet:update": "node scripts/ratchet.mjs --update",
     "verify:identity": "node scripts/verify-identity.mjs",
-    "lint:color": "node scripts/lint-color.mjs"
+    "lint:color": "node scripts/lint-color.mjs",
+    "lint:spacing": "node scripts/lint-spacing.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.127.0",

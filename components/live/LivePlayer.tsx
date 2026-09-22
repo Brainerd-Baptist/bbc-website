@@ -468,7 +468,7 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
               </p>
             ))}
           </div>
-          <p className="mt-5 text-[10px] text-fg-on-dark-muted tracking-wide uppercase">
+          <p className="mt-5 label-micro text-fg-on-dark-muted">
             {data.translation_name}
           </p>
         </>
