@@ -122,16 +122,16 @@ export default function VisitPage() {
       {/* ── Photo collage ──────────────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-1" style={{ height: "clamp(260px, 36vw, 440px)" }}>
         <div className="relative overflow-hidden">
-          <Image src="/visit/congregation-hero.jpg" alt="Congregation on Sunday morning" fill className="object-cover object-center" sizes="25vw" />
+          <Image src="/ministries/sunday.jpg" alt="Congregation on Sunday morning" fill className="object-cover object-center" sizes="25vw" />
         </div>
         <div className="relative overflow-hidden">
-          <Image src="/carousel/students-1.jpg" alt="Student ministry worship" fill className="object-cover object-center" sizes="25vw" />
+          <Image src="/visit/students-bible.jpg" alt="Student ministry worship" fill className="object-cover object-center" sizes="25vw" />
         </div>
         <div className="relative overflow-hidden">
           <Image src="/visit/kids-toddler.jpg" alt="Nursery at Brainerd Baptist" fill className="object-cover object-center" sizes="25vw" />
         </div>
         <div className="relative overflow-hidden">
-          <Image src="/carousel/life-groups-1.jpg" alt="Community at Brainerd Baptist" fill className="object-cover object-top" sizes="25vw" />
+          <Image src="/visit/life-groups-2.jpg" alt="Community at Brainerd Baptist" fill className="object-cover object-top" sizes="25vw" />
         </div>
       </div>
 

@@ -83,7 +83,7 @@ export default function AboutPage() {
               style={{ aspectRatio: "4/3" }}
             >
               <Image
-                src="/visit/congregation-hero.jpg"
+                src="/about/choir-orchestra-wide.jpg"
                 alt="Brainerd Baptist congregation"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -246,7 +246,7 @@ export default function AboutPage() {
               style={{ aspectRatio: "4/3" }}
             >
               <Image
-                src="/visit/life-groups.jpg"
+                src="/about/life-groups-wide.jpg"
                 alt="Life Groups at Brainerd Baptist"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"

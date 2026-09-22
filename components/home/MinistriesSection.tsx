@@ -157,7 +157,7 @@ export default function MinistriesSection() {
             style={{ minHeight: "280px" }}
           >
             <Image
-              src="/visit/congregation-hero.jpg"
+              src="/carousel/congregation-standing.jpg"
               alt="Brainerd Baptist congregation in worship"
               fill
               sizes="(max-width: 1280px) 100vw, 1200px"
