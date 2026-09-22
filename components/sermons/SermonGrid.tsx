@@ -106,6 +106,25 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, 
 
   const hasFilters = query || series !== "all" || speaker !== "all" || year !== "all" || book !== "all";
 
+  // Group the filtered results by series so the page opens as a set of
+  // series sections instead of one long chronological scroll. Group order
+  // follows first-appearance in `filtered`, which is already newest-first,
+  // so the current/most-recent series lands at the top -- same ordering
+  // the "Current & Recent Series" cards above use.
+  const groups = useMemo(() => {
+    const map = new Map<string, { seriesId: string; series: string; sermons: typeof filtered }>();
+    for (const s of filtered) {
+      const key = s.seriesId || s.series || "other";
+      const existing = map.get(key);
+      if (existing) {
+        existing.sermons.push(s);
+      } else {
+        map.set(key, { seriesId: key, series: s.series || "Other", sermons: [s] });
+      }
+    }
+    return Array.from(map.values());
+  }, [filtered]);
+
   function clearAll() {
     setQuery("");
     setSeries("all");
@@ -171,10 +190,34 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, 
               </button>
             </div>
           ) : (
-            <div className="space-y-3">
-              {filtered.map((sermon, i) => (
-                <SermonCard key={sermon.id} sermon={sermon} index={i} />
-              ))}
+            <div className="space-y-10">
+              {groups.map((group) => {
+                const color = seriesColor(group.seriesId);
+                return (
+                  <div key={group.seriesId}>
+                    <div className="flex items-baseline gap-2.5 mb-3.5">
+                      <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ background: color.accent }}
+                      />
+                      <h2
+                        className="font-condensed font-800 text-fg"
+                        style={{ fontSize: "1.15rem", letterSpacing: "-0.01em" }}
+                      >
+                        {group.series}
+                      </h2>
+                      <span className="text-fg-subtle text-xs tabular-nums">
+                        {group.sermons.length} sermon{group.sermons.length !== 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      {group.sermons.map((sermon, i) => (
+                        <SermonCard key={sermon.id} sermon={sermon} index={i} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

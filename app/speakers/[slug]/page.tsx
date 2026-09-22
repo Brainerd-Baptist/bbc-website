@@ -42,6 +42,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
     slug: string;
     title: string;
     series: string;
+    seriesId: string;
     passage: string;
     date: string;
     youtubeId: string;
@@ -53,6 +54,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
     slug: s.slug?.current ?? "",
     title: s.title,
     series: s.series?.title ?? "",
+    seriesId: s.series?.slug?.current ?? "",
     passage: s.passage ?? "",
     date: s.date ?? "",
     youtubeId: s.youtubeId ?? "",
@@ -68,6 +70,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
       slug: s.id,
       title: s.title,
       series: s.series,
+      seriesId: s.seriesId,
       passage: s.passage,
       date: s.date,
       youtubeId: s.youtubeId,
@@ -80,6 +83,23 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
   );
 
   const hasSermons = sermons.length > 0;
+
+  // Group by series (newest series first) instead of one long chronological
+  // list -- same convention as the main /sermons page.
+  const sermonGroups: { seriesId: string; series: string; accentColor: string; sermons: SermonRow[] }[] = [];
+  {
+    const map = new Map<string, { seriesId: string; series: string; accentColor: string; sermons: SermonRow[] }>();
+    for (const s of sermons) {
+      const key = s.seriesId || s.series || "other";
+      const existing = map.get(key);
+      if (existing) {
+        existing.sermons.push(s);
+      } else {
+        map.set(key, { seriesId: key, series: s.series || "Other", accentColor: s.accentColor, sermons: [s] });
+      }
+    }
+    sermonGroups.push(...map.values());
+  }
 
   return (
     <div className="min-h-screen bg-surface">
@@ -208,60 +228,76 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
           <div className="max-w-4xl mx-auto">
             <p className="eyebrow-muted mb-6">Sermons</p>
 
-            <div className="space-y-2">
-              {sermons.map((s) => {
-                const thumbUrl = s.youtubeId
-                  ? `https://img.youtube.com/vi/${s.youtubeId}/maxresdefault.jpg`
-                  : null;
+            <div className="space-y-8">
+              {sermonGroups.map((group) => (
+                <div key={group.seriesId}>
+                  <div className="flex items-baseline gap-2.5 mb-3">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ background: group.accentColor }}
+                    />
+                    <h3 className="font-condensed font-800 text-fg" style={{ fontSize: "1rem", letterSpacing: "-0.01em" }}>
+                      {group.series}
+                    </h3>
+                    <span className="text-fg-subtle text-xs tabular-nums">
+                      {group.sermons.length} sermon{group.sermons.length !== 1 ? "s" : ""}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {group.sermons.map((s) => {
+                      const thumbUrl = s.youtubeId
+                        ? `https://img.youtube.com/vi/${s.youtubeId}/maxresdefault.jpg`
+                        : null;
 
-                return (
-                  <a
-                    key={s.slug || s.date}
-                    href={s.slug ? `/sermons/${s.slug}` : "#"}
-                    className="group flex items-center gap-4 p-3 rounded-xl bg-surface-raised border border-border hover:border-accent/30 hover:shadow-sm transition"
-                  >
-                    {/* Thumbnail */}
-                    <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-brand-navy/6">
-                      {thumbUrl && (
-                        <img
-                          src={thumbUrl}
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
+                      return (
+                        <a
+                          key={s.slug || s.date}
+                          href={s.slug ? `/sermons/${s.slug}` : "#"}
+                          className="group flex items-center gap-4 p-3 rounded-xl bg-surface-raised border border-border hover:border-accent/30 hover:shadow-sm transition"
+                        >
+                          {/* Thumbnail */}
+                          <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-brand-navy/6">
+                            {thumbUrl && (
+                              <img
+                                src={thumbUrl}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
 
-                    {/* Meta */}
-                    <div className="flex-1 min-w-0">
-                      <p
-                        className="text-fg text-sm font-semibold leading-snug truncate group-hover:text-accent-text transition-colors"
-                        style={{ letterSpacing: "-0.01em" }}
-                      >
-                        {s.title}
-                      </p>
-                      <p className="text-fg-muted text-xs mt-0.5 truncate">
-                        {s.series && <span style={{ color: s.accentColor }}>{s.series}</span>}
-                        {s.series && s.passage && <span className="text-fg-subtle mx-1.5">·</span>}
-                        {s.passage}
-                      </p>
-                    </div>
+                          {/* Meta */}
+                          <div className="flex-1 min-w-0">
+                            <p
+                              className="text-fg text-sm font-semibold leading-snug truncate group-hover:text-accent-text transition-colors"
+                              style={{ letterSpacing: "-0.01em" }}
+                            >
+                              {s.title}
+                            </p>
+                            <p className="text-fg-muted text-xs mt-0.5 truncate">
+                              {s.passage}
+                            </p>
+                          </div>
 
-                    {/* Date + arrow */}
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <span className="text-fg-subtle text-xs hidden sm:block">
-                        {s.date ? formatDate(s.date) : ""}
-                      </span>
-                      <svg
-                        width="12" height="12" viewBox="0 0 12 12" fill="none"
-                        className="text-fg-subtle group-hover:text-accent-text transition-colors"
-                        stroke="currentColor" strokeWidth="1.5"
-                      >
-                        <path d="M2 6h8M7 3l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                  </a>
-                );
-              })}
+                          {/* Date + arrow */}
+                          <div className="flex items-center gap-3 flex-shrink-0">
+                            <span className="text-fg-subtle text-xs hidden sm:block">
+                              {s.date ? formatDate(s.date) : ""}
+                            </span>
+                            <svg
+                              width="12" height="12" viewBox="0 0 12 12" fill="none"
+                              className="text-fg-subtle group-hover:text-accent-text transition-colors"
+                              stroke="currentColor" strokeWidth="1.5"
+                            >
+                              <path d="M2 6h8M7 3l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
