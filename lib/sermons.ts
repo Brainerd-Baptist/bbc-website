@@ -695,7 +695,7 @@ export const SERMONS: Sermon[] = [
   // ── Gospel of John ────────────────────────────────────────────────────────
   {
     id: "john-11",
-    youtubeId: "",
+    youtubeId: "jKJRAh_vlDc",
     title: "Responding to Jesus",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -705,8 +705,34 @@ export const SERMONS: Sermon[] = [
     book: "John",
   },
   {
+    // No real title on file for this guest message — using the passage as an
+    // honest placeholder until a transcript/title is provided (same
+    // convention as the Dec2022–Dec2024 backfill).
+    id: "john-10c",
+    youtubeId: "lgjcK4N3MWE",
+    title: "John 8:30–47",
+    series: "Gospel of John",
+    seriesId: "gospel-of-john",
+    speaker: "Jackson Bowman",
+    date: "2025-07-20",
+    passage: "John 8:30–47",
+    book: "John",
+  },
+  {
+    // Same placeholder-title situation as above.
+    id: "john-10b",
+    youtubeId: "jg5MIxDv43I",
+    title: "John 8",
+    series: "Gospel of John",
+    seriesId: "gospel-of-john",
+    speaker: "Josiah King",
+    date: "2025-07-13",
+    passage: "John 8",
+    book: "John",
+  },
+  {
     id: "john-10",
-    youtubeId: "",
+    youtubeId: "Bf-1shmYluU",
     title: "Neither Do I",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
