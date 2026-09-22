@@ -67,7 +67,7 @@ function getHeroContent(): HeroContent {
     }
     return {
       eyebrow: "Good morning — we're glad you're here",
-      headline: <>We&rsquo;re live<br /><span className="text-accent-text">this morning.</span></>,
+      headline: <>We&rsquo;re live<br /><span className="text-accent">this morning.</span></>,
       sub: serviceMsg + " 300 Brookfield Ave, Chattanooga.",
       primaryLabel: "Get Directions",
       primaryHref: "https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411",
@@ -81,7 +81,7 @@ function getHeroContent(): HeroContent {
   if (day === 6 && hour >= 16) {
     return {
       eyebrow: "See you tomorrow",
-      headline: <>Sundays at<br /><span className="text-accent-text">Brainerd Baptist.</span></>,
+      headline: <>Sundays at<br /><span className="text-accent">Brainerd Baptist.</span></>,
       sub: "Services at 8:30 AM and 11:00 AM. Life Groups at 9:45. Come as you are.",
       primaryLabel: "Plan Your Visit",
       primaryHref: "/visit",
@@ -94,7 +94,7 @@ function getHeroContent(): HeroContent {
   // Default — rest of week
   return {
     eyebrow: "Sundays in Chattanooga",
-    headline: <>Welcome to<br /><span className="text-accent-text">Brainerd.</span></>,
+    headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
     sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
@@ -159,7 +159,7 @@ export default function Hero() {
   // Server/first-render fallback
   const c = content ?? {
     eyebrow: "Sundays in Chattanooga",
-    headline: <>Welcome to <span className="text-accent-text">Brainerd.</span></>,
+    headline: <>Welcome to <span className="text-accent">Brainerd.</span></>,
     sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",

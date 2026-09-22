@@ -39,15 +39,15 @@ export default function ServiceInfo() {
 
             {/* Address / Visit CTA */}
             <div className="flex flex-col justify-center">
-              <div className="rounded-2xl bg-brand-navy text-white p-7 h-full flex flex-col justify-between">
+              <div className="rounded-2xl bg-brand-navy text-fg-on-dark p-7 h-full flex flex-col justify-between">
                 <div>
                   <p className="eyebrow-white mb-3">Find Us</p>
                   <p className="font-condensed font-800 text-xl mb-1">300 Brookfield Ave</p>
-                  <p className="text-white/60 mb-4">Chattanooga, TN 37411</p>
+                  <p className="text-fg-on-dark-muted mb-4">Chattanooga, TN 37411</p>
 
-                  <div className="border-t border-white/10 pt-4 mt-4">
+                  <div className="border-t border-border-on-dark pt-4 mt-4">
                     <p className="text-fg-on-dark-muted text-xs uppercase tracking-widest mb-1">Ministerio Hispano</p>
-                    <p className="text-white/70 text-sm">1203 Blocker Lane</p>
+                    <p className="text-fg-on-dark-body text-sm">1203 Blocker Lane</p>
                     <p className="text-fg-on-dark-muted text-sm">Domingos · 1:00 PM</p>
                   </div>
                 </div>
