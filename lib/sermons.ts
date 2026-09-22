@@ -23,7 +23,7 @@ export const SERMONS: Sermon[] = [
   // ── Behind the Scenes (Esther) — current series ────────────────────────────
   {
     id: "bts-8",
-    youtubeId: "",
+    youtubeId: "mAMBA_u20J8",
     title: "Named and Known",
     series: "Behind the Scenes",
     seriesId: "behind-the-scenes",
@@ -452,7 +452,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "gw-0104",
-    youtubeId: "",
+    youtubeId: "YKog8fEYDzQ",
     title: "Prayers We Can Always Pray",
     series: "God's Work | Our Work",
     seriesId: "gods-work-our-work",
@@ -465,7 +465,7 @@ export const SERMONS: Sermon[] = [
   // ── Advent 2025 — Who Is Jesus? ────────────────────────────────────────────
   {
     id: "advent-2025-4",
-    youtubeId: "",
+    youtubeId: "lcFAbhfEYv4",
     title: "Jesus the Redeemer",
     series: "Who Is Jesus?",
     seriesId: "who-is-jesus-2025",
@@ -476,7 +476,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "advent-2025-3",
-    youtubeId: "",
+    youtubeId: "-dsKbFRV9M0",
     title: "Jesus the Word",
     series: "Who Is Jesus?",
     seriesId: "who-is-jesus-2025",
@@ -487,7 +487,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "advent-2025-2",
-    youtubeId: "",
+    youtubeId: "QAnqzxLjuuA",
     title: "Jesus the Servant",
     series: "Who Is Jesus?",
     seriesId: "who-is-jesus-2025",
@@ -498,7 +498,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "advent-2025-1",
-    youtubeId: "",
+    youtubeId: "MDpw1jTc5us",
     title: "Jesus the Son",
     series: "Who Is Jesus?",
     seriesId: "who-is-jesus-2025",
@@ -511,7 +511,7 @@ export const SERMONS: Sermon[] = [
   // ── Matthew 6 — Nov 2025 ──────────────────────────────────────────────────
   {
     id: "matt6-3",
-    youtubeId: "",
+    youtubeId: "fOqNM-v7Nz4",
     title: "How to Trust",
     series: "The Ordered Life",
     seriesId: "ordered-life",
@@ -522,7 +522,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "matt6-2",
-    youtubeId: "",
+    youtubeId: "Fz03MsBQahc",
     title: "How to Fast",
     series: "The Ordered Life",
     seriesId: "ordered-life",
@@ -533,7 +533,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "matt6-1",
-    youtubeId: "",
+    youtubeId: "4QehZn_rA6E",
     title: "How to Give",
     series: "The Ordered Life",
     seriesId: "ordered-life",
@@ -546,7 +546,7 @@ export const SERMONS: Sermon[] = [
   // ── Standalone — Oct 2025 ──────────────────────────────────────────────────
   {
     id: "harvest-2025",
-    youtubeId: "",
+    youtubeId: "nhSmLLA3ZP8",
     title: "Looking at the Harvest",
     series: "Guest Messages",
     seriesId: "guest-messages",
@@ -559,7 +559,7 @@ export const SERMONS: Sermon[] = [
   // ── Joseph (Genesis) ───────────────────────────────────────────────────────
   {
     id: "joseph-11",
-    youtubeId: "",
+    youtubeId: "nNOQDjrC2og",
     title: "God's Good Plan",
     series: "Providence",
     seriesId: "joseph",
@@ -570,7 +570,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-10",
-    youtubeId: "",
+    youtubeId: "GKYTMUmgmwQ",
     title: "Blessings",
     series: "Providence",
     seriesId: "joseph",
@@ -581,7 +581,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-9",
-    youtubeId: "",
+    youtubeId: "4S5UB_kHPD0",
     title: "These Are the Names",
     series: "Providence",
     seriesId: "joseph",
@@ -592,7 +592,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-8",
-    youtubeId: "",
+    youtubeId: "pQgBJYonLHI",
     title: "Connecting the Dots",
     series: "Providence",
     seriesId: "joseph",
@@ -603,7 +603,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-7",
-    youtubeId: "",
+    youtubeId: "lGS9bs8uIgw",
     title: "The Gospel According to Judah",
     series: "Providence",
     seriesId: "joseph",
@@ -614,7 +614,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-6",
-    youtubeId: "",
+    youtubeId: "fjbs7JrpACA",
     title: "Above and Beyond",
     series: "Providence",
     seriesId: "joseph",
@@ -625,7 +625,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-5",
-    youtubeId: "",
+    youtubeId: "IXxqa1Mu884",
     title: "Navigating Success",
     series: "Providence",
     seriesId: "joseph",
@@ -636,7 +636,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-4",
-    youtubeId: "",
+    youtubeId: "Dydu3Sl1Zz4",
     title: "Pressure and Time",
     series: "Providence",
     seriesId: "joseph",
@@ -647,7 +647,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-3",
-    youtubeId: "",
+    youtubeId: "rvZDMSiwJ44",
     title: "Stabilizing Your Soul",
     series: "Providence",
     seriesId: "joseph",
@@ -658,7 +658,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-2",
-    youtubeId: "",
+    youtubeId: "My20OeUqrgM",
     title: "Dissecting a Disaster",
     series: "Providence",
     seriesId: "joseph",
@@ -669,7 +669,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "joseph-1",
-    youtubeId: "",
+    youtubeId: "v3ESLwQFLG8",
     title: "Joseph",
     series: "Providence",
     seriesId: "joseph",
@@ -682,7 +682,7 @@ export const SERMONS: Sermon[] = [
   // ── Standalone — Aug 2025 ─────────────────────────────────────────────────
   {
     id: "psalm-51-2025",
-    youtubeId: "",
+    youtubeId: "NY4JQ1OddE0",
     title: "Repentance",
     series: "Guest Messages",
     seriesId: "guest-messages",
@@ -743,7 +743,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-9",
-    youtubeId: "",
+    youtubeId: "ltlbbYbUCeQ",
     title: "The Holy Spirit",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -754,7 +754,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-8",
-    youtubeId: "",
+    youtubeId: "et4kn6qvoPo",
     title: "All Who Are Thirsty",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -765,7 +765,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-7",
-    youtubeId: "",
+    youtubeId: "T26NqIcAHeA",
     title: "People Who Should Get It",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -776,7 +776,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-6",
-    youtubeId: "",
+    youtubeId: "Jjv5kzk7zII",
     title: "You Don't Want to Go Away",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -787,7 +787,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-5",
-    youtubeId: "",
+    youtubeId: "KpZ8Ng95vWI",
     title: "King-Makers, Chaos and Food-Chasers",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -798,7 +798,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-4",
-    youtubeId: "",
+    youtubeId: "GvbfkKTpkfQ",
     title: "Bringing Jesus into the Equation",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -809,7 +809,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-3",
-    youtubeId: "",
+    youtubeId: "Vn48QxE5sJc",
     title: "Initiation of a Confrontation",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -820,7 +820,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-2",
-    youtubeId: "",
+    youtubeId: "e33Y4bj37sg",
     title: "Father and Son",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -831,7 +831,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "john-1",
-    youtubeId: "",
+    youtubeId: "NQXOTS7KHnQ",
     title: "Jesus Notices Hurting People",
     series: "Gospel of John",
     seriesId: "gospel-of-john",
@@ -844,7 +844,7 @@ export const SERMONS: Sermon[] = [
   // ── Standalone — Spring 2025 ──────────────────────────────────────────────
   {
     id: "easter-2025",
-    youtubeId: "",
+    youtubeId: "kcl6aBYELPY",
     title: "Easter",
     series: "Guest Messages",
     seriesId: "guest-messages",
@@ -855,7 +855,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "isaiah-40-2025",
-    youtubeId: "",
+    youtubeId: "4EV8ybOIaSs",
     title: "Bookmark",
     series: "Guest Messages",
     seriesId: "guest-messages",
@@ -868,7 +868,7 @@ export const SERMONS: Sermon[] = [
   // ── Ecclesiastes ──────────────────────────────────────────────────────────
   {
     id: "eccl-6",
-    youtubeId: "",
+    youtubeId: "msU0jW0szQs",
     title: "Wrapping It All Up",
     series: "Under the Sun",
     seriesId: "ecclesiastes",
@@ -879,7 +879,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "eccl-5",
-    youtubeId: "",
+    youtubeId: "ZFAOD5DpPyY",
     title: "How Do We Remember Death?",
     series: "Under the Sun",
     seriesId: "ecclesiastes",
@@ -890,7 +890,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "eccl-4",
-    youtubeId: "",
+    youtubeId: "1o-Ypzpcq9g",
     title: "What Investments Will You Make?",
     series: "Under the Sun",
     seriesId: "ecclesiastes",
@@ -901,7 +901,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "eccl-3",
-    youtubeId: "",
+    youtubeId: "AK5GHfaids0",
     title: "How Do You Receive a Gift?",
     series: "Under the Sun",
     seriesId: "ecclesiastes",
@@ -912,7 +912,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "eccl-2",
-    youtubeId: "",
+    youtubeId: "_y4fXY5CQ_Q",
     title: "What Time Is It?",
     series: "Under the Sun",
     seriesId: "ecclesiastes",
@@ -923,7 +923,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "eccl-1",
-    youtubeId: "",
+    youtubeId: "Cgrxi8BW-Ic",
     title: "Where Are We?",
     series: "Under the Sun",
     seriesId: "ecclesiastes",
@@ -936,7 +936,7 @@ export const SERMONS: Sermon[] = [
   // ── Acts ──────────────────────────────────────────────────────────────────
   {
     id: "acts-6",
-    youtubeId: "",
+    youtubeId: "-4MmnHIPxyo",
     title: "The God Who Orchestrates",
     series: "The Church on Mission",
     seriesId: "acts-2025",
@@ -947,7 +947,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "acts-5",
-    youtubeId: "",
+    youtubeId: "DOHULhdLrfQ",
     title: "Different and Better",
     series: "The Church on Mission",
     seriesId: "acts-2025",
@@ -958,7 +958,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "acts-4",
-    youtubeId: "",
+    youtubeId: "dWR_3-w2EqQ",
     title: "Hard Seasons",
     series: "The Church on Mission",
     seriesId: "acts-2025",
@@ -980,7 +980,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "acts-2",
-    youtubeId: "",
+    youtubeId: "OWtHFv_J6DY",
     title: "Lord and Messiah",
     series: "The Church on Mission",
     seriesId: "acts-2025",
@@ -991,7 +991,7 @@ export const SERMONS: Sermon[] = [
   },
   {
     id: "acts-1",
-    youtubeId: "",
+    youtubeId: "GIPYfbArfdI",
     title: "Devoted to Prayer",
     series: "The Church on Mission",
     seriesId: "acts-2025",
