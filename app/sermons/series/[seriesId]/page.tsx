@@ -37,7 +37,7 @@ const SERIES_COLORS: Record<string, SeriesColor> = {
   "ot-revisited":          { bg: "#1c1209", accent: IDENTITY.amber.hue,   ink: IDENTITY.amber },
   "complete-in-christ":    { bg: "#0d2618", accent: IDENTITY.emerald.hue, ink: IDENTITY.emerald },
   "gods-work-our-work":    { bg: "#00205B", accent: "#00abc9",            ink: { light: "var(--accent-text)", dark: "var(--accent-text)" } },
-  "guest-messages":        { bg: "#111827", accent: IDENTITY.slate.hue,   ink: IDENTITY.slate },
+  "standalone-messages":        { bg: "#111827", accent: IDENTITY.slate.hue,   ink: IDENTITY.slate },
 };
 
 export default async function SeriesPage({
