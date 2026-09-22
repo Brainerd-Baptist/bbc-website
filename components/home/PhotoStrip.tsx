@@ -17,14 +17,14 @@ const PHOTOS = [
   { src: "/carousel/choir-orchestra.jpg",       w: 1400, h:  931, alt: "Choir and Orchestra in the sanctuary at Brainerd Baptist" },
   { src: "/carousel/women-prayer.jpg",          w: 1400, h:  931, alt: "Women praying together at a Brainerd Baptist women's ministry event" },
   { src: "/carousel/students-1.jpg",            w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
-  { src: "/carousel/music-camp-3.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
+  { src: "/carousel/kids-sunday-worship-strip.jpg", w: 1400, h:  931, alt: "Kids engaged in Sunday worship at Brainerd Baptist" },
   { src: "/carousel/women-speaker.jpg",         w: 1400, h:  931, alt: "A woman speaking at a Brainerd Baptist women's ministry gathering" },
   { src: "/carousel/adult-bible-study.jpg",     w: 1400, h:  931, alt: "Adults in small group Bible study" },
   { src: "/carousel/men-intergen.jpg",          w: 1400, h:  931, alt: "Men of different generations at a Brainerd Baptist men's ministry event" },
   { src: "/carousel/missions-1.jpg",            w: 1400, h:  787, alt: "Brainerd Baptist Ecuador missions trip 2026" },
   { src: "/carousel/women-laughing.jpg",        w: 1400, h:  931, alt: "Women laughing together at a Brainerd Baptist women's ministry gathering" },
   { src: "/carousel/food-pantry-checkin.jpg",   w: 1400, h:  931, alt: "Volunteers at the Brainerd Baptist food pantry" },
-  { src: "/carousel/music-camp-5.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer camp" },
+  { src: "/carousel/kids-toddler-strip.jpg",    w: 1400, h:  931, alt: "Toddlers playing together in the Brainerd Baptist nursery" },
   { src: "/carousel/missions-2.jpg",            w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
 ];
 

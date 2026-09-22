@@ -126,7 +126,7 @@ export default function KidsPage() {
         {/* Background photo */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/carousel/music-camp-3.jpg"
+          src="/carousel/kids-sunday-worship.jpg"
           alt="Brainerd Baptist Kids Ministry"
           className="absolute inset-0 w-full h-full object-cover object-center"
           aria-hidden="true"
@@ -424,7 +424,7 @@ export default function KidsPage() {
             <div className="rounded-2xl overflow-hidden" style={{ height: "300px" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/carousel/music-camp-2.jpg"
+                src="/carousel/kids-midweek.jpg"
                 alt="Kids midweek"
                 className="w-full h-full object-cover object-center"
               />
@@ -497,10 +497,10 @@ export default function KidsPage() {
       <section className="py-0 overflow-hidden">
         <div className="flex gap-1" style={{ height: "280px" }}>
           {[
-            "/carousel/music-camp-1.jpg",
-            "/carousel/music-camp-2.jpg",
+            "/ministries/nursery.jpg",
+            "/ministries/kids.jpg",
             "/carousel/music-camp-4.jpg",
-            "/carousel/music-camp-5.jpg",
+            "/carousel/kids-preschool-table.jpg",
           ].map((src, i) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img
