@@ -160,45 +160,6 @@ export default async function SermonsPage() {
         );
       })()}
 
-      {/* ── Series cards ──────────────────────────────────────────────── */}
-      <section className="px-5 md:px-8 mb-14 pt-12">
-        <div className="max-w-5xl mx-auto">
-          <p className="eyebrow-muted mb-5">Current &amp; Recent Series</p>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory">
-            {allSeries.map((sr) => {
-              const count = sermons.filter((s) => s.seriesId === sr.id).length;
-              // Use the most recent sermon's YouTube thumbnail as card artwork
-              const firstSermon = sermons.find((s) => s.seriesId === sr.id);
-              const thumbUrl = firstSermon?.youtubeId
-                ? `https://img.youtube.com/vi/${firstSermon.youtubeId}/maxresdefault.jpg`
-                : null;
-              return (
-                <a
-                  key={sr.id}
-                  href={`/series/${sr.id}`}
-                  className="group flex-shrink-0 snap-start w-48 md:w-56 rounded-2xl overflow-hidden border border-border-on-dark hover:border-border-on-dark-strong transition relative"
-                  style={{ background: "var(--brand-band)" }}
-                >
-                  {/* Artwork background */}
-                  {thumbUrl && (
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-                      style={{ backgroundImage: `url(${thumbUrl})` }}
-                    />
-                  )}
-                  {/* Minimal bottom scrim for the count badge */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  {/* Sermon count badge */}
-                  <div className="relative p-3 h-full flex flex-col justify-end min-h-[140px]">
-                    <p className="text-fg-on-dark-muted text-[10px] font-medium">{count} sermon{count !== 1 ? "s" : ""}</p>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* ── Continue Listening shelf (client — reads localStorage) ─────── */}
       <ContinueListeningShelf
         sermons={sermons.map((s): SermonForShelf => ({

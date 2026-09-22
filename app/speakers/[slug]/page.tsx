@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
-import { SERMONS, formatDate } from "@/lib/sermons";
+import { SERMONS } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
 // ClientEmailButton is a "use client" wrapper around EmailButton — it handles the
 // dynamic(ssr:false) import internally, which is required because ssr:false is not
@@ -84,21 +84,22 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
   const hasSermons = sermons.length > 0;
 
-  // Group by series (newest series first) instead of one long chronological
-  // list -- same convention as the main /sermons page.
-  const sermonGroups: { seriesId: string; series: string; accentColor: string; sermons: SermonRow[] }[] = [];
+  // One card per series this speaker has preached in (newest series first)
+  // instead of one long chronological list -- click through to /series/[id]
+  // for the full series, same convention as the main /sermons page.
+  const seriesCards: { seriesId: string; series: string; count: number; youtubeId: string; accentColor: string }[] = [];
   {
-    const map = new Map<string, { seriesId: string; series: string; accentColor: string; sermons: SermonRow[] }>();
+    const map = new Map<string, { seriesId: string; series: string; count: number; youtubeId: string; accentColor: string }>();
     for (const s of sermons) {
       const key = s.seriesId || s.series || "other";
       const existing = map.get(key);
       if (existing) {
-        existing.sermons.push(s);
+        existing.count += 1;
       } else {
-        map.set(key, { seriesId: key, series: s.series || "Other", accentColor: s.accentColor, sermons: [s] });
+        map.set(key, { seriesId: key, series: s.series || "Other", count: 1, youtubeId: s.youtubeId, accentColor: s.accentColor });
       }
     }
-    sermonGroups.push(...map.values());
+    seriesCards.push(...map.values());
   }
 
   return (
@@ -226,78 +227,47 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
       {hasSermons && (
         <div className="px-5 md:px-8 pb-24 border-t border-border pt-10" style={{ background: "var(--surface-sunken)" }}>
           <div className="max-w-4xl mx-auto">
-            <p className="eyebrow-muted mb-6">Sermons</p>
+            <p className="eyebrow-muted mb-6">Sermon Series</p>
 
-            <div className="space-y-8">
-              {sermonGroups.map((group) => (
-                <div key={group.seriesId}>
-                  <div className="flex items-baseline gap-2.5 mb-3">
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: group.accentColor }}
-                    />
-                    <h3 className="font-condensed font-800 text-fg" style={{ fontSize: "1rem", letterSpacing: "-0.01em" }}>
-                      {group.series}
-                    </h3>
-                    <span className="text-fg-subtle text-xs tabular-nums">
-                      {group.sermons.length} sermon{group.sermons.length !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    {group.sermons.map((s) => {
-                      const thumbUrl = s.youtubeId
-                        ? `https://img.youtube.com/vi/${s.youtubeId}/maxresdefault.jpg`
-                        : null;
-
-                      return (
-                        <a
-                          key={s.slug || s.date}
-                          href={s.slug ? `/sermons/${s.slug}` : "#"}
-                          className="group flex items-center gap-4 p-3 rounded-xl bg-surface-raised border border-border hover:border-accent/30 hover:shadow-sm transition"
-                        >
-                          {/* Thumbnail */}
-                          <div className="w-16 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-brand-navy/6">
-                            {thumbUrl && (
-                              <img
-                                src={thumbUrl}
-                                alt=""
-                                className="w-full h-full object-cover"
-                              />
-                            )}
-                          </div>
-
-                          {/* Meta */}
-                          <div className="flex-1 min-w-0">
-                            <p
-                              className="text-fg text-sm font-semibold leading-snug truncate group-hover:text-accent-text transition-colors"
-                              style={{ letterSpacing: "-0.01em" }}
-                            >
-                              {s.title}
-                            </p>
-                            <p className="text-fg-muted text-xs mt-0.5 truncate">
-                              {s.passage}
-                            </p>
-                          </div>
-
-                          {/* Date + arrow */}
-                          <div className="flex items-center gap-3 flex-shrink-0">
-                            <span className="text-fg-subtle text-xs hidden sm:block">
-                              {s.date ? formatDate(s.date) : ""}
-                            </span>
-                            <svg
-                              width="12" height="12" viewBox="0 0 12 12" fill="none"
-                              className="text-fg-subtle group-hover:text-accent-text transition-colors"
-                              stroke="currentColor" strokeWidth="1.5"
-                            >
-                              <path d="M2 6h8M7 3l3 3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {seriesCards.map((card) => {
+                const thumbUrl = card.youtubeId
+                  ? `https://img.youtube.com/vi/${card.youtubeId}/maxresdefault.jpg`
+                  : null;
+                return (
+                  <a
+                    key={card.seriesId}
+                    href={`/series/${card.seriesId}`}
+                    className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-border-on-dark hover:border-border-on-dark-strong transition"
+                    style={{ background: "var(--brand-band)" }}
+                  >
+                    {thumbUrl ? (
+                      <img
+                        src={thumbUrl}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-105 transition duration-300"
+                      />
+                    ) : (
+                      <div
+                        className="absolute inset-0"
+                        style={{ background: `linear-gradient(135deg, var(--brand-band) 0%, ${card.accentColor}33 100%)` }}
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+                    <div className="relative h-full flex flex-col justify-end p-4">
+                      <h3
+                        className="text-fg-on-dark font-condensed font-800 leading-tight mb-1"
+                        style={{ fontSize: "1.1rem", letterSpacing: "-0.01em" }}
+                      >
+                        {card.series}
+                      </h3>
+                      <p className="text-fg-on-dark-muted text-[11px] font-medium tabular-nums">
+                        {card.count} sermon{card.count !== 1 ? "s" : ""}
+                      </p>
+                    </div>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
