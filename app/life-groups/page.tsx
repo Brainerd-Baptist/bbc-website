@@ -99,6 +99,37 @@ export default function LifeGroupsPage() {
         </div>
       </section>
 
+      {/* Where on campus */}
+      <section className="py-12 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-condensed font-800 text-fg text-3xl mb-2">
+            Where on Campus, 9:45 AM?
+          </h2>
+          <p className="text-fg-muted text-sm mb-8 leading-relaxed">
+            First time at 9:45? Here&apos;s where each age group meets between services.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-5">
+            <div className="glass rounded-2xl p-7">
+              <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">Main Building</p>
+              <h3 className="font-condensed font-800 text-fg text-xl mb-2">Kids &amp; most Adult groups</h3>
+              <p className="text-fg-muted text-sm leading-relaxed">
+                Kids Life Groups and the large majority of adult groups meet in the main building —
+                staff and greeters can point you to your specific room.
+              </p>
+            </div>
+            <div className="glass rounded-2xl p-7">
+              <p className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-2">The BX</p>
+              <h3 className="font-condensed font-800 text-fg text-xl mb-2">Students, College &amp; a few Adult groups</h3>
+              <p className="text-fg-muted text-sm leading-relaxed">
+                Students and College &amp; Young Adult groups meet at the BX, along with a handful of
+                adult groups. Not sure which building your group is in? Ask at check-in and we&apos;ll
+                walk you there.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-20 px-6 text-center">
         <div className="max-w-xl mx-auto">

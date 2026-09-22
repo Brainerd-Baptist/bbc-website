@@ -114,6 +114,10 @@ export default function VisitPage() {
               </p>
               <p className="text-fg-on-dark font-condensed font-800 text-2xl">Life Groups</p>
               <p className="text-fg-on-dark-muted text-sm mt-1">Small-group Bible study for all ages — the best way to get connected beyond Sunday.</p>
+              <p className="text-fg-on-dark-muted text-xs mt-2">
+                Kids &amp; most adult groups meet in the Main Building. Students, College, and a few
+                adult groups meet at the BX.
+              </p>
             </div>
           </div>
         </div>
