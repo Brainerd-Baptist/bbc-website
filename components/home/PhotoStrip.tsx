@@ -8,7 +8,6 @@ const PHOTOS = [
   { src: "/carousel/congregation-worship.jpg",  w: 1400, h:  931, alt: "Congregation in worship at Brainerd Baptist" },
   { src: "/carousel/kids-midweek.jpg",          w: 1400, h:  931, alt: "Kids active in midweek ministry at Brainerd Baptist" },
   { src: "/carousel/students-1.jpg",            w: 1400, h:  931, alt: "Students in community at Brainerd Baptist" },
-  { src: "/carousel/life-groups-1.jpg",         w: 1400, h:  931, alt: "Community at Brainerd Baptist" },
   { src: "/carousel/food-pantry-wide.jpg",      w: 1400, h:  931, alt: "Brainerd Baptist food pantry serving the community" },
   { src: "/carousel/choir-orchestra.jpg",       w: 1400, h:  931, alt: "Choir and Orchestra in the sanctuary at Brainerd Baptist" },
   { src: "/carousel/music-camp-3.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer musical" },
