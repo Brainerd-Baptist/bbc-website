@@ -77,8 +77,7 @@ export default async function SermonsPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-fg-on-dark mb-4"
-            style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em", lineHeight: 0.95 }}
+            className="text-fg-on-dark mb-4 h-display"
           >
             Sermons
           </h1>
@@ -229,8 +228,7 @@ export default async function SermonsPage() {
         <div className="max-w-2xl mx-auto text-center">
           <p className="eyebrow-white mb-3">Subscribe</p>
           <h2
-            className="font-condensed font-800 text-fg-on-dark mb-4"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em" }}
+            className="text-fg-on-dark mb-4 h-section"
           >
             Listen Anywhere
           </h2>

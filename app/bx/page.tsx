@@ -41,8 +41,7 @@ export default function BXPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5"
-            style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
+            className="text-white mb-5 h-display"
           >
             The{" "}
             <span style={{ color: "var(--accent-text)" }}>BX.</span>
@@ -85,8 +84,7 @@ export default function BXPage() {
           <div>
             <p className="eyebrow mb-3">Open to the Public</p>
             <h2
-              className="font-condensed font-900 text-fg mb-5"
-              style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+              className="text-fg mb-5 h-section"
             >
               Fitness, recreation, and community.
             </h2>
@@ -161,8 +159,7 @@ export default function BXPage() {
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-3">What&apos;s Inside</p>
           <h2
-            className="font-condensed font-900 text-fg text-center mb-12"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+            className="text-fg text-center mb-12 h-section"
           >
             Everything you need.
           </h2>
@@ -190,8 +187,7 @@ export default function BXPage() {
           <div>
             <p className="eyebrow mb-3">Join the BX</p>
             <h2
-              className="font-condensed font-900 text-fg mb-5"
-              style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+              className="text-fg mb-5 h-section"
             >
               Membership starts here.
             </h2>
@@ -268,8 +264,7 @@ export default function BXPage() {
           <div className="mb-10 text-center">
             <p className="eyebrow mb-3">What&apos;s Happening</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+              className="text-fg h-section"
             >
               BX Calendar.
             </h2>
@@ -296,8 +291,7 @@ export default function BXPage() {
           <div className="mb-14">
             <p className="eyebrow mb-3">Events &amp; Meetings</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+              className="text-fg h-subsection"
             >
               Reserve a room.
             </h2>
@@ -411,8 +405,7 @@ export default function BXPage() {
         <div className="relative max-w-3xl mx-auto text-center">
           <p className="eyebrow mb-3" style={{ color: "var(--accent-text)" }}>3rd Wednesday · 10:00 AM – 12:00 PM</p>
           <h2
-            className="font-condensed font-800 text-white mb-4"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}
+            className="text-white mb-4 h-section"
           >
             Community Food Pantry
           </h2>

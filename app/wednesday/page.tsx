@@ -132,11 +132,7 @@ export default function WednesdayPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-fg-on-dark leading-none mb-5"
-            style={{
-              fontSize: "clamp(2.8rem, 8vw, 5.5rem)",
-              letterSpacing: "-0.02em",
-            }}
+            className="text-fg-on-dark mb-5 h-display"
           >
             Wednesday Night{" "}
             <span style={{ color: "var(--accent)" }}>at Brainerd.</span>
@@ -275,8 +271,7 @@ export default function WednesdayPage() {
             <div className="gold-divider" />
           </div>
           <h2
-            className="font-condensed font-800 text-fg-on-dark mb-4"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}
+            className="text-fg-on-dark mb-4 h-section"
           >
             Just show up on a Wednesday.
           </h2>

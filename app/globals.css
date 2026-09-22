@@ -326,34 +326,40 @@ body {
    .h-display/.h-hero/.h-section existed but .h-display and .h-hero had
    zero real callers and .h-section had exactly one; the values below
    match the 5/6/8-site clusters found when every hand-rolled clamp()
-   heading site-wide was grepped and grouped by exact string. */
+   heading site-wide was grepped and grouped by exact string. Font-weight
+   was audited the same way per cluster, not assumed: every real
+   .h-display/.h-hero/.h-subsection call site uses font-900, and the
+   .h-section cluster is 800 at 4 of 7 sites (the other 3, in bx/page.tsx,
+   are themselves a drift from that page's own established pattern) --
+   so weight tracks what the cluster actually uses, not what the single
+   pre-existing, unused .h-section definition happened to say. */
 .h-display {
   font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 800;
+  font-weight: 900;
   font-size: clamp(2.8rem, 8vw, 5.5rem);
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.02em;
 }
 .h-hero {
   font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 800;
+  font-weight: 900;
   font-size: clamp(2.8rem, 7vw, 4.5rem);
   line-height: 1.0;
   letter-spacing: -0.02em;
 }
 .h-subsection {
   font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 800;
+  font-weight: 900;
   font-size: clamp(2rem, 5vw, 3rem);
   line-height: 1.05;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 .h-section {
   font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   line-height: 1.05;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 /* Card and list-item heading -- the font-condensed font-800 text-xl/text-2xl
    pattern repeated across visit/give/life-groups/home with no shared class.

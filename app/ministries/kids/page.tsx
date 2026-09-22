@@ -396,12 +396,7 @@ export default function KidsPage() {
             <div>
               <p className="eyebrow mb-3">Wednesday nights</p>
               <h2
-                className="font-condensed font-900 text-fg mb-5"
-                style={{
-                  fontSize: "clamp(2rem, 5vw, 3rem)",
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.05,
-                }}
+                className="text-fg mb-5 h-subsection"
               >
                 Kids midweek.
               </h2>
@@ -444,12 +439,7 @@ export default function KidsPage() {
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Our Team</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                letterSpacing: "-0.02em",
-                lineHeight: 1.05,
-              }}
+              className="text-fg h-subsection"
             >
               The people who love your kids.
             </h2>

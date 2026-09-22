@@ -26,8 +26,7 @@ export default function CommunityPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-white leading-none mb-5"
-            style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
+            className="text-white mb-5 h-display"
           >
             Brainerd Baptist in the{" "}
             <span style={{ color: "var(--accent-text)" }}>Community.</span>
@@ -46,8 +45,7 @@ export default function CommunityPage() {
             <div>
               <p className="eyebrow mb-3">Open to the Public</p>
               <h2
-                className="font-condensed font-900 text-fg mb-5"
-                style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+                className="text-fg mb-5 h-subsection"
               >
                 The BX Community Center.
               </h2>
@@ -161,8 +159,7 @@ export default function CommunityPage() {
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Practical Help</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+              className="text-fg h-subsection"
             >
               Showing up when it counts.
             </h2>
@@ -255,8 +252,7 @@ export default function CommunityPage() {
       >
         <div className="max-w-2xl mx-auto text-center">
           <h2
-            className="font-condensed font-800 text-white mb-4"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}
+            className="text-white mb-4 h-section"
           >
             Want to get involved?
           </h2>

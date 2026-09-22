@@ -112,12 +112,7 @@ export default function StudentsPage() {
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">What we&apos;re about</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                letterSpacing: "-0.02em",
-                lineHeight: 1.05,
-              }}
+              className="text-fg h-subsection"
             >
               Built on three things.
             </h2>
@@ -152,12 +147,7 @@ export default function StudentsPage() {
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Find your week</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                letterSpacing: "-0.02em",
-                lineHeight: 1.05,
-              }}
+              className="text-fg h-subsection"
             >
               When we meet.
             </h2>
@@ -197,12 +187,7 @@ export default function StudentsPage() {
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Our Team</p>
             <h2
-              className="font-condensed font-900 text-fg"
-              style={{
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                letterSpacing: "-0.02em",
-                lineHeight: 1.05,
-              }}
+              className="text-fg h-subsection"
             >
               The people behind it.
             </h2>
@@ -268,12 +253,7 @@ export default function StudentsPage() {
             Ready to plug in?
           </p>
           <h2
-            className="font-condensed font-900 text-fg-on-dark mb-5"
-            style={{
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-            }}
+            className="text-fg-on-dark mb-5 h-subsection"
           >
             Bring your student on a Wednesday.
           </h2>

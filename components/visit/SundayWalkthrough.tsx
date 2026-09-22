@@ -84,8 +84,7 @@ export default function SundayWalkthrough() {
           Your First Sunday
         </p>
         <h2
-          className="font-condensed font-900 text-fg-on-dark text-center mb-16"
-          style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+          className="text-fg-on-dark text-center mb-16 h-hero"
         >
           Step by Step
         </h2>

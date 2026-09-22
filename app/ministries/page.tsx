@@ -137,8 +137,7 @@ export default function MinistriesPage() {
             <div className="gold-divider" />
           </div>
           <h1
-            className="font-condensed font-900 text-fg-on-dark leading-none mb-5"
-            style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)", letterSpacing: "-0.02em" }}
+            className="text-fg-on-dark mb-5 h-display"
           >
             Ministries
           </h1>

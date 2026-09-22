@@ -146,8 +146,7 @@ export default function VisitPage() {
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Before You Arrive</p>
           <h2
-            className="font-condensed font-900 text-fg text-center mb-16"
-            style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+            className="text-fg text-center mb-16 h-hero"
           >
             What to Expect
           </h2>
@@ -179,8 +178,7 @@ export default function VisitPage() {
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Your Kids Matter Here</p>
           <h2
-            className="font-condensed font-900 text-fg text-center mb-4"
-            style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+            className="text-fg text-center mb-4 h-hero"
           >
             Worship Care for Kids
           </h2>
@@ -206,8 +204,7 @@ export default function VisitPage() {
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Getting Here</p>
           <h2
-            className="font-condensed font-900 text-fg text-center mb-16"
-            style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+            className="text-fg text-center mb-16 h-hero"
           >
             Find Us
           </h2>
@@ -245,8 +242,7 @@ export default function VisitPage() {
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="eyebrow mb-4">Questions? Reach Out.</p>
           <h2
-            className="font-condensed font-900 text-fg mb-4"
-            style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+            className="text-fg mb-4 h-hero"
           >
             We'd love to hear from you.
           </h2>
@@ -263,8 +259,7 @@ export default function VisitPage() {
       <section className="py-24 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-xl mx-auto">
           <h2
-            className="font-condensed font-900 text-fg-on-dark mb-4"
-            style={{ fontSize: "clamp(2.8rem, 7vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+            className="text-fg-on-dark mb-4 h-hero"
           >
             Ready to Visit?
           </h2>

@@ -127,8 +127,7 @@ export default function WhoIsJesusPage() {
             }}
           >
             <h2
-              className="font-condensed font-900 text-white mb-4"
-              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}
+              className="text-white mb-4 h-subsection"
             >
               Still working through it?
             </h2>
