@@ -17,6 +17,9 @@ const PHOTOS = [
   { src: "/carousel/food-pantry-checkin.jpg",   w: 1400, h:  931, alt: "Volunteers at the Brainerd Baptist food pantry" },
   { src: "/carousel/music-camp-5.jpg",          w: 1400, h:  931, alt: "Brainerd Kids summer camp" },
   { src: "/carousel/missions-2.jpg",            w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
+  { src: "/carousel/men-football-catch.jpg",    w: 1400, h:  931, alt: "A man catching a football at a Brainerd Baptist men's ministry event" },
+  { src: "/carousel/men-devotional.jpg",        w: 1400, h:  931, alt: "A man leading a devotional at a Brainerd Baptist men's ministry gathering" },
+  { src: "/carousel/men-intergen.jpg",          w: 1400, h:  931, alt: "Men of different generations at a Brainerd Baptist men's ministry event" },
 ];
 
 function PhotoItem({ photo, priority = false }: { photo: (typeof PHOTOS)[0]; priority?: boolean }) {
