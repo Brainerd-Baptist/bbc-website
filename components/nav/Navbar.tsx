@@ -25,7 +25,7 @@ const NAV_GROUPS = [
       { label: "Students", href: "/ministries/students" },
       { label: "College & Young Adults", href: "/ministries/college" },
       { label: "Life Groups", href: "/life-groups" },
-      { label: "Missions", href: "/connect" },
+      { label: "Missions", href: "/missions" },
       { label: "Wednesday Night", href: "/wednesday" },
     ],
   },

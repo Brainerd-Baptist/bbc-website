@@ -48,7 +48,7 @@ const ROW_TWO = [
     key: "missions",
     label: "Missions",
     sub: "Local outreach and international partnerships",
-    href: "/ministries/missions",
+    href: "/missions",
     photo: "/ministries/missions.jpg",
   },
 ];
