@@ -117,10 +117,10 @@ function Fade({show,delay=0,children}:{show:boolean;delay?:number;children:React
 const HALO: React.CSSProperties = { paintOrder:"stroke", stroke:"var(--plate)", strokeWidth:5, strokeLinejoin:"round" };
 
 function MLText({x,y,lines,fill,size=15,weight=800,anchor="middle",ls="0.06em"}:{
-  x:number;y:number;lines:string[];fill:string;size?:number;weight?:number;anchor?:string;ls?:string
+  x:number;y:number;lines:string[];fill:string;size?:number;weight?:number;anchor?:React.SVGAttributes<SVGTextElement>["textAnchor"];ls?:string
 }) {
   return (
-    <text y={y} textAnchor={anchor as any} fill={fill} fontSize={size} fontWeight={weight}
+    <text y={y} textAnchor={anchor} fill={fill} fontSize={size} fontWeight={weight}
       fontFamily="var(--font-barlow-condensed), sans-serif"
       letterSpacing={ls} style={{textTransform:"uppercase", ...HALO}}>
       {lines.map((l,i)=><tspan key={i} x={x} dy={i===0?0:size*1.3}>{l}</tspan>)}
@@ -226,28 +226,48 @@ function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
   const [key,setKey] = useState(0);
   const prev = useRef(false);
   useEffect(()=>{ if(show && !prev.current) setKey(k=>k+1); prev.current = show; },[show]);
+
+  // These are finite (non-looping) SMIL animations. A default begin="0s" is
+  // relative to when the SVG document itself loaded, not to when this
+  // figure actually mounts — so by the time you've clicked through a few
+  // steps, the browser considers the animation's time window already
+  // elapsed and jumps straight to the frozen end pose without ever
+  // playing it. begin="indefinite" + an explicit beginElement() call, run
+  // right when the figure mounts, starts the clock at the real moment it
+  // becomes visible instead.
+  const motionRef = useRef<SVGAnimateMotionElement>(null);
+  const leg1Ref = useRef<SVGAnimateTransformElement>(null);
+  const leg2Ref = useRef<SVGAnimateTransformElement>(null);
+  const arm1Ref = useRef<SVGAnimateTransformElement>(null);
+  const arm2Ref = useRef<SVGAnimateTransformElement>(null);
+  useEffect(() => {
+    if (!show) return;
+    const els: (SVGAnimationElement|null)[] = [motionRef.current, leg1Ref.current, leg2Ref.current, arm1Ref.current, arm2Ref.current];
+    els.forEach(el => { try { el?.beginElement(); } catch {} });
+  }, [show, key]);
+
   if (!show) return null;
   return (
     <g key={key} filter="url(#sk)">
       <g>
         {/* Runs the crossing twice, then stops (freezes) at Brokenness — not an endless loop */}
-        <animateMotion dur="1.4s" repeatCount="2" fill="freeze" path={path}/>
+        <animateMotion ref={motionRef} dur="1.4s" begin="indefinite" repeatCount="2" fill="freeze" path={path}/>
         <circle cx="0" cy="-10" r="4" fill={color}/>
         <line x1="0" y1="-6" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="4" x2="-7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="4" x2="7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={arm1Ref} attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="-5" x2="-7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={arm2Ref} attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="-5" x2="7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
       </g>
@@ -262,6 +282,23 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
   const [key,setKey] = useState(0);
   const prev = useRef(false);
   useEffect(()=>{ if(show && !prev.current) setKey(k=>k+1); prev.current = show; },[show]);
+
+  // Same begin="indefinite" + beginElement() fix as RunningMan — see the
+  // note there. Without it this kneel simply never plays once the page has
+  // been open a few seconds.
+  const leg1Ref = useRef<SVGAnimateTransformElement>(null);
+  const leg2Ref = useRef<SVGAnimateTransformElement>(null);
+  const arm1Ref = useRef<SVGAnimateTransformElement>(null);
+  const arm2Ref = useRef<SVGAnimateTransformElement>(null);
+  useEffect(() => {
+    if (!show) return;
+    [leg1Ref, leg2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
+    const t = setTimeout(() => {
+      [arm1Ref, arm2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
+    }, 450);
+    return () => clearTimeout(t);
+  }, [show, key]);
+
   return (
     <g transform={`translate(${x},${y})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
@@ -270,19 +307,19 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
           <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           {/* Legs start straight and together (standing), then splay into a kneel */}
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 0;38 0 0" dur=".55s" begin=".3s" fill="freeze"/>
+            <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="0 0 0;38 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="0" x2="-2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-14 0 0" dur=".55s" begin=".3s" fill="freeze"/>
+            <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="0 0 0;-14 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="0" x2="2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin=".75s" fill="freeze"/>
+            <animateTransform ref={arm1Ref} attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="-8" x2="-7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;-52 0 -8" dur=".45s" begin=".75s" fill="freeze"/>
+            <animateTransform ref={arm2Ref} attributeName="transform" type="rotate" values="0 0 -8;-52 0 -8" dur=".45s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="-8" x2="7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
         </g>
@@ -381,6 +418,31 @@ export default function ThreeCircles() {
   // stepping on the line itself.
   const sinRunPath = `M ${sinStart.x},${sinStart.y-16} Q ${sinCtrl.x},${sinCtrl.y-16} ${sinEnd.x},${sinEnd.y-16}`;
 
+  // A point (and outward normal) on a quadratic bezier at parameter t — used
+  // to plant the praying/redeemed figures directly on their arrows, at a
+  // point along the curve clear of the rotated label, the way the runner
+  // already sits right on the sin arrow.
+  type Pt = {x:number;y:number};
+  const bez = (p0:Pt,p1:Pt,p2:Pt,t:number): Pt => {
+    const mt=1-t;
+    return { x: mt*mt*p0.x+2*mt*t*p1.x+t*t*p2.x, y: mt*mt*p0.y+2*mt*t*p1.y+t*t*p2.y };
+  };
+  const bezOffset = (p0:Pt,p1:Pt,p2:Pt,t:number,dist:number,side:1|-1): Pt => {
+    const mt=1-t;
+    const dx = 2*mt*(p1.x-p0.x)+2*t*(p2.x-p1.x);
+    const dy = 2*mt*(p1.y-p0.y)+2*t*(p2.y-p1.y);
+    const len = Math.hypot(dx,dy) || 1;
+    const p = bez(p0,p1,p2,t);
+    return { x: p.x + side*(-dy/len)*dist, y: p.y + side*(dx/len)*dist };
+  };
+  // Near where the repent arrow arrives at the Gospel circle — offset to
+  // the outside of the curve, clear of the "Repent & Believe" label.
+  const prayPos = bezOffset(repStart, repCtrl, repEnd, 0.82, 16, -1);
+  // Near where the recover arrow arrives back at Design — offset outward,
+  // clear of the "Recover & Pursue" label, and a touch lower per feedback.
+  const redeemPosRaw = bezOffset(recStart, recCtrl, recEnd, 0.82, 16, 1);
+  const redeemPos = { x: redeemPosRaw.x, y: redeemPosRaw.y + 10 };
+
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
 
@@ -453,8 +515,9 @@ export default function ThreeCircles() {
 
             {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed — squiggle icon ═══ */}
             <BrokenCircle show={vis(v,"broken-circle")} navy={NAVY}/>
-            <DrawIcon cx={BX} cy={BY-10} show={vis(v,"broken-circle")} delay={300} stroke={NAVY} sw={2.6}
-              d="M -35,0 Q -26,-22 -17,0 Q -8,22 0,0 Q 8,-22 17,0 Q 26,22 35,0" len={175}/>
+            {/* Sized and lifted so its bottom trough clears the "Brokenness" label below it */}
+            <DrawIcon cx={BX} cy={BY-16} show={vis(v,"broken-circle")} delay={300} stroke={NAVY} sw={2.6}
+              d="M -31,0 Q -23,-16 -15,0 Q -7,16 0,0 Q 7,-16 15,0 Q 23,16 31,0" len={150}/>
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={NAVY} size={13}/>
             </Fade>
@@ -469,32 +532,36 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Down: heaven to earth (incarnation) — left of the cross */}
+            {/* Down: heaven to earth (incarnation) — left of the cross. Same
+                stroke weight and length as the outer flow arrows so it reads
+                as a drawn line, not just a small marker glyph. */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-30},${GPY-40} L ${GPX-30},${GPY-4}`} stroke={NAVY} sw={2.4} show={vis(v,"gospel-circle")} delay={300} len={40}/>
+              <AnimPath d={`M ${GPX-30},${GPY-46} L ${GPX-30},${GPY-4}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={46}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-30},${GPY-40} L ${GPX-30},${GPY-4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.4"/>
+              <path d={`M ${GPX-30},${GPY-46} L ${GPX-30},${GPY-4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={600} stroke={NAVY}/>
-            {/* The tomb, empty — the stone rolled to the side */}
+            {/* The tomb, empty — the stone rolled to the side. Sits below the
+                cross, with clear space kept below it for the "Gospel" label
+                so the two never overlap. */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-9},${GPY+20} L ${GPX-9},${GPY+8} A 9,9 0 0 1 ${GPX+9},${GPY+8} L ${GPX+9},${GPY+20}`}
+              <AnimPath d={`M ${GPX-9},${GPY+26} L ${GPX-9},${GPY+13} A 9,9 0 0 1 ${GPX+9},${GPY+13} L ${GPX+9},${GPY+26}`}
                 stroke={NAVY} sw={2.2} show={vis(v,"gospel-circle")} delay={1000} len={44}/>
             </g>
-            <AnimCircle cx={GPX+16} cy={GPY+18} r={5} stroke={NAVY} sw={2} show={vis(v,"gospel-circle")} delay={1250}/>
+            <AnimCircle cx={GPX+16} cy={GPY+24} r={5} stroke={NAVY} sw={2} show={vis(v,"gospel-circle")} delay={1250}/>
             {/* Up: the ascension — right of the cross */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-40}`} stroke={NAVY} sw={2.4} show={vis(v,"gospel-circle")} delay={1450} len={40}/>
+              <AnimPath d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-46}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={1450} len={46}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-40}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.4"/>
+              <path d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-46}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
             {/* Crown sits on top of the circle, partly outside it — same read as the reference art */}
             <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={1700} stroke={NAVY} sw={2.6}
               d="M -20,0 L -20,-15 L -10,-4 L 0,-30 L 10,-4 L 20,-15 L 20,0 Z" len={170}/>
             <Fade show={vis(v,"gospel-inner")}>
-              <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={NAVY} size={17}/>
+              <MLText x={GPX} y={GPY+42} lines={["Gospel"]} fill={NAVY} size={17}/>
             </Fade>
 
             {/* ═══ SIN arrow ═══ */}
@@ -530,7 +597,7 @@ export default function ThreeCircles() {
                 Repent &amp; Believe
               </text>
             </Fade>
-            <PrayingMan x={repMid.x+46} y={repMid.y+56} color={TEAL} show={vis(v,"repent-arrow")}/>
+            <PrayingMan x={prayPos.x} y={prayPos.y} color={TEAL} show={vis(v,"repent-arrow")}/>
 
             {/* ═══ RECOVER & PURSUE: GP → GD ═══ */}
             <g filter="url(#sk)">
@@ -550,7 +617,7 @@ export default function ThreeCircles() {
                 Recover &amp; Pursue
               </text>
             </Fade>
-            <RedeemedMan x={recMid.x-46} y={recMid.y+58} color={TEAL} show={vis(v,"recover-arrow")}/>
+            <RedeemedMan x={redeemPos.x} y={redeemPos.y} color={TEAL} show={vis(v,"recover-arrow")}/>
 
           </svg>
         </div>
