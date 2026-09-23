@@ -50,7 +50,7 @@ const MINISTRIES = [
     color: IDENTITY.missions.hue,
     ink: IDENTITY.missions,
     photo: "/carousel/missions-istanbul.jpg",
-    href: "/connect",
+    href: "/missions",
     body: "From East Ridge to East Africa. Brainerd Baptist partners with missionaries and church-planting networks globally, and engages the Brainerd community locally every week.",
     detail: "Local + global partnerships",
   },
@@ -230,7 +230,7 @@ export default function MinistriesPage() {
                     className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-5 py-2.5 transition inline-flex items-center gap-2 whitespace-nowrap hover:opacity-80 identity-ink identity-border"
                     style={inkVars(ink)}
                   >
-                    {href.startsWith("/ministries/") || href === "/life-groups"
+                    {href.startsWith("/ministries/") || href === "/life-groups" || href === "/missions"
                       ? "Learn More"
                       : "Get Connected"}
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
