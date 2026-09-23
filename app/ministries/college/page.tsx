@@ -19,9 +19,10 @@ const SECTIONS = [
     ages: "College Students",
     ink: IDENTITY.college,
     detail: "Sundays · Weekly small groups",
-    body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow deep in God's Word together in Men's and Women's Bible studies, and learn what it looks like to live out — and share — your faith on campus. We gather together on Sundays and meet in smaller groups throughout the week to study Scripture, encourage one another, and train together to talk about Jesus with the people around us.",
+    body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow deep in God's Word together in Men's and Women's Bible studies on campus throughout the semester, and learn what it looks like to live out — and share — your faith on campus. We gather together on Sundays and meet in smaller groups throughout the week to study Scripture, encourage one another, and train together to talk about Jesus with the people around us.",
     schedule: [
-      { label: "Men's & Women's Bible Study", when: "Sundays · 9:45 AM", where: "BX" },
+      { label: "Life Group", when: "Sundays · 9:45 AM", where: "BX" },
+      { label: "Men's & Women's Bible Study", when: "Weekly during the semester", where: "On Campus" },
       { label: "Midweek Gathering", when: "Wednesdays · 6:00 PM", where: "Bobbitt Home" },
       { label: "Monthly Lunch", when: "1st Sunday of the month · 12:30 PM", where: "BX" },
     ],
