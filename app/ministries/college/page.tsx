@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
 import PhotoLightboxGrid from "./PhotoLightboxGrid";
+import ExpandablePhoto from "./ExpandablePhoto";
 
 export const metadata: Metadata = {
   title: "College & Young Adults — Brainerd Baptist Church",
@@ -18,9 +19,10 @@ const SECTIONS = [
     ages: "College Students",
     ink: IDENTITY.college,
     detail: "Sundays · Weekly small groups",
-    body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow in their faith, and build friendships that go beyond Sunday. We gather together on Sundays and meet in smaller groups throughout the week to encourage one another, study God's Word, and learn what it looks like to follow Jesus in college.",
+    body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow deep in God's Word together in Men's and Women's Bible studies on campus throughout the semester, and learn what it looks like to live out — and share — your faith on campus. We gather together on Sundays and meet in smaller groups throughout the week to study Scripture, encourage one another, and train together to talk about Jesus with the people around us.",
     schedule: [
       { label: "Life Group", when: "Sundays · 9:45 AM", where: "BX" },
+      { label: "Men's & Women's Bible Study", when: "Weekly during the semester", where: "On Campus" },
       { label: "Midweek Gathering", when: "Wednesdays · 6:00 PM", where: "Bobbitt Home" },
       { label: "Monthly Lunch", when: "1st Sunday of the month · 12:30 PM", where: "BX" },
     ],
@@ -28,6 +30,7 @@ const SECTIONS = [
       name: "Jo & Ada Bobbitt",
       email: "college@brainerdbaptist.org",
       photo: "/college/jo-ada-bobbitt.jpg",
+      bio: undefined as string | undefined, // TODO: add once Jo & Ada send a bio
     },
     instagram: "brainerd_college",
     photos: [
@@ -146,15 +149,7 @@ export default function CollegeYoungAdultsPage() {
                     style={{ borderColor: "var(--border)" }}
                   >
                     {leader.photo ? (
-                      <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0">
-                        <Image
-                          src={leader.photo}
-                          alt={leader.name}
-                          fill
-                          sizes="56px"
-                          className="object-cover"
-                        />
-                      </div>
+                      <ExpandablePhoto src={leader.photo} alt={leader.name} size={56} />
                     ) : (
                       <div
                         className="w-14 h-14 rounded-full shrink-0 identity-ink identity-border border flex items-center justify-center"
@@ -180,6 +175,9 @@ export default function CollegeYoungAdultsPage() {
                       >
                         {leader.email}
                       </a>
+                      {leader.bio && (
+                        <p className="text-fg-muted text-sm mt-1.5 leading-relaxed">{leader.bio}</p>
+                      )}
                     </div>
                   </div>
                 )}
