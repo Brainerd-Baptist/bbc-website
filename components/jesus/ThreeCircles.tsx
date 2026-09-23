@@ -326,15 +326,19 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
             <line x1="0" y1="-8" x2="-7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
             <line x1="0" y1="-8" x2="7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
-          {/* Kneeling — head and shoulders dip forward, both legs bend at
-              the knee and fold back together (one continuous line: hip to
-              knee to heel), hands come together low in front. */}
+          {/* Kneeling — mirrored to face left/down, toward the Gospel
+              circle and its cross, since that's the direction of this
+              figure relative to it. Head and torso lean that way, the
+              knee-to-heel line trails back to the right (away from the
+              facing direction, like a real kneel), and both arms are
+              raised up to a shared point near the face instead of down
+              in front — praying hands lifted toward the cross. */}
           <g style={{opacity:kneel?1:0, transition:"opacity .4s ease .12s"}}>
-            <circle cx="1" cy="-8" r="4" fill={color}/>
-            <line x1="1" y1="-4" x2="3" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-            <path d="M 3,6 L 1,12 L -6,12" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <line x1="2" y1="-2" x2="0" y2="8" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-            <line x1="2" y1="-2" x2="3" y2="8" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="-1" cy="-9" r="4" fill={color}/>
+            <line x1="-1" y1="-5" x2="-3" y2="5" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <path d="M -3,5 L -1,11 L 6,11" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <line x1="-2" y1="-3" x2="-6" y2="-9" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <line x1="-2" y1="-3" x2="-5" y2="-10" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
         </g>
       )}
@@ -445,7 +449,7 @@ export default function ThreeCircles() {
   // rather than guessing a curve parameter. "Believe" and "Recover" are
   // stepped away from the anchor along that same rotation direction.
   const prayPos = { x: repMid.x + 37, y: repMid.y + 25 };   // near "Believe"
-  const redeemPos = { x: recMid.x - 37, y: recMid.y + 25 }; // near "Recover", opposite side of the arrow from before
+  const redeemPos = { x: recMid.x - 37, y: recMid.y + 55 }; // near "Recover", pulled further down the arrow so its radiating burst clears the label text above it
 
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
@@ -533,11 +537,27 @@ export default function ThreeCircles() {
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY-R-12} lines={["Brokenness"]} fill={NAVY} size={14}/>
             </Fade>
-            {/* Coping labels — only step 4 */}
+            {/* Coping labels — only step 4. Moved up alongside the little
+                jagged "shrapnel" marks that fly off the Brokenness circle's
+                cracks (drawn in BrokenCircle), each word angled to match
+                the mark it sits beside, so it reads as "this word IS one of
+                the broken lines" rather than a caption floating below. */}
             <Fade show={vis(v,"cope-labels")}>
-              <MLText x={BX-62} y={BY+108} lines={["Money"]}   fill={LABEL} size={12} weight={500}/>
-              <MLText x={BX+6}  y={BY+108} lines={["Success"]} fill={LABEL} size={12} weight={500}/>
-              <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill={LABEL} size={12} weight={500}/>
+              <g transform={`translate(${BX+30},${BY-96}) rotate(-20)`}>
+                <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
+                  fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
+                  style={{textTransform:"uppercase", ...HALO}}>Money</text>
+              </g>
+              <g transform={`translate(${BX+78},${BY-54}) rotate(0)`}>
+                <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
+                  fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
+                  style={{textTransform:"uppercase", ...HALO}}>Addiction</text>
+              </g>
+              <g transform={`translate(${BX+78},${BY+58}) rotate(10)`}>
+                <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
+                  fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
+                  style={{textTransform:"uppercase", ...HALO}}>Religion</text>
+              </g>
             </Fade>
 
             {/* ═══ GOSPEL (bottom-center) — navy on white — cross + crown ═══
@@ -546,20 +566,23 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Two arrows, both flowing from the top of the circle down
-                toward the tomb — bowed out around the cross so they never
-                touch its crossbar, rather than tucked in against its arms. */}
+            {/* Two arrows circling the cross, in opposite directions — left
+                flows UP, right flows DOWN — rather than both pointing at
+                the tomb. Bowed out around the cross so they never touch
+                its crossbar, and pulled back from the tomb graphic
+                (stopping short of it) so they read as showing a direction
+                of flow, not literally pointing at the tomb itself. */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-16},${GPY-62} Q ${GPX-42},${GPY-20} ${GPX-14},${GPY+9}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={82}/>
+              <AnimPath d={`M ${GPX-14},${GPY-2} Q ${GPX-42},${GPY-20} ${GPX-16},${GPY-62}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={82}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-16},${GPY-62} Q ${GPX-42},${GPY-20} ${GPX-14},${GPY+9}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
+              <path d={`M ${GPX-14},${GPY-2} Q ${GPX-42},${GPY-20} ${GPX-16},${GPY-62}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+16},${GPY-62} Q ${GPX+42},${GPY-20} ${GPX+14},${GPY+9}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={550} len={82}/>
+              <AnimPath d={`M ${GPX+16},${GPY-62} Q ${GPX+42},${GPY-20} ${GPX+14},${GPY-2}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={550} len={82}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+16},${GPY-62} Q ${GPX+42},${GPY-20} ${GPX+14},${GPY+9}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
+              <path d={`M ${GPX+16},${GPY-62} Q ${GPX+42},${GPY-20} ${GPX+14},${GPY-2}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
