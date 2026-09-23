@@ -60,7 +60,7 @@ const MINISTRIES = [
     ages: "College Students",
     color: IDENTITY.college.hue,
     ink: IDENTITY.college,
-    photo: null,
+    photo: "/college/college-group-porch.jpg",
     href: "/ministries/college",
     body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow in their faith, and build friendships that go beyond Sunday. We gather together on Sundays and meet in smaller groups throughout the week to encourage one another, study God's Word, and learn what it looks like to follow Jesus in college.",
     detail: "Sundays · Weekly small groups",
