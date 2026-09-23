@@ -563,15 +563,25 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Round 11: the reference image shows one simple diagonal
-                stroke inside the Gospel circle, left of the cross — not a
-                pair flanking it. Verified clear of the crossbar (closest
-                approach x≈168, crossbar spans 193-225). */}
+            {/* Round 12: "just match this picture — exactly." The reference
+                shows two separate STRAIGHT internal strokes, not one curved
+                one bunched at the top: a short one right of the cross that
+                just goes straight down (where Repent & Believe arrives),
+                and a longer one from center that goes straight up-left to
+                the edge (where Restored & Forgiven leaves). Both verified
+                clear of the crossbar (y=278, x 193-225) and the tomb
+                (y>=313, x 200-218). */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-6},${GPY+42} Q ${GPX-52},${GPY+15} ${GPX-38},${GPY-42}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={110}/>
+              <AnimPath d={`M ${GPX+23},${GPY-50} L ${GPX+27},${GPY-4}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={46}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-6},${GPY+42} Q ${GPX-52},${GPY+15} ${GPX-38},${GPY-42}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+              <path d={`M ${GPX+23},${GPY-50} L ${GPX+27},${GPY-4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+            )}
+            <g filter="url(#sk)">
+              <AnimPath d={`M ${GPX+8},${GPY+8} L ${GPX-46},${GPY-38}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={500} len={70}/>
+            </g>
+            {vis(v,"gospel-circle") && (
+              <path d={`M ${GPX+8},${GPY+8} L ${GPX-46},${GPY-38}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
