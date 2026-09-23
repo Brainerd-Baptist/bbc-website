@@ -296,13 +296,12 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
   // note there. Without it this kneel simply never plays once the page has
   // been open a few seconds.
   const dropRef = useRef<SVGAnimateTransformElement>(null);
-  const leg1Ref = useRef<SVGAnimateTransformElement>(null);
-  const leg2Ref = useRef<SVGAnimateTransformElement>(null);
+  const legsRef = useRef<SVGAnimateTransformElement>(null);
   const arm1Ref = useRef<SVGAnimateTransformElement>(null);
   const arm2Ref = useRef<SVGAnimateTransformElement>(null);
   useEffect(() => {
     if (!show) return;
-    [dropRef, leg1Ref, leg2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
+    [dropRef, legsRef].forEach(r => { try { r.current?.beginElement(); } catch {} });
     const t = setTimeout(() => {
       [arm1Ref, arm2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
     }, 450);
@@ -318,16 +317,16 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
           <animateTransform ref={dropRef} attributeName="transform" type="translate" values="0 0;0 6" dur=".55s" begin="indefinite" fill="freeze"/>
           <circle cx="0" cy="-14" r="4" fill={color}/>
           <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-          {/* Legs start straight (standing), then fold back sharply under
-              him — sitting back onto his heels, the clear kneeling pose in
-              the reference art rather than a shallow bend. */}
+          {/* Both legs are one rigid unit, rotated together by a single
+              animation around the same pivot. Rotating them separately (the
+              earlier version) let one leg swing much further than the
+              other, which read as the legs scissoring apart into a splits
+              rather than folding back together into a kneel. Sharing one
+              transform makes that impossible — they can only move as a pair. */}
           <g>
-            <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="0 0 0;96 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
-            <line x1="0" y1="0" x2="-2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-          </g>
-          <g>
-            <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="0 0 0;-30 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
-            <line x1="0" y1="0" x2="2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <animateTransform ref={legsRef} attributeName="transform" type="rotate" values="0 0 0;82 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
+            <line x1="0" y1="0" x2="-3" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <line x1="0" y1="0" x2="3" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
             <animateTransform ref={arm1Ref} attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin="indefinite" fill="freeze"/>
@@ -545,7 +544,7 @@ export default function ThreeCircles() {
             {/* A small gap in the ground beneath the crack — the "broken
                 open door" detail from the reference art */}
             <DrawIcon cx={BX} cy={BY+30} show={vis(v,"broken-circle")} delay={900} stroke={NAVY} sw={2}
-              d="M -5,-6 L -5,6 L 5,6 L 5,-6" len={24}/>
+              d="M -5,-6 L -5,6 L 5,6 L 5,-6" len={34}/>
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY-R-12} lines={["Brokenness"]} fill={NAVY} size={14}/>
             </Fade>
