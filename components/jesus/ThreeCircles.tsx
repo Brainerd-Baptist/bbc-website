@@ -266,20 +266,24 @@ export default function ThreeCircles() {
               </marker>
             </defs>
 
-            {/* ═══ GOD'S DESIGN (top-left) — teal on white ═══ */}
+            {/* ═══ GOD'S DESIGN (top-left) — teal on white — heart icon ═══ */}
             <g filter="url(#sk)">
               <AnimCircle cx={GDX} cy={GDY} r={R} stroke={TEAL} sw={3} show={vis(v,"design-circle")}/>
             </g>
-            <line x1={GDX} y1={GDY-28} x2={GDX} y2={GDY-4} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
-              style={{opacity:vis(v,"design-circle")?.65:0,transition:"opacity .5s ease 1s"}}/>
-            <line x1={GDX-14} y1={GDY-18} x2={GDX+14} y2={GDY-18} stroke={TEAL} strokeWidth="2.5" strokeLinecap="round"
-              style={{opacity:vis(v,"design-circle")?.65:0,transition:"opacity .5s ease 1s"}}/>
+            <path
+              d={`M ${GDX},${GDY-14} C ${GDX-14},${GDY-24} ${GDX-8},${GDY-40} ${GDX},${GDY-25} C ${GDX+8},${GDY-40} ${GDX+14},${GDY-24} ${GDX},${GDY-14} Z`}
+              fill={TEAL} stroke="none"
+              style={{opacity:vis(v,"design-circle")?0.85:0,transition:"opacity .5s ease 1s"}}/>
             <Fade show={vis(v,"design-inner")}>
               <MLText x={GDX} y={GDY+8} lines={["God's","Design"]} fill={TEAL} size={15}/>
             </Fade>
 
-            {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed ═══ */}
+            {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed — squiggle icon ═══ */}
             <BrokenCircle show={vis(v,"broken-circle")} navy={NAVY}/>
+            <path
+              d={`M ${BX-18},${BY-16} Q ${BX-12},${BY-30} ${BX-6},${BY-16} Q ${BX},${BY-2} ${BX+6},${BY-16} Q ${BX+12},${BY-30} ${BX+18},${BY-16}`}
+              fill="none" stroke={NAVY} strokeWidth="2.5" strokeLinecap="round" strokeOpacity={0.8}
+              style={{opacity:vis(v,"broken-circle")?1:0,transition:"opacity .5s ease 1s"}}/>
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={NAVY} size={13}/>
             </Fade>
@@ -290,7 +294,7 @@ export default function ThreeCircles() {
               <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill={LABEL} size={12} weight={500}/>
             </Fade>
 
-            {/* ═══ GOSPEL (bottom-center) — navy on white ═══ */}
+            {/* ═══ GOSPEL (bottom-center) — navy on white — cross + crown ═══ */}
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
@@ -298,6 +302,10 @@ export default function ThreeCircles() {
               style={{opacity:vis(v,"gospel-circle")?.75:0,transition:"opacity .5s ease 1s"}}/>
             <line x1={GPX-22} y1={GPY-22} x2={GPX+22} y2={GPY-22} stroke={NAVY} strokeWidth="3" strokeLinecap="round"
               style={{opacity:vis(v,"gospel-circle")?.75:0,transition:"opacity .5s ease 1s"}}/>
+            <path
+              d={`M ${GPX-13},${GPY-40} L ${GPX-13},${GPY-50} L ${GPX-6},${GPY-44} L ${GPX},${GPY-54} L ${GPX+6},${GPY-44} L ${GPX+13},${GPY-50} L ${GPX+13},${GPY-40} Z`}
+              fill="none" stroke={NAVY} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" strokeOpacity={0.85}
+              style={{opacity:vis(v,"gospel-circle")?1:0,transition:"opacity .5s ease 1.1s"}}/>
             <Fade show={vis(v,"gospel-inner")}>
               <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={NAVY} size={17}/>
             </Fade>
