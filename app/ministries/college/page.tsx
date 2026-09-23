@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
 
@@ -24,6 +25,15 @@ const SECTIONS = [
     ],
     leader: { name: "Jo & Ada Bobbitt", email: "college@brainerdbaptist.org" },
     instagram: "brainerd_college",
+    photos: [
+      { src: "/college/college-mission-team-rocks.jpg", alt: "College students on a short-term mission trip, gathered on volcanic rock" },
+      { src: "/college/college-lifegroup-discussion.jpg", alt: "Students talking together in a life group room" },
+      { src: "/college/college-friends-costumes.jpg", alt: "Three friends laughing together in costumes" },
+      { src: "/college/college-mission-teaching.jpg", alt: "A student reading Scripture aloud outdoors on a mission trip" },
+      { src: "/college/college-group-porch.jpg", alt: "College group photo together on a porch" },
+      { src: "/college/college-mission-circle-discussion.jpg", alt: "Students and a local family gathered in conversation on a mission trip" },
+      { src: "/college/college-mission-painting.jpg", alt: "Students painting a building's exterior on a mission trip" },
+    ],
   },
   {
     key: "youngadults",
@@ -65,7 +75,7 @@ export default function CollegeYoungAdultsPage() {
       {/* ── Sections ─────────────────────────────────────────── */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto space-y-16">
-          {SECTIONS.map(({ key, name, ages, ink, detail, body, schedule, leader, instagram }) => (
+          {SECTIONS.map(({ key, name, ages, ink, detail, body, schedule, leader, instagram, photos }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">
               <div className="h-1" style={{ background: ink.hue }} />
               <div className="p-8 md:p-12">
@@ -148,6 +158,26 @@ export default function CollegeYoungAdultsPage() {
                     </a>{" "}
                     on Instagram.
                   </p>
+                )}
+
+                {photos && (
+                  <div className="grid grid-cols-3 gap-3 mt-8">
+                    {photos.map((p) => (
+                      <div
+                        key={p.src}
+                        className="relative rounded-lg overflow-hidden"
+                        style={{ aspectRatio: "4 / 3" }}
+                      >
+                        <Image
+                          src={p.src}
+                          alt={p.alt}
+                          fill
+                          sizes="(max-width: 768px) 33vw, 220px"
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
