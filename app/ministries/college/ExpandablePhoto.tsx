@@ -46,14 +46,24 @@ export default function ExpandablePhoto({
           aria-modal="true"
           aria-label={alt}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
-          style={{ background: "var(--scrim-solid)" }}
+          style={{ background: "var(--scrim-solid)", touchAction: "manipulation" }}
           onClick={() => setOpen(false)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            setOpen(false);
+          }}
         >
           <button
             type="button"
             onClick={() => setOpen(false)}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setOpen(false);
+            }}
             aria-label="Close"
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-fg-on-dark hover:opacity-70 transition"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-fg-on-dark hover:opacity-70 transition z-10"
+            style={{ touchAction: "manipulation" }}
           >
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M6 6l12 12M18 6L6 18" />
@@ -62,6 +72,8 @@ export default function ExpandablePhoto({
           <div
             className="relative w-full h-full max-w-xl"
             onClick={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
+            style={{ touchAction: "manipulation" }}
           >
             <Image src={src} alt={alt} fill sizes="100vw" className="object-contain" priority />
           </div>
