@@ -31,6 +31,8 @@ const SECTIONS = [
       { src: "/college/college-friends-costumes.jpg", alt: "Three friends laughing together in costumes" },
       { src: "/college/college-mission-teaching.jpg", alt: "A student reading Scripture aloud outdoors on a mission trip" },
       { src: "/college/college-group-porch.jpg", alt: "College group photo together on a porch" },
+      { src: "/college/college-mission-circle-discussion.jpg", alt: "Students and a local family gathered in conversation on a mission trip" },
+      { src: "/college/college-mission-painting.jpg", alt: "Students painting a building's exterior on a mission trip" },
     ],
   },
   {
