@@ -132,25 +132,17 @@ function MLText({x,y,lines,fill,size=15,weight=800,anchor="middle",ls="0.06em"}:
 }
 
 /* ─── Broken circle ──────────────────────────────────────────────────── */
+/* Round 11: "This brokenness is not even a circle. So we need to make
+   that a circle. So this is actually three circles." The gapped-arc
+   rendering below used to draw the ring itself as broken; now the ring
+   is a normal complete circle (matching Design and Gospel exactly), and
+   only the crack/shrapnel marks — already outside the ring, already the
+   thing that reads as "broken" — carry that idea. */
 function BrokenCircle({show, navy}:{show:boolean; navy:string}) {
   const on = useDrawOn(show,0);
-  const segs=[
-    `M ${BX+R},${BY} A ${R},${R} 0 0 1 ${BX+48},${BY-49}`,
-    `M ${BX+41},${BY-55} A ${R},${R} 0 0 1 ${BX-14},${BY-66}`,
-    `M ${BX-23},${BY-63} A ${R},${R} 0 0 1 ${BX-60},${BY-33}`,
-    `M ${BX-64},${BY-20} A ${R},${R} 0 0 1 ${BX-64},${BY+20}`,
-    `M ${BX-60},${BY+33} A ${R},${R} 0 0 1 ${BX-23},${BY+63}`,
-    `M ${BX-14},${BY+66} A ${R},${R} 0 0 1 ${BX+41},${BY+55}`,
-    `M ${BX+48},${BY+49} A ${R},${R} 0 0 1 ${BX+R},${BY}`,
-  ];
-  /* On white: dark navy arcs, no fill needed — they read perfectly */
   return (
     <g style={{opacity:show?1:0}}>
-      {segs.map((d,i)=>(
-        <path key={i} d={d} fill="none" stroke={navy} strokeWidth={3} strokeOpacity={0.75}
-          strokeLinecap="round" strokeDasharray={65} strokeDashoffset={on?0:65}
-          style={{transition:on?`stroke-dashoffset .45s cubic-bezier(.4,0,.2,1) ${i*60}ms`:undefined}}/>
-      ))}
+      <AnimCircle cx={BX} cy={BY} r={R} stroke={navy} sw={3} show={show}/>
       {on && <>
         <path d={`M ${BX+74},${BY-46} l 12,-8 l -6,12 l 10,-4`} stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
         <path d={`M ${BX+74},${BY+46} l 10,8 l -4,-12 l 8,6`}   stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
@@ -427,51 +419,34 @@ export default function ThreeCircles() {
   const sinCtrl  = {x: 209, y: 22};
   const sinEnd   = {x: BX-50, y: BY-52};
 
-  // Round 10: the previous two rounds only widened the bow of a single-
-  // control-point (quadratic) curve through the middle of the diagram —
-  // real changes, but still read as "the same shape, a bit bigger." The
-  // reference markup calls for something structurally different: a big
-  // hook/C-shaped sweep that swings out through the CORNER of the card
-  // (bottom-left for Recover & Pursue, top-right for Repent & Believe)
-  // rather than the gap between circles. That needs two control points
-  // (a cubic curve), not one.
-  //
-  // recCtrl1 pulls the curve away from the Gospel circle toward the
-  // bottom-left corner first; recCtrl2 continues the sweep along that
-  // corner before it turns up into the Design circle — the two points
-  // together are what makes it read as a hook instead of a gentle arc.
-  // The Repent & Believe curve is this same shape mirrored left-right
-  // (Design's circle position mirrors to Brokenness's) and reversed
-  // (Recover flows Gospel->Design; Repent flows Brokenness->Gospel).
-  const recStart = {x: 159, y: 248};   // Gospel circle, upper-left edge
-  const recCtrl1 = {x: 60,  y: 320};   // pulled down toward the bottom-left corner
-  const recCtrl2 = {x: 40,  y: 120};   // swept up along the left edge
-  const recEnd   = {x: 156, y: 174};   // Design circle, lower-right edge
+  // Round 11: rounds 8-10 kept making these arrows bigger, further out,
+  // structurally fancier — and each round Josiah said it was getting
+  // further from what he wanted, not closer. He sent an exact hand-drawn
+  // reference ("just match this picture") showing simple single-curve
+  // arcs directly connecting adjacent circles, nothing more. Back to
+  // that: one control point, modest bow, no hooks, no corner sweeps —
+  // this is close to the diagram's very first version.
+  const repStart = {x: BX-48, y: BY+54};   // Brokenness circle, lower-left edge
+  const repCtrl  = {x: 280,   y: 205};
+  const repEnd   = {x: GPX+50, y: GPY-52}; // Gospel circle, upper-right edge
 
-  const repStart = {x: 262, y: 174};   // Brokenness circle, lower-left edge
-  const repCtrl1 = {x: 378, y: 120};   // pulled up toward the top-right corner
-  const repCtrl2 = {x: 358, y: 320};   // swept down along the right edge
-  const repEnd   = {x: 259, y: 248};   // Gospel circle, upper-right edge
+  const recStart = {x: GPX-50, y: GPY-52}; // Gospel circle, upper-left edge
+  const recCtrl  = {x: 118,   y: 212};
+  const recEnd   = {x: GDX+48, y: GDY+54}; // Design circle, lower-right edge
 
   const sinMid  = { x:(sinStart.x+2*sinCtrl.x+sinEnd.x)/4,  y:(sinStart.y+2*sinCtrl.y+sinEnd.y)/4  };
-  // Cubic bezier midpoint (t=0.5): B(0.5) = (P0 + 3C1 + 3C2 + P1) / 8
-  const repMid  = { x:(repStart.x+3*repCtrl1.x+3*repCtrl2.x+repEnd.x)/8, y:(repStart.y+3*repCtrl1.y+3*repCtrl2.y+repEnd.y)/8 };
-  const recMid  = { x:(recStart.x+3*recCtrl1.x+3*recCtrl2.x+recEnd.x)/8, y:(recStart.y+3*recCtrl1.y+3*recCtrl2.y+recEnd.y)/8 };
+  const repMid  = { x:(repStart.x+2*repCtrl.x+repEnd.x)/4,  y:(repStart.y+2*repCtrl.y+repEnd.y)/4  };
+  const recMid  = { x:(recStart.x+2*recCtrl.x+recEnd.x)/4,  y:(recStart.y+2*recCtrl.y+recEnd.y)/4  };
 
   // Runner travels a copy of the sin arrow, lifted above it so he isn't
   // stepping on the line itself.
   const sinRunPath = `M ${sinStart.x},${sinStart.y-16} Q ${sinCtrl.x},${sinCtrl.y-16} ${sinEnd.x},${sinEnd.y-16}`;
 
-  // The "Repent & Believe" and "Recover & Pursue" labels are drawn centered
-  // (textAnchor="middle") on a rotated axis, so their own anchor points are
-  // fixed reference points to plant the figures near a specific WORD,
-  // rather than guessing a curve parameter. "Believe" and "Recover" are
-  // stepped away from the anchor along that same rotation direction.
-  // Figures sit just off the curve itself (a small perpendicular offset,
-  // not directly on the stroke) near the Gospel-circle end of each hook —
-  // "Believe" happens on arrival at Gospel, "Recover" happens on leaving it.
-  const prayPos = { x: 305, y: 241 };
-  const redeemPos = { x: 98, y: 282 };
+  // Figures sit near the Gospel-circle end of each arrow, just off the
+  // curve — "Believe" happens on arrival at Gospel, "Restored" happens
+  // on leaving it, matching where the reference places its two figures.
+  const prayPos = { x: repMid.x + 37, y: repMid.y + 25 };
+  const redeemPos = { x: recMid.x - 37, y: recMid.y + 55 };
 
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
@@ -588,24 +563,15 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Round 10: pulled in from the wide loop tried in rounds 8-9 to
-                flank the cross directly — a tighter, bolder pair of strokes
-                immediately left and right of it, matching the reference
-                markup's placement. Left flows UP, right flows DOWN. Still
-                clears the crossbar (x stays under ~173, crossbar spans
-                193-225) and stops short of the tomb graphic (ends at
-                GPY+4, tomb starts at GPY+13). */}
+            {/* Round 11: the reference image shows one simple diagonal
+                stroke inside the Gospel circle, left of the cross — not a
+                pair flanking it. Verified clear of the crossbar (closest
+                approach x≈168, crossbar spans 193-225). */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-24},${GPY+4} Q ${GPX-46},${GPY-18} ${GPX-30},${GPY-58}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={80}/>
+              <AnimPath d={`M ${GPX-6},${GPY+42} Q ${GPX-52},${GPY+15} ${GPX-38},${GPY-42}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={110}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-24},${GPY+4} Q ${GPX-46},${GPY-18} ${GPX-30},${GPY-58}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
-            )}
-            <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+30},${GPY-58} Q ${GPX+46},${GPY-18} ${GPX+24},${GPY+4}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={550} len={80}/>
-            </g>
-            {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+30},${GPY-58} Q ${GPX+46},${GPY-18} ${GPX+24},${GPY+4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+              <path d={`M ${GPX-6},${GPY+42} Q ${GPX-52},${GPY+15} ${GPX-38},${GPY-42}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
@@ -636,46 +602,46 @@ export default function ThreeCircles() {
             </Fade>
             <RunningMan path={sinRunPath} color={RED} show={vis(v,"sin-arrow")}/>
 
-            {/* ═══ REPENT & BELIEVE: B → GP ═══ A big hook/C-shaped sweep —
-                two control points, not one — that swings out through the
-                top-right corner of the card before curving down into the
-                Gospel circle, rather than a gentle bow through the middle. */}
+            {/* ═══ REPENT & BELIEVE: B → GP ═══ Round 11: back to a single,
+                modest bow — no hook, no corner sweep — matching the
+                reference image exactly. Label sized down and set close to
+                the praying man rather than stretched along the curve. */}
             <g filter="url(#sk)">
               <AnimPath
-                d={`M ${repStart.x},${repStart.y} C ${repCtrl1.x},${repCtrl1.y} ${repCtrl2.x},${repCtrl2.y} ${repEnd.x},${repEnd.y}`}
-                stroke={TEAL} sw={4} show={vis(v,"repent-arrow")} len={240}/>
+                d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
+                stroke={TEAL} sw={4} show={vis(v,"repent-arrow")} len={140}/>
             </g>
             {vis(v,"repent-arrow") && (
-              <path d={`M ${repStart.x},${repStart.y} C ${repCtrl1.x},${repCtrl1.y} ${repCtrl2.x},${repCtrl2.y} ${repEnd.x},${repEnd.y}`}
+              <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
             <Fade show={vis(v,"repent-arrow")}>
-              <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
-                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
-                transform={`translate(${repMid.x},${repMid.y}) rotate(-85)`}
+              <text textAnchor="middle" fill={TEAL} fontSize={10} fontWeight={700}
+                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.06em"
+                transform={`translate(${repMid.x},${repMid.y}) rotate(58)`}
                 style={{textTransform:"uppercase", ...HALO}}>
                 Repent &amp; Believe
               </text>
             </Fade>
             <PrayingMan x={prayPos.x} y={prayPos.y} color={TEAL} show={vis(v,"repent-arrow")}/>
 
-            {/* ═══ RECOVER & PURSUE: GP → GD ═══ The mirror image of the
-                curve above, swept through the bottom-left corner instead. */}
+            {/* ═══ RESTORED & FORGIVEN: GP → GD ═══ Mirror of the curve
+                above. Renamed from "Recover & Pursue" per Josiah's request. */}
             <g filter="url(#sk)">
               <AnimPath
-                d={`M ${recStart.x},${recStart.y} C ${recCtrl1.x},${recCtrl1.y} ${recCtrl2.x},${recCtrl2.y} ${recEnd.x},${recEnd.y}`}
-                stroke={TEAL} sw={4} show={vis(v,"recover-arrow")} len={240} delay={300}/>
+                d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
+                stroke={TEAL} sw={4} show={vis(v,"recover-arrow")} len={140} delay={300}/>
             </g>
             {vis(v,"recover-arrow") && (
-              <path d={`M ${recStart.x},${recStart.y} C ${recCtrl1.x},${recCtrl1.y} ${recCtrl2.x},${recCtrl2.y} ${recEnd.x},${recEnd.y}`}
+              <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
             <Fade show={vis(v,"recover-arrow")} delay={300}>
-              <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
-                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
-                transform={`translate(${recMid.x},${recMid.y}) rotate(85)`}
+              <text textAnchor="middle" fill={TEAL} fontSize={10} fontWeight={700}
+                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.06em"
+                transform={`translate(${recMid.x},${recMid.y}) rotate(-58)`}
                 style={{textTransform:"uppercase", ...HALO}}>
-                Recover &amp; Pursue
+                Restored &amp; Forgiven
               </text>
             </Fade>
             <RedeemedMan x={redeemPos.x} y={redeemPos.y} color={TEAL} show={vis(v,"recover-arrow")}/>
