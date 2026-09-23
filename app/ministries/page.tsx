@@ -38,7 +38,7 @@ const MINISTRIES = [
     ages: "All Ages",
     color: "var(--accent)",
     ink: { light: "var(--accent-text)", dark: "var(--accent-text)" },
-    photo: "/carousel/life-groups-1.jpg",
+    photo: "/carousel/life-groups-2026.jpg",
     href: "/life-groups",
     body: "The local church is best experienced in a smaller circle. Life Groups meet weekly — in homes and around tables — for Bible study, prayer, and the kind of community you can't get on Sunday morning alone.",
     detail: "Sunday 9:45 AM · Groups throughout the week",
