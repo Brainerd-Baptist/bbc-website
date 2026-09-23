@@ -34,6 +34,7 @@
     "@tiptap/pm": "^3.31.3",
     "@tiptap/react": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
+    "d3-geo": "^3.1.1",
     "framer-motion": "^13.4.0",
     "mammoth": "^1.12.3",
     "next": "16.3.5",
@@ -42,6 +43,7 @@
     "plyr": "^3.8.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-simple-maps": "^5.0.5",
     "resend": "^6.28.1",
     "sanity": "^3.66.1",
     "styled-components": "^6.1.0"

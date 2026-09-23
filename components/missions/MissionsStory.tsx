@@ -5,25 +5,26 @@ import Image from "next/image";
 import { IDENTITY } from "@/lib/identity-colors";
 
 // ── Scroll-reveal editorial narrative ──────────────────────────────
-// Each "beat" pairs one short line of copy with one photo that bleeds
-// off the edge of the viewport, running partway behind the text
-// column. As a beat scrolls into view its line fades/slides in and
-// the photo drifts in slightly slower than the page (a soft parallax),
-// so the image feels like it's sliding out from behind the words
-// rather than sitting in a boxed gallery. The two paragraphs of copy
-// Josiah provided are broken apart into these fragments; the copy
-// itself is unchanged, just re-paced across the scroll instead of
-// sitting in one dense block.
+// Each "beat" pairs a fragment of copy with a photo that bleeds off the
+// edge of the viewport, running partway behind the text column. As a
+// beat scrolls into view its lines fade/slide in and the photo drifts
+// in slightly, so it feels like it's sliding out from behind the words
+// rather than sitting in a boxed gallery.
+//
+// The two paragraphs Josiah provided are reproduced here in full,
+// split only at natural clause breaks across the beats below — no
+// content was cut, just re-paced across the scroll instead of sitting
+// in one dense block. (An sr-only copy of the same paragraphs also
+// lives on the page for screen readers / search.)
 const BEATS = [
   {
     src: "/missions/story/beat-1-road.jpg",
     alt: "Sunset over a rural road",
     side: "right" as const,
     lines: [
-      "Every nation.",
-      "Every tribe.",
-      "Every language.",
-      "Every people — gathered before Jesus.",
+      "Brainerd Missions is rooted in the conviction of Scripture —",
+      "the picture in Revelation of every nation, tribe, language,",
+      "and people gathered before Jesus.",
     ],
   },
   {
@@ -31,8 +32,8 @@ const BEATS = [
     alt: "Rainbow over ancient ruins",
     side: "left" as const,
     lines: [
-      "There are still unreached peoples in the world.",
-      "We see it as our mission — and our joy —",
+      "Because there are still unreached peoples in the world,",
+      "we see it as our mission — and our joy —",
       "to take the gospel to the ends of the earth.",
     ],
   },
@@ -41,7 +42,7 @@ const BEATS = [
     alt: "City skyline from a hillside at dusk",
     side: "right" as const,
     lines: [
-      "We send Brainerd members",
+      "We do that by sending Brainerd members",
       "on short-term and long-term teams,",
     ],
   },
@@ -50,10 +51,9 @@ const BEATS = [
     alt: "Ancient ruins lit at night beneath a hillside city",
     side: "left" as const,
     lines: [
-      "and support trusted partners in",
-      "Central & South America, Africa,",
-      "Asia, and the Middle East —",
-      "trusting God to draw people to Christ.",
+      "and by supporting trusted partners in places like",
+      "Central & South America, Africa, Asia, and the Middle East —",
+      "trusting that God uses these efforts to draw people to Christ.",
     ],
   },
   {
@@ -63,6 +63,16 @@ const BEATS = [
     lines: [
       "At home, we pray and give",
       "in ways that fuel global missions.",
+    ],
+  },
+  {
+    src: "/carousel/congregation-standing.jpg",
+    alt: "Brainerd Baptist congregation in worship",
+    side: "left" as const,
+    lines: [
+      "We want Brainerd to be a church that equips people to live sent —",
+      "whether that's across the street or across the world,",
+      "always with a humble dependence on God's guidance and God's strength.",
     ],
   },
 ];
@@ -84,13 +94,17 @@ function Beat({
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
       },
-      { threshold: 0.35 }
+      // Trigger a bit before the beat is centered, and stay lenient
+      // near the bottom of the viewport, so the reveal feels tied to
+      // the scroll itself rather than popping once mostly on-screen.
+      { threshold: 0.1, rootMargin: "0px 0px -12% 0px" }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   const imageOnLeft = beat.side === "left";
+  const easing = "cubic-bezier(0.16, 1, 0.3, 1)";
 
   return (
     <div
@@ -101,14 +115,17 @@ function Beat({
       {/* Photo — bleeds past the content column toward one edge of the
           viewport, sitting behind the text at the point of overlap. */}
       <div
-        className={`absolute top-1/2 -translate-y-1/2 transition-all duration-[1400ms] ease-out ${
-          visible ? "opacity-100" : "opacity-0"
-        } ${imageOnLeft ? "left-0" : "right-0"}`}
+        className={`absolute top-1/2 -translate-y-1/2 ${
+          imageOnLeft ? "left-0" : "right-0"
+        }`}
         style={{
           width: "min(62vw, 780px)",
+          opacity: visible ? 1 : 0,
           transform: `translateY(-50%) translateX(${
-            visible ? "0" : imageOnLeft ? "-40px" : "40px"
+            visible ? "0" : imageOnLeft ? "-24px" : "24px"
           })`,
+          transition: `opacity 900ms ${easing}, transform 900ms ${easing}`,
+          willChange: "opacity, transform",
         }}
       >
         <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
@@ -118,16 +135,18 @@ function Beat({
             fill
             sizes="(max-width: 768px) 90vw, 60vw"
             className="object-cover"
+            style={{ filter: "brightness(1.12) saturate(1.05)" }}
           />
           {/* Scrim on the side the text overlaps, so the words that
               cross onto the photo stay legible. --scrim-side is defined
               dark-to-light left-to-right; mirror it with scaleX for the
-              photos on the left, so the dark end always sits under the
-              text regardless of which edge the photo bleeds toward. */}
+              photos on the left. Dialed down to 55% opacity — legible,
+              not a dark filter over the whole photo. */}
           <div
             className="absolute inset-0"
             style={{
               background: "var(--scrim-side)",
+              opacity: 0.55,
               transform: imageOnLeft ? "scaleX(-1)" : undefined,
             }}
           />
@@ -144,13 +163,14 @@ function Beat({
         {beat.lines.map((line, i) => (
           <p
             key={i}
-            className="font-condensed font-800 text-fg-on-dark leading-tight transition-all duration-700 ease-out"
+            className="font-condensed font-800 text-fg-on-dark leading-tight"
             style={{
-              fontSize: "clamp(1.5rem, 3.4vw, 2.4rem)",
+              fontSize: "clamp(1.35rem, 3vw, 2.15rem)",
               letterSpacing: "-0.01em",
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(24px)",
-              transitionDelay: `${150 + i * 140}ms`,
+              transform: visible ? "translateY(0)" : "translateY(16px)",
+              transition: `opacity 700ms ${easing}, transform 700ms ${easing}`,
+              transitionDelay: `${i * 110}ms`,
             }}
           >
             {line}
@@ -158,12 +178,13 @@ function Beat({
         ))}
         {index === BEATS.length - 1 && (
           <p
-            className="mt-6 text-sm font-semibold tracking-widest uppercase transition-all duration-700 ease-out"
+            className="mt-6 text-sm font-semibold tracking-widest uppercase"
             style={{
               color: IDENTITY.missions.hue,
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(24px)",
-              transitionDelay: `${150 + beat.lines.length * 140}ms`,
+              transform: visible ? "translateY(0)" : "translateY(16px)",
+              transition: `opacity 700ms ${easing}, transform 700ms ${easing}`,
+              transitionDelay: `${beat.lines.length * 110}ms`,
             }}
           >
             Live sent.
@@ -176,10 +197,7 @@ function Beat({
 
 export default function MissionsStory() {
   return (
-    <div
-      className="relative"
-      style={{ background: "var(--brand-ink)" }}
-    >
+    <div className="relative" style={{ background: "var(--brand-ink)" }}>
       {BEATS.map((beat, i) => (
         <Beat key={i} beat={beat} index={i} />
       ))}
