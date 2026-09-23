@@ -5,8 +5,11 @@ import Image from "next/image";
 
 type Photo = { src: string; alt: string };
 
+const SWIPE_THRESHOLD = 40;
+
 export default function PhotoLightboxGrid({ photos }: { photos: Photo[] }) {
   const [index, setIndex] = useState<number | null>(null);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
 
   const close = useCallback(() => setIndex(null), []);
   const prev = useCallback(
@@ -65,6 +68,20 @@ export default function PhotoLightboxGrid({ photos }: { photos: Photo[] }) {
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
           style={{ background: "var(--scrim-solid)" }}
           onClick={close}
+          onTouchStart={(e) => {
+            const t = e.touches[0];
+            setTouchStart({ x: t.clientX, y: t.clientY });
+          }}
+          onTouchEnd={(e) => {
+            if (!touchStart) return;
+            const t = e.changedTouches[0];
+            const dx = t.clientX - touchStart.x;
+            const dy = t.clientY - touchStart.y;
+            setTouchStart(null);
+            if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+            if (dx > 0) prev();
+            else next();
+          }}
         >
           <button
             type="button"
