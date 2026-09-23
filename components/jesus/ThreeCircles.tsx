@@ -109,13 +109,20 @@ function Fade({show,delay=0,children}:{show:boolean;delay?:number;children:React
 }
 
 /* ─── Multi-line text helper ─────────────────────────────────────────── */
+/* Halo: a white outline behind every label's fill, painted first via
+   paint-order, so a word sitting on top of an icon or a line stays
+   legible instead of dissolving into it. #fff matches --plate, which is
+   a fixed light ground regardless of theme (see the palette note below),
+   so this never needs to invert. */
+const HALO: React.CSSProperties = { paintOrder:"stroke", stroke:"var(--plate)", strokeWidth:5, strokeLinejoin:"round" };
+
 function MLText({x,y,lines,fill,size=15,weight=800,anchor="middle",ls="0.06em"}:{
   x:number;y:number;lines:string[];fill:string;size?:number;weight?:number;anchor?:string;ls?:string
 }) {
   return (
     <text y={y} textAnchor={anchor as any} fill={fill} fontSize={size} fontWeight={weight}
       fontFamily="var(--font-barlow-condensed), sans-serif"
-      letterSpacing={ls} style={{textTransform:"uppercase"}}>
+      letterSpacing={ls} style={{textTransform:"uppercase", ...HALO}}>
       {lines.map((l,i)=><tspan key={i} x={x} dy={i===0?0:size*1.3}>{l}</tspan>)}
     </text>
   );
@@ -216,27 +223,31 @@ function CrossIcon({cx,cy,stroke,show,delay=0,popDelay}:{
    running rather than sliding. Mounted only while `show`, so nothing
    animates off-screen. ───────────────────────────────────────────────── */
 function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
+  const [key,setKey] = useState(0);
+  const prev = useRef(false);
+  useEffect(()=>{ if(show && !prev.current) setKey(k=>k+1); prev.current = show; },[show]);
   if (!show) return null;
   return (
-    <g filter="url(#sk)">
+    <g key={key} filter="url(#sk)">
       <g>
-        <animateMotion dur="1.4s" repeatCount="indefinite" path={path}/>
+        {/* Runs the crossing twice, then stops (freezes) at Brokenness — not an endless loop */}
+        <animateMotion dur="1.4s" repeatCount="2" fill="freeze" path={path}/>
         <circle cx="0" cy="-10" r="4" fill={color}/>
         <line x1="0" y1="-6" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="4" x2="-7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="4" x2="7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="-5" x2="-7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" repeatCount="9" fill="freeze"/>
           <line x1="0" y1="-5" x2="7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
       </g>
@@ -257,20 +268,21 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
         <g key={key}>
           <circle cx="0" cy="-14" r="4" fill={color}/>
           <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          {/* Legs start straight and together (standing), then splay into a kneel */}
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 0;38 0 0" dur=".55s" begin=".05s" fill="freeze"/>
-            <line x1="0" y1="0" x2="-6" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 0;38 0 0" dur=".55s" begin=".3s" fill="freeze"/>
+            <line x1="0" y1="0" x2="-2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-14 0 0" dur=".55s" begin=".05s" fill="freeze"/>
-            <line x1="0" y1="0" x2="6" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-14 0 0" dur=".55s" begin=".3s" fill="freeze"/>
+            <line x1="0" y1="0" x2="2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin=".45s" fill="freeze"/>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin=".75s" fill="freeze"/>
             <line x1="0" y1="-8" x2="-7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;-52 0 -8" dur=".45s" begin=".45s" fill="freeze"/>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;-52 0 -8" dur=".45s" begin=".75s" fill="freeze"/>
             <line x1="0" y1="-8" x2="7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
         </g>
@@ -424,6 +436,9 @@ export default function ThreeCircles() {
               <marker id="arrr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
                 <path d="M 0 0 L 10 5 L 0 10 Z" fill={RED}/>
               </marker>
+              <marker id="argn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 Z" fill={NAVY}/>
+              </marker>
             </defs>
 
             {/* ═══ GOD'S DESIGN (top-left) — teal on white — heart icon ═══ */}
@@ -454,9 +469,29 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={300} stroke={NAVY}/>
+            {/* Down: heaven to earth (incarnation) — left of the cross */}
+            <g filter="url(#sk)">
+              <AnimPath d={`M ${GPX-30},${GPY-40} L ${GPX-30},${GPY-4}`} stroke={NAVY} sw={2.4} show={vis(v,"gospel-circle")} delay={300} len={40}/>
+            </g>
+            {vis(v,"gospel-circle") && (
+              <path d={`M ${GPX-30},${GPY-40} L ${GPX-30},${GPY-4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.4"/>
+            )}
+            <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={600} stroke={NAVY}/>
+            {/* The tomb, empty — the stone rolled to the side */}
+            <g filter="url(#sk)">
+              <AnimPath d={`M ${GPX-9},${GPY+20} L ${GPX-9},${GPY+8} A 9,9 0 0 1 ${GPX+9},${GPY+8} L ${GPX+9},${GPY+20}`}
+                stroke={NAVY} sw={2.2} show={vis(v,"gospel-circle")} delay={1000} len={44}/>
+            </g>
+            <AnimCircle cx={GPX+16} cy={GPY+18} r={5} stroke={NAVY} sw={2} show={vis(v,"gospel-circle")} delay={1250}/>
+            {/* Up: the ascension — right of the cross */}
+            <g filter="url(#sk)">
+              <AnimPath d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-40}`} stroke={NAVY} sw={2.4} show={vis(v,"gospel-circle")} delay={1450} len={40}/>
+            </g>
+            {vis(v,"gospel-circle") && (
+              <path d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-40}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.4"/>
+            )}
             {/* Crown sits on top of the circle, partly outside it — same read as the reference art */}
-            <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY} sw={2.6}
+            <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={1700} stroke={NAVY} sw={2.6}
               d="M -20,0 L -20,-15 L -10,-4 L 0,-30 L 10,-4 L 20,-15 L 20,0 Z" len={170}/>
             <Fade show={vis(v,"gospel-inner")}>
               <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={NAVY} size={17}/>
@@ -491,11 +526,11 @@ export default function ThreeCircles() {
               <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
                 fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
                 transform={`translate(${repMid.x+32},${repMid.y}) rotate(58)`}
-                style={{textTransform:"uppercase"}}>
+                style={{textTransform:"uppercase", ...HALO}}>
                 Repent &amp; Believe
               </text>
             </Fade>
-            <PrayingMan x={repMid.x+26} y={repMid.y-2} color={TEAL} show={vis(v,"repent-arrow")}/>
+            <PrayingMan x={repMid.x+46} y={repMid.y+56} color={TEAL} show={vis(v,"repent-arrow")}/>
 
             {/* ═══ RECOVER & PURSUE: GP → GD ═══ */}
             <g filter="url(#sk)">
@@ -511,11 +546,11 @@ export default function ThreeCircles() {
               <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
                 fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.08em"
                 transform={`translate(${recMid.x-32},${recMid.y}) rotate(-58)`}
-                style={{textTransform:"uppercase"}}>
+                style={{textTransform:"uppercase", ...HALO}}>
                 Recover &amp; Pursue
               </text>
             </Fade>
-            <RedeemedMan x={recMid.x-26} y={recMid.y+6} color={TEAL} show={vis(v,"recover-arrow")}/>
+            <RedeemedMan x={recMid.x-46} y={recMid.y+58} color={TEAL} show={vis(v,"recover-arrow")}/>
 
           </svg>
         </div>
