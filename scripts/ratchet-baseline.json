@@ -1,6 +1,6 @@
 {
   "_comment": "Migration ratchet. Counts may only decrease. Regenerate with `npm run ratchet:update` after a phase lands. Deleted in Phase 6 when the rails become hard errors.",
-  "recorded": "2026-09-22",
+  "recorded": "2026-09-23",
   "counts": {
     "raw-hex": 0,
     "raw-rgb-fn": 0,
@@ -11,6 +11,6 @@
     "js-theme-branch": 3,
     "hue-on-own-tint": 0,
     "unthemed-files": 0,
-    "eslint-errors": 52
+    "eslint-errors": 51
   }
 }
