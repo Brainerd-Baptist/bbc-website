@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { IDENTITY } from "@/lib/identity-colors";
 import WorldReachMap from "@/components/missions/WorldReachMap";
 import MissionsContactForm from "@/components/missions/MissionsContactForm";
+import MissionsStory from "@/components/missions/MissionsStory";
 
 export const metadata: Metadata = {
   title: "Missions — Brainerd Baptist Church",
@@ -36,30 +37,27 @@ export default function MissionsPage() {
         </div>
       </div>
 
-      {/* ── Copy ─────────────────────────────────────────────── */}
-      <section className="py-20 px-6">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <div className="h-1 w-16 rounded-full mb-8" style={{ background: IDENTITY.missions.hue }} />
-          <p className="text-fg text-lg leading-relaxed">
-            Brainerd Missions is rooted in the conviction of Scripture and the
-            picture in Revelation of every nation, tribe, language, and
-            people gathered before Jesus. Because there are still unreached
-            peoples in the world, we see it as our mission and our joy to
-            take the gospel to the ends of the earth. We do that by sending
-            Brainerd members on short-term and long-term teams and by
-            supporting trusted partners in places like Central and South
-            America, Africa, Asia, and the Middle East, trusting that God
-            uses these efforts to draw people to Christ.
-          </p>
-          <p className="text-fg text-lg leading-relaxed">
-            At home, we pray and give in ways that fuel global missions. We
-            want Brainerd to be a church that equips people to live sent,
-            whether that&apos;s across the street or across the world, always
-            with a humble dependence on God&apos;s guidance and God&apos;s
-            strength.
-          </p>
-        </div>
-      </section>
+      {/* ── Story ────────────────────────────────────────────── */}
+      <MissionsStory />
+
+      {/* Full copy, for screen readers and anyone who'd rather read it
+          straight through than scroll the story above. Visually
+          hidden — not display:none, so it stays in the accessibility
+          tree and isn't a duplicate-content concern for search. */}
+      <p className="sr-only">
+        Brainerd Missions is rooted in the conviction of Scripture and the
+        picture in Revelation of every nation, tribe, language, and people
+        gathered before Jesus. Because there are still unreached peoples in
+        the world, we see it as our mission and our joy to take the gospel
+        to the ends of the earth. We do that by sending Brainerd members on
+        short-term and long-term teams and by supporting trusted partners in
+        places like Central and South America, Africa, Asia, and the Middle
+        East, trusting that God uses these efforts to draw people to Christ.
+        At home, we pray and give in ways that fuel global missions. We want
+        Brainerd to be a church that equips people to live sent, whether
+        that&apos;s across the street or across the world, always with a
+        humble dependence on God&apos;s guidance and God&apos;s strength.
+      </p>
 
       {/* ── World Reach ──────────────────────────────────────── */}
       <section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
