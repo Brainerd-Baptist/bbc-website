@@ -150,6 +150,162 @@ function BrokenCircle({show, navy}:{show:boolean; navy:string}) {
   );
 }
 
+/* ─── Pencil pop: a small spring-scale after a stroke finishes drawing ──
+   Shared by every hand-drawn icon below via SMIL (not CSS) so the pivot
+   is exact SVG user-space, with no cross-browser transform-origin
+   ambiguity on plain shapes. ─────────────────────────────────────────── */
+function popTransform(popDelayMs: number) {
+  return (
+    <animateTransform attributeName="transform" type="scale" values="1;1;1.14;1" keyTimes="0;0.7;0.85;1"
+      dur="1s" begin={`${popDelayMs}ms`} fill="freeze" calcMode="spline"
+      keySplines="0 0 1 1;.34 1.56 .64 1;.34 1.56 .64 1"/>
+  );
+}
+
+/* ─── Drawn icon: a stroked shape (optionally filled) that draws on like
+   pencil, then pops. `d`/`len` are in LOCAL coordinates centered on 0,0;
+   the icon is positioned by translating the whole group to (cx,cy). ─── */
+function DrawIcon({cx,cy,d,len,stroke,sw=2.6,fill,show,delay=0,popDelay}:{
+  cx:number;cy:number;d:string;len:number;stroke:string;sw?:number;fill?:string;
+  show:boolean;delay?:number;popDelay?:number;
+}) {
+  const on = useDrawOn(show, delay);
+  const pd = popDelay ?? delay + 950;
+  return (
+    <g transform={`translate(${cx},${cy})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
+      {show && (
+        <g>
+          {popTransform(pd)}
+          {fill && <path d={d} fill={fill} fillOpacity={on?0.14:0} stroke="none" style={{transition:"fill-opacity .5s ease .9s"}}/>}
+          <path d={d} fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"
+            strokeDasharray={len} strokeDashoffset={on?0:len}
+            style={{transition:on?`stroke-dashoffset .85s cubic-bezier(.4,0,.2,1)`:undefined}}/>
+        </g>
+      )}
+    </g>
+  );
+}
+
+/* ─── Cross icon: two strokes drawn in sequence (down the shaft, then the
+   crossbar) so it reads as a hand actually drawing a cross. ─────────── */
+function CrossIcon({cx,cy,stroke,show,delay=0,popDelay}:{
+  cx:number;cy:number;stroke:string;show:boolean;delay?:number;popDelay?:number;
+}) {
+  const onV = useDrawOn(show, delay);
+  const onH = useDrawOn(show, delay+380);
+  const pd = popDelay ?? delay + 1000;
+  return (
+    <g transform={`translate(${cx},${cy})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
+      {show && (
+        <g>
+          {popTransform(pd)}
+          <path d="M 0,-34 L 0,10" fill="none" stroke={stroke} strokeWidth={3.2} strokeLinecap="round"
+            strokeDasharray={44} strokeDashoffset={onV?0:44}
+            style={{transition:onV?`stroke-dashoffset .5s cubic-bezier(.4,0,.2,1)`:undefined}}/>
+          <path d="M -16,-16 L 16,-16" fill="none" stroke={stroke} strokeWidth={3.2} strokeLinecap="round"
+            strokeDasharray={32} strokeDashoffset={onH?0:32}
+            style={{transition:onH?`stroke-dashoffset .4s cubic-bezier(.4,0,.2,1)`:undefined}}/>
+        </g>
+      )}
+    </g>
+  );
+}
+
+/* ─── Running stick figure: travels along `path` (SMIL animateMotion)
+   with a looping leg/arm swing (SMIL animateTransform), so it reads as
+   running rather than sliding. Mounted only while `show`, so nothing
+   animates off-screen. ───────────────────────────────────────────────── */
+function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
+  if (!show) return null;
+  return (
+    <g filter="url(#sk)">
+      <g>
+        <animateMotion dur="1.4s" repeatCount="indefinite" path={path}/>
+        <circle cx="0" cy="-10" r="4" fill={color}/>
+        <line x1="0" y1="-6" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" repeatCount="indefinite"/>
+          <line x1="0" y1="4" x2="-7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" repeatCount="indefinite"/>
+          <line x1="0" y1="4" x2="7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" repeatCount="indefinite"/>
+          <line x1="0" y1="-5" x2="-7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" repeatCount="indefinite"/>
+          <line x1="0" y1="-5" x2="7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        </g>
+      </g>
+    </g>
+  );
+}
+
+/* ─── Praying stick figure: falls to its knees and brings its hands
+   together, once, each time it comes into view (remounted via a key
+   bump so the fall replays on every visit to this step). ──────────────── */
+function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolean}) {
+  const [key,setKey] = useState(0);
+  const prev = useRef(false);
+  useEffect(()=>{ if(show && !prev.current) setKey(k=>k+1); prev.current = show; },[show]);
+  return (
+    <g transform={`translate(${x},${y})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
+      {show && (
+        <g key={key}>
+          <circle cx="0" cy="-14" r="4" fill={color}/>
+          <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 0;38 0 0" dur=".55s" begin=".05s" fill="freeze"/>
+            <line x1="0" y1="0" x2="-6" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          </g>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 0;-14 0 0" dur=".55s" begin=".05s" fill="freeze"/>
+            <line x1="0" y1="0" x2="6" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          </g>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin=".45s" fill="freeze"/>
+            <line x1="0" y1="-8" x2="-7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          </g>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0 0 -8;-52 0 -8" dur=".45s" begin=".45s" fill="freeze"/>
+            <line x1="0" y1="-8" x2="7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          </g>
+        </g>
+      )}
+    </g>
+  );
+}
+
+/* ─── Redeemed stick figure: a gentle standing bounce, with dashes
+   radiating off it that blink in a staggered loop. ────────────────────── */
+function RedeemedMan({x,y,color,show}:{x:number;y:number;color:string;show:boolean}) {
+  if (!show) return null;
+  const rays: [number,number,number,number][] = [
+    [-12,-14,-19,-14], [12,-14,19,-14], [-9,-24,-13,-30], [9,-24,13,-30],
+  ];
+  return (
+    <g transform={`translate(${x},${y})`} filter="url(#sk)">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="1.5s" repeatCount="indefinite"/>
+        <circle cx="0" cy="-14" r="4" fill={color}/>
+        <line x1="0" y1="-10" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="4" x2="-6" y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="4" x2="6" y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="-6" x2="-7" y2="-1" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="-6" x2="7" y2="-1" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        {rays.map(([x1,y1,x2,y2],i)=>(
+          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="2" strokeLinecap="round">
+            <animate attributeName="opacity" values="0.15;1;0.15" dur="1.3s" begin={`${i*0.18}s`} repeatCount="indefinite"/>
+          </line>
+        ))}
+      </g>
+    </g>
+  );
+}
+
 /* ─── Main component ─────────────────────────────────────────────────── */
 export default function ThreeCircles() {
   const [idx, setIdx] = useState(0);
@@ -208,6 +364,10 @@ export default function ThreeCircles() {
   const sinMid  = { x:(sinStart.x+2*sinCtrl.x+sinEnd.x)/4,  y:(sinStart.y+2*sinCtrl.y+sinEnd.y)/4  };
   const repMid  = { x:(repStart.x+2*repCtrl.x+repEnd.x)/4,  y:(repStart.y+2*repCtrl.y+repEnd.y)/4  };
   const recMid  = { x:(recStart.x+2*recCtrl.x+recEnd.x)/4,  y:(recStart.y+2*recCtrl.y+recEnd.y)/4  };
+
+  // Runner travels a copy of the sin arrow, lifted above it so he isn't
+  // stepping on the line itself.
+  const sinRunPath = `M ${sinStart.x},${sinStart.y-16} Q ${sinCtrl.x},${sinCtrl.y-16} ${sinEnd.x},${sinEnd.y-16}`;
 
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
@@ -270,20 +430,16 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GDX} cy={GDY} r={R} stroke={TEAL} sw={3} show={vis(v,"design-circle")}/>
             </g>
-            <path
-              d={`M ${GDX},${GDY-14} C ${GDX-14},${GDY-24} ${GDX-8},${GDY-40} ${GDX},${GDY-25} C ${GDX+8},${GDY-40} ${GDX+14},${GDY-24} ${GDX},${GDY-14} Z`}
-              fill={TEAL} stroke="none"
-              style={{opacity:vis(v,"design-circle")?0.85:0,transition:"opacity .5s ease 1s"}}/>
+            <DrawIcon cx={GDX} cy={GDY-14} show={vis(v,"design-circle")} delay={300} stroke={TEAL} fill={TEAL} sw={2.6}
+              d="M 0,25.2 C -36.4,4.2 -19.6,-29.4 0,-12.6 C 19.6,-29.4 36.4,4.2 0,25.2 Z" len={170}/>
             <Fade show={vis(v,"design-inner")}>
               <MLText x={GDX} y={GDY+8} lines={["God's","Design"]} fill={TEAL} size={15}/>
             </Fade>
 
             {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed — squiggle icon ═══ */}
             <BrokenCircle show={vis(v,"broken-circle")} navy={NAVY}/>
-            <path
-              d={`M ${BX-18},${BY-16} Q ${BX-12},${BY-30} ${BX-6},${BY-16} Q ${BX},${BY-2} ${BX+6},${BY-16} Q ${BX+12},${BY-30} ${BX+18},${BY-16}`}
-              fill="none" stroke={NAVY} strokeWidth="2.5" strokeLinecap="round" strokeOpacity={0.8}
-              style={{opacity:vis(v,"broken-circle")?1:0,transition:"opacity .5s ease 1s"}}/>
+            <DrawIcon cx={BX} cy={BY-10} show={vis(v,"broken-circle")} delay={300} stroke={NAVY} sw={2.6}
+              d="M -35,0 Q -26,-22 -17,0 Q -8,22 0,0 Q 8,-22 17,0 Q 26,22 35,0" len={175}/>
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={NAVY} size={13}/>
             </Fade>
@@ -298,14 +454,10 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            <line x1={GPX} y1={GPY-38} x2={GPX} y2={GPY-2} stroke={NAVY} strokeWidth="3" strokeLinecap="round"
-              style={{opacity:vis(v,"gospel-circle")?.75:0,transition:"opacity .5s ease 1s"}}/>
-            <line x1={GPX-22} y1={GPY-22} x2={GPX+22} y2={GPY-22} stroke={NAVY} strokeWidth="3" strokeLinecap="round"
-              style={{opacity:vis(v,"gospel-circle")?.75:0,transition:"opacity .5s ease 1s"}}/>
-            <path
-              d={`M ${GPX-13},${GPY-40} L ${GPX-13},${GPY-50} L ${GPX-6},${GPY-44} L ${GPX},${GPY-54} L ${GPX+6},${GPY-44} L ${GPX+13},${GPY-50} L ${GPX+13},${GPY-40} Z`}
-              fill="none" stroke={NAVY} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" strokeOpacity={0.85}
-              style={{opacity:vis(v,"gospel-circle")?1:0,transition:"opacity .5s ease 1.1s"}}/>
+            <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={300} stroke={NAVY}/>
+            {/* Crown sits on top of the circle, partly outside it — same read as the reference art */}
+            <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY} sw={2.6}
+              d="M -20,0 L -20,-15 L -10,-4 L 0,-30 L 10,-4 L 20,-15 L 20,0 Z" len={170}/>
             <Fade show={vis(v,"gospel-inner")}>
               <MLText x={GPX} y={GPY+16} lines={["Gospel"]} fill={NAVY} size={17}/>
             </Fade>
@@ -323,6 +475,7 @@ export default function ThreeCircles() {
             <Fade show={vis(v,"sin-arrow")}>
               <MLText x={sinMid.x} y={sinMid.y-6} lines={["Sin"]} fill={RED} size={14} weight={700} ls="0.12em"/>
             </Fade>
+            <RunningMan path={sinRunPath} color={RED} show={vis(v,"sin-arrow")}/>
 
             {/* ═══ REPENT & BELIEVE: B → GP ═══ */}
             <g filter="url(#sk)">
@@ -342,6 +495,7 @@ export default function ThreeCircles() {
                 Repent &amp; Believe
               </text>
             </Fade>
+            <PrayingMan x={repMid.x+26} y={repMid.y-2} color={TEAL} show={vis(v,"repent-arrow")}/>
 
             {/* ═══ RECOVER & PURSUE: GP → GD ═══ */}
             <g filter="url(#sk)">
@@ -361,6 +515,7 @@ export default function ThreeCircles() {
                 Recover &amp; Pursue
               </text>
             </Fade>
+            <RedeemedMan x={recMid.x-26} y={recMid.y+6} color={TEAL} show={vis(v,"recover-arrow")}/>
 
           </svg>
         </div>
