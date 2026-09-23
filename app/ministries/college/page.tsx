@@ -17,6 +17,13 @@ const SECTIONS = [
     ink: IDENTITY.college,
     detail: "Sundays · Weekly small groups",
     body: "Whether you're from Chattanooga or find yourself here for college, you don't have to navigate this season alone. Brainerd College Ministry is a place for students from across Chattanooga's campuses to find genuine community, grow in their faith, and build friendships that go beyond Sunday. We gather together on Sundays and meet in smaller groups throughout the week to encourage one another, study God's Word, and learn what it looks like to follow Jesus in college.",
+    schedule: [
+      { label: "Life Group", when: "Sundays · 9:45 AM", where: "BX" },
+      { label: "Midweek Gathering", when: "Wednesdays · 6:00 PM", where: "Bobbitt Home" },
+      { label: "Monthly Lunch", when: "1st Sunday of the month · 12:30 PM", where: "BX" },
+    ],
+    leader: { name: "Jo & Ada Bobbitt", email: "college@brainerdbaptist.org" },
+    instagram: "brainerd_college",
   },
   {
     key: "youngadults",
@@ -58,7 +65,7 @@ export default function CollegeYoungAdultsPage() {
       {/* ── Sections ─────────────────────────────────────────── */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto space-y-16">
-          {SECTIONS.map(({ key, name, ages, ink, detail, body }) => (
+          {SECTIONS.map(({ key, name, ages, ink, detail, body, schedule, leader, instagram }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">
               <div className="h-1" style={{ background: ink.hue }} />
               <div className="p-8 md:p-12">
@@ -83,16 +90,65 @@ export default function CollegeYoungAdultsPage() {
                   {detail}
                 </p>
                 <p className="text-fg-muted leading-relaxed mb-8">{body}</p>
-                <Link
-                  href="/connect"
-                  className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-6 py-3 transition inline-flex items-center gap-2 hover:opacity-80 identity-ink identity-border"
-                  style={inkVars(ink)}
-                >
-                  Get Connected
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2.5 6h7M6.5 3l3 3-3 3" />
-                  </svg>
-                </Link>
+
+                {schedule && (
+                  <div className="grid sm:grid-cols-3 gap-4 mb-8">
+                    {schedule.map((s) => (
+                      <div
+                        key={s.label}
+                        className="rounded-xl p-4 border"
+                        style={{ borderColor: "var(--border)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold tracking-widest uppercase mb-1.5 identity-ink"
+                          style={inkVars(ink)}
+                        >
+                          {s.label}
+                        </p>
+                        <p className="text-fg text-sm font-semibold">{s.when}</p>
+                        <p className="text-fg-muted text-sm">{s.where}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex flex-wrap items-center gap-4 mb-8">
+                  <Link
+                    href="/connect"
+                    className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-6 py-3 transition inline-flex items-center gap-2 hover:opacity-80 identity-ink identity-border"
+                    style={inkVars(ink)}
+                  >
+                    Get Connected
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M2.5 6h7M6.5 3l3 3-3 3" />
+                    </svg>
+                  </Link>
+
+                  {leader && (
+                    <a
+                      href={`mailto:${leader.email}`}
+                      className="text-sm text-fg-muted hover:opacity-80 transition"
+                    >
+                      {leader.name} — {leader.email}
+                    </a>
+                  )}
+                </div>
+
+                {instagram && (
+                  <p className="text-fg-muted text-sm">
+                    Stay up to date on events throughout the semester — follow{" "}
+                    <a
+                      href={`https://www.instagram.com/${instagram}/`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold identity-ink hover:opacity-80"
+                      style={inkVars(ink)}
+                    >
+                      @{instagram}
+                    </a>{" "}
+                    on Instagram.
+                  </p>
+                )}
               </div>
             </div>
           ))}
