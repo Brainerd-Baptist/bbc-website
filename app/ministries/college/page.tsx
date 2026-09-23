@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
+import PhotoLightboxGrid from "./PhotoLightboxGrid";
 
 export const metadata: Metadata = {
   title: "College & Young Adults — Brainerd Baptist Church",
@@ -160,25 +160,7 @@ export default function CollegeYoungAdultsPage() {
                   </p>
                 )}
 
-                {photos && (
-                  <div className="grid grid-cols-3 gap-3 mt-8">
-                    {photos.map((p) => (
-                      <div
-                        key={p.src}
-                        className="relative rounded-lg overflow-hidden"
-                        style={{ aspectRatio: "4 / 3" }}
-                      >
-                        <Image
-                          src={p.src}
-                          alt={p.alt}
-                          fill
-                          sizes="(max-width: 768px) 33vw, 220px"
-                          className="object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {photos && <PhotoLightboxGrid photos={photos} />}
               </div>
             </div>
           ))}
