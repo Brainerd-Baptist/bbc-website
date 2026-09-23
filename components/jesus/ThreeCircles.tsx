@@ -253,8 +253,8 @@ function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
   return (
     <g key={key} filter="url(#sk)">
       <g>
-        {/* Runs the crossing twice, then stops (freezes) at Brokenness — not an endless loop */}
-        <animateMotion ref={motionRef} dur="1.4s" begin="indefinite" repeatCount="2" fill="freeze" path={path}/>
+        {/* Runs the crossing once, then stops (freezes) at Brokenness — not a loop */}
+        <animateMotion ref={motionRef} dur="1.4s" begin="indefinite" repeatCount="1" fill="freeze" path={path}/>
         {/* Wind lines trailing behind him, like the reference art — the
             figure only translates (no rotate="auto"), so "behind" is a
             fixed local -x regardless of which way the path curves. */}
@@ -264,19 +264,19 @@ function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
         <circle cx="0" cy="-10" r="4" fill={color}/>
         <line x1="0" y1="-6" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         <g>
-          <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="34 0 4;-34 0 4;34 0 4" dur="0.3s" begin="indefinite" repeatCount="5" fill="freeze"/>
           <line x1="0" y1="4" x2="-7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="-34 0 4;34 0 4;-34 0 4" dur="0.3s" begin="indefinite" repeatCount="5" fill="freeze"/>
           <line x1="0" y1="4" x2="7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform ref={arm1Ref} attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={arm1Ref} attributeName="transform" type="rotate" values="-32 0 -5;32 0 -5;-32 0 -5" dur="0.3s" begin="indefinite" repeatCount="5" fill="freeze"/>
           <line x1="0" y1="-5" x2="-7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
         <g>
-          <animateTransform ref={arm2Ref} attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" begin="indefinite" repeatCount="9" fill="freeze"/>
+          <animateTransform ref={arm2Ref} attributeName="transform" type="rotate" values="32 0 -5;-32 0 -5;32 0 -5" dur="0.3s" begin="indefinite" repeatCount="5" fill="freeze"/>
           <line x1="0" y1="-5" x2="7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         </g>
       </g>
@@ -292,49 +292,49 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
   const prev = useRef(false);
   useEffect(()=>{ if(show && !prev.current) setKey(k=>k+1); prev.current = show; },[show]);
 
-  // Same begin="indefinite" + beginElement() fix as RunningMan — see the
-  // note there. Without it this kneel simply never plays once the page has
-  // been open a few seconds.
-  const dropRef = useRef<SVGAnimateTransformElement>(null);
-  const legsRef = useRef<SVGAnimateTransformElement>(null);
-  const arm1Ref = useRef<SVGAnimateTransformElement>(null);
-  const arm2Ref = useRef<SVGAnimateTransformElement>(null);
+  // Earlier versions rotated individual leg lines by SMIL transforms to
+  // approximate a kneel. That's hard to get right without ever seeing it
+  // rendered — small pivot/angle mistakes read as splayed or airborne legs
+  // instead of a kneel. This version sidesteps the geometry guesswork
+  // entirely: it draws two complete, fixed poses (standing and kneeling)
+  // and crossfades between them with plain CSS opacity, so the kneeling
+  // pose is exactly the coordinates below, not a rotation applied to the
+  // standing one.
+  const [kneel, setKneel] = useState(false);
   useEffect(() => {
-    if (!show) return;
-    [dropRef, legsRef].forEach(r => { try { r.current?.beginElement(); } catch {} });
-    const t = setTimeout(() => {
-      [arm1Ref, arm2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
-    }, 450);
-    return () => clearTimeout(t);
+    // Both transitions run from timer callbacks rather than synchronously
+    // in the effect body, so this never triggers a same-render cascade.
+    if (!show) {
+      const t = setTimeout(() => setKneel(false), 0);
+      return () => clearTimeout(t);
+    }
+    const reset = setTimeout(() => setKneel(false), 0);
+    const fall = setTimeout(() => setKneel(true), 250);
+    return () => { clearTimeout(reset); clearTimeout(fall); };
   }, [show, key]);
 
   return (
     <g transform={`translate(${x},${y})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
-        <g key={key}>
-          {/* The whole figure settles down a touch as the knees bend, so it
-              reads as actually falling rather than legs swinging in place. */}
-          <animateTransform ref={dropRef} attributeName="transform" type="translate" values="0 0;0 6" dur=".55s" begin="indefinite" fill="freeze"/>
-          <circle cx="0" cy="-14" r="4" fill={color}/>
-          <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-          {/* Both legs are one rigid unit, rotated together by a single
-              animation around the same pivot. Rotating them separately (the
-              earlier version) let one leg swing much further than the
-              other, which read as the legs scissoring apart into a splits
-              rather than folding back together into a kneel. Sharing one
-              transform makes that impossible — they can only move as a pair. */}
-          <g>
-            <animateTransform ref={legsRef} attributeName="transform" type="rotate" values="0 0 0;82 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
-            <line x1="0" y1="0" x2="-3" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-            <line x1="0" y1="0" x2="3" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-          </g>
-          <g>
-            <animateTransform ref={arm1Ref} attributeName="transform" type="rotate" values="0 0 -8;52 0 -8" dur=".45s" begin="indefinite" fill="freeze"/>
+        <g key={key} style={{transform:kneel?"translate(0px,5px)":"translate(0px,0px)", transition:"transform .5s cubic-bezier(.4,0,.2,1)"}}>
+          {/* Standing */}
+          <g style={{opacity:kneel?0:1, transition:"opacity .35s ease"}}>
+            <circle cx="0" cy="-14" r="4" fill={color}/>
+            <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <line x1="0" y1="0" x2="-2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <line x1="0" y1="0" x2="2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
             <line x1="0" y1="-8" x2="-7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-          </g>
-          <g>
-            <animateTransform ref={arm2Ref} attributeName="transform" type="rotate" values="0 0 -8;-52 0 -8" dur=".45s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="-8" x2="7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          </g>
+          {/* Kneeling — head and shoulders dip forward, both legs bend at
+              the knee and fold back together (one continuous line: hip to
+              knee to heel), hands come together low in front. */}
+          <g style={{opacity:kneel?1:0, transition:"opacity .4s ease .12s"}}>
+            <circle cx="1" cy="-8" r="4" fill={color}/>
+            <line x1="1" y1="-4" x2="3" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <path d="M 3,6 L 1,12 L -6,12" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <line x1="2" y1="-2" x2="0" y2="8" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <line x1="2" y1="-2" x2="3" y2="8" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
         </g>
       )}
@@ -439,30 +439,13 @@ export default function ThreeCircles() {
   // stepping on the line itself.
   const sinRunPath = `M ${sinStart.x},${sinStart.y-16} Q ${sinCtrl.x},${sinCtrl.y-16} ${sinEnd.x},${sinEnd.y-16}`;
 
-  // A point (and outward normal) on a quadratic bezier at parameter t — used
-  // to plant the praying/redeemed figures directly on their arrows, at a
-  // point along the curve clear of the rotated label, the way the runner
-  // already sits right on the sin arrow.
-  type Pt = {x:number;y:number};
-  const bez = (p0:Pt,p1:Pt,p2:Pt,t:number): Pt => {
-    const mt=1-t;
-    return { x: mt*mt*p0.x+2*mt*t*p1.x+t*t*p2.x, y: mt*mt*p0.y+2*mt*t*p1.y+t*t*p2.y };
-  };
-  const bezOffset = (p0:Pt,p1:Pt,p2:Pt,t:number,dist:number,side:1|-1): Pt => {
-    const mt=1-t;
-    const dx = 2*mt*(p1.x-p0.x)+2*t*(p2.x-p1.x);
-    const dy = 2*mt*(p1.y-p0.y)+2*t*(p2.y-p1.y);
-    const len = Math.hypot(dx,dy) || 1;
-    const p = bez(p0,p1,p2,t);
-    return { x: p.x + side*(-dy/len)*dist, y: p.y + side*(dx/len)*dist };
-  };
-  // Near where the repent arrow arrives at the Gospel circle — offset to
-  // the outside of the curve, clear of the "Repent & Believe" label.
-  const prayPos = bezOffset(repStart, repCtrl, repEnd, 0.82, 16, -1);
-  // Near where the recover arrow arrives back at Design — offset outward,
-  // clear of the "Recover & Pursue" label, and a touch lower per feedback.
-  const redeemPosRaw = bezOffset(recStart, recCtrl, recEnd, 0.82, 16, 1);
-  const redeemPos = { x: redeemPosRaw.x, y: redeemPosRaw.y + 10 };
+  // The "Repent & Believe" and "Recover & Pursue" labels are drawn centered
+  // (textAnchor="middle") on a rotated axis, so their own anchor points are
+  // fixed reference points to plant the figures near a specific WORD,
+  // rather than guessing a curve parameter. "Believe" and "Recover" are
+  // stepped away from the anchor along that same rotation direction.
+  const prayPos = { x: repMid.x + 37, y: repMid.y + 25 };   // near "Believe"
+  const redeemPos = { x: recMid.x - 37, y: recMid.y + 25 }; // near "Recover", opposite side of the arrow from before
 
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
@@ -541,10 +524,12 @@ export default function ThreeCircles() {
             <BrokenCircle show={vis(v,"broken-circle")} navy={NAVY}/>
             <DrawIcon cx={BX} cy={BY} show={vis(v,"broken-circle")} delay={300} stroke={NAVY} sw={2.6}
               d="M -33,0 Q -24.75,-20 -16.5,0 Q -8.25,20 0,0 Q 8.25,-20 16.5,0 Q 24.75,20 33,0" len={190}/>
-            {/* A small gap in the ground beneath the crack — the "broken
-                open door" detail from the reference art */}
+            {/* A small open door beneath the crack — the reference art's
+                detail. A closed rectangle (top included) plus a knob, not
+                the open-topped, knob-less notch from before. */}
             <DrawIcon cx={BX} cy={BY+30} show={vis(v,"broken-circle")} delay={900} stroke={NAVY} sw={2}
-              d="M -5,-6 L -5,6 L 5,6 L 5,-6" len={34}/>
+              d="M -5,-6 L -5,6 L 5,6 L 5,-6 L -5,-6" len={44}/>
+            <AnimCircle cx={BX+2} cy={BY+30} r={1.3} stroke={NAVY} sw={1.4} show={vis(v,"broken-circle")} delay={1700}/>
             <Fade show={vis(v,"broken-inner")}>
               <MLText x={BX} y={BY-R-12} lines={["Brokenness"]} fill={NAVY} size={14}/>
             </Fade>
@@ -561,29 +546,28 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Down: heaven to earth (incarnation) — angled in tight against
-                the cross's left arm, like the reference, instead of a
-                straight vertical line standing off to the side. */}
+            {/* Two arrows, both flowing from the top of the circle down
+                toward the tomb — bowed out around the cross so they never
+                touch its crossbar, rather than tucked in against its arms. */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-44},${GPY-48} L ${GPX-16},${GPY-20}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={40}/>
+              <AnimPath d={`M ${GPX-16},${GPY-62} Q ${GPX-42},${GPY-20} ${GPX-14},${GPY+9}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={82}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-44},${GPY-48} L ${GPX-16},${GPY-20}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
+              <path d={`M ${GPX-16},${GPY-62} Q ${GPX-42},${GPY-20} ${GPX-14},${GPY+9}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
-            <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={600} stroke={NAVY}/>
+            <g filter="url(#sk)">
+              <AnimPath d={`M ${GPX+16},${GPY-62} Q ${GPX+42},${GPY-20} ${GPX+14},${GPY+9}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={550} len={82}/>
+            </g>
+            {vis(v,"gospel-circle") && (
+              <path d={`M ${GPX+16},${GPY-62} Q ${GPX+42},${GPY-20} ${GPX+14},${GPY+9}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
+            )}
+            <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
             <g filter="url(#sk)">
               <AnimPath d={`M ${GPX-9},${GPY+26} L ${GPX-9},${GPY+13} A 9,9 0 0 1 ${GPX+9},${GPY+13} L ${GPX+9},${GPY+26}`}
-                stroke={NAVY} sw={2.2} show={vis(v,"gospel-circle")} delay={1000} len={44}/>
+                stroke={NAVY} sw={2.2} show={vis(v,"gospel-circle")} delay={1300} len={44}/>
             </g>
-            <AnimCircle cx={GPX+16} cy={GPY+24} r={5} stroke={NAVY} sw={2} show={vis(v,"gospel-circle")} delay={1250}/>
-            {/* Up: the ascension — angled in tight against the cross's right arm */}
-            <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+16},${GPY-20} L ${GPX+44},${GPY-48}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={1450} len={40}/>
-            </g>
-            {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+16},${GPY-20} L ${GPX+44},${GPY-48}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
-            )}
+            <AnimCircle cx={GPX+16} cy={GPY+24} r={5} stroke={NAVY} sw={2} show={vis(v,"gospel-circle")} delay={1550}/>
             {/* Crown sits on top of the circle, partly outside it — same read as the reference art */}
             <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={1700} stroke={NAVY} sw={2.6}
               d="M -20,0 L -20,-15 L -10,-4 L 0,-30 L 10,-4 L 20,-15 L 20,0 Z" len={170}/>
