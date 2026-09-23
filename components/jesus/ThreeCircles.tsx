@@ -427,15 +427,16 @@ export default function ThreeCircles() {
   const sinCtrl  = {x: 209, y: 22};
   const sinEnd   = {x: BX-50, y: BY-52};
 
-  // Bowed further out from the circles than before (control point pushed
-  // ~1.6x further from the chord), so the curve reads as a big deliberate
-  // arc rather than a tight connector line.
+  // Bowed dramatically further out from the circles than before (control
+  // point pushed ~2.3x further from the chord vs. the original — the first
+  // attempt at 1.6x read as "the same" on an actual phone at this render
+  // size), so the curve unmistakably reads as a big deliberate outer arc.
   const repStart = {x: BX-48, y: BY+54};
-  const repCtrl  = {x: 311, y: 213};
+  const repCtrl  = {x: 333, y: 213};
   const repEnd   = {x: GPX+50, y: GPY-52};
 
   const recStart = {x: GPX-50, y: GPY-52};
-  const recCtrl  = {x: 94, y: 213};
+  const recCtrl  = {x: 67, y: 213};
   const recEnd   = {x: GDX+48, y: GDY+54};
 
   const sinMid  = { x:(sinStart.x+2*sinCtrl.x+sinEnd.x)/4,  y:(sinStart.y+2*sinCtrl.y+sinEnd.y)/4  };
@@ -570,22 +571,22 @@ export default function ThreeCircles() {
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
             {/* Two arrows circling the cross, in opposite directions — left
-                flows UP, right flows DOWN. Bowed out wider than before
-                (control point further from the cross, endpoints stretched
-                a bit taller) so they read as a big sweeping loop around
-                the cross, still clearing the crossbar and stopping short
-                of the tomb rather than touching it. */}
+                flows UP, right flows DOWN. Bowed out much further than the
+                first attempt (control point now sits just past the circle's
+                own edge, not tucked in near the cross) so the loop is
+                unmistakably big rather than a subtle nudge, still clearing
+                the crossbar and stopping short of the tomb. */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-14},${GPY+2} Q ${GPX-58},${GPY-20} ${GPX-16},${GPY-66}`} stroke={NAVY} sw={3.4} show={vis(v,"gospel-circle")} delay={300} len={100}/>
+              <AnimPath d={`M ${GPX-14},${GPY+6} Q ${GPX-75},${GPY-20} ${GPX-16},${GPY-72}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={120}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-14},${GPY+2} Q ${GPX-58},${GPY-20} ${GPX-16},${GPY-66}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="3.4"/>
+              <path d={`M ${GPX-14},${GPY+6} Q ${GPX-75},${GPY-20} ${GPX-16},${GPY-72}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+16},${GPY-66} Q ${GPX+58},${GPY-20} ${GPX+14},${GPY+2}`} stroke={NAVY} sw={3.4} show={vis(v,"gospel-circle")} delay={550} len={100}/>
+              <AnimPath d={`M ${GPX+16},${GPY-72} Q ${GPX+75},${GPY-20} ${GPX+14},${GPY+6}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={550} len={120}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+16},${GPY-66} Q ${GPX+58},${GPY-20} ${GPX+14},${GPY+2}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="3.4"/>
+              <path d={`M ${GPX+16},${GPY-72} Q ${GPX+75},${GPY-20} ${GPX+14},${GPY+6}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
@@ -620,11 +621,11 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimPath
                 d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
-                stroke={TEAL} sw={3.4} show={vis(v,"repent-arrow")} len={270}/>
+                stroke={TEAL} sw={4} show={vis(v,"repent-arrow")} len={270}/>
             </g>
             {vis(v,"repent-arrow") && (
               <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
-                fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="3.4"/>
+                fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
             <Fade show={vis(v,"repent-arrow")}>
               <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
@@ -640,11 +641,11 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimPath
                 d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
-                stroke={TEAL} sw={3.4} show={vis(v,"recover-arrow")} len={270} delay={300}/>
+                stroke={TEAL} sw={4} show={vis(v,"recover-arrow")} len={270} delay={300}/>
             </g>
             {vis(v,"recover-arrow") && (
               <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
-                fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="3.4"/>
+                fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
             <Fade show={vis(v,"recover-arrow")} delay={300}>
               <text textAnchor="middle" fill={TEAL} fontSize={13} fontWeight={700}
