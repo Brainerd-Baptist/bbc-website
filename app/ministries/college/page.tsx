@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
 import PhotoLightboxGrid from "./PhotoLightboxGrid";
@@ -23,7 +24,11 @@ const SECTIONS = [
       { label: "Midweek Gathering", when: "Wednesdays · 6:00 PM", where: "Bobbitt Home" },
       { label: "Monthly Lunch", when: "1st Sunday of the month · 12:30 PM", where: "BX" },
     ],
-    leader: { name: "Jo & Ada Bobbitt", email: "college@brainerdbaptist.org" },
+    leader: {
+      name: "Jo & Ada Bobbitt",
+      email: "college@brainerdbaptist.org",
+      photo: "/college/jo-ada-bobbitt.jpg",
+    },
     instagram: "brainerd_college",
     photos: [
       { src: "/college/college-mission-team-rocks.jpg", alt: "College students on a short-term mission trip, gathered on volcanic rock" },
@@ -122,7 +127,7 @@ export default function CollegeYoungAdultsPage() {
                   </div>
                 )}
 
-                <div className="flex flex-wrap items-center gap-4 mb-8">
+                <div className="mb-8">
                   <Link
                     href="/connect"
                     className="font-condensed font-700 tracking-wide uppercase text-sm border rounded-full px-6 py-3 transition inline-flex items-center gap-2 hover:opacity-80 identity-ink identity-border"
@@ -133,16 +138,51 @@ export default function CollegeYoungAdultsPage() {
                       <path d="M2.5 6h7M6.5 3l3 3-3 3" />
                     </svg>
                   </Link>
-
-                  {leader && (
-                    <a
-                      href={`mailto:${leader.email}`}
-                      className="text-sm text-fg-muted hover:opacity-80 transition"
-                    >
-                      {leader.name} — {leader.email}
-                    </a>
-                  )}
                 </div>
+
+                {leader && (
+                  <div
+                    className="flex items-center gap-4 rounded-xl p-4 border mb-8"
+                    style={{ borderColor: "var(--border)" }}
+                  >
+                    {leader.photo ? (
+                      <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0">
+                        <Image
+                          src={leader.photo}
+                          alt={leader.name}
+                          fill
+                          sizes="56px"
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="w-14 h-14 rounded-full shrink-0 identity-ink identity-border border flex items-center justify-center"
+                        style={inkVars(ink)}
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                      </div>
+                    )}
+                    <div>
+                      <p
+                        className="text-xs font-semibold tracking-widest uppercase mb-1 identity-ink"
+                        style={inkVars(ink)}
+                      >
+                        Ministry Leaders
+                      </p>
+                      <p className="text-fg text-sm font-semibold">{leader.name}</p>
+                      <a
+                        href={`mailto:${leader.email}`}
+                        className="text-fg-muted text-sm hover:opacity-80 transition"
+                      >
+                        {leader.email}
+                      </a>
+                    </div>
+                  </div>
+                )}
 
                 {instagram && (
                   <p className="text-fg-muted text-sm">
