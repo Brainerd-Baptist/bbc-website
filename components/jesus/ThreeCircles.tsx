@@ -33,14 +33,17 @@ const GPX=209, GPY=300;
 
 /* ─── Per-step viewBox ───────────────────────────────────────────────── */
 type VB = [number,number,number,number];
+// Extra headroom above the Design/Brokenness circles and extra room below
+// the Gospel circle so their labels can sit outside the circle (like the
+// reference art) instead of stacked on top of the icon inside it.
 const VIEWBOXES: Record<string,VB> = {
-  brokenness: [206, 22, 200, 200],
-  design:     [ 22, 36, 360, 178],
+  brokenness: [206, 14, 200, 208],
+  design:     [ 22, 14, 360, 200],
   sin:        [ 22,  6, 360, 190],
   coping:     [ 22,  6, 374, 240],
-  gospel:     [ 22,  6, 360, 368],
-  repent:     [ 22,  6, 360, 368],
-  recover:    [ 22,  6, 360, 368],
+  gospel:     [ 22,  6, 360, 404],
+  repent:     [ 22,  6, 360, 404],
+  recover:    [ 22,  6, 360, 404],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -252,6 +255,12 @@ function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
       <g>
         {/* Runs the crossing twice, then stops (freezes) at Brokenness — not an endless loop */}
         <animateMotion ref={motionRef} dur="1.4s" begin="indefinite" repeatCount="2" fill="freeze" path={path}/>
+        {/* Wind lines trailing behind him, like the reference art — the
+            figure only translates (no rotate="auto"), so "behind" is a
+            fixed local -x regardless of which way the path curves. */}
+        <line x1="-14" y1="-10" x2="-25" y2="-6" stroke={color} strokeWidth="1.6" strokeLinecap="round" opacity="0.55"/>
+        <line x1="-15" y1="0"   x2="-27" y2="0"  stroke={color} strokeWidth="1.6" strokeLinecap="round" opacity="0.55"/>
+        <line x1="-14" y1="9"   x2="-25" y2="13" stroke={color} strokeWidth="1.6" strokeLinecap="round" opacity="0.55"/>
         <circle cx="0" cy="-10" r="4" fill={color}/>
         <line x1="0" y1="-6" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         <g>
@@ -286,13 +295,14 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
   // Same begin="indefinite" + beginElement() fix as RunningMan — see the
   // note there. Without it this kneel simply never plays once the page has
   // been open a few seconds.
+  const dropRef = useRef<SVGAnimateTransformElement>(null);
   const leg1Ref = useRef<SVGAnimateTransformElement>(null);
   const leg2Ref = useRef<SVGAnimateTransformElement>(null);
   const arm1Ref = useRef<SVGAnimateTransformElement>(null);
   const arm2Ref = useRef<SVGAnimateTransformElement>(null);
   useEffect(() => {
     if (!show) return;
-    [leg1Ref, leg2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
+    [dropRef, leg1Ref, leg2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
     const t = setTimeout(() => {
       [arm1Ref, arm2Ref].forEach(r => { try { r.current?.beginElement(); } catch {} });
     }, 450);
@@ -303,15 +313,20 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
     <g transform={`translate(${x},${y})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
         <g key={key}>
+          {/* The whole figure settles down a touch as the knees bend, so it
+              reads as actually falling rather than legs swinging in place. */}
+          <animateTransform ref={dropRef} attributeName="transform" type="translate" values="0 0;0 6" dur=".55s" begin="indefinite" fill="freeze"/>
           <circle cx="0" cy="-14" r="4" fill={color}/>
           <line x1="0" y1="-10" x2="0" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-          {/* Legs start straight and together (standing), then splay into a kneel */}
+          {/* Legs start straight (standing), then fold back sharply under
+              him — sitting back onto his heels, the clear kneeling pose in
+              the reference art rather than a shallow bend. */}
           <g>
-            <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="0 0 0;38 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
+            <animateTransform ref={leg1Ref} attributeName="transform" type="rotate" values="0 0 0;96 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="0" x2="-2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
-            <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="0 0 0;-14 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
+            <animateTransform ref={leg2Ref} attributeName="transform" type="rotate" values="0 0 0;-30 0 0" dur=".55s" begin="indefinite" fill="freeze"/>
             <line x1="0" y1="0" x2="2" y2="11" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
           <g>
@@ -332,9 +347,16 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
    radiating off it that blink in a staggered loop. ────────────────────── */
 function RedeemedMan({x,y,color,show}:{x:number;y:number;color:string;show:boolean}) {
   if (!show) return null;
-  const rays: [number,number,number,number][] = [
-    [-12,-14,-19,-14], [12,-14,19,-14], [-9,-24,-13,-30], [9,-24,13,-30],
-  ];
+  // A full ring of rays around the figure, like the sunburst in the
+  // reference art, rather than a partial cluster on one side.
+  const rays: [number,number,number,number][] = Array.from({length:8}, (_,i) => {
+    const a = (i*45) * Math.PI/180;
+    const cx=0, cy=-8;
+    return [
+      +(cx+10*Math.cos(a)).toFixed(1), +(cy+10*Math.sin(a)).toFixed(1),
+      +(cx+19*Math.cos(a)).toFixed(1), +(cy+19*Math.sin(a)).toFixed(1),
+    ] as [number,number,number,number];
+  });
   return (
     <g transform={`translate(${x},${y})`} filter="url(#sk)">
       <g>
@@ -503,23 +525,29 @@ export default function ThreeCircles() {
               </marker>
             </defs>
 
-            {/* ═══ GOD'S DESIGN (top-left) — teal on white — heart icon ═══ */}
+            {/* ═══ GOD'S DESIGN (top-left) — teal on white — heart icon ═══
+                Label sits above the circle, outside it, like the reference —
+                so the icon can be centered and full-size with nothing
+                competing for space inside the ring. */}
             <g filter="url(#sk)">
               <AnimCircle cx={GDX} cy={GDY} r={R} stroke={TEAL} sw={3} show={vis(v,"design-circle")}/>
             </g>
-            <DrawIcon cx={GDX} cy={GDY-14} show={vis(v,"design-circle")} delay={300} stroke={TEAL} fill={TEAL} sw={2.6}
+            <DrawIcon cx={GDX} cy={GDY} show={vis(v,"design-circle")} delay={300} stroke={TEAL} fill={TEAL} sw={2.6}
               d="M 0,25.2 C -36.4,4.2 -19.6,-29.4 0,-12.6 C 19.6,-29.4 36.4,4.2 0,25.2 Z" len={170}/>
             <Fade show={vis(v,"design-inner")}>
-              <MLText x={GDX} y={GDY+8} lines={["God's","Design"]} fill={TEAL} size={15}/>
+              <MLText x={GDX} y={GDY-R-12} lines={["God's Design"]} fill={TEAL} size={14}/>
             </Fade>
 
             {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed — squiggle icon ═══ */}
             <BrokenCircle show={vis(v,"broken-circle")} navy={NAVY}/>
-            {/* Sized and lifted so its bottom trough clears the "Brokenness" label below it */}
-            <DrawIcon cx={BX} cy={BY-16} show={vis(v,"broken-circle")} delay={300} stroke={NAVY} sw={2.6}
-              d="M -31,0 Q -23,-16 -15,0 Q -7,16 0,0 Q 7,-16 15,0 Q 23,16 31,0" len={150}/>
+            <DrawIcon cx={BX} cy={BY} show={vis(v,"broken-circle")} delay={300} stroke={NAVY} sw={2.6}
+              d="M -33,0 Q -24.75,-20 -16.5,0 Q -8.25,20 0,0 Q 8.25,-20 16.5,0 Q 24.75,20 33,0" len={190}/>
+            {/* A small gap in the ground beneath the crack — the "broken
+                open door" detail from the reference art */}
+            <DrawIcon cx={BX} cy={BY+30} show={vis(v,"broken-circle")} delay={900} stroke={NAVY} sw={2}
+              d="M -5,-6 L -5,6 L 5,6 L 5,-6" len={24}/>
             <Fade show={vis(v,"broken-inner")}>
-              <MLText x={BX} y={BY+6} lines={["Brokenness"]} fill={NAVY} size={13}/>
+              <MLText x={BX} y={BY-R-12} lines={["Brokenness"]} fill={NAVY} size={14}/>
             </Fade>
             {/* Coping labels — only step 4 */}
             <Fade show={vis(v,"cope-labels")}>
@@ -528,40 +556,40 @@ export default function ThreeCircles() {
               <MLText x={BX+72} y={BY+108} lines={["Religion"]}fill={LABEL} size={12} weight={500}/>
             </Fade>
 
-            {/* ═══ GOSPEL (bottom-center) — navy on white — cross + crown ═══ */}
+            {/* ═══ GOSPEL (bottom-center) — navy on white — cross + crown ═══
+                Label now sits below the circle, outside it, so the cross,
+                arrows, and tomb have the whole ring to themselves. */}
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Down: heaven to earth (incarnation) — left of the cross. Same
-                stroke weight and length as the outer flow arrows so it reads
-                as a drawn line, not just a small marker glyph. */}
+            {/* Down: heaven to earth (incarnation) — angled in tight against
+                the cross's left arm, like the reference, instead of a
+                straight vertical line standing off to the side. */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-30},${GPY-46} L ${GPX-30},${GPY-4}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={46}/>
+              <AnimPath d={`M ${GPX-44},${GPY-48} L ${GPX-16},${GPY-20}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={300} len={40}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-30},${GPY-46} L ${GPX-30},${GPY-4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
+              <path d={`M ${GPX-44},${GPY-48} L ${GPX-16},${GPY-20}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={600} stroke={NAVY}/>
-            {/* The tomb, empty — the stone rolled to the side. Sits below the
-                cross, with clear space kept below it for the "Gospel" label
-                so the two never overlap. */}
+            {/* The tomb, empty — the stone rolled to the side */}
             <g filter="url(#sk)">
               <AnimPath d={`M ${GPX-9},${GPY+26} L ${GPX-9},${GPY+13} A 9,9 0 0 1 ${GPX+9},${GPY+13} L ${GPX+9},${GPY+26}`}
                 stroke={NAVY} sw={2.2} show={vis(v,"gospel-circle")} delay={1000} len={44}/>
             </g>
             <AnimCircle cx={GPX+16} cy={GPY+24} r={5} stroke={NAVY} sw={2} show={vis(v,"gospel-circle")} delay={1250}/>
-            {/* Up: the ascension — right of the cross */}
+            {/* Up: the ascension — angled in tight against the cross's right arm */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-46}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={1450} len={46}/>
+              <AnimPath d={`M ${GPX+16},${GPY-20} L ${GPX+44},${GPY-48}`} stroke={NAVY} sw={2.8} show={vis(v,"gospel-circle")} delay={1450} len={40}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+30},${GPY-4} L ${GPX+30},${GPY-46}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
+              <path d={`M ${GPX+16},${GPY-20} L ${GPX+44},${GPY-48}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="2.8"/>
             )}
             {/* Crown sits on top of the circle, partly outside it — same read as the reference art */}
             <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={1700} stroke={NAVY} sw={2.6}
               d="M -20,0 L -20,-15 L -10,-4 L 0,-30 L 10,-4 L 20,-15 L 20,0 Z" len={170}/>
             <Fade show={vis(v,"gospel-inner")}>
-              <MLText x={GPX} y={GPY+42} lines={["Gospel"]} fill={NAVY} size={17}/>
+              <MLText x={GPX} y={GPY+R+22} lines={["Gospel"]} fill={NAVY} size={16}/>
             </Fade>
 
             {/* ═══ SIN arrow ═══ */}
