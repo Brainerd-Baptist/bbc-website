@@ -563,25 +563,29 @@ export default function ThreeCircles() {
             <g filter="url(#sk)">
               <AnimCircle cx={GPX} cy={GPY} r={R} stroke={NAVY} sw={3.2} show={vis(v,"gospel-circle")}/>
             </g>
-            {/* Round 12: "just match this picture — exactly." The reference
-                shows two separate STRAIGHT internal strokes, not one curved
-                one bunched at the top: a short one right of the cross that
-                just goes straight down (where Repent & Believe arrives),
-                and a longer one from center that goes straight up-left to
-                the edge (where Restored & Forgiven leaves). Both verified
-                clear of the crossbar (y=278, x 193-225) and the tomb
-                (y>=313, x 200-218). */}
+            {/* Round 13: measured pixel-for-pixel off the reference image
+                itself (cropped, gridded, and read off in a python pass),
+                not eyeballed — each point taken as a fraction of the
+                reference oval's own radius, then applied to this circle's
+                GPX/GPY/R so the angles and proportions carry over exactly.
+                Down-arrow: starts near the top-right where Repent & Believe
+                arrives, leans down-left, stays short. Up-arrow: starts low
+                and just left of center, stays low the whole way (its tip
+                never reaches crossbar height) and points up-left, ending
+                well short of the edge — NOT swept up to flank the top the
+                way every earlier round had it. Both verified clear of the
+                crossbar (y=278, x 193-225) and the tomb (y>=313, x 200-218). */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+23},${GPY-50} L ${GPX+27},${GPY-4}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={46}/>
+              <AnimPath d={`M ${GPX+31},${GPY-39} L ${GPX+21},${GPY+25}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={65}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+23},${GPY-50} L ${GPX+27},${GPY-4}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+              <path d={`M ${GPX+31},${GPY-39} L ${GPX+21},${GPY+25}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+8},${GPY+8} L ${GPX-46},${GPY-38}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={500} len={70}/>
+              <AnimPath d={`M ${GPX-25},${GPY+47} L ${GPX-56},${GPY-1}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={500} len={58}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+8},${GPY+8} L ${GPX-46},${GPY-38}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+              <path d={`M ${GPX-25},${GPY+47} L ${GPX-56},${GPY-1}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
