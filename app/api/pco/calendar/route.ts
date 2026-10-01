@@ -25,6 +25,11 @@ export interface CalendarEvent {
   church_center_url: string;
   image_url: string | null;
   summary: string | null;
+  /** Deep link straight to the PCO Registrations signup page, when this
+   * event has one attached — null otherwise. Prefer this over
+   * church_center_url so "Register" is one click, not a click-through
+   * to the calendar page and then another click to register. */
+  registration_url: string | null;
 }
 
 export async function GET() {
@@ -52,6 +57,9 @@ export async function GET() {
     "include":                    "event",
     "per_page":                   "100",
     "order":                      "starts_at",
+    // Sparse fieldset — without this, registration_url isn't guaranteed to
+    // come back on the included Event resources.
+    "fields[Event]":              "visible_in_church_center,summary,image_url,registration_url",
   });
 
   let data: {
@@ -76,6 +84,7 @@ export async function GET() {
         name: string;
         summary: string | null;
         image_url: string | null;
+        registration_url: string | null;
       };
     }>;
   };
@@ -108,7 +117,12 @@ export async function GET() {
   // Build map: event id → event attributes
   const eventMap = new Map<
     string,
-    { visible_in_church_center: boolean; summary: string | null; image_url: string | null }
+    {
+      visible_in_church_center: boolean;
+      summary: string | null;
+      image_url: string | null;
+      registration_url: string | null;
+    }
   >();
   for (const item of data.included ?? []) {
     if (item.type === "Event") {
@@ -116,6 +130,7 @@ export async function GET() {
         visible_in_church_center: item.attributes.visible_in_church_center,
         summary: item.attributes.summary ?? null,
         image_url: item.attributes.image_url ?? null,
+        registration_url: item.attributes.registration_url ?? null,
       });
     }
   }
@@ -140,6 +155,7 @@ export async function GET() {
         church_center_url:inst.attributes.church_center_url,
         image_url:        inst.attributes.image_url ?? eventData?.image_url ?? null,
         summary:          eventData?.summary ?? null,
+        registration_url: eventData?.registration_url ?? null,
       };
     });
 

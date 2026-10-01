@@ -188,7 +188,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
 
   return (
     <a
-      href={ev.church_center_url}
+      href={ev.registration_url ?? ev.church_center_url}
       target="_blank"
       rel="noopener noreferrer"
       className="glass card-hover-sm flex items-stretch rounded-2xl overflow-hidden group"
@@ -225,6 +225,14 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
           style={{ color: "var(--fg)" }}
         >
           {ev.name}
+          {ev.registration_url && (
+            <span
+              className="label-micro ml-2 align-middle"
+              style={{ color: "var(--accent-text)" }}
+            >
+              Register
+            </span>
+          )}
         </p>
 
         {/* Location (optional) */}

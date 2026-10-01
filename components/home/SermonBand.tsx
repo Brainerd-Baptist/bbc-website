@@ -6,8 +6,16 @@ import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
 export default async function SermonBand() {
   const sermon = await getLatestSermon();
 
-  const { title, passage, youtubeId, watchUrl, thumbnail } = sermon;
+  const { title, passage, watchUrl, watchUrlIsInternal, thumbnail } = sermon;
   const date = formatSermonDate(sermon.date);
+
+  // When we found the sermon's own /sermons/[slug] page, send people there —
+  // it has the inline player, outline, and notes tabs. Only fall back to an
+  // external YouTube tab when no matching sermon page exists yet.
+  const WatchLink = watchUrlIsInternal ? Link : "a";
+  const watchLinkProps = watchUrlIsInternal
+    ? { href: watchUrl }
+    : { href: watchUrl, target: "_blank", rel: "noopener noreferrer" };
 
   return (
     <section className="bg-surface section-pad border-b border-border">
@@ -67,19 +75,17 @@ export default async function SermonBand() {
                 </div>
 
                 {/* Play button */}
-                <a
-                  href={watchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <WatchLink
+                  {...watchLinkProps}
                   className="relative z-10"
-                  aria-label={`Watch ${title} on YouTube`}
+                  aria-label={watchUrlIsInternal ? `Watch ${title}` : `Watch ${title} on YouTube`}
                 >
                   <div className="w-16 h-16 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center cursor-pointer transition shadow-lg shadow-accent/40 hover:scale-105">
                     <svg width="22" height="22" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}>
                       <polygon points="5,3 19,12 5,21"/>
                     </svg>
                   </div>
-                </a>
+                </WatchLink>
               </div>
 
               {/* Info panel */}
@@ -113,14 +119,9 @@ export default async function SermonBand() {
                   )}
                 </div>
                 <div className="flex gap-3 flex-wrap">
-                  <a
-                    href={watchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary text-sm"
-                  >
+                  <WatchLink {...watchLinkProps} className="btn-primary text-sm">
                     Watch Now
-                  </a>
+                  </WatchLink>
                   <Link
                     href="/sermons"
                     className="btn-outline-navy text-sm"

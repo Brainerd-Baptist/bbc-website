@@ -29,6 +29,18 @@
    themes. Change a value here and it will tell you what broke.
    ═══════════════════════════════════════════════════════════════════════ */
 
+/* ── Dark variant strategy ──────────────────────────────────────────────
+   Tailwind v4's `dark:` utility defaults to `@media (prefers-color-scheme:
+   dark)` — it does NOT follow a `.dark` class unless told to. next-themes
+   is configured with `attribute="class"` (components/ThemeProvider.tsx),
+   toggling a `.dark` class on <html>. Without this directive, the two
+   never actually line up: any `dark:*` utility in the codebase (e.g.
+   SermonBand's `dark:shadow-black/30`) silently followed the OS's color
+   scheme instead of the toggle the user clicked — the toggle looked like
+   it "didn't change" that part of the page, because for that part it
+   genuinely didn't. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ── Brand primitives ──────────────────────────────────────────────
    Tailwind v4 is CSS-first and does NOT read a tailwind.config.ts
    unless you add an explicit `@config` directive. There wasn't one,

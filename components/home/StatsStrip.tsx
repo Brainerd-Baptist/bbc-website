@@ -10,30 +10,46 @@ interface Stat {
   description: string;
 }
 
+// Pulled from Planning Center 2026-10-01 — see claude/bbc-website-stats-audit-2026-10-01.md
+// for how each number was checked and what still needs a source. Re-verify
+// periodically rather than letting these go stale the way the originals did
+// (800 members / 12 Life Groups, both roughly half the real count).
 const STATS: Stat[] = [
   {
     value: 1921,
     suffix: "",
     prefix: "Est. ",
-    label: "Years of faithful ministry",
-    description: "in Chattanooga",
+    // Was mislabeled "Years of faithful ministry" over a count-up TO the
+    // founding year itself (reading as "Est. 1,921 years"). This is a
+    // founding year, not a duration — label it as one.
+    label: "Founded in Chattanooga",
+    description: "still here, still preaching the Word",
   },
   {
-    value: 800,
+    value: 1500,
     suffix: "+",
     label: "Members",
+    // PCO People: 1,503 active people with membership status "Member" —
+    // rounded down so this doesn't need updating every time one person's
+    // status changes.
     description: "in our church family",
   },
   {
-    value: 12,
+    value: 36,
     suffix: "",
     label: "Life Groups",
+    // PCO Groups: 36 active (non-archived) groups under "Adult Life Groups" —
+    // doesn't include Student Life Groups, Bible Studies, or other group types.
     description: "meeting every week",
   },
   {
     value: 6,
     suffix: "",
     label: "Mission Partners",
+    // Unverified — no mission-partner count exists in Planning Center or
+    // in this codebase (components/missions/WorldReachMap.tsx is still
+    // placeholder data). Left as-is rather than guessing; confirm the
+    // real number with the missions office and update here.
     description: "local and international",
   },
 ];

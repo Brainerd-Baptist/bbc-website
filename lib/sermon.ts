@@ -31,9 +31,35 @@ export interface SermonData {
   date: string;           // "YYYY-MM-DD"
   youtubeId: string | null;
   watchUrl: string;
+  /** True when watchUrl is an internal /sermons/[slug] path rather than an
+   * external YouTube link — lets the homepage render it as a normal in-app
+   * link (and eventually an inline player) instead of opening a new tab. */
+  watchUrlIsInternal: boolean;
   thumbnail: string | null;
   outline: string[];      // parsed outline points from Curtis's doc
   outlineType: "structured" | "scripture" | "none";
+}
+
+/**
+ * Finds the /sermons/[slug] page for a given YouTube video ID, so the
+ * homepage's "latest sermon" card can send people to the actual sermon
+ * page (which plays inline, has notes/outline tabs, etc.) instead of
+ * bouncing them out to YouTube. Checks Sanity first, then the static
+ * fallback library — same source order every other sermon lookup uses.
+ */
+async function findSlugForYoutubeId(youtubeId: string): Promise<string | null> {
+  try {
+    const { getAllSermons } = await import("./sanity");
+    const all = await getAllSermons();
+    const match = all.find((s) => s.youtubeId === youtubeId);
+    if (match?.slug?.current) return match.slug.current;
+  } catch {
+    // fall through to static
+  }
+
+  const { SERMONS } = await import("./sermons");
+  const staticMatch = SERMONS.find((s) => s.youtubeId === youtubeId);
+  return staticMatch?.id ?? null;
 }
 
 /** Format a "YYYY-MM-DD" date string for display. */
@@ -465,6 +491,8 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
     getLatestYouTubeId(),
   ]);
 
+  const slug = youtubeId ? await findSlugForYoutubeId(youtubeId) : null;
+
   return {
     title:       drive?.title       ?? "Latest Sermon",
     passage:     drive?.passage     ?? "",
@@ -472,9 +500,12 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
     outline:     drive?.outline     ?? [],
     outlineType: drive?.outlineType ?? "none",
     youtubeId:   youtubeId          ?? null,
-    watchUrl:    youtubeId
-      ? `https://www.youtube.com/watch?v=${youtubeId}`
-      : "https://www.youtube.com/@brainerdbaptist",
+    watchUrl:    slug
+      ? `/sermons/${slug}`
+      : youtubeId
+        ? `https://www.youtube.com/watch?v=${youtubeId}`
+        : "https://www.youtube.com/@brainerdbaptist",
+    watchUrlIsInternal: Boolean(slug),
     thumbnail:   youtubeId
       ? `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`
       : null,

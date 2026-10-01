@@ -47,10 +47,22 @@ function getEasternParts(date: Date) {
   return { day, hour, minute };
 }
 
+// The countdown is only relevant in the run-up to a service: Friday evening
+// through the end of the weekend. Outside that window it's just a timer
+// ticking toward something a week away, which read as noise rather than
+// anticipation.
+function inCountdownWindow(day: number, hour: number): boolean {
+  if (day === 5 && hour >= 17) return true; // Friday evening
+  if (day === 6) return true;               // all day Saturday
+  if (day === 0 && hour < 7) return true;    // Sunday, before services start
+  return false;
+}
+
 function getHeroContent(): HeroContent {
   const now = new Date();
   const { day, hour, minute } = getEasternParts(now);
   // day: 0=Sun … 6=Sat, hour: 0–23 in Eastern time (ET), DST-aware
+  const showCountdown = inCountdownWindow(day, hour);
 
   // Sunday morning — service is happening or imminent (7am–1pm ET)
   if (day === 0 && hour >= 7 && hour < 13) {
@@ -87,7 +99,7 @@ function getHeroContent(): HeroContent {
       primaryHref: "/visit",
       secondaryLabel: "Sermons",
       secondaryHref: "/sermons",
-      showCountdown: true,
+      showCountdown,
     };
   }
 
@@ -100,7 +112,7 @@ function getHeroContent(): HeroContent {
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
     secondaryHref: "/sermons",
-    showCountdown: true,
+    showCountdown,
   };
 }
 
@@ -165,7 +177,10 @@ export default function Hero() {
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
     secondaryHref: "/sermons",
-    showCountdown: true,
+    // Default false pre-hydration: outside the Fri-evening–Sunday window
+    // (most of the week) this avoids a flash of a countdown that
+    // immediately disappears once the real content hydrates.
+    showCountdown: false,
   };
 
   const isSundayMorning = content
