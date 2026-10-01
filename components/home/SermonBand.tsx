@@ -18,8 +18,9 @@ export default async function SermonBand() {
     : { href: watchUrl, target: "_blank", rel: "noopener noreferrer" };
 
   return (
-    <section className="bg-surface section-pad border-b border-border">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative overflow-hidden bg-surface section-pad border-b border-border">
+      <div className="bx-bloom" aria-hidden="true" />
+      <div className="relative max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
@@ -43,7 +44,7 @@ export default async function SermonBand() {
 
         {/* Featured sermon card */}
         <ScrollReveal delay={100}>
-          <div className="rounded-2xl overflow-hidden border border-border shadow-lg shadow-black/5 dark:shadow-black/30">
+          <div className="glass-frost rounded-2xl overflow-hidden">
             <div className="grid md:grid-cols-5">
 
               {/* Thumbnail / Play */}

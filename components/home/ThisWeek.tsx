@@ -114,8 +114,18 @@ export default function ThisWeek() {
   const grouped = groupByDay(events);
 
   return (
-    <section className="py-20 px-6 md:px-12" style={{ background: "var(--surface-sunken)" }}>
-      <div className="max-w-7xl mx-auto">
+    <section
+      className="relative overflow-hidden py-20 px-6 md:px-12"
+      style={{
+        // A subtle gradient instead of a flat fill — gives the glass-frost
+        // cards below something with texture to actually blur. See
+        // claude/bbc-website-theme-depth-audit-2026-10-01.md (prototype).
+        background:
+          "linear-gradient(180deg, var(--surface-sunken) 0%, var(--surface) 100%)",
+      }}
+    >
+      <div className="bx-bloom" aria-hidden="true" />
+      <div className="relative max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
           <div>
@@ -191,7 +201,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
       href={ev.registration_url ?? ev.church_center_url}
       target="_blank"
       rel="noopener noreferrer"
-      className="glass card-hover-sm flex items-stretch rounded-2xl overflow-hidden group"
+      className="glass-frost flex items-stretch rounded-2xl overflow-hidden group"
       style={{ textDecoration: "none" }}
     >
       {/* Teal left accent bar */}
