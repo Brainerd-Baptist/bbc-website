@@ -141,6 +141,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     title: string;
     series: string;
     seriesSlug: string;
+    book: string;
     passage: string;
     passages?: string[];
     speaker: string;
@@ -160,6 +161,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       title:       sanitySermon.title,
       series:      sanitySermon.series?.title ?? "",
       seriesSlug:  sanitySermon.series?.slug?.current ?? "",
+      book:        sanitySermon.book ?? "",
       passage:     sanitySermon.passage ?? "",
       passages:    sanitySermon.passages as string[] | undefined,
       speaker:     sanitySermon.speaker ?? "",
@@ -178,6 +180,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       title:       staticS.title,
       series:      staticS.series,
       seriesSlug:  staticS.seriesId ?? "",
+      book:        staticS.book ?? "",
       passage:     staticS.passage,
       passages:    staticS.passages,
       speaker:     staticS.speaker,
@@ -374,6 +377,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       <RelatedSermons
         currentId={slug}
         seriesId={sanitySermon ? (sanitySermon.series?.slug?.current ?? "") : (SERMONS.find((x) => x.id === slug)?.seriesId ?? "")}
+        book={s.book}
         accentColor={accentColor}
       />
 

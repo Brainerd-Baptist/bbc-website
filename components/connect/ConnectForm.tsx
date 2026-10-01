@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import GuestCardQR from "@/components/connect/GuestCardQR";
 
 const HOW_HEARD_OPTIONS = [
   { id: "11728678", label: "Friend" },
@@ -188,6 +189,12 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
           Thanks! Someone from our team will be in touch soon. We&apos;re glad
           you&apos;re here.
         </p>
+        <GuestCardQR
+          firstName={firstName}
+          lastName={lastName}
+          email={email}
+          phone={phone}
+        />
       </div>
     );
   }

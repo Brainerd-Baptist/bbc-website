@@ -137,6 +137,15 @@ export async function getSermonsBySeries(seriesSlug: string): Promise<SanitySerm
   );
 }
 
+/** All sermons for a specific book of the Bible, newest first */
+export async function getSermonsByBook(book: string): Promise<SanitySermon[]> {
+  return sanityClient.fetch(
+    `*[_type == "sermon" && book == $book] | order(date desc) { ${SERMON_FIELDS} }`,
+    { book },
+    { next: { revalidate: 300 } }
+  );
+}
+
 /** Single series by slug */
 export async function getSeriesBySlug(slug: string): Promise<SanitySeries | null> {
   return sanityClient.fetch(

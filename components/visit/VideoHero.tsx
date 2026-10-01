@@ -11,7 +11,26 @@ const HLS_URL = `https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID
 const DASH_URL = `https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID}/manifest/video.mpd`;
 const MP4_URL = `https://${CF_CUSTOMER_CODE}.cloudflarestream.com/${CF_STREAM_ID}/downloads/default.mp4`;
 
-export default function VideoHero() {
+interface VideoHeroProps {
+  eyebrow?: string;
+  title?: React.ReactNode;
+  subtitle?: string;
+  primaryCta?: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+}
+
+export default function VideoHero({
+  eyebrow = "Sundays in Chattanooga",
+  title = (
+    <>
+      We&apos;d love to{" "}
+      <span style={{ color: "var(--accent)" }}>have you.</span>
+    </>
+  ),
+  subtitle = "Here is everything you need to know before you join us Sunday.",
+  primaryCta = { label: "Service Times", href: "#service-times" },
+  secondaryCta = { label: "Let Us Know You're Coming", href: "/connect" },
+}: VideoHeroProps = {}) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -77,7 +96,7 @@ export default function VideoHero() {
       {/* ── Content ── */}
       <div className="relative z-10 h-full flex flex-col justify-end">
         <div className="max-w-7xl mx-auto w-full px-6 md:px-12 pb-16 md:pb-24">
-          <p className="eyebrow-white mb-4">Sundays in Chattanooga</p>
+          <p className="eyebrow-white mb-4">{eyebrow}</p>
 
           <h1
             className="font-condensed font-900 text-white leading-none mb-5"
@@ -86,30 +105,29 @@ export default function VideoHero() {
               letterSpacing: "-0.01em",
             }}
           >
-            We&apos;d love to{" "}
-            <span style={{ color: "var(--accent)" }}>have you.</span>
+            {title}
           </h1>
 
           <p
             className="text-white/70 leading-relaxed mb-8 max-w-lg"
             style={{ fontSize: "1.05rem" }}
           >
-            Here is everything you need to know before you join us Sunday.
+            {subtitle}
           </p>
 
           <div className="flex flex-wrap gap-4">
             <a
-              href="#service-times"
+              href={primaryCta.href}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
               style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >
-              Service Times
+              {primaryCta.label}
             </a>
             <Link
-              href="/connect"
+              href={secondaryCta.href}
               className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/40 text-white px-7 py-3 rounded-full hover:border-white/70 transition-colors"
             >
-              Let Us Know You&apos;re Coming
+              {secondaryCta.label}
             </Link>
           </div>
         </div>
