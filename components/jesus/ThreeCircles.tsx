@@ -426,9 +426,12 @@ export default function ThreeCircles() {
   // arcs directly connecting adjacent circles, nothing more. Back to
   // that: one control point, modest bow, no hooks, no corner sweeps —
   // this is close to the diagram's very first version.
-  const repStart = {x: BX-48, y: BY+54};   // Brokenness circle, lower-left edge
-  const repCtrl  = {x: 280,   y: 205};
-  const repEnd   = {x: GPX+50, y: GPY-52}; // Gospel circle, upper-right edge
+  // Repent & Believe floats free of both circles, but pulled in to about
+  // half its previous length — it now sits in the gap between them
+  // rather than reaching all the way to either circle's edge.
+  const repStart = {x: 321, y: 235};
+  const repCtrl  = {x: 305, y: 275};
+  const repEnd   = {x: 287, y: 326};
 
   const recStart = {x: GPX-50, y: GPY-52}; // Gospel circle, upper-left edge
   const recCtrl  = {x: 118,   y: 212};
@@ -445,7 +448,7 @@ export default function ThreeCircles() {
   // Figures sit near the Gospel-circle end of each arrow, just off the
   // curve — "Believe" happens on arrival at Gospel, "Restored" happens
   // on leaving it, matching where the reference places its two figures.
-  const prayPos = { x: repMid.x + 37, y: repMid.y + 25 };
+  const prayPos = { x: repMid.x + 22, y: repMid.y + 6 };
   const redeemPos = { x: recMid.x - 37, y: recMid.y + 55 };
 
   return (
@@ -576,16 +579,16 @@ export default function ThreeCircles() {
                 way every earlier round had it. Both verified clear of the
                 crossbar (y=278, x 193-225) and the tomb (y>=313, x 200-218). */}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX+31},${GPY-39} L ${GPX+21},${GPY+25}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={65}/>
+              <AnimPath d={`M ${GPX+48},${GPY-24} L ${GPX+38},${GPY+40}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={300} len={65}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX+31},${GPY-39} L ${GPX+21},${GPY+25}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+              <path d={`M ${GPX+48},${GPY-24} L ${GPX+38},${GPY+40}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <g filter="url(#sk)">
-              <AnimPath d={`M ${GPX-25},${GPY+47} L ${GPX-56},${GPY-1}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={500} len={58}/>
+              <AnimPath d={`M ${GPX-17},${GPY+39} L ${GPX-48},${GPY-9}`} stroke={NAVY} sw={4} show={vis(v,"gospel-circle")} delay={500} len={58}/>
             </g>
             {vis(v,"gospel-circle") && (
-              <path d={`M ${GPX-25},${GPY+47} L ${GPX-56},${GPY-1}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
+              <path d={`M ${GPX-17},${GPY+39} L ${GPX-48},${GPY-9}`} fill="none" stroke="none" markerEnd="url(#argn)" strokeWidth="4"/>
             )}
             <CrossIcon cx={GPX} cy={GPY-6} show={vis(v,"gospel-circle")} delay={900} stroke={NAVY}/>
             {/* The tomb, empty — the stone rolled to the side */}
@@ -616,23 +619,27 @@ export default function ThreeCircles() {
             </Fade>
             <RunningMan path={sinRunPath} color={RED} show={vis(v,"sin-arrow")}/>
 
-            {/* ═══ REPENT & BELIEVE: B → GP ═══ Round 11: back to a single,
-                modest bow — no hook, no corner sweep — matching the
-                reference image exactly. Label sized down and set close to
-                the praying man rather than stretched along the curve. */}
+            {/* ═══ REPENT & BELIEVE: B → GP ═══ Floats free of both circles —
+                leaves Brokenness's bottom-right, bows out toward the
+                bottom-right of the page, comes back into Gospel's
+                bottom-right, never touching either circle. */}
             <g filter="url(#sk)">
               <AnimPath
                 d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
-                stroke={TEAL} sw={4} show={vis(v,"repent-arrow")} len={140}/>
+                stroke={TEAL} sw={3} show={vis(v,"repent-arrow")} len={100}/>
             </g>
             {vis(v,"repent-arrow") && (
               <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
+            {/* The arrow is short enough now that the label used to sit
+                right on top of the stroke and hide almost all of it —
+                offset to the side instead, so the arrow itself stays
+                visible. */}
             <Fade show={vis(v,"repent-arrow")}>
               <text textAnchor="middle" fill={TEAL} fontSize={10} fontWeight={700}
                 fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.06em"
-                transform={`translate(${repMid.x},${repMid.y}) rotate(58)`}
+                transform={`translate(${repMid.x-17},${repMid.y-6.3}) rotate(-70)`}
                 style={{textTransform:"uppercase", ...HALO}}>
                 Repent &amp; Believe
               </text>
