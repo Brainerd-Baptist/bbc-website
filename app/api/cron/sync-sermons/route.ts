@@ -336,7 +336,7 @@ export async function GET(req: NextRequest) {
 
       await sanityWriteClient.createOrReplace(doc);
       created.push({ title, date });
-      console.log(`[sync-sermons] ${date} ${video.videoId} ok in ${Date.now() - itemStart}ms`);
+      console.log(`[sync-sermons] ${date} ${video.videoId} ok in ${Date.now() - itemStart}ms speaker="${speaker}" taggingSpeaker="${taggingSpeaker}" taggingTeacherRaw="${tagging?.teacher}" hasTagging=${!!tagging} hasReference=${!!reference} parsedSpeaker="${parsedSpeaker}"`);
     } catch (err) {
       console.error(`[sync-sermons] failed to sync ${video.videoId}:`, err);
       // Keep going — one bad sermon shouldn't block the rest of the batch.
