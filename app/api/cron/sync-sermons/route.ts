@@ -43,6 +43,25 @@ import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { sanityWriteClient, hasSanityWriteToken } from "@/lib/sanity-write";
 import { slugify } from "@/lib/slugify";
 import { sendMail } from "@/lib/mail";
+import backfillReference from "@/lib/data/sermon-backfill-reference.json";
+
+/**
+ * Hand-verified date/speaker/series for ~168 historical sermons (Dec 2022
+ * onward), keyed by youtubeId — built during the separate YouTube
+ * title/thumbnail rollout project (this same conversation, "Brainerd
+ * Website") and rediscovered 2026-10-02 sitting in this session's own
+ * output folder as `final_dry_run.csv`. Per Josiah 2026-10-02: Curtis's
+ * Tagging sheet is the ultimate source of truth for sermons it covers
+ * (and for everything going forward) since he maintains it by hand
+ * specifically for this; this reference is a fallback for older sermons
+ * the Tagging sheet doesn't reach back to — "pieced together," in his
+ * words, not authoritative the way the sheet is. Precedence everywhere
+ * below is: Tagging sheet > this reference > YouTube title-parsing.
+ */
+const BACKFILL_REFERENCE = backfillReference as Record<
+  string,
+  { date: string; speaker: string; series: string }
+>;
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -164,26 +183,33 @@ export async function GET(req: NextRequest) {
 
   for (const video of missing) {
     try {
+      const reference = BACKFILL_REFERENCE[video.videoId];
+
       // playlistItems' own publishedAt is the date the video was added to
       // the curated playlist, NOT when it was preached or uploaded — for
       // the historical back-catalog (bulk-added to the playlist long after
-      // the fact) every video in that batch reports the same add-date.
-      // resolveSermonDate() instead prefers a date parsed straight out of
-      // the title (older videos are literally titled "Month D, YYYY |
-      // Speaker"), falling back to the nearest Sunday on/before the
-      // video's own upload timestamp when no such date is embedded.
+      // the fact) every video in that batch reports the same add-date. The
+      // hand-verified reference CSV wins where it has a row (it was built
+      // specifically to get this right for this exact set of videos);
+      // otherwise fall back to a date parsed straight out of the title
+      // (older videos are literally titled "Month D, YYYY | Speaker"), and
+      // finally to the nearest Sunday on/before the video's own upload
+      // timestamp when no such date is embedded anywhere.
       const uploadedAt = uploadDates[video.videoId] || video.publishedAt;
-      const date = resolveSermonDate(video.rawTitle, uploadedAt);
+      const date = reference?.date || resolveSermonDate(video.rawTitle, uploadedAt);
       const tagging = await getTaggingRowByDate(date).catch(() => null);
 
-      // Same precedence the live homepage card uses: Tagging sheet (Curtis's
-      // hand-verified record) wins when it exists, YouTube title parsing
-      // fills in the rest.
+      // Precedence, per Josiah 2026-10-02: Curtis's Tagging sheet is the
+      // ultimate source of truth (he maintains it by hand for exactly
+      // this) and always wins where it has a row; the hand-verified
+      // reference CSV is next for sermons the sheet doesn't reach back to;
+      // YouTube title-parsing is the last resort.
       const { title: parsedTitle, passage: parsedPassage, speaker: parsedSpeaker } =
         parseYoutubeSermonTitle(video.rawTitle);
       const title = tagging?.title || parsedTitle || video.title;
       const passage = tagging?.passage || parsedPassage;
-      const speaker = tagging?.teacher || parsedSpeaker || "Curtis Hill";
+      const speaker = tagging?.teacher || reference?.speaker || parsedSpeaker || "Curtis Hill";
+      const seriesTitle = tagging?.series || reference?.series || "";
 
       if (EXCLUDED_SPEAKERS.some((name) => speaker.toLowerCase().includes(name.toLowerCase()))) {
         skipped.push({ title: title || video.title, speaker });
@@ -204,7 +230,7 @@ export async function GET(req: NextRequest) {
       const prevKey = dateToKey(prevDate.toISOString().slice(0, 10));
       const audioUrl = podcastMap[key] || podcastMap[prevKey] || undefined;
 
-      const seriesId = tagging?.series ? await resolveSeriesId(tagging.series) : undefined;
+      const seriesId = seriesTitle ? await resolveSeriesId(seriesTitle) : undefined;
 
       const doc = {
         _id: `sermon-${video.videoId}`,
