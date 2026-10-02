@@ -95,6 +95,9 @@ export default function Navbar() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
+    // Evaluate once on mount: a reload, a back-navigation or an anchor link can
+    // land the page already scrolled, and no scroll event fires to say so.
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

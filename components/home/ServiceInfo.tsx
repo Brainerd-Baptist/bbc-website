@@ -3,8 +3,9 @@ import ScrollReveal from "./ScrollReveal";
 
 export default function ServiceInfo() {
   return (
-    <section className="bg-surface py-20 px-6 border-b border-border">
-      <div className="max-w-7xl mx-auto">
+    <section className="relative overflow-hidden py-20 px-6">
+      <div className="bx-bloom" aria-hidden="true" />
+      <div className="relative max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
 
@@ -12,7 +13,7 @@ export default function ServiceInfo() {
             <div className="md:col-span-2">
               <p className="eyebrow mb-3">Sunday Services</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="rounded-2xl bg-accent-bg border border-accent/15 p-6">
+                <div className="glass-frost glass-static rounded-2xl p-6">
                   <div className="text-accent-text font-condensed font-900 text-3xl mb-1">8:30 AM</div>
                   <div className="font-semibold text-fg mb-2">Choir & Orchestra</div>
                   <p className="text-fg-muted text-sm leading-relaxed">
@@ -20,7 +21,7 @@ export default function ServiceInfo() {
                     this one will feel familiar.
                   </p>
                 </div>
-                <div className="rounded-2xl bg-accent-bg border border-accent/15 p-6">
+                <div className="glass-frost glass-static rounded-2xl p-6">
                   <div className="text-accent-text font-condensed font-900 text-3xl mb-1">11:00 AM</div>
                   <div className="font-semibold text-fg mb-2">Band-Led</div>
                   <p className="text-fg-muted text-sm leading-relaxed">
@@ -39,7 +40,7 @@ export default function ServiceInfo() {
 
             {/* Address / Visit CTA */}
             <div className="flex flex-col justify-center">
-              <div className="rounded-2xl bg-brand-navy text-fg-on-dark p-7 h-full flex flex-col justify-between">
+              <div className="rounded-2xl bg-brand-navy text-fg-on-dark p-7 h-full flex flex-col justify-between shadow-xl">
                 <div>
                   <p className="eyebrow-white mb-3">Find Us</p>
                   <p className="font-condensed font-800 text-xl mb-1">300 Brookfield Ave</p>

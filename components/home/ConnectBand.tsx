@@ -121,14 +121,14 @@ export default function ConnectBand() {
                   href={item.href}
                   className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/40 rounded-xl px-5 py-4 transition duration-200"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent-text shrink-0 group-hover:bg-accent-solid group-hover:text-white transition">
+                  <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent shrink-0 group-hover:bg-accent-solid group-hover:text-white transition">
                     {item.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-condensed font-700 text-white text-base">{item.label}</p>
                     <p className="text-fg-on-dark-muted text-sm leading-snug">{item.desc}</p>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-fg-on-dark-muted group-hover:text-accent-text transition-colors shrink-0">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-fg-on-dark-muted group-hover:text-accent transition-colors shrink-0">
                     <path d="M3 7h8M8 4l3 3-3 3"/>
                   </svg>
                 </Link>

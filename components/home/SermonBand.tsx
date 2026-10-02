@@ -39,7 +39,7 @@ export default async function SermonBand() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-surface section-pad border-b border-border">
+    <section className="relative overflow-hidden section-pad">
       <div className="bx-bloom" aria-hidden="true" />
       <div className="relative max-w-7xl mx-auto">
         <ScrollReveal>
@@ -88,7 +88,7 @@ export default async function SermonBand() {
 
                 {/* Series chip */}
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="label-micro text-accent-text bg-black/30 border border-accent/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                  <span className="label-micro text-accent bg-black/30 border border-accent/30 px-3 py-1 rounded-full backdrop-blur-sm">
                     {seriesLabel}
                   </span>
                 </div>
@@ -108,7 +108,7 @@ export default async function SermonBand() {
               </div>
 
               {/* Info panel */}
-              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center bg-surface-raised ">
+              <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center">
                 <h3
                   className="font-condensed font-800 text-fg text-2xl md:text-3xl leading-tight mb-4"
                   style={{ fontWeight: 800, letterSpacing: "-0.02em" }}

@@ -353,9 +353,9 @@
   --glass-shadow-hover:
     0 2px 4px rgba(0, 32, 91, 0.12),
     0 22px 44px -10px rgba(0, 32, 91, 0.32);
-  --bloom-a: rgba(0, 171, 201, 0.34);
-  --bloom-b: rgba(40, 80, 190, 0.26);
-  --bloom-c: rgba(255, 190, 90, 0.24);
+  --bloom-a: rgba(0, 171, 201, 0.46);
+  --bloom-b: rgba(40, 80, 190, 0.36);
+  --bloom-c: rgba(255, 190, 90, 0.32);
 
   /* ── On-dark content ──────────────────────────────────────────────────
      Theme-INVARIANT on purpose. These sit on ground that is dark in BOTH
@@ -734,9 +734,9 @@
   --glass-shadow-hover:
     0 2px 4px rgba(0, 0, 0, 0.50),
     0 26px 48px -10px rgba(0, 0, 0, 0.70);
-  --bloom-a: rgba(0, 171, 201, 0.28);
-  --bloom-b: rgba(60, 100, 230, 0.28);
-  --bloom-c: rgba(255, 170, 70, 0.14);
+  --bloom-a: rgba(0, 171, 201, 0.38);
+  --bloom-b: rgba(60, 100, 230, 0.38);
+  --bloom-c: rgba(255, 170, 70, 0.20);
 
   /* The nav's glass surface is dark here, so its chrome inverts. This pair is
      the reason globals.css needs no `.dark` selector for nav colour.

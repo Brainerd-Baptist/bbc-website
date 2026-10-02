@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import type { CalendarEvent } from "@/app/api/pco/calendar/route";
+import ScrollReveal from "./ScrollReveal";
 
 // ── Eastern-time helpers ───────────────────────────────────────────────────
 
@@ -114,16 +114,9 @@ export default function ThisWeek() {
   const grouped = groupByDay(events);
 
   return (
-    <section
-      className="relative overflow-hidden py-20 px-6 md:px-12"
-      style={{
-        // A subtle gradient instead of a flat fill — gives the glass-frost
-        // cards below something with texture to actually blur. See
-        // claude/bbc-website-theme-depth-audit-2026-10-01.md (prototype).
-        background:
-          "linear-gradient(180deg, var(--surface-sunken) 0%, var(--surface) 100%)",
-      }}
-    >
+    // No background of its own: the page's grain and gradient show through, and
+    // the bloom below puts colour behind the glass cards for them to blur.
+    <section className="relative overflow-hidden py-20 px-6 md:px-12">
       <div className="bx-bloom" aria-hidden="true" />
       <div className="relative max-w-7xl mx-auto">
         {/* Header */}
@@ -167,8 +160,8 @@ export default function ThisWeek() {
 
         {/* Day groups */}
         <div className="space-y-8">
-          {grouped.map((day) => (
-            <div key={day.label}>
+          {grouped.map((day, i) => (
+            <ScrollReveal key={day.label} delay={Math.min(i, 3) * 90}>
               {/* Day label */}
               <p
                 className="text-xs font-semibold uppercase tracking-widest mb-3"
@@ -183,7 +176,7 @@ export default function ThisWeek() {
                   <EventCard key={ev.id} event={ev} />
                 ))}
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -231,8 +224,9 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
 
         {/* Event name */}
         <p
-          className="font-condensed font-700 leading-tight text-base group-hover:text-accent-text transition-colors duration-200"
-          style={{ color: "var(--fg)" }}
+          // Colour comes from classes, not an inline style: an inline colour
+          // beats group-hover, which is why this hover never fired before.
+          className="font-condensed font-700 leading-tight text-base text-fg group-hover:text-accent-text transition-colors duration-200"
         >
           {ev.name}
           {ev.registration_url && (

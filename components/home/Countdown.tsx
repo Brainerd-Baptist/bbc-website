@@ -101,8 +101,11 @@ export default function Countdown() {
           key={label}
           className="flex flex-col items-center glass-dark rounded-xl px-4 py-3 min-w-[56px]"
         >
+          {/* key={value} remounts the digit whenever it changes, which replays
+              the slide-in. Transform and opacity only, so nothing reflows. */}
           <span
-            className="font-condensed font-900 text-white tabular-nums"
+            key={value}
+            className="digit-tick font-condensed font-900 text-white tabular-nums"
             style={{ fontSize: "clamp(1.5rem, 4vw, 2.2rem)", lineHeight: 1 }}
           >
             {String(value).padStart(2, "0")}
