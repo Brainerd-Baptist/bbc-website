@@ -79,10 +79,11 @@ const SYNC_WINDOW = 15;
 // somewhere else, e.g. a shared staff inbox.
 const NOTIFY_EMAIL = "jking@brainerdbaptist.org";
 
-// Former staff — sermons attributed to either of these (via title parsing
+// Former staff — sermons attributed to any of these (via title parsing
 // or the Tagging sheet) are skipped entirely rather than synced, per
-// Josiah 2026-10-02: "they're no longer at Brainerd."
-const EXCLUDED_SPEAKERS = ["Jim Shaddix", "Kevin Baggett"];
+// Josiah 2026-10-02 ("they're no longer at Brainerd") and 2026-10-02
+// follow-up adding Paul Laso and Blaine Vandegriff to the same list.
+const EXCLUDED_SPEAKERS = ["Jim Shaddix", "Kevin Baggett", "Paul Laso", "Blaine Vandegriff"];
 
 // Curtis's Tagging sheet (and the backfill reference CSV) label the odd
 // handful of one-off, non-series sermons each year with a placeholder
