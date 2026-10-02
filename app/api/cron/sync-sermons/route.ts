@@ -109,7 +109,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "SANITY_API_TOKEN not configured" }, { status: 500 });
   }
 
-  const recent = await getRecentSermons(SYNC_WINDOW);
+  // Vercel's own cron invocation never sends this — it always gets the
+  // normal SYNC_WINDOW. This is for a manual, one-time catch-up run (e.g.
+  // the first time this ever runs against a Sanity dataset with little or
+  // nothing in it yet) without changing what the daily job checks forever
+  // after. getRecentSermons() paginates past YouTube's 50-per-page cap on
+  // its own, so this just bounds how large a single manual run can ask
+  // for; re-running with createIfNotExists is always safe if the real
+  // backlog somehow exceeds 200.
+  const requestedLimit = Number(req.nextUrl.searchParams.get("limit"));
+  const limit = Number.isFinite(requestedLimit) && requestedLimit > 0
+    ? Math.min(requestedLimit, 200)
+    : SYNC_WINDOW;
+
+  const recent = await getRecentSermons(limit);
   if (recent.length === 0) {
     return NextResponse.json({ ok: true, checked: 0, created: [] });
   }

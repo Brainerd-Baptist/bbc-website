@@ -116,19 +116,28 @@ export function formatSermonDate(iso: string): string {
 export async function getRecentSermons(limit = 15): Promise<YouTubeSermon[]> {
   if (!API_KEY) return [];
 
-  const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${YOUTUBE_SERMONS_PLAYLIST_ID}&maxResults=${limit}&key=${API_KEY}`;
-  const res = await fetch(url, { next: { revalidate: 21600 } });
-  if (!res.ok) return [];
+  const results: YouTubeSermon[] = [];
+  let pageToken = "";
 
-  const data = await res.json();
-  const items: Array<{ snippet: Record<string, unknown> }> = data.items ?? [];
+  // playlistItems caps maxResults at 50 per call — paginate for anything
+  // bigger (a full-history backfill request, say) rather than silently
+  // truncating at page one.
+  while (results.length < limit) {
+    const pageSize = Math.min(50, limit - results.length);
+    const url =
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${YOUTUBE_SERMONS_PLAYLIST_ID}` +
+      `&maxResults=${pageSize}&key=${API_KEY}${pageToken ? `&pageToken=${pageToken}` : ""}`;
+    const res = await fetch(url, { next: { revalidate: 21600 } });
+    if (!res.ok) break;
 
-  return items
-    .map(({ snippet }) => {
+    const data = await res.json();
+    const items: Array<{ snippet: Record<string, unknown> }> = data.items ?? [];
+
+    for (const { snippet } of items) {
       const videoId = (snippet.resourceId as { videoId?: string } | undefined)?.videoId;
-      if (!videoId) return null;
+      if (!videoId) continue;
       const { title, passage, speaker } = parseYoutubeSermonTitle(snippet.title as string);
-      return {
+      results.push({
         videoId,
         rawTitle: snippet.title as string,
         title,
@@ -138,9 +147,14 @@ export async function getRecentSermons(limit = 15): Promise<YouTubeSermon[]> {
         thumbnail: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
         channelTitle: snippet.channelTitle as string,
         description: (snippet.description as string) ?? "",
-      } satisfies YouTubeSermon;
-    })
-    .filter((s): s is YouTubeSermon => s !== null);
+      });
+    }
+
+    pageToken = data.nextPageToken ?? "";
+    if (!pageToken || items.length === 0) break;
+  }
+
+  return results;
 }
 
 /**
