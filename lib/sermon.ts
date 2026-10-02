@@ -28,6 +28,7 @@ const DRIVE_FOLDER_ID = "164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS"; // current year
 export interface SermonData {
   title: string;
   passage: string;
+  speaker: string;
   date: string;           // "YYYY-MM-DD"
   youtubeId: string | null;
   watchUrl: string;
@@ -485,7 +486,13 @@ export async function getSermonNotesByDate(date: string): Promise<{
 
 // ── Primary export ────────────────────────────────────────────────────────────
 
-export async function getLatestSermon(overrideFileId?: string): Promise<SermonData> {
+/**
+ * Builds the Drive+RSS-only SermonData shape — the original pairing, used
+ * as a fallback when the YouTube Data API is unavailable (no key, or the
+ * call failed) and for the overrideFileId preview path (checking a Drive
+ * draft before it's been uploaded to YouTube at all).
+ */
+async function getFromDriveAndRss(overrideFileId?: string): Promise<SermonData> {
   const [drive, youtubeId] = await Promise.all([
     getLatestFromDrive(overrideFileId),
     getLatestYouTubeId(),
@@ -496,6 +503,7 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
   return {
     title:       drive?.title       ?? "Latest Sermon",
     passage:     drive?.passage     ?? "",
+    speaker:     "",
     date:        drive?.date        ?? new Date().toISOString().slice(0, 10),
     outline:     drive?.outline     ?? [],
     outlineType: drive?.outlineType ?? "none",
@@ -509,5 +517,67 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
     thumbnail:   youtubeId
       ? `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`
       : null,
+  };
+}
+
+export async function getLatestSermon(overrideFileId?: string): Promise<SermonData> {
+  // Preview mode: an explicit Drive file ID was passed (e.g. /live?fileId=...
+  // to sanity-check a draft before it's uploaded) — Drive is the only
+  // source that makes sense here, since the video may not exist on YouTube
+  // yet at all.
+  if (overrideFileId) {
+    return getFromDriveAndRss(overrideFileId);
+  }
+
+  // Primary path: the YouTube video's own title is, for now, the only name
+  // source that's guaranteed to be current. Curtis's Drive folder is
+  // view-only for the person maintaining this site (no edit access yet to
+  // fix names there), and Drive vs. YouTube can independently lag each
+  // other by however long it takes a doc to land in the folder — which
+  // previously showed up as the homepage card pairing last week's Drive
+  // title with this week's YouTube thumbnail. So title/passage/speaker/date
+  // now all come straight from the YouTube video via the Data API
+  // (lib/youtube.ts), parsed from BBC's "Title (Passage) | Speaker"
+  // convention. Revisit once the Drive folder has real edit access and
+  // up-to-date names — see claude/ sermon pipeline notes.
+  const { getLatestSermon: getLatestYouTubeSermon } = await import("./youtube");
+  const yt = await getLatestYouTubeSermon();
+
+  if (!yt) {
+    // No YOUTUBE_API_KEY, or the call failed — fall back to the old
+    // Drive + RSS pairing rather than showing nothing.
+    return getFromDriveAndRss();
+  }
+
+  const date = yt.publishedAt.slice(0, 10);
+  const slug = await findSlugForYoutubeId(yt.videoId);
+
+  // Best-effort: attach Curtis's outline/notes for this exact date if his
+  // doc has made it into Drive by now. Matched by date (not "most recent
+  // file"), so a missing or out-of-sync doc just means no outline yet
+  // rather than a mismatched one.
+  let outline: string[] = [];
+  let outlineType: "structured" | "scripture" | "none" = "none";
+  try {
+    const notes = await getSermonNotesByDate(date);
+    if (notes) {
+      outline = notes.outline;
+      outlineType = notes.outlineType;
+    }
+  } catch {
+    // no Drive doc for this date yet — fine, the YouTube title still stands
+  }
+
+  return {
+    title:       yt.title || "Latest Sermon",
+    passage:     yt.passage,
+    speaker:     yt.speaker,
+    date,
+    outline,
+    outlineType,
+    youtubeId:   yt.videoId,
+    watchUrl:    slug ? `/sermons/${slug}` : `https://www.youtube.com/watch?v=${yt.videoId}`,
+    watchUrlIsInternal: Boolean(slug),
+    thumbnail:   yt.thumbnail,
   };
 }

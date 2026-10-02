@@ -394,7 +394,7 @@ function WatchTab({ sermon }: { sermon: SermonData }) {
         </p>
       )}
       <h2 className="text-xl font-bold text-fg-on-dark mb-1 leading-tight">{sermon.title}</h2>
-      <p className="text-sm text-fg-on-dark-muted mb-6">{date} · Curtis Hill</p>
+      <p className="text-sm text-fg-on-dark-muted mb-6">{date} · {sermon.speaker || "Curtis Hill"}</p>
 
       <div className="flex flex-col gap-3">
         <a
@@ -743,7 +743,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
               <div className="md:col-span-3 p-7 md:p-9 flex flex-col justify-center">
                 {sermon.passage && <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
                 <h3 className="text-xl md:text-2xl font-bold text-fg-on-dark mb-3 leading-tight">{sermon.title}</h3>
-                <p className="text-sm text-fg-on-dark-muted mb-5">{date} · Curtis Hill</p>
+                <p className="text-sm text-fg-on-dark-muted mb-5">{date} · {sermon.speaker || "Curtis Hill"}</p>
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm inline-block self-start">
                   Watch Now
                 </a>

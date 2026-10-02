@@ -6,7 +6,7 @@ import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
 export default async function SermonBand() {
   const sermon = await getLatestSermon();
 
-  const { title, passage, watchUrl, watchUrlIsInternal, thumbnail } = sermon;
+  const { title, passage, speaker, watchUrl, watchUrlIsInternal, thumbnail } = sermon;
   const date = formatSermonDate(sermon.date);
 
   // When we found the sermon's own /sermons/[slug] page, send people there —
@@ -102,7 +102,7 @@ export default async function SermonBand() {
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
-                    Curtis Hill
+                    {speaker || "Curtis Hill"}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
