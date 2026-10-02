@@ -290,10 +290,26 @@
      change per theme (surface, border, shadow). In light mode the shadow
      carries the depth; in dark mode it goes nearly opaque and decorative
      while the lighter surface and visible border do the real work. */
-  --shadow-sm: 0 1px 4px rgba(0, 32, 91, 0.06);
-  --shadow-md: 0 2px 8px rgba(0, 32, 91, 0.06);
-  --shadow-lg: 0 16px 40px rgba(0, 32, 91, 0.12), 0 4px 12px rgba(0, 32, 91, 0.08);
-  --shadow-sm-hover: 0 8px 24px rgba(0, 32, 91, 0.10);
+  /* Phase 3 — 2026-10-01: double-layer shadow system matching BX.
+     Each shadow = ambient layer (spread, soft) + directional layer (tight, punchy).
+     Light: tinted with --brand-navy so shadows feel warm/branded not grey.
+     Dark mode block below overrides with black-alpha for depth without blue bleed. */
+  --shadow-sm:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    0 1px 3px rgba(0, 32, 91, 0.06),
+    0 4px 16px rgba(0, 32, 91, 0.08);
+  --shadow-md:
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    0 2px 6px rgba(0, 32, 91, 0.07),
+    0 8px 24px rgba(0, 32, 91, 0.10);
+  --shadow-lg:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 4px 12px rgba(0, 32, 91, 0.08),
+    0 16px 48px rgba(0, 32, 91, 0.14);
+  --shadow-sm-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 2px 8px rgba(0, 32, 91, 0.10),
+    0 8px 28px rgba(0, 32, 91, 0.13);
 
   /* ── On-dark content ──────────────────────────────────────────────────
      Theme-INVARIANT on purpose. These sit on ground that is dark in BOTH
@@ -610,10 +626,23 @@
   --scrim:    rgba(0, 0, 0, 0.60);
   --media-bg: #0a1020;
 
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.30);
-  --shadow-sm-hover: 0 8px 24px rgba(0, 0, 0, 0.40);
+  /* Phase 3 dark-mode shadows — black-alpha double-layer, no blue tint. */
+  --shadow-sm:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.30);
+  --shadow-md:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.28),
+    0 12px 36px rgba(0, 0, 0, 0.35);
+  --shadow-lg:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 20px rgba(0, 0, 0, 0.35),
+    0 24px 56px rgba(0, 0, 0, 0.45);
+  --shadow-sm-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 4px 12px rgba(0, 0, 0, 0.30),
+    0 12px 32px rgba(0, 0, 0, 0.40);
 
   /* The nav's glass surface is dark here, so its chrome inverts. This pair is
      the reason globals.css needs no `.dark` selector for nav colour.
