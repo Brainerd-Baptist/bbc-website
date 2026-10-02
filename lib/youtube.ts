@@ -34,6 +34,12 @@ const API_KEY = process.env.YOUTUBE_API_KEY;
  * missing the " | Speaker" suffix or the "(Passage)" parenthetical just
  * yields an empty speaker/passage rather than throwing.
  */
+/** A passage reference has a number in it (chapter/verse); no speaker's
+ * name does. Crude but effective — see parseYoutubeSermonTitle below. */
+function looksLikePassageSegment(value: string): boolean {
+  return /\d/.test(value.trim());
+}
+
 export function parseYoutubeSermonTitle(rawTitle: string): {
   title: string;
   passage: string;
@@ -41,6 +47,28 @@ export function parseYoutubeSermonTitle(rawTitle: string): {
 } {
   let rest = rawTitle.trim();
   let speaker = "";
+  let passage = "";
+
+  // Most titles follow "Title (Passage) | Speaker" — one pipe, speaker
+  // last. But some 2022-era guest-speaker uploads instead use
+  // "Month D, YYYY |  Speaker | Passage" — TWO pipes, passage last
+  // instead of speaker. Found 2026-10-02: taking "whatever's after the
+  // last pipe" as the speaker on one of these put a passage reference
+  // ("1 Peter 1:5-11") straight into the speaker field. Detect that
+  // 3-segment shape specifically — if the last segment looks like a
+  // passage and the one before it doesn't, that middle segment is the
+  // speaker, not the last one.
+  const segments = rest.split("|").map((s) => s.trim());
+  if (
+    segments.length === 3 &&
+    looksLikePassageSegment(segments[2]) &&
+    !looksLikePassageSegment(segments[1])
+  ) {
+    speaker = segments[1];
+    passage = segments[2];
+    rest = segments[0];
+    return { title: rest, passage, speaker };
+  }
 
   const pipeIdx = rest.lastIndexOf("|");
   if (pipeIdx !== -1) {
@@ -48,7 +76,6 @@ export function parseYoutubeSermonTitle(rawTitle: string): {
     rest = rest.slice(0, pipeIdx).trim();
   }
 
-  let passage = "";
   const parenMatch = rest.match(/\(([^()]+)\)\s*$/);
   if (parenMatch) {
     passage = parenMatch[1].trim();
