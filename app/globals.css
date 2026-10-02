@@ -112,7 +112,7 @@ html {
    which always renders above background-color.
 
    Layer order (CSS background-image paints top → bottom):
-     [0] fractalNoise grain — opacity baked into the SVG rect (6% light / 4% dark)
+     [0] fractalNoise grain — opacity baked into the SVG rect (12% light / 7% dark)
      [1] radial gradient depth — warm bloom top-center (light) / navy glow (dark)
    background-color: var(--surface) — the solid base beneath both layers.     */
 body {
@@ -287,7 +287,8 @@ body {
 .gold-divider {
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--color-brand-cyan-light));
+  /* warm amber — distinct from .blue-divider's cyan */
+  background: linear-gradient(90deg, #b8770a, #e8a820);
   border-radius: 2px;
 }
 
@@ -394,6 +395,12 @@ body {
   font-size: clamp(2.8rem, 7vw, 4.5rem);
   line-height: 1.0;
   letter-spacing: -0.02em;
+}
+/* homepage Hero headline — larger floor than .h-hero so small screens
+   still read as hero-scale; used only in components/home/Hero.tsx */
+.h-home-hero {
+  font-size: clamp(3.2rem, 8vw, 5.5rem);
+  letter-spacing: -0.01em;
 }
 .h-subsection {
   font-family: var(--font-barlow-condensed), sans-serif;

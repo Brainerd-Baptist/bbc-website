@@ -67,6 +67,7 @@ function StepLabel({ num, label }: { num: number; label: string }) {
   return (
     <div className="flex items-center gap-3 mb-5">
       <span
+        aria-hidden="true"
         className="font-condensed font-900 leading-none flex-shrink-0"
         style={{ fontSize: "2rem", color: "var(--accent-text)", opacity: 0.4 }}
       >

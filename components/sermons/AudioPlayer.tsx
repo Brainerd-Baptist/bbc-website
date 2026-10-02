@@ -19,7 +19,7 @@ interface Props {
   theme?: "dark" | "light";
 }
 
-export default function AudioPlayer({ track, accentColor = "#00abc9", theme = "dark" }: Props) {
+export default function AudioPlayer({ track, accentColor = "var(--accent)", theme = "dark" }: Props) {
   const light = theme === "light";
   const { track: activeTrack, isPlaying, currentTime, duration, speed, bufferedEnd, loadTrack, togglePlay, seek, setSpeed } = useAudio();
   const barRef   = useRef<HTMLDivElement>(null);

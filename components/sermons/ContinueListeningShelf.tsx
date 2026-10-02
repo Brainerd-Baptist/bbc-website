@@ -96,7 +96,7 @@ export default function ContinueListeningShelf({
             const thumb = sermon.youtubeId
               ? `https://img.youtube.com/vi/${sermon.youtubeId}/mqdefault.jpg`
               : null;
-            const accent = sermon.seriesAccent ?? "#00abc9";
+            const accent = sermon.seriesAccent ?? "var(--accent)";
 
             return (
               <Link

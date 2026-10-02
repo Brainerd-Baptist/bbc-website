@@ -144,7 +144,7 @@ export default function GlobalAudioPlayer() {
   const bufPct     = duration > 0 ? bufferedEnd / duration : 0;
   const displayPct = dragging ? dragPct : pct;
 
-  const accent = track?.accentColor ?? "#00abc9";
+  const accent = track?.accentColor ?? "var(--accent)";
   // The dark tier, for text and icons on the player's tinted chips. The raw
   // hue happens to clear 4.5:1 there when it is brand cyan (4.72-6.19 measured
   // across the player grounds), but `accent` is whatever the series says, and a
