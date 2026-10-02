@@ -37,11 +37,20 @@ const NAV_GROUPS = [
     ],
   },
   {
-    label: "Connect",
+    label: "Next Steps",
     links: [
       { label: "Membership", href: "/membership" },
-      { label: "Staff", href: "/staff" },
+      { label: "Baptism", href: "/connect/next-step" },
+      { label: "Life Groups", href: "/life-groups" },
+      { label: "Serving", href: "/connect/next-step" },
+      { label: "Mission Trips", href: "/missions" },
       { label: "Connect With Us", href: "/connect" },
+    ],
+  },
+  {
+    label: "More",
+    links: [
+      { label: "Staff", href: "/staff" },
       { label: "Give", href: "/give" },
     ],
   },
