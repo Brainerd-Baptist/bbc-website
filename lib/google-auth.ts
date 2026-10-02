@@ -1,11 +1,13 @@
 /**
  * lib/google-auth.ts
  *
- * Service-account auth for the Google Drive API, replacing the old bare
- * GOOGLE_API_KEY approach (which only works against folders shared
- * "Anyone with the link → Viewer"). Curtis's real sermon-notes folder is
- * shared with named people only, not link-public, so reading it requires an
- * authenticated identity the folder is explicitly shared with instead.
+ * Service-account auth for the Google Drive and Sheets APIs, replacing the
+ * old bare GOOGLE_API_KEY approach (which only works against files/folders
+ * shared "Anyone with the link → Viewer"). Curtis's real sermon-notes
+ * folders and the weekly sermon-tagging sheet are shared with named people
+ * only, not link-public, so reading them requires an authenticated identity
+ * they're explicitly shared with instead. One token works for both APIs —
+ * it's scoped to read both Drive files and Sheets values.
  *
  * Setup (one-time, outside this repo):
  *   1. In Google Cloud Console, create (or reuse) a project with the Drive
@@ -22,6 +24,7 @@
 import { JWT } from "google-auth-library";
 
 const DRIVE_READONLY_SCOPE = "https://www.googleapis.com/auth/drive.readonly";
+const SHEETS_READONLY_SCOPE = "https://www.googleapis.com/auth/spreadsheets.readonly";
 
 let cachedClient: JWT | null = null;
 
@@ -41,7 +44,7 @@ function getClient(): JWT | null {
     cachedClient = new JWT({
       email: creds.client_email,
       key: creds.private_key,
-      scopes: [DRIVE_READONLY_SCOPE],
+      scopes: [DRIVE_READONLY_SCOPE, SHEETS_READONLY_SCOPE],
     });
   }
 

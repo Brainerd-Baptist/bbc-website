@@ -6,8 +6,9 @@ import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
 export default async function SermonBand() {
   const sermon = await getLatestSermon();
 
-  const { title, passage, speaker, watchUrl, watchUrlIsInternal, thumbnail } = sermon;
+  const { title, passage, speaker, series, part, summary, watchUrl, watchUrlIsInternal, thumbnail } = sermon;
   const date = formatSermonDate(sermon.date);
+  const seriesLabel = series ? (part ? `${series} · ${part}` : series) : "Latest";
 
   // When we found the sermon's own /sermons/[slug] page, send people there —
   // it has the inline player, outline, and notes tabs. Only fall back to an
@@ -71,7 +72,7 @@ export default async function SermonBand() {
                 {/* Series chip */}
                 <div className="absolute top-4 left-4 z-10">
                   <span className="label-micro text-accent-text bg-black/30 border border-accent/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                    Latest
+                    {seriesLabel}
                   </span>
                 </div>
 
@@ -119,6 +120,11 @@ export default async function SermonBand() {
                     </span>
                   )}
                 </div>
+                {summary && (
+                  <p className="text-fg-muted text-sm leading-relaxed mb-6 line-clamp-3">
+                    {summary}
+                  </p>
+                )}
                 <div className="flex gap-3 flex-wrap">
                   <WatchLink {...watchLinkProps} className="btn-primary text-sm">
                     Watch Now

@@ -24,6 +24,7 @@
  */
 
 import { getDriveAccessToken } from "./google-auth";
+import { getTaggingRowByDate } from "./sermon-tagging";
 
 export const YOUTUBE_CHANNEL_ID = "UCEcu35yHidS8fQVwsoSP3zQ";
 // Curated "Sermons" playlist — the homepage card should only ever pull from
@@ -40,6 +41,16 @@ export interface SermonData {
   title: string;
   passage: string;
   speaker: string;
+  /** Series name, e.g. "Not a Straight Line" — from the Tagging sheet only;
+   * there's no other source that reliably knows this. Empty when the sheet
+   * has no row yet for this date (e.g. this week's sermon, tagged later). */
+  series: string;
+  /** Series part/number as the sheet wrote it, e.g. "Part 8" or "8". Empty
+   * for standalone sermons (Bookmarks) or when not yet tagged. */
+  part: string;
+  /** Written summary paragraph from the Tagging sheet's SERMON SUMMARY
+   * column. Empty when not yet tagged. */
+  summary: string;
   date: string;           // "YYYY-MM-DD"
   youtubeId: string | null;
   watchUrl: string;
@@ -513,12 +524,21 @@ async function getFromDriveAndRss(overrideFileId?: string): Promise<SermonData> 
   ]);
 
   const slug = youtubeId ? await findSlugForYoutubeId(youtubeId) : null;
+  const date = drive?.date ?? new Date().toISOString().slice(0, 10);
+
+  // The Tagging sheet wins over Drive's filename-parsed title/passage too,
+  // same precedence as the primary YouTube path below — it's Curtis's
+  // hand-verified record, Drive's filename is just a best-effort parse.
+  const tagging = await getTaggingRowByDate(date).catch(() => null);
 
   return {
-    title:       drive?.title       ?? "Latest Sermon",
-    passage:     drive?.passage     ?? "",
-    speaker:     "",
-    date:        drive?.date        ?? new Date().toISOString().slice(0, 10),
+    title:       tagging?.title     || drive?.title       || "Latest Sermon",
+    passage:     tagging?.passage   || drive?.passage      || "",
+    speaker:     tagging?.teacher   || "",
+    series:      tagging?.series    ?? "",
+    part:        tagging?.part      ?? "",
+    summary:     tagging?.summary   ?? "",
+    date,
     outline:     drive?.outline     ?? [],
     outlineType: drive?.outlineType ?? "none",
     youtubeId:   youtubeId          ?? null,
@@ -582,10 +602,22 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
     // no Drive doc for this date yet — fine, the YouTube title still stands
   }
 
+  // The Tagging sheet is Curtis's hand-verified weekly record (series/part/
+  // passage/teacher/summary) and wins over YouTube's title parsing whenever
+  // a row exists for this date. Most weeks it won't exist yet for the sermon
+  // that *just* aired (tagging happens after the fact), so this just fills
+  // in gaps most of the time rather than overriding anything — but once the
+  // row shows up, it becomes the source of truth. YouTube keeps the site from
+  // showing nothing in the meantime.
+  const tagging = await getTaggingRowByDate(date).catch(() => null);
+
   return {
-    title:       yt.title || "Latest Sermon",
-    passage:     yt.passage,
-    speaker:     yt.speaker,
+    title:       tagging?.title   || yt.title || "Latest Sermon",
+    passage:     tagging?.passage || yt.passage,
+    speaker:     tagging?.teacher || yt.speaker,
+    series:      tagging?.series  ?? "",
+    part:        tagging?.part    ?? "",
+    summary:     tagging?.summary ?? "",
     date,
     outline,
     outlineType,

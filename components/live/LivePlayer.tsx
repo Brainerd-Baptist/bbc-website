@@ -333,6 +333,11 @@ function ActiveView({
         <div className="hidden lg:flex flex-col w-[380px] xl:w-[420px] border-l border-border-on-dark bg-theater-sunken overflow-y-auto">
           {/* Sermon header */}
           <div className="px-6 pt-6 pb-4 border-b border-border-on-dark">
+            {sermon.series && (
+              <p className="label-micro text-fg-on-dark-muted mb-1">
+                {sermon.series}{sermon.part ? ` · ${sermon.part}` : ""}
+              </p>
+            )}
             {sermon.passage && (
               <a
                 href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(sermon.passage)}&version=CSB`}
@@ -393,8 +398,18 @@ function WatchTab({ sermon }: { sermon: SermonData }) {
           {sermon.passage}
         </p>
       )}
+      {sermon.series && (
+        <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-1">
+          {sermon.series}{sermon.part ? ` · ${sermon.part}` : ""}
+        </p>
+      )}
       <h2 className="text-xl font-bold text-fg-on-dark mb-1 leading-tight">{sermon.title}</h2>
-      <p className="text-sm text-fg-on-dark-muted mb-6">{date} · {sermon.speaker || "Curtis Hill"}</p>
+      <p className="text-sm text-fg-on-dark-muted mb-4">{date} · {sermon.speaker || "Curtis Hill"}</p>
+      {sermon.summary && (
+        <p className="text-sm text-fg-on-dark-muted leading-relaxed mb-6">
+          {sermon.summary}
+        </p>
+      )}
 
       <div className="flex flex-col gap-3">
         <a
@@ -741,9 +756,19 @@ function OffHours({ sermon }: { sermon: SermonData }) {
                 </a>
               </div>
               <div className="md:col-span-3 p-7 md:p-9 flex flex-col justify-center">
+                {sermon.series && (
+                  <p className="label-micro text-fg-on-dark-muted mb-1">
+                    {sermon.series}{sermon.part ? ` · ${sermon.part}` : ""}
+                  </p>
+                )}
                 {sermon.passage && <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
                 <h3 className="text-xl md:text-2xl font-bold text-fg-on-dark mb-3 leading-tight">{sermon.title}</h3>
-                <p className="text-sm text-fg-on-dark-muted mb-5">{date} · {sermon.speaker || "Curtis Hill"}</p>
+                <p className="text-sm text-fg-on-dark-muted mb-4">{date} · {sermon.speaker || "Curtis Hill"}</p>
+                {sermon.summary && (
+                  <p className="text-sm text-fg-on-dark-muted leading-relaxed mb-5 line-clamp-3">
+                    {sermon.summary}
+                  </p>
+                )}
                 <a href={sermon.watchUrl} target="_blank" rel="noopener noreferrer" className="btn-primary text-sm inline-block self-start">
                   Watch Now
                 </a>
