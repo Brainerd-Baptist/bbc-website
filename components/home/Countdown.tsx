@@ -20,14 +20,18 @@ function getNextSunday830ET(): number {
   const etDay = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(parts.weekday);
   const daysUntilSunday = etDay === 0 ? 7 : 7 - etDay;
 
-  // Build the target date string: next Sunday in ET, at 08:30:00
+  // Build the target date string: next Sunday in ET, at 08:30:00.
+  // Do the "add N days" math as pure UTC milliseconds (Date.UTC + getUTC*),
+  // never local getDate()/setDate() — those read/write in the *browser's*
+  // local timezone, which silently shifts this by a day whenever the
+  // viewer's device isn't set to UTC (e.g. anyone on US Eastern time).
   const [month, day, year] = [parts.month, parts.day, parts.year];
-  const targetDate = new Date(`${year}-${month}-${day}`);
-  targetDate.setDate(targetDate.getDate() + daysUntilSunday);
+  const targetUTCMillis = Date.UTC(+year, +month - 1, +day) + daysUntilSunday * 86_400_000;
+  const targetDate = new Date(targetUTCMillis);
 
-  const yyyy = targetDate.getFullYear();
-  const mm = String(targetDate.getMonth() + 1).padStart(2, "0");
-  const dd = String(targetDate.getDate()).padStart(2, "0");
+  const yyyy = targetDate.getUTCFullYear();
+  const mm = String(targetDate.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(targetDate.getUTCDate()).padStart(2, "0");
 
   // "2026-09-21T08:30:00" interpreted as Eastern by converting via Intl
   // Trick: parse the wall-clock string as if it were UTC, then correct for
