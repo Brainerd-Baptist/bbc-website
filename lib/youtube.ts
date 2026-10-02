@@ -184,6 +184,31 @@ export async function getVideoDurations(videoIds: string[]): Promise<Record<stri
   return out;
 }
 
+/**
+ * Each video's own upload timestamp (videos.snippet.publishedAt) — NOT the
+ * same as playlistItems.snippet.publishedAt (the playlist-add date, see
+ * resolveSermonDate() above). Used as the fallback preach-date source when
+ * a title has no embedded date string. Batched into one call alongside
+ * duration where possible is a nice-to-have, kept separate here for
+ * clarity and because callers already have getVideoDurations wired in.
+ */
+export async function getVideoUploadDates(videoIds: string[]): Promise<Record<string, string>> {
+  if (!API_KEY || videoIds.length === 0) return {};
+
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(",")}&key=${API_KEY}`;
+  const res = await fetch(url, { next: { revalidate: 21600 } });
+  if (!res.ok) return {};
+
+  const data = await res.json();
+  const items: Array<{ id: string; snippet?: { publishedAt?: string } }> = data.items ?? [];
+
+  const out: Record<string, string> = {};
+  for (const item of items) {
+    if (item.snippet?.publishedAt) out[item.id] = item.snippet.publishedAt;
+  }
+  return out;
+}
+
 /** "PT1H2M10S" → 62 (rounds to the nearest minute). Returns null if unparseable. */
 function isoDurationToMinutes(iso: string): number | null {
   const m = iso.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
@@ -192,4 +217,60 @@ function isoDurationToMinutes(iso: string): number | null {
   const mins = parseInt(m[2] ?? "0", 10);
   const secs = parseInt(m[3] ?? "0", 10);
   return Math.round(hours * 60 + mins + secs / 60);
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+/**
+ * Pulls an explicit calendar date out of a raw YouTube title, e.g.
+ * "June 12, 2022 | Kevin Baggett" → "2022-06-12". Older-era sermon videos
+ * were titled with the preach date directly (no separate sermon title),
+ * which turns out to be the ONLY reliable source for when they were
+ * actually preached — see resolveSermonDate() below for why.
+ */
+export function extractDateFromTitle(rawTitle: string): string | null {
+  const re = /\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(\d{4})\b/;
+  const m = rawTitle.match(re);
+  if (!m) return null;
+  const monthIdx = MONTHS.indexOf(m[1]);
+  if (monthIdx === -1) return null;
+  const day = parseInt(m[2], 10);
+  const year = parseInt(m[3], 10);
+  if (!day || !year) return null;
+  return `${year}-${String(monthIdx + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/** Sunday on or before the given "YYYY-MM-DD" date, as "YYYY-MM-DD". */
+function priorSunday(isoDate: string): string {
+  const d = new Date(`${isoDate}T12:00:00Z`);
+  const dow = d.getUTCDay(); // 0 = Sunday
+  d.setUTCDate(d.getUTCDate() - dow);
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Resolves the actual date a sermon was PREACHED, as distinct from either
+ * of the two dates YouTube can hand us — both of which are unreliable on
+ * their own:
+ *   - playlistItems' publishedAt is when the video was ADDED to the
+ *     curated Sermons playlist, not when it was uploaded or preached. For
+ *     the historical back-catalog (bulk-added to the playlist in one
+ *     batch long after the fact), every video in that batch reports the
+ *     SAME add-date — discovered 2026-10-02 when a 200-sermon backfill
+ *     put ~210 different sermons on the identical date.
+ *   - the video's own upload date (videos.snippet.publishedAt) is closer
+ *     but still not the preach date: sermons are typically uploaded a few
+ *     days later, Mon/Tue/Wed following the Sunday they were preached.
+ * Precedence: a date string embedded in the title itself (the
+ * "Month D, YYYY | Speaker" convention used for older videos) is the most
+ * trustworthy source where present. Otherwise, fall back to the nearest
+ * Sunday on or before the upload date.
+ */
+export function resolveSermonDate(rawTitle: string, uploadedAtIso: string): string {
+  const titleDate = extractDateFromTitle(rawTitle);
+  if (titleDate) return titleDate;
+  return priorSunday(uploadedAtIso.slice(0, 10));
 }

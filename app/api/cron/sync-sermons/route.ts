@@ -30,7 +30,13 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getRecentSermons, getVideoDurations, parseYoutubeSermonTitle } from "@/lib/youtube";
+import {
+  getRecentSermons,
+  getVideoDurations,
+  getVideoUploadDates,
+  parseYoutubeSermonTitle,
+  resolveSermonDate,
+} from "@/lib/youtube";
 import { getTaggingRowByDate } from "@/lib/sermon-tagging";
 import { getSermonNotesByDate } from "@/lib/sermon";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
@@ -52,6 +58,11 @@ const SYNC_WINDOW = 15;
 // own address — change here (or move to an env var) if that should go
 // somewhere else, e.g. a shared staff inbox.
 const NOTIFY_EMAIL = "jking@brainerdbaptist.org";
+
+// Former staff — sermons attributed to either of these (via title parsing
+// or the Tagging sheet) are skipped entirely rather than synced, per
+// Josiah 2026-10-02: "they're no longer at Brainerd."
+const EXCLUDED_SPEAKERS = ["Jim Shaddix", "Kevin Baggett"];
 
 function unauthorized() {
   return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -142,16 +153,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, checked: recent.length, created: [] });
   }
 
-  const [durations, podcastMap] = await Promise.all([
+  const [durations, uploadDates, podcastMap] = await Promise.all([
     getVideoDurations(missing.map((s) => s.videoId)),
+    getVideoUploadDates(missing.map((s) => s.videoId)),
     getPodcastAudioMap().catch(() => ({}) as Record<string, string>),
   ]);
 
   const created: { title: string; date: string }[] = [];
+  const skipped: { title: string; speaker: string }[] = [];
 
   for (const video of missing) {
     try {
-      const date = video.publishedAt.slice(0, 10);
+      // playlistItems' own publishedAt is the date the video was added to
+      // the curated playlist, NOT when it was preached or uploaded — for
+      // the historical back-catalog (bulk-added to the playlist long after
+      // the fact) every video in that batch reports the same add-date.
+      // resolveSermonDate() instead prefers a date parsed straight out of
+      // the title (older videos are literally titled "Month D, YYYY |
+      // Speaker"), falling back to the nearest Sunday on/before the
+      // video's own upload timestamp when no such date is embedded.
+      const uploadedAt = uploadDates[video.videoId] || video.publishedAt;
+      const date = resolveSermonDate(video.rawTitle, uploadedAt);
       const tagging = await getTaggingRowByDate(date).catch(() => null);
 
       // Same precedence the live homepage card uses: Tagging sheet (Curtis's
@@ -162,6 +184,11 @@ export async function GET(req: NextRequest) {
       const title = tagging?.title || parsedTitle || video.title;
       const passage = tagging?.passage || parsedPassage;
       const speaker = tagging?.teacher || parsedSpeaker || "Curtis Hill";
+
+      if (EXCLUDED_SPEAKERS.some((name) => speaker.toLowerCase().includes(name.toLowerCase()))) {
+        skipped.push({ title: title || video.title, speaker });
+        continue;
+      }
 
       let outlineLines: string[] = [];
       try {
@@ -205,15 +232,42 @@ export async function GET(req: NextRequest) {
 
   if (created.length > 0) {
     const lines = created.map((c) => `• ${c.title} — ${c.date}`).join("\n");
+    const skippedLines = skipped.length > 0
+      ? `\n\nSkipped (former staff):\n${skipped.map((s) => `• ${s.title} — ${s.speaker}`).join("\n")}`
+      : "";
     await sendMail({
       to: NOTIFY_EMAIL,
       subject: `Sermon sync: ${created.length} new sermon${created.length === 1 ? "" : "s"} added to Sanity`,
-      text: `The sermon auto-sync added ${created.length} sermon${created.length === 1 ? "" : "s"} to Sanity:\n\n${lines}\n\nWorth a quick glance in Sanity Studio to make sure titles/passages parsed cleanly — nothing's blocking on it, this is just a heads-up.`,
+      text: `The sermon auto-sync added ${created.length} sermon${created.length === 1 ? "" : "s"} to Sanity:\n\n${lines}${skippedLines}\n\nWorth a quick glance in Sanity Studio to make sure titles/passages parsed cleanly — nothing's blocking on it, this is just a heads-up.`,
     }).catch((err) => console.error("[sync-sermons] notification email failed:", err));
   }
 
-  return NextResponse.json({ ok: true, checked: recent.length, created });
+  return NextResponse.json({ ok: true, checked: recent.length, created, skipped });
 }
 
 // Manual trigger for testing — same auth, same logic.
 export const POST = GET;
+
+/**
+ * One-time cleanup for the 2026-10-02 corrupted backfill: wipes every
+ * synced sermon doc so a fresh GET/POST re-syncs them all with the fixed
+ * date/speaker/exclusion logic above. Same bearer-secret auth as the sync
+ * itself. Safe to leave in place afterward — running it again just means
+ * "re-sync everything from scratch," which is always a safe no-duplicate
+ * operation given createIfNotExists()'s deterministic _ids.
+ */
+export async function DELETE(req: NextRequest) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) {
+    return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
+  }
+  const authHeader = req.headers.get("authorization");
+  if (authHeader !== `Bearer ${secret}`) return unauthorized();
+
+  if (!hasSanityWriteToken()) {
+    return NextResponse.json({ error: "SANITY_API_TOKEN not configured" }, { status: 500 });
+  }
+
+  const result = await sanityWriteClient.delete({ query: `*[_type == "sermon"]` });
+  return NextResponse.json({ ok: true, deleted: result });
+}
