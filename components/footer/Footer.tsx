@@ -147,7 +147,7 @@ export default function Footer() {
 
         {/* Build marker — intentionally near-invisible; this is a QA aid for
             Josiah while iterating, not something a visitor should notice. */}
-        <p className="mt-3 text-center sm:text-right font-mono text-[10px] leading-none text-white/10 select-none">
+        <p className="mt-3 text-center sm:text-right font-mono text-[10px] leading-none text-white/35 select-none">
           {build.label}
         </p>
       </div>
