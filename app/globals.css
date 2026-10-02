@@ -111,27 +111,6 @@ body {
   font-family: var(--font-barlow), sans-serif;
   overflow-x: clip;
   max-width: 100%;
-  position: relative;
-}
-
-/* Sitewide grain — PROTOTYPE, part of the 2026-10-01 glass/depth pass (see
-   claude/bbc-website-theme-depth-audit-2026-10-01.md). Fixed, barely
-   perceptible, never blocks interaction. Same idea as BX's noise layer
-   (claude/bx-design-system-phases-2026-09-25.md): a surface with a hint of
-   grain reads as physical/premium rather than a flat CSS fill — low risk
-   sitewide since it's static (no motion) and this faint. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  opacity: 0.018;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-}
-.dark body::before {
-  opacity: 0.012;
 }
 
 /* ── Scroll reveal ─────────────────────────────────────── */
@@ -197,9 +176,33 @@ body::before {
 
 /* ── Card / glass utility (light-mode) ─────────────────── */
 .glass {
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  /* Real glass: semi-transparent + blur so content beneath bleeds through.
+     Phase 1b of the BBC theme upgrade (2026-10-01).
+     Previously this was fully opaque --surface-raised with a single shadow —
+     that is why light-mode cards felt flat and dark-mode felt disconnected.
+
+     Light: 78% white with a 16px blur and a double-layer shadow + inner glow.
+     Dark:  72% navy (#1a2336) with a deeper 20px blur. The darker alpha
+            means less of the near-black background leaks through, giving the
+            glass a tighter, more defined look in dark mode (mirrors BX). */
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.60),
+    0 1px 3px rgba(0, 32, 91, 0.06),
+    0 4px 16px rgba(0, 32, 91, 0.08);
+}
+.dark .glass {
+  background: rgba(26, 35, 54, 0.72);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.30);
 }
 .glass-md {
   background: var(--surface-sunken);
@@ -216,71 +219,6 @@ body::before {
   border: 1px solid var(--border-on-dark);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-}
-
-/* ── Glass-frost prototype (2026-10-01) ──────────────────────────────────
-   PROTOTYPE — scoped to a few sections for review, not a sitewide
-   replacement for .glass yet. See claude/bbc-website-theme-depth-audit-
-   2026-10-01.md. Modeled on the BX Reservations app's card treatment
-   (claude/bx-design-system-phases-2026-09-25.md, claude/bx-design-
-   physics-spec-2026-09-27.md): real translucency + backdrop blur, a soft
-   layered shadow for actual lift, and a hairline top highlight that reads
-   as light catching a glass edge. Needs a textured/gradient backdrop
-   behind it (see .bx-bloom below) — blur over a flat color just looks
-   like a slightly duller flat card. Built from the SAME --surface-raised/
-   --border tokens .glass uses, so it automatically re-themes with the
-   site and never introduces a new raw color. */
-.glass-frost {
-  background: color-mix(in srgb, var(--surface-raised) 72%, transparent);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-md), inset 0 1px 0 color-mix(in srgb, var(--fg-on-dark) 10%, transparent);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  transition: transform var(--duration-fast) var(--ease-out),
-              box-shadow var(--duration-fast) var(--ease-out);
-}
-.dark .glass-frost {
-  background: color-mix(in srgb, var(--surface-raised) 55%, transparent);
-  border: 1px solid var(--border-strong);
-}
-.glass-frost:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg), inset 0 1px 0 color-mix(in srgb, var(--fg-on-dark) 10%, transparent);
-}
-@media (prefers-reduced-motion: reduce) {
-  .glass-frost { transition: none; }
-  .glass-frost:hover { transform: none; }
-}
-
-/* Ambient background bloom — a slow-drifting soft gradient blob behind a
-   section, giving the glass above it something to actually blur. Subtle
-   and paused for reduced-motion. Parent needs `relative overflow-hidden`;
-   sibling content needs `relative` to sit above it. */
-.bx-bloom {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-.bx-bloom::before {
-  content: "";
-  position: absolute;
-  width: 640px;
-  height: 640px;
-  top: -220px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
-  filter: blur(56px);
-  animation: bxBloomPulse 10s ease-in-out infinite alternate;
-}
-@keyframes bxBloomPulse {
-  from { opacity: 0.5; transform: translateX(-50%) scale(1); }
-  to   { opacity: 0.9; transform: translateX(-50%) scale(1.15); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bx-bloom::before { animation: none; opacity: 0.7; }
 }
 
 /* ── Eyebrow ───────────────────────────────────────────── */
