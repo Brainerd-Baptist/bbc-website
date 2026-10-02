@@ -330,6 +330,9 @@ body {
   background-size: 360px 360px;
   background-repeat: no-repeat;
   background-position: right -40px top 20px;
+  /* Fade the top and bottom edges so a blob cut off by its section's
+     overflow:hidden never leaves a visible seam between two sections. */
+  mask-image: linear-gradient(to bottom, transparent, currentColor 18%, currentColor 82%, transparent);
 }
 .bx-bloom::before,
 .bx-bloom::after {
