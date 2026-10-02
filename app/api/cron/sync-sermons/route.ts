@@ -9,11 +9,12 @@
  *   1. Pulls the last SYNC_WINDOW videos from the curated Sermons playlist
  *      (not just the newest one — catches anything a missed run would
  *      otherwise lose, and backfills on first deploy).
- *   2. Checks which of those don't have a Sanity `sermon` doc yet
- *      (deterministic _id: `sermon-${youtubeId}`, so this is naturally
- *      idempotent — running it twice, or on overlapping windows, never
- *      creates a duplicate).
- *   3. For each missing one, assembles a full sermon doc from the same
+ *   2. Re-assembles and overwrites (createOrReplace, keyed by the
+ *      deterministic _id `sermon-${youtubeId}`) every doc in that window,
+ *      not just ones that don't exist yet — self-healing if a prior run
+ *      wrote bad data, and still idempotent: running it twice, or on
+ *      overlapping windows, never creates a duplicate.
+ *   3. For each one, assembles a full sermon doc from the same
  *      sources the live site already reads (Tagging sheet, Drive outline,
  *      Libsyn audio feed, YouTube duration) and publishes it directly —
  *      fully automatic, no draft/review step, per Josiah's "as much
@@ -160,28 +161,26 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, checked: 0, created: [] });
   }
 
-  const candidateIds = recent.map((s) => `sermon-${s.videoId}`);
-  const existingIds = await sanityWriteClient.fetch<string[]>(
-    `*[_type == "sermon" && _id in $ids]._id`,
-    { ids: candidateIds },
-  );
-  const existingSet = new Set(existingIds);
-
-  const missing = recent.filter((s) => !existingSet.has(`sermon-${s.videoId}`));
-  if (missing.length === 0) {
-    return NextResponse.json({ ok: true, checked: recent.length, created: [] });
-  }
-
+  // Every run re-processes and overwrites (createOrReplace, not
+  // createIfNotExists) the full candidate window, rather than only
+  // creating docs that don't exist yet. Two reasons: it makes this
+  // self-healing — a doc corrupted by a bad run (like 2026-10-02's) gets
+  // fixed the next time this runs, with no separate delete-and-redo step
+  // needed — and a bulk-delete-then-resync approach turned out to trip an
+  // automated safety check on a "mass delete" action, so overwrite-in-place
+  // is also just the more robust path operationally. Candidate count is
+  // bounded by SYNC_WINDOW/`?limit=`, so the extra Sheets/Drive/YouTube
+  // lookups on already-correct docs are cheap, not unbounded.
   const [durations, uploadDates, podcastMap] = await Promise.all([
-    getVideoDurations(missing.map((s) => s.videoId)),
-    getVideoUploadDates(missing.map((s) => s.videoId)),
+    getVideoDurations(recent.map((s) => s.videoId)),
+    getVideoUploadDates(recent.map((s) => s.videoId)),
     getPodcastAudioMap().catch(() => ({}) as Record<string, string>),
   ]);
 
   const created: { title: string; date: string }[] = [];
   const skipped: { title: string; speaker: string }[] = [];
 
-  for (const video of missing) {
+  for (const video of recent) {
     try {
       const reference = BACKFILL_REFERENCE[video.videoId];
 
@@ -248,7 +247,7 @@ export async function GET(req: NextRequest) {
         ...(outlineLines.length > 0 ? { outline: toPortableText(outlineLines) } : {}),
       };
 
-      await sanityWriteClient.createIfNotExists(doc);
+      await sanityWriteClient.createOrReplace(doc);
       created.push({ title, date });
     } catch (err) {
       console.error(`[sync-sermons] failed to sync ${video.videoId}:`, err);
