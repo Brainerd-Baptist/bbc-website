@@ -4,7 +4,7 @@ import ConnectSidebar from "@/components/connect/ConnectSidebar";
 
 export default function ConnectPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       {/* Page header */}
       <div className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
@@ -27,14 +27,15 @@ export default function ConnectPage() {
       </div>
 
       {/* Main grid: tiles + info */}
-      <section className="pb-24 px-6">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-[1fr_340px] gap-10">
+      <section className="relative overflow-hidden pb-24 px-6">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-5xl mx-auto grid md:grid-cols-[1fr_340px] gap-10">
           <ConnectTiles />
           <ConnectSidebar />
         </div>
 
         {/* Utility links */}
-        <div className="max-w-5xl mx-auto mt-10 pt-8 border-t border-border flex flex-wrap gap-x-8 gap-y-2 text-sm">
+        <div className="relative max-w-5xl mx-auto mt-10 pt-8 border-t border-border flex flex-wrap gap-x-8 gap-y-2 text-sm">
           <Link href="/connect/other?category=website-issue" className="text-fg-muted hover:text-accent-text transition-colors">
             Report a website issue
           </Link>

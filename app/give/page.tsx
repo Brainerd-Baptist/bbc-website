@@ -26,7 +26,7 @@ const FUNDS = [
 
 export default function GivePage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
@@ -49,8 +49,9 @@ export default function GivePage() {
       </div>
 
       {/* Giving options */}
-      <section className="pb-12 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative overflow-hidden pb-12 px-6">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto">
           <h2 className="font-condensed font-800 text-fg text-2xl mb-6">Ways to Give</h2>
           <div className="grid md:grid-cols-3 gap-5 mb-8">
             {FUNDS.map((f) => (
@@ -70,7 +71,7 @@ export default function GivePage() {
                   className={`block text-center font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full transition-colors ${
                     f.primary
                       ? "bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy"
-                      : "border border-white/20 hover:border-white/40 text-fg glass"
+                      : "border border-border hover:border-accent text-fg glass"
                   }`}
                 >
                   Give Online

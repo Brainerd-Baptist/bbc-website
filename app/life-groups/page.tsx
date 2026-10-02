@@ -27,7 +27,7 @@ const WHYS = [
 
 export default function LifeGroupsPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="pt-32 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
@@ -49,8 +49,9 @@ export default function LifeGroupsPage() {
       </div>
 
       {/* Why a Life Group */}
-      <section className="py-12 px-6">
-        <div className="max-w-5xl mx-auto">
+      <section className="relative overflow-hidden py-12 px-6">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-5xl mx-auto">
           <h2 className="font-condensed font-800 text-fg text-3xl mb-8">
             Why a Life Group?
           </h2>
@@ -149,7 +150,7 @@ export default function LifeGroupsPage() {
             </Link>
             <Link
               href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/20 hover:border-white/40 text-fg px-8 py-3.5 rounded-full transition-colors glass"
+              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border hover:border-accent text-fg px-8 py-3.5 rounded-full transition-colors glass"
             >
               Plan Your Visit
             </Link>
