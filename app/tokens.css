@@ -146,6 +146,25 @@
   --radius-tag:      0.25rem; /* small chips/tags -- rounded (default), 11 sites */
 }
 
+/* ── Motion tokens ──────────────────────────────────────────────────────
+   Not theme-dependent — one set, used in both themes. Added 2026-10-01
+   alongside the glass-frost prototype (claude/bbc-design-system-transfer-
+   2026-10-01.md, Part 3): named easing/duration primitives so hover
+   physics and entrance motion stop being inline magic numbers repeated
+   per component. Card hover follows that doc's rule — hover ON is
+   instant, hover OFF eases out — which is why .glass-frost's :hover in
+   globals.css sets transition only on the hover rule itself, not at rest. */
+@theme {
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);    /* arriving: decelerates to a stop */
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);        /* departing: accelerates away */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* slight overshoot */
+
+  --duration-instant: 80ms;  /* micro: color shifts, badge changes */
+  --duration-fast:    150ms; /* hover states, border changes */
+  --duration-base:    220ms; /* cards mounting, panels opening */
+  --duration-slow:    350ms; /* modals, page-level transitions */
+}
+
 /* ── Semantic tokens ────────────────────────────────────────────────────
    The role layer. Components consume THESE — never the brand primitives
    above, and never a raw hex.

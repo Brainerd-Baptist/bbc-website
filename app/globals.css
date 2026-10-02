@@ -236,8 +236,8 @@ body::before {
   box-shadow: var(--shadow-md), inset 0 1px 0 color-mix(in srgb, var(--fg-on-dark) 10%, transparent);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  transition: transform var(--duration-fast, 150ms) var(--ease-out, ease-out),
-              box-shadow var(--duration-fast, 150ms) var(--ease-out, ease-out);
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
 }
 .dark .glass-frost {
   background: color-mix(in srgb, var(--surface-raised) 55%, transparent);
