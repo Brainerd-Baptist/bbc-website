@@ -161,6 +161,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, checked: 0, created: [] });
   }
 
+  // Process oldest → newest. getRecentSermons() returns newest-first (YouTube
+  // playlist order), which is fine for the small daily SYNC_WINDOW, but on a
+  // large manual `?limit=` backfill it meant every run burned its ~60s
+  // budget re-processing the same already-correct recent sermons before ever
+  // reaching new historical ground — observed 2026-10-02 as runs stalling at
+  // the same date instead of pushing further back each time. Oldest-first
+  // guarantees forward progress into the back-catalog on every run.
+  const ordered = [...recent].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
+
   // Every run re-processes and overwrites (createOrReplace, not
   // createIfNotExists) the full candidate window, rather than only
   // creating docs that don't exist yet. Two reasons: it makes this
@@ -180,7 +189,7 @@ export async function GET(req: NextRequest) {
   const created: { title: string; date: string }[] = [];
   const skipped: { title: string; speaker: string }[] = [];
 
-  for (const video of recent) {
+  for (const video of ordered) {
     try {
       const reference = BACKFILL_REFERENCE[video.videoId];
 
