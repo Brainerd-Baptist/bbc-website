@@ -25,8 +25,12 @@
 
 import { getDriveAccessToken } from "./google-auth";
 import { getTaggingRowByDate } from "./sermon-tagging";
-
-export const YOUTUBE_CHANNEL_ID = "UCEcu35yHidS8fQVwsoSP3zQ";
+// Re-exported for existing server-side importers — the values themselves
+// now live in lib/sermon-shared.ts (a zero-dependency module) so a "use
+// client" component can import them directly without pulling in
+// google-auth-library (and its Node-only child_process dependency) via this
+// file. See that file's doc comment for why this split exists.
+export { YOUTUBE_CHANNEL_ID, formatSermonDate } from "./sermon-shared";
 // Curated "Sermons" playlist — the homepage card should only ever pull from
 // this, never from the channel's full upload feed (which includes clips,
 // announcements, and anything else posted to the channel).
@@ -85,15 +89,6 @@ async function findSlugForYoutubeId(youtubeId: string): Promise<string | null> {
   return staticMatch?.id ?? null;
 }
 
-/** Format a "YYYY-MM-DD" date string for display. */
-export function formatSermonDate(isoDate: string): string {
-  return new Date(`${isoDate}T12:00:00`).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "America/New_York",
-  });
-}
 
 /**
  * Parse Curtis's filename convention:

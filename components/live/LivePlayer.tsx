@@ -23,7 +23,11 @@ import {
   type FormEvent,
 } from "react";
 import type { SermonData } from "@/lib/sermon";
-import { YOUTUBE_CHANNEL_ID, formatSermonDate } from "@/lib/sermon";
+// NOT from "@/lib/sermon" — that file imports google-auth-library at module
+// scope (Node-only, needs child_process), which breaks the client bundle
+// the moment a "use client" component imports any runtime value from it.
+// See lib/sermon-shared.ts's doc comment.
+import { YOUTUBE_CHANNEL_ID, formatSermonDate } from "@/lib/sermon-shared";
 import SermonNotes from "@/components/sermons/SermonNotes";
 
 const DEFAULT_ACCENT = "#00abc9";
