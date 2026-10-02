@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE, FOOTER_LINKS, HISPANIC_MINISTRY } from "@/lib/constants";
+import { getBuildInfo } from "@/lib/version";
 
 const SOCIAL = [
   {
@@ -42,6 +43,7 @@ const SOCIAL = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const build = getBuildInfo();
 
   return (
     // The footer is deliberately brand navy in BOTH themes — it is not a page
@@ -142,7 +144,14 @@ export default function Footer() {
             <Link href="/contact" className="hover:text-white/60 transition-colors">Contact</Link>
           </div>
         </div>
+
+        {/* Build marker — intentionally near-invisible; this is a QA aid for
+            Josiah while iterating, not something a visitor should notice. */}
+        <p className="mt-3 text-center sm:text-right font-mono text-[10px] leading-none text-white/10 select-none">
+          {build.label}
+        </p>
       </div>
     </footer>
+
   );
 }
