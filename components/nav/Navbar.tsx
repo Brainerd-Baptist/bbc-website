@@ -39,6 +39,7 @@ const NAV_GROUPS = [
   {
     label: "Connect",
     links: [
+      { label: "Membership", href: "/membership" },
       { label: "Staff", href: "/staff" },
       { label: "Connect With Us", href: "/connect" },
       { label: "Give", href: "/give" },
