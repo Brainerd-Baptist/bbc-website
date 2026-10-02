@@ -132,6 +132,16 @@
   --radius-panel:    0.75rem; /* secondary containers, larger inputs -- rounded-xl, 39 sites */
   --radius-input:    0.5rem;  /* form fields, small controls -- rounded-lg, 16 sites */
   --radius-tag:      0.25rem; /* small chips/tags -- rounded (default), 11 sites */
+
+  /* font-700 / font-800 / font-900. 211 call sites write these numeric
+     weights, but Tailwind v4 only knows named weights (font-bold...) unless a
+     --font-weight-<name> token exists. Without these three lines every one of
+     those headings, labels and buttons rendered at the browser default 400.
+     All three weights are already loaded in layout.tsx. Added 2026-10-02,
+     glass phase A. */
+  --font-weight-700: 700;
+  --font-weight-800: 800;
+  --font-weight-900: 900;
 }
 
 /* ── Semantic tokens ────────────────────────────────────────────────────
@@ -310,6 +320,42 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.65),
     0 2px 8px rgba(0, 32, 91, 0.10),
     0 8px 28px rgba(0, 32, 91, 0.13);
+
+  /* Elevation for Tailwind's shadow-sm/md/lg/xl/2xl utilities. Same navy
+     tint and double layer as --shadow-*, but WITHOUT the inset top highlight,
+     which would draw a stray white line across dark buttons and images.
+     Exported in @theme inline below. Glass phase A, 2026-10-02. */
+  --elev-sm:  0 1px 3px rgba(0, 32, 91, 0.06), 0 4px 16px rgba(0, 32, 91, 0.08);
+  --elev-md:  0 2px 6px rgba(0, 32, 91, 0.07), 0 8px 24px rgba(0, 32, 91, 0.10);
+  --elev-lg:  0 4px 12px rgba(0, 32, 91, 0.08), 0 16px 48px rgba(0, 32, 91, 0.14);
+  --elev-xl:  0 8px 20px rgba(0, 32, 91, 0.10), 0 24px 64px rgba(0, 32, 91, 0.18);
+  --elev-2xl: 0 12px 28px rgba(0, 32, 91, 0.12), 0 32px 80px rgba(0, 32, 91, 0.24);
+
+  /* ── Glass (frost tier) ───────────────────────────────────────────────
+     Used by .glass-frost, .glass-md and .bx-bloom in globals.css.
+       --glass-fill-frost  half-clear card surface (the showcase tier)
+       --glass-fill-md     lighter, more opaque tier for dense content
+       --glass-edge        bright rim that catches light
+       --glass-hi          top-edge highlight (inset)
+       --glass-ring        1px hairline so the card edge shows on a pale page
+       --glass-shadow-*    resting and hover elevation
+       --bloom-a/b/c       soft colour layers placed BEHIND glass so the blur
+                           has something to bend. Without them glass over a
+                           flat page just looks like a solid card. */
+  --glass-fill-frost: rgba(255, 255, 255, 0.55);
+  --glass-fill-md:    rgba(255, 255, 255, 0.66);
+  --glass-edge:       rgba(255, 255, 255, 0.85);
+  --glass-hi:         rgba(255, 255, 255, 0.90);
+  --glass-ring:       rgba(0, 32, 91, 0.06);
+  --glass-shadow-rest:
+    0 1px 2px rgba(0, 32, 91, 0.10),
+    0 12px 32px -8px rgba(0, 32, 91, 0.22);
+  --glass-shadow-hover:
+    0 2px 4px rgba(0, 32, 91, 0.12),
+    0 22px 44px -10px rgba(0, 32, 91, 0.32);
+  --bloom-a: rgba(0, 171, 201, 0.34);
+  --bloom-b: rgba(40, 80, 190, 0.26);
+  --bloom-c: rgba(255, 190, 90, 0.24);
 
   /* ── On-dark content ──────────────────────────────────────────────────
      Theme-INVARIANT on purpose. These sit on ground that is dark in BOTH
@@ -580,6 +626,16 @@
   --duration-fast:   150ms;
   --duration-base:   300ms;
   --duration-slow:   500ms;
+
+  /* Tailwind's shadow-sm … shadow-2xl utilities, pointed at the branded,
+     theme-aware elevation tokens instead of Tailwind's grey defaults.
+     `inline` makes the utility read var(--elev-*) directly, so dark mode
+     follows the .dark block without any extra selector. */
+  --shadow-sm:  var(--elev-sm);
+  --shadow-md:  var(--elev-md);
+  --shadow-lg:  var(--elev-lg);
+  --shadow-xl:  var(--elev-xl);
+  --shadow-2xl: var(--elev-2xl);
 }
 
 /* ── The dark value set ──────────────────────────────────────────────
@@ -658,6 +714,29 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.10),
     0 4px 12px rgba(0, 0, 0, 0.30),
     0 12px 32px rgba(0, 0, 0, 0.40);
+
+  /* Dark elevation + glass. Dark glass needs a brighter rim and a darker,
+     bluer fill than light glass, or it reads as muddy grey. */
+  --elev-sm:  0 2px 8px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.30);
+  --elev-md:  0 4px 12px rgba(0, 0, 0, 0.28), 0 12px 36px rgba(0, 0, 0, 0.35);
+  --elev-lg:  0 8px 20px rgba(0, 0, 0, 0.35), 0 24px 56px rgba(0, 0, 0, 0.45);
+  --elev-xl:  0 12px 28px rgba(0, 0, 0, 0.40), 0 32px 72px rgba(0, 0, 0, 0.50);
+  --elev-2xl: 0 16px 36px rgba(0, 0, 0, 0.45), 0 40px 90px rgba(0, 0, 0, 0.55);
+
+  --glass-fill-frost: rgba(30, 44, 72, 0.50);
+  --glass-fill-md:    rgba(22, 32, 48, 0.66);
+  --glass-edge:       rgba(150, 190, 255, 0.22);
+  --glass-hi:         rgba(180, 210, 255, 0.30);
+  --glass-ring:       rgba(255, 255, 255, 0.04);
+  --glass-shadow-rest:
+    0 1px 2px rgba(0, 0, 0, 0.50),
+    0 16px 36px -8px rgba(0, 0, 0, 0.60);
+  --glass-shadow-hover:
+    0 2px 4px rgba(0, 0, 0, 0.50),
+    0 26px 48px -10px rgba(0, 0, 0, 0.70);
+  --bloom-a: rgba(0, 171, 201, 0.28);
+  --bloom-b: rgba(60, 100, 230, 0.28);
+  --bloom-c: rgba(255, 170, 70, 0.14);
 
   /* The nav's glass surface is dark here, so its chrome inverts. This pair is
      the reason globals.css needs no `.dark` selector for nav colour.

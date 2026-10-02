@@ -229,10 +229,10 @@ function ActiveView({
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={`flex items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
-        state === "live" ? "bg-accent" : state === "post" ? "bg-theater-raised" : "bg-brand-navy"
+        state === "live" ? "bg-accent text-accent-fg" : state === "post" ? "bg-theater-raised" : "bg-brand-navy"
       }`}>
         {state === "live" && (
-          <><span className="w-1.5 h-1.5 rounded-full bg-surface-raised animate-pulse" />
+          <><span className="w-1.5 h-1.5 rounded-full bg-accent-fg animate-pulse" />
           We&apos;re Live — {service?.label}</>
         )}
         {state === "pre" && (

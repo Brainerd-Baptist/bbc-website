@@ -229,9 +229,116 @@ body {
     0 8px 24px rgba(0, 0, 0, 0.30);
 }
 .glass-md {
-  background: var(--surface-sunken);
+  /* Glass phase A (2026-10-02): was an opaque --surface-sunken fill, which is
+     a solid card by definition. Now a lighter glass tier: more opaque than
+     .glass-frost so dense text stays readable, still translucent enough that
+     a bloom or photo behind it shows through. */
+  background: var(--glass-fill-md);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
+}
+
+/* ── Frost tier ────────────────────────────────────────────────────────────
+   The showcase surface. Home event cards and the featured sermon card already
+   carry this class in their markup, but no rule existed, so they rendered with
+   no fill, edge or shadow at all. Half-clear fill, bright rim, a hairline ring
+   so the edge shows on a pale page, and a two-layer shadow that lifts on hover.
+   Tokens: --glass-* in tokens.css (light and dark values). */
+.glass-frost {
+  background: var(--glass-fill-frost);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    inset 0 1px 0 var(--glass-hi),
+    0 0 0 1px var(--glass-ring),
+    var(--glass-shadow-rest);
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .glass-frost:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 1px 0 var(--glass-hi),
+      0 0 0 1px var(--glass-ring),
+      var(--glass-shadow-hover);
+  }
+}
+
+/* Browsers without backdrop-filter get a solid card instead of a washed-out
+   see-through one, which would hurt text contrast. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-frost,
+  .glass-md {
+    background: var(--surface-raised);
+  }
+}
+
+/* ── Bloom ─────────────────────────────────────────────────────────────────
+   Soft colour layers placed behind glass so the blur has something to bend.
+   Drop <div className="bx-bloom" aria-hidden="true" /> as the FIRST child of a
+   `relative overflow-hidden` section; later positioned siblings paint above it.
+   Three blobs: two pseudo-elements that drift slowly (transform only, so it
+   never causes layout), and the third drawn by the element's own background. */
+.bx-bloom {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(
+    closest-side at 88% 24%,
+    var(--bloom-c),
+    transparent
+  );
+  background-size: 360px 360px;
+  background-repeat: no-repeat;
+  background-position: right -40px top 20px;
+}
+.bx-bloom::before,
+.bx-bloom::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  animation: bx-bloom-drift 18s var(--ease-out) infinite alternate;
+}
+.bx-bloom::before {
+  width: 420px;
+  height: 420px;
+  left: -90px;
+  top: 10%;
+  background: radial-gradient(closest-side, var(--bloom-a), transparent);
+}
+.bx-bloom::after {
+  width: 480px;
+  height: 480px;
+  left: 38%;
+  top: 30%;
+  background: radial-gradient(closest-side, var(--bloom-b), transparent);
+  animation-duration: 24s;
+  animation-delay: -8s;
+}
+@keyframes bx-bloom-drift {
+  to {
+    transform: translate(28px, -22px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bx-bloom::before,
+  .bx-bloom::after {
+    animation: none;
+  }
+  .glass-frost {
+    transition: none;
+  }
+  .glass-frost:hover {
+    transform: none;
+  }
 }
 
 /* Cards sitting on an intentionally dark section (a navy band, a photo).
@@ -662,6 +769,13 @@ body {
    Light: soft inset shadow in navy-alpha to suggest depth.
    Dark:  deeper black-alpha inset + slightly darker background than --surface.
    Focus ring uses --accent to match the BX reservation portal style. */
+/* Glass phase A (2026-10-02): these rules were unlayered, and unlayered CSS
+   beats every Tailwind utility regardless of specificity. So bg-*, border-*,
+   rounded-* and text-* on any input, textarea or select were silently ignored
+   (the Connect form fields, the Live prayer form, the Beliefs textarea).
+   Wrapped in @layer components so they remain the DEFAULT field style but a
+   utility class on a specific field now wins, as everywhere else. */
+@layer components {
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
 textarea,
 select {
@@ -698,4 +812,5 @@ select:focus {
   box-shadow:
     inset 0 2px 6px rgba(0, 0, 0, 0.20),
     0 0 0 3px rgba(0, 171, 201, 0.25);
+}
 }
