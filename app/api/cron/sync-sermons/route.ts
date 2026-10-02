@@ -219,8 +219,23 @@ export async function GET(req: NextRequest) {
       const speaker = tagging?.teacher || reference?.speaker || parsedSpeaker || "Curtis Hill";
       const seriesTitle = tagging?.series || reference?.series || "";
 
-      if (EXCLUDED_SPEAKERS.some((name) => speaker.toLowerCase().includes(name.toLowerCase()))) {
-        skipped.push({ title: title || video.title, speaker });
+      // Check every candidate source for an excluded name, not just the
+      // resolved `speaker` — found 2026-10-02 that Curtis's Tagging sheet
+      // has swapped/misplaced cells for some 2022-era guest-speaker weeks
+      // (a passage reference sitting in the Teacher column instead of the
+      // name), which let tagging.teacher win the precedence above and mask
+      // the real speaker. The YouTube title itself (e.g. "... | Kevin
+      // Baggett") is a reliable signal even when the sheet row is messy.
+      const exclusionCandidates = [speaker, tagging?.teacher, reference?.speaker, parsedSpeaker, video.rawTitle];
+      const excludedMatch = EXCLUDED_SPEAKERS.find((name) =>
+        exclusionCandidates.some((c) => c?.toLowerCase().includes(name.toLowerCase())),
+      );
+      if (excludedMatch) {
+        skipped.push({ title: title || video.title, speaker: excludedMatch });
+        // Clean up a doc an earlier (pre-exclusion-fix) run may have
+        // already written for this video — a single scoped delete by its
+        // own _id, not a bulk operation.
+        await sanityWriteClient.delete(`sermon-${video.videoId}`).catch(() => {});
         continue;
       }
 
