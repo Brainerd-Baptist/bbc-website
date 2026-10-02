@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
 import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
+import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 
 export default async function SermonBand() {
   const sermon = await getLatestSermon();
@@ -11,12 +12,30 @@ export default async function SermonBand() {
   const seriesLabel = series ? (part ? `${series} · ${part}` : series) : "Latest";
 
   // When we found the sermon's own /sermons/[slug] page, send people there —
-  // it has the inline player, outline, and notes tabs. Only fall back to an
-  // external YouTube tab when no matching sermon page exists yet.
-  const WatchLink = watchUrlIsInternal ? Link : "a";
-  const watchLinkProps = watchUrlIsInternal
-    ? { href: watchUrl }
-    : { href: watchUrl, target: "_blank", rel: "noopener noreferrer" };
+  // it has the inline player, outline, and notes tabs. That page doesn't
+  // exist until this sermon is entered in Sanity (or the static fallback),
+  // which lags the live Drive/YouTube feed by however long it takes someone
+  // to add it. Rather than bouncing people out to YouTube in that gap, send
+  // them to the general sermons list — still on-site, and it'll pick up the
+  // real page itself the moment the sermon is cataloged.
+  const WatchLink = Link;
+  const watchLinkProps = { href: watchUrlIsInternal ? watchUrl : "/sermons" };
+
+  // Audio ("Listen") option, straight from the podcast feed — independent of
+  // whether this sermon has a /sermons/[slug] page yet. Falls back to the
+  // day before in case the episode published a little early/late relative
+  // to the sermon date (same lookup the old per-sermon notes page used).
+  let audioUrl = "";
+  try {
+    const podcastMap = await getPodcastAudioMap();
+    const key = dateToKey(sermon.date);
+    const d = new Date(sermon.date + "T12:00:00Z");
+    d.setUTCDate(d.getUTCDate() - 1);
+    const prevKey = dateToKey(d.toISOString().slice(0, 10));
+    audioUrl = podcastMap[key] || podcastMap[prevKey] || "";
+  } catch {
+    // Podcast feed unreachable — just omit the Listen option.
+  }
 
   return (
     <section className="relative overflow-hidden bg-surface section-pad border-b border-border">
@@ -80,7 +99,7 @@ export default async function SermonBand() {
                 <WatchLink
                   {...watchLinkProps}
                   className="relative z-10"
-                  aria-label={watchUrlIsInternal ? `Watch ${title}` : `Watch ${title} on YouTube`}
+                  aria-label={`Watch ${title}`}
                 >
                   <div className="w-16 h-16 rounded-full bg-accent hover:bg-accent-solid-hover flex items-center justify-center cursor-pointer transition shadow-lg shadow-accent/40 hover:scale-105">
                     <svg width="22" height="22" viewBox="0 0 24 24" style={{ fill: "var(--fg-on-accent)" }}>
@@ -129,6 +148,18 @@ export default async function SermonBand() {
                   <WatchLink {...watchLinkProps} className="btn-primary text-sm">
                     Watch Now
                   </WatchLink>
+                  {audioUrl && (
+                    <a
+                      href={audioUrl}
+                      className="btn-outline-navy text-sm inline-flex items-center gap-1.5"
+                      aria-label={`Listen to ${title}`}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                      </svg>
+                      Listen
+                    </a>
+                  )}
                   <Link
                     href="/sermons"
                     className="btn-outline-navy text-sm"
