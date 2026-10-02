@@ -15,11 +15,18 @@
 
 import { Resend } from "resend";
 
+export interface SendMailAttachment {
+  filename: string;
+  /** Raw file bytes. */
+  content: Buffer;
+}
+
 export interface SendMailArgs {
   to: string;
   subject: string;
   text: string;
   replyTo?: string;
+  attachments?: SendMailAttachment[];
 }
 
 export interface SendMailResult {
@@ -28,7 +35,7 @@ export interface SendMailResult {
   queued?: boolean;
 }
 
-export async function sendMail({ to, subject, text, replyTo }: SendMailArgs): Promise<SendMailResult> {
+export async function sendMail({ to, subject, text, replyTo, attachments }: SendMailArgs): Promise<SendMailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.MAIL_FROM || "Brainerd Baptist Church <onboarding@resend.dev>";
 
@@ -48,6 +55,9 @@ export async function sendMail({ to, subject, text, replyTo }: SendMailArgs): Pr
       subject,
       text,
       ...(replyTo ? { replyTo } : {}),
+      ...(attachments?.length
+        ? { attachments: attachments.map((a) => ({ filename: a.filename, content: a.content })) }
+        : {}),
     });
     if (error) {
       console.error("[mail:resend-error]", error);

@@ -177,9 +177,11 @@ export default function SermonTabPlayer({
           {hasNotes && (
             <div style={{ marginTop: hasOutline ? "1.5rem" : 0, paddingTop: hasOutline ? "1.25rem" : 0, borderTop: hasOutline ? "1px solid var(--border)" : "none" }}>
               <a
-                href={`/sermons/${slug}/notes`}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#notes"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("notes")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -214,6 +216,7 @@ export default function SermonTabPlayer({
       )}
       {/* ── Section 3: Personal notes card ─────────────────────────── */}
       <div
+        id="notes"
         style={{
           background: "var(--surface-sunken)",
           border: "1px solid var(--border)",

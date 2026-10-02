@@ -9,7 +9,14 @@ import { useAudio } from "@/lib/audio-context";
 import { deriveInk, inkVarsFor } from "@/lib/identity-colors";
 
 interface Props {
+  /** Identifies the sermon for the notes storage key — a /sermons/[slug]
+   * slug once one exists. */
   slug: string;
+  /** Overrides the storage key entirely (e.g. a date-based draft key for
+   * /live, before a sermon has a /sermons/[slug] page). Falls back to
+   * `bbc-notes-${slug}` when omitted, so every surface converges on the
+   * same notes once a slug exists. */
+  noteKey?: string;
   youtubeId?: string;
   accentColor: string;
   sermonTitle: string;
@@ -41,6 +48,33 @@ function countWords(html: string): number {
 
 function escStr(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+/**
+ * The retired /sermons/[slug]/notes page (NotesEditor.tsx) used to save to
+ * this exact same localStorage key, but as a JSON blob
+ * ({ pointNotes: string[], additionalNotes: string }) instead of this
+ * editor's HTML string — the two were silently clobbering each other.
+ * Anyone who saved notes there before the pages were unified would otherwise
+ * see raw JSON text dumped into this editor on first load; recover it into
+ * real paragraphs instead.
+ */
+function migrateLegacyNotes(saved: string): string {
+  const trimmed = saved.trim();
+  if (!trimmed.startsWith("{")) return saved;
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (!Array.isArray(parsed?.pointNotes) && typeof parsed?.additionalNotes !== "string") return saved;
+    const paras: string[] = [
+      ...(Array.isArray(parsed.pointNotes) ? parsed.pointNotes : []),
+      ...(typeof parsed.additionalNotes === "string" ? [parsed.additionalNotes] : []),
+    ]
+      .map((p) => (typeof p === "string" ? p.trim() : ""))
+      .filter(Boolean);
+    return paras.length ? paras.map((p) => `<p>${escStr(p)}</p>`).join("") : "<p></p>";
+  } catch {
+    return saved;
+  }
 }
 
 // ── Print-page HTML generator ─────────────────────────────────────────────────
@@ -158,6 +192,9 @@ function buildPrintHTML({
   .notes-body ul li { margin: 3px 0; }
   .notes-body ul ul { list-style-type: circle; }
   .notes-body ul ul ul { list-style-type: square; }
+  .notes-body ol { padding-left: 1.4rem; list-style-type: decimal; margin: 4px 0; }
+  .notes-body ol li { margin: 3px 0; }
+  .notes-body ol ol { list-style-type: lower-alpha; }
   .footer {
     margin-top: 48px;
     padding-top: 16px;
@@ -257,6 +294,9 @@ const IconUnderline = () => <svg width="14" height="14" viewBox="0 0 24 24" fill
 const IconStrike    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.3 12H6.7"/><path d="M10 7.3C10 6 11.3 5 13 5s3 1 3 2.3"/><path d="M14 16.7c0 1.3-1.3 2.3-3 2.3s-3-1-3-2.3"/></svg>;
 const IconHighlight = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="12" width="13" height="6" rx="1"/><path d="M16 15l4-4-2-2-4 4"/><line x1="3" y1="19" x2="16" y2="19" strokeWidth="3" style={{ stroke: "var(--highlight-bg)" }} strokeLinecap="round"/></svg>;
 const IconBullets   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>;
+const IconNumbers   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M4 14h2a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H4" strokeLinejoin="round"/></svg>;
+const IconDownload  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>;
+const IconMail      = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>;
 const IconIndent    = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="16" x2="21" y2="16"/><polyline points="3 12 6 15 3 18"/></svg>;
 const IconOutdent   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="16" x2="21" y2="16"/><polyline points="7 12 4 15 7 18"/></svg>;
 const IconUndo      = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>;
@@ -276,10 +316,10 @@ const popItemStyle: React.CSSProperties = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function SermonNotes({
-  slug, youtubeId, accentColor, sermonTitle,
+  slug, noteKey, youtubeId, accentColor, sermonTitle,
   speaker = "", series = "", date = "", passage = "",
 }: Props) {
-  const storageKey = `bbc-notes-${slug}`;
+  const storageKey = noteKey ?? `bbc-notes-${slug}`;
   const videoKey   = youtubeId ? `bbc-sermon-pos-${youtubeId}` : null;
   const audioKey   = `bbc-ap-${slug}`;
 
@@ -292,6 +332,10 @@ export default function SermonNotes({
   const [isMobile,      setIsMobile]      = useState(false);
   const [shareOpen,     setShareOpen]     = useState(false);
   const [shareLabel,    setShareLabel]    = useState<string | null>(null);
+  const [downloading,   setDownloading]   = useState(false);
+  const [emailPrompt,   setEmailPrompt]   = useState(false);
+  const [emailValue,    setEmailValue]    = useState("");
+  const [emailStatus,   setEmailStatus]   = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const saveTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initialContent = useRef<string>("");
@@ -313,7 +357,7 @@ export default function SermonNotes({
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
-      if (saved) initialContent.current = saved;
+      if (saved) initialContent.current = migrateLegacyNotes(saved);
     } catch { /* private mode */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -335,7 +379,8 @@ export default function SermonNotes({
     extensions: [
       StarterKit.configure({
         bulletList: { keepMarks: true, keepAttributes: false, HTMLAttributes: { class: "bbc-bullets" } },
-        orderedList: false, blockquote: false, codeBlock: false, code: false,
+        orderedList: { keepMarks: true, keepAttributes: false, HTMLAttributes: { class: "bbc-numbers" } },
+        blockquote: false, codeBlock: false, code: false,
         horizontalRule: false, heading: false,
       }),
       Underline,
@@ -411,6 +456,51 @@ export default function SermonNotes({
     catch { /* dismissed */ }
   }, [getPlainText, sermonTitle]);
 
+  const downloadPDF = useCallback(async () => {
+    if (!editor) return;
+    setDownloading(true);
+    try {
+      const res = await fetch("/api/notes/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: sermonTitle, series, passage, speaker, formattedDate: formatDateLong(date), notesHtml: editor.getHTML() }),
+      });
+      if (!res.ok) throw new Error("PDF generation failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const safeTitle = sermonTitle.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 60) || "sermon";
+      a.download = `${safeTitle}-my-notes.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setShareOpen(false);
+    } catch {
+      alert("Could not generate the PDF. Please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  }, [editor, sermonTitle, series, passage, speaker, date]);
+
+  const sendEmail = useCallback(async () => {
+    if (!editor || !emailValue.trim()) return;
+    setEmailStatus("sending");
+    try {
+      const res = await fetch("/api/notes/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: emailValue.trim(), title: sermonTitle, series, passage, speaker,
+          formattedDate: formatDateLong(date), notesHtml: editor.getHTML(),
+        }),
+      });
+      setEmailStatus(res.ok ? "sent" : "error");
+      if (res.ok) setTimeout(() => { setEmailPrompt(false); setEmailStatus("idle"); setShareOpen(false); }, 1600);
+    } catch {
+      setEmailStatus("error");
+    }
+  }, [editor, emailValue, sermonTitle, series, passage, speaker, date]);
+
   const handleShareBtn = useCallback(() => {
     if (!editor || !editor.getText().trim()) return;
     setShareOpen((o) => !o);
@@ -443,6 +533,10 @@ export default function SermonNotes({
         .bbc-bullets li p { margin: 0; display: inline; }
         .bbc-bullets .bbc-bullets { list-style-type: circle; margin-top: 0.1rem; }
         .bbc-bullets .bbc-bullets .bbc-bullets { list-style-type: square; }
+        .bbc-numbers { padding-left: 1.35rem; margin: 0.2rem 0; list-style-type: decimal; }
+        .bbc-numbers li { margin: 0.1rem 0; color: var(--fg); }
+        .bbc-numbers li p { margin: 0; display: inline; }
+        .bbc-numbers .bbc-numbers { list-style-type: lower-alpha; margin-top: 0.1rem; }
         .bbc-notes-editor strong { font-weight: 700; color: var(--fg); }
         .bbc-notes-editor em { font-style: italic; color: var(--fg-muted); }
         .bbc-notes-editor u { text-decoration-color: ${accentColor}; text-underline-offset: 2px; }
@@ -523,7 +617,7 @@ export default function SermonNotes({
                     position: "absolute", right: 0, top: "calc(100% + 6px)",
                     background: "var(--surface-raised)", border: "1px solid var(--border)",
                     borderRadius: "0.75rem", boxShadow: "var(--shadow-lg)",
-                    minWidth: 190, zIndex: 50, overflow: "hidden", padding: "6px",
+                    minWidth: 220, zIndex: 50, overflow: "hidden", padding: "6px",
                   }}>
                     {typeof navigator !== "undefined" && typeof navigator.share === "function" && (
                       <button onClick={shareNative} style={popItemStyle}
@@ -535,13 +629,62 @@ export default function SermonNotes({
                         Share via…
                       </button>
                     )}
+                    <button onClick={downloadPDF} disabled={downloading} style={popItemStyle}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
+                      <IconDownload />
+                      {downloading ? "Generating…" : "Download PDF"}
+                    </button>
+                    <button onClick={() => setEmailPrompt((o) => !o)} style={popItemStyle}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
+                      <IconMail />
+                      Email as PDF
+                    </button>
+                    {emailPrompt && (
+                      <div style={{ padding: "0.5rem 0.75rem 0.75rem" }}>
+                        <div style={{ display: "flex", gap: "0.375rem" }}>
+                          <input
+                            type="email"
+                            inputMode="email"
+                            value={emailValue}
+                            onChange={(e) => setEmailValue(e.target.value)}
+                            onKeyDown={(e) => { if (e.key === "Enter") sendEmail(); }}
+                            placeholder="you@example.com"
+                            style={{
+                              flex: 1, fontSize: "0.78rem", padding: "0.4rem 0.6rem",
+                              borderRadius: "0.5rem", border: "1px solid var(--border)",
+                              background: "var(--surface)", color: "var(--fg)",
+                            }}
+                          />
+                          <button
+                            onClick={sendEmail}
+                            disabled={emailStatus === "sending" || !emailValue.trim()}
+                            style={{
+                              fontSize: "0.72rem", fontWeight: 600, padding: "0 0.75rem",
+                              borderRadius: "0.5rem", border: "none", cursor: "pointer",
+                              background: "var(--accent-solid)", color: "var(--fg-on-accent)",
+                              opacity: emailStatus === "sending" || !emailValue.trim() ? 0.55 : 1,
+                            }}
+                          >
+                            {emailStatus === "sent" ? "Sent!" : emailStatus === "sending" ? "…" : "Send"}
+                          </button>
+                        </div>
+                        {emailStatus === "error" && (
+                          <p style={{ fontSize: "0.68rem", color: "var(--danger-text)", marginTop: "0.375rem" }}>
+                            Couldn&apos;t send that. Try again?
+                          </p>
+                        )}
+                      </div>
+                    )}
+                    <Divider />
                     <button onClick={openPrintView} style={popItemStyle}
                       onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
                       </svg>
-                      Save / Print
+                      Print
                     </button>
                     <button onClick={copyText} style={popItemStyle}
                       onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-subtle)")}
@@ -572,7 +715,8 @@ export default function SermonNotes({
           <ToolBtn onClick={() => editor.chain().focus().toggleStrike().run()}    active={editor.isActive("strike")}    title="Strikethrough" accentColor={accentColor}><IconStrike /></ToolBtn>
           <ToolBtn onClick={() => editor.chain().focus().toggleHighlight().run()} active={editor.isActive("highlight")} title="Highlight"     accentColor={accentColor}><IconHighlight /></ToolBtn>
           <Divider />
-          <ToolBtn onClick={() => editor.chain().focus().toggleBulletList().run()}           active={editor.isActive("bulletList")} title="Bullet list" accentColor={accentColor}><IconBullets /></ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().toggleBulletList().run()}           active={editor.isActive("bulletList")}  title="Bullet list"   accentColor={accentColor}><IconBullets /></ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().toggleOrderedList().run()}          active={editor.isActive("orderedList")} title="Numbered list" accentColor={accentColor}><IconNumbers /></ToolBtn>
           <ToolBtn onClick={() => editor.chain().focus().sinkListItem("listItem").run()}     active={false}                        title="Indent"      accentColor={accentColor}><IconIndent /></ToolBtn>
           <ToolBtn onClick={() => editor.chain().focus().liftListItem("listItem").run()}     active={false}                        title="Outdent"     accentColor={accentColor}><IconOutdent /></ToolBtn>
           <Divider />

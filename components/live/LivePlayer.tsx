@@ -24,6 +24,16 @@ import {
 } from "react";
 import type { SermonData } from "@/lib/sermon";
 import { YOUTUBE_CHANNEL_ID, formatSermonDate } from "@/lib/sermon";
+import SermonNotes from "@/components/sermons/SermonNotes";
+
+const DEFAULT_ACCENT = "#00abc9";
+
+/** Extracts the /sermons/[slug] slug from an internal watchUrl, if any. */
+function slugFromWatchUrl(watchUrl: string, isInternal: boolean): string | null {
+  if (!isInternal) return null;
+  const m = watchUrl.match(/^\/sermons\/([^/?#]+)/);
+  return m?.[1] ?? null;
+}
 
 // ── Service schedule ──────────────────────────────────────────────────────────
 
@@ -113,37 +123,11 @@ function useScripture(passage: string) {
 
 // ── Notes (localStorage) ──────────────────────────────────────────────────────
 
-function useNotes(sermonDate: string) {
-  const key = `sermon-notes-${sermonDate}`;
-
-  const [notes, setNotes] = useState("");
-
-  useEffect(() => {
-    try { setNotes(localStorage.getItem(key) ?? ""); } catch {}
-  }, [key]);
-
-  const save = useCallback(
-    (val: string) => {
-      setNotes(val);
-      try { localStorage.setItem(key, val); } catch {}
-    },
-    [key],
-  );
-
-  const emailNotes = useCallback(
-    (title: string) => {
-      const subject = encodeURIComponent(`My notes — ${title}`);
-      const body    = encodeURIComponent(notes);
-      window.open(`mailto:?subject=${subject}&body=${body}`);
-    },
-    [notes],
-  );
-
-  const copyNotes = useCallback(async () => {
-    try { await navigator.clipboard.writeText(notes); } catch {}
-  }, [notes]);
-
-  return { notes, save, emailNotes, copyNotes };
+/** Falls back to a stable per-date draft key before a sermon has a real
+ * /sermons/[slug] page, so notes typed during the live stream converge onto
+ * the same SermonNotes storage key once the slug exists later that week. */
+function draftNoteKey(sermonDate: string): string {
+  return `live-draft-${sermonDate}`;
 }
 
 // ── Prayer form ───────────────────────────────────────────────────────────────
@@ -318,7 +302,7 @@ function ActiveView({
               {tab === "watch"   && <WatchTab   sermon={sermon} />}
               {tab === "passage" && <PassageTab sermon={sermon} />}
               {tab === "outline" && <OutlineTab sermon={sermon} />}
-              {tab === "notes"   && <NotesTab   sermon={sermon} />}
+              {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
               {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
             </div>
           </div>
@@ -378,7 +362,7 @@ function ActiveView({
           <div className="flex-1 overflow-y-auto">
             {(tab === "watch" || tab === "outline") && <OutlineTab sermon={sermon} />}
             {tab === "passage" && <PassageTab sermon={sermon} />}
-            {tab === "notes"   && <NotesTab   sermon={sermon} />}
+            {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
             {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
           </div>
         </div>
@@ -538,51 +522,28 @@ function OutlineTab({ sermon }: { sermon: SermonData }) {
 
 // ── Notes tab ─────────────────────────────────────────────────────────────────
 
-function NotesTab({ sermon }: { sermon: SermonData }) {
-  const { notes, save, emailNotes, copyNotes } = useNotes(sermon.date);
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await copyNotes();
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+/** /live's Notes tab, now the same rich editor used on /sermons/[slug] —
+ * formatting, numbered/bulleted lists, one-click PDF download, and real
+ * email-with-attachment, instead of the old plain textarea + mailto: link.
+ * Before a slug exists for this week's sermon, notes are kept under a
+ * per-date draft key and will carry over once SermonNotes is opened again
+ * from the sermon's own page (same `bbc-notes-${slug}` key). */
+function LiveNotesTab({ sermon }: { sermon: SermonData }) {
+  const slug = slugFromWatchUrl(sermon.watchUrl, sermon.watchUrlIsInternal);
 
   return (
-    <div className="px-5 py-6 max-w-xl mx-auto flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-accent text-xs font-semibold tracking-widest uppercase">My Notes</p>
-          <p className="text-[11px] text-fg-on-dark-muted mt-0.5">Saved automatically</p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handleCopy}
-            disabled={!notes}
-            className="text-[11px] font-semibold text-fg-on-dark-muted hover:text-fg-on-dark disabled:opacity-30 transition-colors px-2 py-1 rounded border border-border-on-dark"
-          >
-            {copied ? "Copied!" : "Copy"}
-          </button>
-          <button
-            onClick={() => emailNotes(sermon.title)}
-            disabled={!notes}
-            className="text-[11px] font-semibold text-fg-on-dark-muted hover:text-fg-on-dark disabled:opacity-30 transition-colors px-2 py-1 rounded border border-border-on-dark"
-          >
-            Email
-          </button>
-        </div>
-      </div>
-
-      <textarea
-        value={notes}
-        onChange={(e) => save(e.target.value)}
-        placeholder={`Notes for "${sermon.title}"…\n\nWrite anything you want to remember from today's message.`}
-        className="w-full h-60 rounded-xl bg-surface-on-dark border border-border-on-dark text-sm text-fg-on-dark-body placeholder-fg-on-dark-muted p-4 resize-none focus:border-accent/50 transition-colors leading-relaxed"
+    <div className="px-5 py-6 max-w-xl mx-auto">
+      <SermonNotes
+        slug={slug ?? draftNoteKey(sermon.date)}
+        noteKey={slug ? undefined : draftNoteKey(sermon.date)}
+        accentColor={DEFAULT_ACCENT}
+        sermonTitle={sermon.title}
+        speaker={sermon.speaker}
+        series={sermon.series}
+        date={sermon.date}
+        passage={sermon.passage}
+        youtubeId={sermon.youtubeId ?? undefined}
       />
-
-      <p className="text-[10px] text-fg-on-dark-muted">
-        Notes are saved on this device only. Use Email to keep them.
-      </p>
     </div>
   );
 }
