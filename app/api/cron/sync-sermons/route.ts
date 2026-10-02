@@ -220,7 +220,26 @@ export async function GET(req: NextRequest) {
   const created: { title: string; date: string }[] = [];
   const skipped: { title: string; speaker: string }[] = [];
 
+  // maxDuration is 60s; Vercel kills the function hard at that point with
+  // no chance to return a response. Found 2026-10-02: a full ?limit=500
+  // backfill run never gets through all 500 in one invocation (YouTube/
+  // Drive/Sheets lookups per item add up), so every run was dying via hard
+  // timeout instead of returning early — no clean partial result, and no
+  // visibility into how far it actually got. This stops the loop with
+  // ~10s of runway left and returns what it has; the daily cron's small
+  // SYNC_WINDOW is unaffected, and a manual large `?limit=` backfill now
+  // makes steady, visible progress across repeated calls instead of
+  // racing a wall.
+  const startedAt = Date.now();
+  const DEADLINE_MS = 50_000;
+  let stoppedEarly = false;
+
   for (const video of ordered) {
+    if (Date.now() - startedAt > DEADLINE_MS) {
+      stoppedEarly = true;
+      break;
+    }
+    const itemStart = Date.now();
     try {
       const reference = BACKFILL_REFERENCE[video.videoId];
 
@@ -317,6 +336,7 @@ export async function GET(req: NextRequest) {
 
       await sanityWriteClient.createOrReplace(doc);
       created.push({ title, date });
+      console.log(`[sync-sermons] ${date} ${video.videoId} ok in ${Date.now() - itemStart}ms`);
     } catch (err) {
       console.error(`[sync-sermons] failed to sync ${video.videoId}:`, err);
       // Keep going — one bad sermon shouldn't block the rest of the batch.
@@ -335,7 +355,7 @@ export async function GET(req: NextRequest) {
     }).catch((err) => console.error("[sync-sermons] notification email failed:", err));
   }
 
-  return NextResponse.json({ ok: true, checked: recent.length, created, skipped });
+  return NextResponse.json({ ok: true, checked: recent.length, created, skipped, stoppedEarly });
 }
 
 // Manual trigger for testing — same auth, same logic.
