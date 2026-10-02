@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
+import ListenButton from "./ListenButton";
 import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 
@@ -45,10 +46,7 @@ export default async function SermonBand() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div>
               <p className="eyebrow mb-3">Latest Sermon</p>
-              <div className="blue-divider mb-5" />
-              <h2 className="h-section text-fg">
-                Hear from God&apos;s Word
-              </h2>
+              <div className="blue-divider" />
             </div>
             <Link
               href="/sermons"
@@ -149,16 +147,20 @@ export default async function SermonBand() {
                     Watch Now
                   </WatchLink>
                   {audioUrl && (
-                    <a
-                      href={audioUrl}
+                    <ListenButton
                       className="btn-outline-navy text-sm inline-flex items-center gap-1.5"
-                      aria-label={`Listen to ${title}`}
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-                      </svg>
-                      Listen
-                    </a>
+                      track={{
+                        title,
+                        speaker: speaker || "Curtis Hill",
+                        series: series || "",
+                        audioUrl,
+                        youtubeId: sermon.youtubeId ?? undefined,
+                        // No Sanity slug yet for a sermon this fresh — key the
+                        // saved-position/dedup logic off the YouTube id instead.
+                        slug: `latest-${sermon.youtubeId || sermon.date}`,
+                        accentColor: "var(--accent)",
+                      }}
+                    />
                   )}
                   <Link
                     href="/sermons"
