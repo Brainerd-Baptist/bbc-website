@@ -139,6 +139,38 @@ body::before {
   opacity: 0.03;
 }
 
+/* ── Radial gradient depth (Phase 4 — 2026-10-01) ───────────────────────────
+   A fixed body::after adds a soft radial light-source at top-center,
+   giving the page a gentle vignette that draws the eye to content and
+   removes the perfectly flat "white rectangle" feeling.
+
+   Light: a very soft warm-white bloom (top 40%) fading to transparent —
+          almost invisible but subconsciously felt as warmth and depth.
+   Dark:  a deeper midnight-blue center glow (matches BX page treatment),
+          fading to near-black edges for a wrapped, immersive feeling.
+
+   z-index: -2 keeps it below the grain (z-index: -1) and all content. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(255, 255, 255, 0.55) 0%,
+    transparent 70%
+  );
+}
+.dark body::after {
+  background: radial-gradient(
+    ellipse 90% 60% at 50% 20%,
+    rgba(22, 42, 72, 0.60) 0%,
+    rgba(10, 16, 32, 0.0) 70%
+  );
+}
+
+
 
 /* ── Scroll reveal ─────────────────────────────────────── */
 .rv {
@@ -146,9 +178,9 @@ body::before {
   transform: translateY(28px) scale(0.98);
   filter: blur(2px);
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out),
+    filter var(--duration-slow) var(--ease-out);
   will-change: opacity, transform, filter;
 }
 .rv.in {
@@ -572,8 +604,10 @@ body::before {
 
 /* ── Card hover lift ───────────────────────────────────── */
 .card-hover {
-  transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94),
-              box-shadow 0.25s cubic-bezier(0.25,0.46,0.45,0.94);
+  /* Phase 5: spring easing for a tactile, alive feel on card lift */
+  transition:
+    transform var(--duration-base) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-out);
   will-change: transform;
 }
 .card-hover:hover {
@@ -581,7 +615,9 @@ body::before {
   box-shadow: var(--shadow-lg);
 }
 .card-hover-sm {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 .card-hover-sm:hover {
   transform: translateY(-2px);
@@ -644,4 +680,50 @@ body::before {
   ::view-transition-new(root) {
     animation: none;
   }
+}
+
+/* ── Recessed input fields (Phase 6 — 2026-10-01) ───────────────────────────
+   Inputs, textareas, and selects are recessed with an inset shadow so they
+   read as sunk into the surface (like physical buttons pressed in). This
+   creates visual contrast between interactive sinks and elevated cards.
+
+   Light: soft inset shadow in navy-alpha to suggest depth.
+   Dark:  deeper black-alpha inset + slightly darker background than --surface.
+   Focus ring uses --accent to match the BX reservation portal style. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+textarea,
+select {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 32, 91, 0.08),
+    inset 0 2px 6px rgba(0, 32, 91, 0.05);
+  border-radius: 6px;
+  color: var(--fg);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 32, 91, 0.06),
+    0 0 0 3px rgba(0, 171, 201, 0.18);
+}
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+.dark textarea,
+.dark select {
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.25),
+    inset 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):focus,
+.dark textarea:focus,
+.dark select:focus {
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.20),
+    0 0 0 3px rgba(0, 171, 201, 0.25);
 }

@@ -565,6 +565,21 @@
   --color-warning-solid:      var(--warning-solid);
   --color-warning-bg:         var(--warning-bg);
   --color-feedback-fg:        var(--feedback-fg);
+
+  /* ── Motion tokens (Phase 5 — 2026-10-01) ───────────────────────────────
+     Easing curves from the BX design-system. Used in card-hover, scroll-reveal,
+     and button transitions throughout globals.css.
+     --ease-out: decelerate — for elements entering the screen
+     --ease-in:  accelerate — for elements leaving
+     --ease-spring: BX-style spring feel — slightly overshoots then settles */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:     cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-instant: 80ms;
+  --duration-fast:   150ms;
+  --duration-base:   300ms;
+  --duration-slow:   500ms;
 }
 
 /* ── The dark value set ──────────────────────────────────────────────
