@@ -115,11 +115,14 @@ export async function GET(req: NextRequest) {
   // nothing in it yet) without changing what the daily job checks forever
   // after. getRecentSermons() paginates past YouTube's 50-per-page cap on
   // its own, so this just bounds how large a single manual run can ask
-  // for; re-running with createIfNotExists is always safe if the real
-  // backlog somehow exceeds 200.
+  // for. Cap of 500: Curtis's preaching on this playlist goes back to
+  // February 2022 (confirmed 2026-10-02 as the actual backfill target —
+  // ~230 weekly sermons from then to now), so 200 wasn't enough; 500
+  // leaves real headroom above that without asking for an unbounded
+  // amount in one shot. Re-running with createIfNotExists is always safe.
   const requestedLimit = Number(req.nextUrl.searchParams.get("limit"));
   const limit = Number.isFinite(requestedLimit) && requestedLimit > 0
-    ? Math.min(requestedLimit, 200)
+    ? Math.min(requestedLimit, 500)
     : SYNC_WINDOW;
 
   const recent = await getRecentSermons(limit);
