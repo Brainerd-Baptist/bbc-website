@@ -104,3 +104,78 @@ export function formatSermonDate(iso: string): string {
     timeZone: "America/New_York",
   });
 }
+
+/**
+ * Returns the most recent `limit` videos from the curated Sermons playlist,
+ * newest first — unlike getLatestSermon() above (which only ever fetches
+ * the single latest one). Used by the sermon auto-sync cron so a single
+ * missed run doesn't permanently lose a sermon: each run re-checks the last
+ * several weeks' worth of uploads against what's already in Sanity, not
+ * just whatever's newest right now.
+ */
+export async function getRecentSermons(limit = 15): Promise<YouTubeSermon[]> {
+  if (!API_KEY) return [];
+
+  const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${YOUTUBE_SERMONS_PLAYLIST_ID}&maxResults=${limit}&key=${API_KEY}`;
+  const res = await fetch(url, { next: { revalidate: 21600 } });
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const items: Array<{ snippet: Record<string, unknown> }> = data.items ?? [];
+
+  return items
+    .map(({ snippet }) => {
+      const videoId = (snippet.resourceId as { videoId?: string } | undefined)?.videoId;
+      if (!videoId) return null;
+      const { title, passage, speaker } = parseYoutubeSermonTitle(snippet.title as string);
+      return {
+        videoId,
+        rawTitle: snippet.title as string,
+        title,
+        passage,
+        speaker,
+        publishedAt: snippet.publishedAt as string,
+        thumbnail: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
+        channelTitle: snippet.channelTitle as string,
+        description: (snippet.description as string) ?? "",
+      } satisfies YouTubeSermon;
+    })
+    .filter((s): s is YouTubeSermon => s !== null);
+}
+
+/**
+ * Looks up each video's duration via the Data API's contentDetails, in one
+ * batched call. Returns { videoId: "42 min" }, rounding to the nearest
+ * minute (good enough for display — matches the schema's own example,
+ * '"42 min"'). Skips anything the API doesn't return cleanly rather than
+ * throwing — duration is a nice-to-have on a synced sermon, not a blocker.
+ */
+export async function getVideoDurations(videoIds: string[]): Promise<Record<string, string>> {
+  if (!API_KEY || videoIds.length === 0) return {};
+
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${API_KEY}`;
+  const res = await fetch(url, { next: { revalidate: 21600 } });
+  if (!res.ok) return {};
+
+  const data = await res.json();
+  const items: Array<{ id: string; contentDetails?: { duration?: string } }> = data.items ?? [];
+
+  const out: Record<string, string> = {};
+  for (const item of items) {
+    const iso = item.contentDetails?.duration;
+    if (!iso) continue;
+    const minutes = isoDurationToMinutes(iso);
+    if (minutes !== null) out[item.id] = `${minutes} min`;
+  }
+  return out;
+}
+
+/** "PT1H2M10S" → 62 (rounds to the nearest minute). Returns null if unparseable. */
+function isoDurationToMinutes(iso: string): number | null {
+  const m = iso.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!m) return null;
+  const hours = parseInt(m[1] ?? "0", 10);
+  const mins = parseInt(m[2] ?? "0", 10);
+  const secs = parseInt(m[3] ?? "0", 10);
+  return Math.round(hours * 60 + mins + secs / 60);
+}
