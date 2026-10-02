@@ -12,33 +12,49 @@
  * automatic instead, from two sources that both update themselves with
  * zero manual action:
  *
- *   - BUILD_NUMBER — the repo's total commit count, computed once at build
- *     time (next.config.ts, baked in via the `env` key). This is the part
- *     that actually climbs by exactly 1 every push — a real, visibly
- *     increasing number, unlike a commit SHA (which changes every commit
- *     too, but as an opaque hex string that doesn't look like it's "going
- *     up").
- *   - the commit SHA itself (VERCEL_GIT_COMMIT_SHA, set automatically by
- *     every Vercel build) — kept alongside the number as the precise,
- *     unambiguous identifier for exactly which commit is live.
+ *   - BUILD_TIME — the instant this build ran, computed once in
+ *     next.config.ts and baked in via Next's `env` key. Originally this was
+ *     a commit counter (git rev-list --count HEAD) so it would visibly
+ *     climb by 1 every push, unlike an opaque commit SHA — but the first
+ *     real deploy showed "build 10" instead of ~416, because Vercel's build
+ *     containers use a shallow git clone that doesn't have the full history
+ *     to count. A timestamp sidesteps that: no git call, always accurate,
+ *     and it answers "is this the build I just pushed" even more directly
+ *     than a counter would.
+ *   - the commit SHA (VERCEL_GIT_COMMIT_SHA) — set automatically by every
+ *     Vercel build, as long as the project has "Automatically expose System
+ *     Environment Variables" turned on (Settings → Environment Variables;
+ *     this was OFF here until 2026-10-02, which is why an earlier version
+ *     of this marker showed "dev (local)" in production).
  *
  * APP_MILESTONE below is the one manual piece left: bump it only for a big
  * "this is a meaningfully different site than before" moment (a redesign
  * phase landing, a new major section shipping) — not for every commit.
- * It's a loose human label; BUILD_NUMBER and the commit SHA are what
+ * It's a loose human label; the build time and commit SHA are what
  * actually answer "is this the latest deploy."
  */
 
 export const APP_MILESTONE = "0.4";
 
 export function getBuildInfo() {
-  const number = process.env.BUILD_NUMBER || "0";
   const sha = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "dev";
   const dirty = !process.env.VERCEL_GIT_COMMIT_SHA; // local/dev build
+
+  let built = "unknown time";
+  if (process.env.BUILD_TIME) {
+    built = new Date(process.env.BUILD_TIME).toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "America/New_York",
+    });
+  }
+
   return {
-    number,
     sha,
     dirty,
-    label: `v${APP_MILESTONE} · build ${number} · ${sha}${dirty ? " (local)" : ""}`,
+    built,
+    label: `v${APP_MILESTONE} · built ${built} ET · ${sha}${dirty ? " (local)" : ""}`,
   };
 }

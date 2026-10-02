@@ -1,25 +1,22 @@
 import type { NextConfig } from "next";
-import { execSync } from "node:child_process";
 
-// Footer build counter (lib/version.ts) — total commit count on this branch
-// at build time. Computed here, once, at build, rather than per-request:
-// it's baked into the bundle as a plain string via the `env` key below, so
-// every page render just reads a constant instead of shelling out to git.
-// Climbs by exactly 1 every commit, so "did my latest push actually land"
-// is a glance, not a guess — unlike a commit SHA, which changes every time
-// but doesn't visibly go UP. Falls back to "0" if git isn't available for
-// some reason (never seen that happen in a Vercel build, but this must
-// never fail the build either way).
-let buildNumber = "0";
-try {
-  buildNumber = execSync("git rev-list --count HEAD").toString().trim();
-} catch {
-  // leave as "0" — footer marker still shows the commit SHA either way
-}
+// Footer build marker (lib/version.ts) — when this build actually happened,
+// baked in once at build time via the `env` key below so every page render
+// just reads a constant.
+//
+// First attempt here was `git rev-list --count HEAD` (a commit counter) —
+// reverted after the first real deploy showed "build 10" instead of ~416:
+// Vercel does a SHALLOW git clone for its build containers, so the full
+// history isn't actually there to count. A build timestamp sidesteps that
+// entirely (no git call needed) and arguably answers the actual question —
+// "is this the build I just pushed" — more directly than a counter would:
+// it's always true to the instant, never dependent on how much history
+// Vercel happened to check out.
+const BUILD_TIME = new Date().toISOString();
 
 const nextConfig: NextConfig = {
   env: {
-    BUILD_NUMBER: buildNumber,
+    BUILD_TIME,
   },
 
   // @react-pdf/renderer has Node.js-only deps (canvas, fontkit, etc.) that
