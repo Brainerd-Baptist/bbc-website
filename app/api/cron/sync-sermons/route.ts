@@ -84,6 +84,37 @@ const NOTIFY_EMAIL = "jking@brainerdbaptist.org";
 // Josiah 2026-10-02: "they're no longer at Brainerd."
 const EXCLUDED_SPEAKERS = ["Jim Shaddix", "Kevin Baggett"];
 
+// Curtis's Tagging sheet (and the backfill reference CSV) label the odd
+// handful of one-off, non-series sermons each year with a placeholder
+// series name rather than leaving the Series cell blank. Treated as a real
+// series title, resolveSeriesId() would create/link an actual "series" doc
+// called "Standalone Messages" and lump every unrelated standalone sermon
+// of the year under it — exactly the opposite of standalone. Per Josiah
+// 2026-10-02: these should have NO series at all, so this name (and close
+// variants) is filtered out before series resolution runs.
+const NON_SERIES_LABELS = ["standalone messages", "standalone message", "standalone"];
+
+function isNonSeriesLabel(title: string): boolean {
+  return NON_SERIES_LABELS.includes(title.trim().toLowerCase());
+}
+
+// Some 2022-era Tagging sheet rows (guest-speaker weeks) have their
+// Title/Teacher cells swapped or misplaced — a Bible passage reference
+// sitting in the Teacher column instead of the person's name (e.g.
+// "1 Peter 1:5-11" instead of "Blaine Vandegriff"). Detected 2026-10-02
+// from live resync output. A crude but effective guard: a real passage
+// reference has a book name followed by a chapter/verse number, which no
+// speaker's name does.
+const PASSAGE_LIKE = /\d/;
+function looksLikePassage(value: string): boolean {
+  const v = value.trim();
+  if (!v) return false;
+  // Any digit at all is disqualifying for a person's name (no Brainerd
+  // staff/guest speaker name contains a numeral), and every passage
+  // reference we've seen contains one (chapter and/or verse numbers).
+  return PASSAGE_LIKE.test(v);
+}
+
 function unauthorized() {
   return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 }
@@ -216,8 +247,21 @@ export async function GET(req: NextRequest) {
         parseYoutubeSermonTitle(video.rawTitle);
       const title = tagging?.title || parsedTitle || video.title;
       const passage = tagging?.passage || parsedPassage;
-      const speaker = tagging?.teacher || reference?.speaker || parsedSpeaker || "Curtis Hill";
-      const seriesTitle = tagging?.series || reference?.series || "";
+
+      // Trust the Tagging sheet's Teacher cell UNLESS it looks like a
+      // passage reference (the 2022-era column-swap issue) — in that case
+      // fall through to the next source rather than writing a scripture
+      // reference into the speaker field.
+      const taggingSpeaker = tagging?.teacher && !looksLikePassage(tagging.teacher)
+        ? tagging.teacher
+        : undefined;
+      const speaker = taggingSpeaker || reference?.speaker || parsedSpeaker || "Curtis Hill";
+
+      // Same idea for series: a real series title from the sheet wins, but
+      // a "Standalone Messages"-style placeholder means NO series, not a
+      // literal series called that.
+      const rawSeriesTitle = tagging?.series || reference?.series || "";
+      const seriesTitle = isNonSeriesLabel(rawSeriesTitle) ? "" : rawSeriesTitle;
 
       // Check every candidate source for an excluded name, not just the
       // resolved `speaker` — found 2026-10-02 that Curtis's Tagging sheet
