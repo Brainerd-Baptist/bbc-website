@@ -2051,10 +2051,14 @@ export function watchUrl(youtubeId: string): string {
 }
 
 export function formatDate(iso: string): string {
+  // Explicitly pinned to America/New_York (Chattanooga) rather than left to
+  // whatever timezone happens to be evaluating this — matches every other
+  // date/time calculation on the site (Countdown, /live, ThisWeek, etc.).
   return new Date(iso + "T12:00:00").toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "America/New_York",
   });
 }
 
