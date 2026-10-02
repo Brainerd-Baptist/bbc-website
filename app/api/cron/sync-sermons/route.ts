@@ -200,7 +200,21 @@ export async function GET(req: NextRequest) {
   // reaching new historical ground — observed 2026-10-02 as runs stalling at
   // the same date instead of pushing further back each time. Oldest-first
   // guarantees forward progress into the back-catalog on every run.
-  const ordered = [...recent].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
+  const fullyOrdered = [...recent].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt));
+
+  // Each invocation only gets through ~45-50 items before the deadline
+  // guard below cuts it off (YouTube/Sheets/Drive lookups cost ~1s/item).
+  // Found 2026-10-02: without an offset, every call re-started at the
+  // SAME oldest item and died at the SAME deadline, so three consecutive
+  // manual backfill calls reprocessed the identical Oct 2022–Jan 2024
+  // range and never made it to 2024 at all — no net progress across
+  // calls. `?offset=` slices the (already oldest-first sorted) candidate
+  // list so repeated manual calls page through disjoint windows instead:
+  // offset=0, then offset=50, offset=100, etc. The daily cron (small
+  // SYNC_WINDOW, no offset) is unaffected.
+  const requestedOffset = Number(req.nextUrl.searchParams.get("offset"));
+  const offset = Number.isFinite(requestedOffset) && requestedOffset > 0 ? requestedOffset : 0;
+  const ordered = fullyOrdered.slice(offset);
 
   // Every run re-processes and overwrites (createOrReplace, not
   // createIfNotExists) the full candidate window, rather than only
@@ -234,6 +248,7 @@ export async function GET(req: NextRequest) {
   const startedAt = Date.now();
   const DEADLINE_MS = 50_000;
   let stoppedEarly = false;
+  let processedInThisCall = 0;
 
   for (const video of ordered) {
     if (Date.now() - startedAt > DEADLINE_MS) {
@@ -241,6 +256,7 @@ export async function GET(req: NextRequest) {
       break;
     }
     const itemStart = Date.now();
+    processedInThisCall++;
     try {
       const reference = BACKFILL_REFERENCE[video.videoId];
 
@@ -356,7 +372,19 @@ export async function GET(req: NextRequest) {
     }).catch((err) => console.error("[sync-sermons] notification email failed:", err));
   }
 
-  return NextResponse.json({ ok: true, checked: recent.length, created, skipped, stoppedEarly });
+  const nextOffset = stoppedEarly ? offset + processedInThisCall : null;
+
+  return NextResponse.json({
+    ok: true,
+    checked: recent.length,
+    offset,
+    totalCandidates: fullyOrdered.length,
+    processedInThisCall,
+    created,
+    skipped,
+    stoppedEarly,
+    nextOffset,
+  });
 }
 
 // Manual trigger for testing — same auth, same logic.
