@@ -137,6 +137,22 @@ export async function getSermonsBySeries(seriesSlug: string): Promise<SanitySerm
   );
 }
 
+/**
+ * Standalone sermons — no series assigned at all. The browse grid groups
+ * these under a synthetic "Other" card (SermonGrid.tsx: seriesId falls back
+ * to "other" when a sermon has no series), which links to /series/other.
+ * There is no real Sanity `series` document for that card, so the series
+ * page needs this separate lookup rather than getSermonsBySeries (which only
+ * matches a real series reference and would 404 on "other").
+ */
+export async function getStandaloneSermons(): Promise<SanitySermon[]> {
+  return sanityClient.fetch(
+    `*[_type == "sermon" && !defined(series)] | order(date asc) { ${SERMON_FIELDS} }`,
+    {},
+    { next: { revalidate: 300 } }
+  );
+}
+
 /** All sermons for a specific book of the Bible, newest first */
 export async function getSermonsByBook(book: string): Promise<SanitySermon[]> {
   return sanityClient.fetch(

@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   getSeriesBySlug,
   getSermonsBySeries,
+  getStandaloneSermons,
   getAllSeries,
   formatDate,
 } from "@/lib/sanity";
@@ -17,11 +18,17 @@ export async function generateStaticParams() {
   const sanitySeries = await getAllSeries().catch(() => []);
   const sanityParams  = sanitySeries.map((s) => ({ slug: s.slug.current }));
   const staticParams  = FALLBACK_SERIES.map((s) => ({ slug: s.id }));
-  return [...sanityParams, ...staticParams];
+  return [...sanityParams, ...staticParams, { slug: "other" }];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === "other") {
+    return {
+      title: "Other Sermons — Brainerd Baptist Church",
+      description: "Standalone sermons that aren't part of a series.",
+    };
+  }
   const series = await getSeriesBySlug(slug).catch(() => null);
   if (!series) return { title: "Series — Brainerd Baptist Church" };
   return {
@@ -32,19 +39,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function SeriesPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const isOther = slug === "other";
 
-  // Try Sanity first, fall back to static data
+  // Try Sanity first, fall back to static data. "other" is a synthetic
+  // grouping (SermonGrid.tsx) for sermons with no series at all — there's no
+  // Sanity `series` document for it, so it's fetched separately rather than
+  // through getSermonsBySeries (which matches a real series reference).
   const [seriesData, sanitySermons] = await Promise.all([
-    getSeriesBySlug(slug).catch(() => null),
-    getSermonsBySeries(slug).catch(() => []),
+    isOther ? Promise.resolve(null) : getSeriesBySlug(slug).catch(() => null),
+    isOther ? getStandaloneSermons().catch(() => []) : getSermonsBySeries(slug).catch(() => []),
   ]);
 
   // If Sanity has no series, try fallback
   const fallbackSeries = FALLBACK_SERIES.find((s) => s.id === slug);
-  if (!seriesData && !fallbackSeries) notFound();
+  if (!isOther && !seriesData && !fallbackSeries) notFound();
 
-  const seriesTitle       = seriesData?.title       ?? fallbackSeries?.name ?? slug;
-  const seriesDescription = seriesData?.description ?? null;
+  const seriesTitle       = isOther ? "Other Sermons" : (seriesData?.title       ?? fallbackSeries?.name ?? slug);
+  const seriesDescription = isOther ? "Standalone sermons that aren't part of a series." : (seriesData?.description ?? null);
   const accentColor       = seriesData?.accentColor ?? "#00abc9";
   const bgColor           = seriesData?.bgColor     ?? "#00205B";
 
