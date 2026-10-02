@@ -53,12 +53,28 @@ let cachedRows: TaggingRow[] | null = null;
 let cachedAt = 0;
 const CACHE_MS = 3600_000; // 1h — matches the Next.js revalidate window elsewhere in lib/sermon.ts
 
+// If a fetch fails (network, 403, quota, etc.), remember that for a short
+// window too — NOT just on success. Found 2026-10-02: every sermon in a
+// resync run calls getTaggingRowByDate() once, and without this, a single
+// broken/rate-limited period meant every one of those (up to 500 on a
+// manual backfill) retried the Sheets API from scratch, which both wasted
+// the function's entire 60s budget on repeated failures (causing runs to
+// time out with no forward progress at all) and made an API-side rate
+// limit worse by hammering it harder. A short failure cache means one bad
+// request per ~2 minutes, not one per video.
+const FAILURE_CACHE_MS = 120_000; // 2m
+let lastFailureAt = 0;
+
 async function fetchTaggingRows(): Promise<TaggingRow[]> {
   const now = Date.now();
   if (cachedRows && now - cachedAt < CACHE_MS) return cachedRows;
+  if (now - lastFailureAt < FAILURE_CACHE_MS) return cachedRows ?? [];
 
   const token = await getDriveAccessToken();
-  if (!token) return [];
+  if (!token) {
+    lastFailureAt = now;
+    return cachedRows ?? [];
+  }
 
   try {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${TAGGING_SHEET_ID}/values/${encodeURIComponent(RANGE)}`;
@@ -67,7 +83,9 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
       next: { revalidate: 3600 },
     });
     if (!res.ok) {
-      console.error("[sermon-tagging] Sheets fetch error:", res.status);
+      const body = await res.text().catch(() => "");
+      console.error("[sermon-tagging] Sheets fetch error:", res.status, body.slice(0, 500));
+      lastFailureAt = now;
       return cachedRows ?? [];
     }
 
@@ -98,6 +116,7 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
     return rows;
   } catch (err) {
     console.error("[sermon-tagging] Sheets fetch error:", err);
+    lastFailureAt = now;
     return cachedRows ?? [];
   }
 }
