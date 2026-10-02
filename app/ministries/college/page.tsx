@@ -55,7 +55,7 @@ const SECTIONS = [
 
 export default function CollegeYoungAdultsPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div
@@ -81,8 +81,9 @@ export default function CollegeYoungAdultsPage() {
       </div>
 
       {/* ── Sections ─────────────────────────────────────────── */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto space-y-16">
+      <section className="relative overflow-hidden py-20 px-6">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto space-y-16">
           {SECTIONS.map(({ key, name, ages, ink, detail, body, schedule, leader, instagram, photos }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">
               <div className="h-1" style={{ background: ink.hue }} />

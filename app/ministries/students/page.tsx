@@ -43,7 +43,7 @@ const SCHEDULE = [
 // ── Page ─────────────────────────────────────────────────────
 export default function StudentsPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section
@@ -107,8 +107,9 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Three pillars ──────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="relative overflow-hidden py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">What we&apos;re about</p>
             <h2
@@ -121,7 +122,7 @@ export default function StudentsPage() {
             {PILLARS.map(({ label, body }) => (
               <div
                 key={label}
-                className="bg-surface-raised rounded-2xl p-8 border border-border hover:border-[var(--pillar-hue)]/30 transition-colors"
+                className="glass-frost rounded-2xl p-8"
                 style={{ "--pillar-hue": IDENTITY.students.hue } as React.CSSProperties}
               >
                 <div

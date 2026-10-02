@@ -133,7 +133,7 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export default function MinistriesPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div
@@ -165,8 +165,9 @@ export default function MinistriesPage() {
       </div>
 
       {/* ── Ministry cards ───────────────────────────────────── */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto space-y-6">
+      <section className="relative overflow-hidden py-20 px-6">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-5xl mx-auto space-y-6">
           {MINISTRIES.map(({ key, name, ages, color, ink, photo, href, body, detail }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">
 

@@ -116,7 +116,7 @@ const CHECKIN_STEPS = [
 // ── Page ─────────────────────────────────────────────────────
 export default function KidsPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section
@@ -181,8 +181,9 @@ export default function KidsPage() {
       </section>
 
       {/* ── Age groups ─────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
-        <div className="max-w-6xl mx-auto">
+      <section className="relative overflow-hidden py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-6xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Every age, every Sunday</p>
             <h2
@@ -206,7 +207,7 @@ export default function KidsPage() {
             {AGE_GROUPS.map(({ icon, label, ages, body, note }) => (
               <div
                 key={label}
-                className="bg-surface-raised rounded-2xl p-8 border border-border hover:border-accent/30 transition-colors"
+                className="glass-frost rounded-2xl p-8"
               >
                 {/* Icon */}
                 <div
@@ -286,8 +287,7 @@ export default function KidsPage() {
               <div className="flex flex-wrap gap-3">
                 <a
                   href="#pre-register"
-                  className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2"
-                  style={{ background: "var(--color-brand-navy)", color: "var(--fg-on-dark)" }}
+                  className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2 bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent"
                 >
                   Pre-Register Online
                 </a>

@@ -115,7 +115,7 @@ const PROGRAMS: Program[] = [
 
 export default function WednesdayPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero / Header ──────────────────────────────────── */}
       <div
@@ -176,8 +176,9 @@ export default function WednesdayPage() {
       </div>
 
       {/* ── Program cards ─────────────────────────────────── */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto space-y-6">
+      <section className="relative overflow-hidden py-20 px-6">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-5xl mx-auto space-y-6">
           {PROGRAMS.map(({ key, time, label, ages, color, ink, location, href, body, icon, photo }) => (
             <div
               key={key}
