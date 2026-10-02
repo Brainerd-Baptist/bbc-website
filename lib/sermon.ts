@@ -8,11 +8,22 @@
  *   For .docx files: downloads binary, extracts text via mammoth, generates
  *   outline with Claude API.
  *   For native Google Docs: exports as plain text and parses outline locally.
- *   Auth: GOOGLE_API_KEY (folder must be "Anyone with link" → viewer)
+ *   Auth: a Google service account (lib/google-auth.ts), authorized against
+ *   Curtis's real "Sermon Notes" folders below. Those folders are shared
+ *   with named people only (not "Anyone with the link"), so this reads via
+ *   an authenticated identity the folders are explicitly shared with —
+ *   NOT a bare API key, which only works on link-public folders. See
+ *   claude/sermon-notes-drive-folder-mismatch-2026-10-02.md for why this
+ *   matters: an earlier version of this file silently pointed at a
+ *   one-time manual duplicate of Curtis's folder (made to work around this
+ *   exact permissions gap with the old API-key approach), which stopped
+ *   getting new sermons the moment it was copied.
  *
  * Source 2 — YouTube RSS feed (no API key needed):
  *   Returns the channel's most recently uploaded video ID.
  */
+
+import { getDriveAccessToken } from "./google-auth";
 
 export const YOUTUBE_CHANNEL_ID = "UCEcu35yHidS8fQVwsoSP3zQ";
 // Curated "Sermons" playlist — the homepage card should only ever pull from
@@ -20,10 +31,10 @@ export const YOUTUBE_CHANNEL_ID = "UCEcu35yHidS8fQVwsoSP3zQ";
 // announcements, and anything else posted to the channel).
 export const YOUTUBE_SERMONS_PLAYLIST_ID = "PLmi1s4e0rk_5Mm_vS6JWamVhtkrhfpKt7";
 
-// Root folder: 15eQjQeoGLB2MJ2RxDjLf9fmzN6TlFzSK
-// 2025 subfolder: 1Lxs7IeOguQNdDF00lA_RvCoJeYddFqdu
-// 2026 subfolder: 164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS
-const DRIVE_FOLDER_ID = "164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS"; // current year
+// Curtis's real, live "Sermon Notes" Drive folders — confirmed 2026-10-02 via
+// the Drive connector (filenames + owners match Curtis's actual weekly
+// workflow). Josiah has writer access to both as of 2026-10-02.
+const DRIVE_FOLDER_ID = "1DssOoq5Yn9W1nEeHAxasG12kyX4iL05a"; // 2026 (current year)
 
 export interface SermonData {
   title: string;
@@ -251,11 +262,12 @@ interface DriveResult {
  * Otherwise loads the most recently modified doc in the folder.
  */
 async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult | null> {
-  const key = process.env.GOOGLE_API_KEY;
-  if (!key) {
-    console.warn("[sermon] GOOGLE_API_KEY not set — skipping Drive fetch");
+  const token = await getDriveAccessToken();
+  if (!token) {
+    console.warn("[sermon] GOOGLE_SERVICE_ACCOUNT_KEY not set (or auth failed) — skipping Drive fetch");
     return null;
   }
+  const authHeaders = { Authorization: `Bearer ${token}` };
 
   try {
     let fileId = overrideFileId ?? "";
@@ -268,9 +280,9 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
         `'${DRIVE_FOLDER_ID}' in parents and (mimeType='application/vnd.openxmlformats-officedocument.wordprocessingml.document' or mimeType='application/vnd.google-apps.document')`,
       );
       const fields = encodeURIComponent("files(id,name)");
-      const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name+desc&pageSize=3&fields=${fields}&key=${key}`;
+      const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=name+desc&pageSize=3&fields=${fields}`;
 
-      const listRes = await fetch(listUrl, { next: { revalidate: 3600 } });
+      const listRes = await fetch(listUrl, { headers: authHeaders, next: { revalidate: 3600 } });
       if (!listRes.ok) {
         console.error("[sermon] Drive list error:", listRes.status);
         return null;
@@ -286,8 +298,8 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
       if (!parsed || !fileId) return null;
     } else {
       // 1b. Fetch metadata for the specific file to get its name
-      const metaUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name&key=${key}`;
-      const metaRes = await fetch(metaUrl, { cache: "no-store" });
+      const metaUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name`;
+      const metaRes = await fetch(metaUrl, { headers: authHeaders, cache: "no-store" });
       if (!metaRes.ok) {
         console.error("[sermon] Drive metadata error:", metaRes.status);
         return null;
@@ -303,16 +315,16 @@ async function getLatestFromDrive(overrideFileId?: string): Promise<DriveResult 
     let outlineType: "structured" | "scripture" | "none" = "none";
     try {
       // Try Google Docs export first (works if file is native Google Doc)
-      const exportUrl = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text%2Fplain&key=${key}`;
-      const exportRes = await fetch(exportUrl, cache ? { cache } : { next: { revalidate: 3600 } });
+      const exportUrl = `https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text%2Fplain`;
+      const exportRes = await fetch(exportUrl, { headers: authHeaders, ...(cache ? { cache } : { next: { revalidate: 3600 } }) });
       if (exportRes.ok) {
         const result = parseOutline(await exportRes.text());
         outline = result.items;
         outlineType = result.type;
       } else {
         // Not a native Google Doc — try downloading as .docx binary
-        const downloadUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${key}`;
-        const dlRes = await fetch(downloadUrl, cache ? { cache } : { next: { revalidate: 3600 } });
+        const downloadUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+        const dlRes = await fetch(downloadUrl, { headers: authHeaders, ...(cache ? { cache } : { next: { revalidate: 3600 } }) });
         if (dlRes.ok) {
           const buffer = await dlRes.arrayBuffer();
           // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -405,16 +417,18 @@ export async function getSermonNotesByDate(date: string): Promise<{
   rawText: string | null;
   highlights: string[];
 } | null> {
-  const key = process.env.GOOGLE_API_KEY;
-  if (!key) return null;
+  const token = await getDriveAccessToken();
+  if (!token) return null;
+  const authHeaders = { Authorization: `Bearer ${token}` };
 
   // "2026-09-20" → "2026 09 20"
   const datePart = date.replace(/-/g, " ");
-  // Determine which subfolder to search based on year
+  // Determine which subfolder to search based on year. These are Curtis's
+  // real, live "Sermon Notes" folders (see the file header comment above).
   const year = date.slice(0, 4);
   const subfolderMap: Record<string, string> = {
-    "2026": "164EEh4JxBxgdUWTeNKTx6ahyFkf3dCPS",
-    "2025": "1Lxs7IeOguQNdDF00lA_RvCoJeYddFqdu",
+    "2026": "1DssOoq5Yn9W1nEeHAxasG12kyX4iL05a",
+    "2025": "1xBsIwdGJ3lLPrzTK09cbvztyoDZGBhPL",
   };
   const subfolderId = subfolderMap[year] ?? DRIVE_FOLDER_ID;
 
@@ -423,9 +437,9 @@ export async function getSermonNotesByDate(date: string): Promise<{
       `'${subfolderId}' in parents and name contains '${datePart}'`,
     );
     const fields = encodeURIComponent("files(id,name,mimeType)");
-    const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=1&fields=${fields}&key=${key}`;
+    const listUrl = `https://www.googleapis.com/drive/v3/files?q=${q}&pageSize=1&fields=${fields}`;
 
-    const listRes = await fetch(listUrl, { next: { revalidate: 3600 } });
+    const listRes = await fetch(listUrl, { headers: authHeaders, next: { revalidate: 3600 } });
     if (!listRes.ok) return null;
 
     const files: Array<{ id: string; name: string; mimeType: string }> = (await listRes.json()).files ?? [];
@@ -437,8 +451,8 @@ export async function getSermonNotesByDate(date: string): Promise<{
     // ── .docx path: download binary → mammoth → AI outline ───────────────────
     if (!isGoogleDoc) {
       try {
-        const downloadUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${key}`;
-        const dlRes = await fetch(downloadUrl, { next: { revalidate: 3600 } });
+        const downloadUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`;
+        const dlRes = await fetch(downloadUrl, { headers: authHeaders, next: { revalidate: 3600 } });
         if (!dlRes.ok) return { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
 
         const buffer = await dlRes.arrayBuffer();
@@ -468,8 +482,8 @@ export async function getSermonNotesByDate(date: string): Promise<{
       }
     }
 
-    const exportUrl = `https://www.googleapis.com/drive/v3/files/${file.id}/export?mimeType=text%2Fhtml&key=${key}`;
-    const exportRes = await fetch(exportUrl, { next: { revalidate: 3600 } });
+    const exportUrl = `https://www.googleapis.com/drive/v3/files/${file.id}/export?mimeType=text%2Fhtml`;
+    const exportRes = await fetch(exportUrl, { headers: authHeaders, next: { revalidate: 3600 } });
     if (!exportRes.ok) return null;
 
     const html = await exportRes.text();

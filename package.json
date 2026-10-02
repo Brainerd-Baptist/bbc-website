@@ -36,6 +36,7 @@
     "@tiptap/starter-kit": "^3.31.3",
     "d3-geo": "^3.1.1",
     "framer-motion": "^13.4.0",
+    "google-auth-library": "^11.1.0",
     "mammoth": "^1.12.3",
     "next": "16.3.5",
     "next-sanity": "^9.8.0",
