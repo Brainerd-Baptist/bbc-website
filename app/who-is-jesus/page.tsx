@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function WhoIsJesusPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Dark gradient hero strip ────────────────────────────── */}
       <section
@@ -60,7 +60,8 @@ export default function WhoIsJesusPage() {
       </section>
 
       {/* ── Who Is Jesus (theology) ─────────────────────────────── */}
-      <section className="px-6 pb-20" style={{ background: "var(--surface-sunken)" }}>
+      <section className="px-6 pb-20 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto pt-16">
           <p className="eyebrow-muted text-center mb-4">More on Jesus</p>
           <h2
@@ -94,7 +95,7 @@ export default function WhoIsJesusPage() {
             ].map((item) => (
               <div
                 key={item.num}
-                className="bg-surface-raised rounded-2xl p-7 border border-border shadow-sm"
+                className="rounded-2xl p-7 glass-frost glass-static"
               >
                 <span
                   className="font-condensed font-900 block mb-4"

@@ -388,6 +388,12 @@ body {
      overflow:hidden never leaves a visible seam between two sections. */
   mask-image: linear-gradient(to bottom, transparent, currentColor 18%, currentColor 82%, transparent);
 }
+/* Variant for sections whose content is not wrapped in a positioned element:
+   put the bloom behind the content instead of above it. The section must also
+   carry `isolate` so z-index -1 stays inside it and above its own background. */
+.bx-bloom-under {
+  z-index: -1;
+}
 .bx-bloom::before,
 .bx-bloom::after {
   content: "";

@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function StaffPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="pt-28 pb-16 px-5 md:px-8 text-center">
         <p className="eyebrow mb-4">Our Team</p>

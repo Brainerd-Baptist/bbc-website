@@ -168,7 +168,7 @@ function BeliefCard({ icon, title, body, verse }: {
 }) {
   const refs = verse.split(" · ");
   return (
-    <div className="flex gap-6 p-7 rounded-2xl border border-border bg-surface-raised hover:border-accent/25 transition-colors">
+    <div className="flex gap-6 p-7 rounded-2xl glass-frost glass-static">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
       <div>
         <h3
@@ -196,7 +196,7 @@ function BeliefCard({ icon, title, body, verse }: {
 // ── Page ─────────────────────────────────────────────────────
 export default function BeliefsPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ───────────────────────────────────────────── */}
       <section className="py-32 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
@@ -215,7 +215,8 @@ export default function BeliefsPage() {
       </section>
 
       {/* ── Beliefs grid ───────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-5">
             {BELIEFS.map((b) => (
@@ -229,7 +230,7 @@ export default function BeliefsPage() {
       <BeliefQuestion />
 
       {/* ── BF&M footnote ──────────────────────────────────── */}
-      <section className="py-10 px-6 bg-surface border-t border-border">
+      <section className="py-10 px-6 border-t border-border">
         <p className="text-center text-fg-muted text-xs max-w-lg mx-auto leading-relaxed">
           Brainerd Baptist Church holds to the{" "}
           <a

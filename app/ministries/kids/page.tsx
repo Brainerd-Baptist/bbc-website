@@ -331,8 +331,9 @@ export default function KidsPage() {
       </section>
 
       {/* ── What we teach ─────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative overflow-hidden py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto text-center">
           <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>
             What we teach
           </p>
@@ -367,7 +368,7 @@ export default function KidsPage() {
             ].map(({ icon, title, body }) => (
               <div
                 key={title}
-                className="glass-dark rounded-2xl p-6"
+                className="glass-on-dark rounded-2xl p-6"
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"

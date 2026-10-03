@@ -28,7 +28,7 @@ const PILLARS = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <div
@@ -74,7 +74,7 @@ export default function AboutPage() {
       </div>
 
       {/* ── Founded section ────────────────────────────────────── */}
-      <section className="py-20 px-6 bg-surface">
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Image */}
@@ -209,7 +209,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── The BX + Sunday snapshot ───────────────────────────── */}
-      <section className="py-20 px-6 bg-surface">
+      <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Text first on this side */}
@@ -285,7 +285,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface text-center">
+      <section className="py-24 px-6 text-center">
         <div className="max-w-xl mx-auto">
           <p className="eyebrow mb-4">Come See for Yourself</p>
           <h2

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function MissionsPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div

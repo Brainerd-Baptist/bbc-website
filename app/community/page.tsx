@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CommunityPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div
@@ -39,7 +39,7 @@ export default function CommunityPage() {
       </div>
 
       {/* ── BX Community Center ──────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
@@ -154,7 +154,8 @@ export default function CommunityPage() {
       <div className="border-t border-border" />
 
       {/* ── Food Pantry + Benevolence ────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section className="py-24 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Practical Help</p>
@@ -168,7 +169,7 @@ export default function CommunityPage() {
           <div className="grid md:grid-cols-2 gap-6">
 
             {/* Food Pantry */}
-            <div className="bg-surface-raised rounded-2xl overflow-hidden border border-border">
+            <div className="rounded-2xl overflow-hidden glass-frost glass-static">
               <div className="h-1" style={{ background: "var(--accent)" }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/carousel/food-pantry-checkin.jpg" alt="Food pantry volunteers helping community members" className="w-full object-cover" style={{ height: "200px", objectPosition: "center 30%" }} />
@@ -204,7 +205,7 @@ export default function CommunityPage() {
             </div>
 
             {/* Benevolence */}
-            <div className="bg-surface-raised rounded-2xl overflow-hidden border border-border">
+            <div className="rounded-2xl overflow-hidden glass-frost glass-static">
               <div className="h-1" style={{ background: "var(--color-brand-navy)" }} />
               <div className="p-8">
                 <div

@@ -247,10 +247,11 @@ export default function MinistriesPage() {
 
       {/* ── CTA band ─────────────────────────────────────────── */}
       <section
-        className="py-20 px-6"
+        className="relative overflow-hidden py-20 px-6"
         style={{ background: "var(--brand-band-deep)" }}
       >
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="bx-bloom" aria-hidden="true" />
+        <div className="relative max-w-2xl mx-auto text-center">
           {/* Dark CTA band — full brand cyan, not --accent-text. */}
           <p className="eyebrow mb-4" style={{ color: "var(--accent)" }}>New Here?</p>
           <div className="flex justify-center mb-6">
