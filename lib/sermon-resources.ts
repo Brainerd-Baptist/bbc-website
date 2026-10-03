@@ -24,6 +24,7 @@
  */
 
 import { sanityWriteClient } from "./sanity-write";
+import type { ResourceLink } from "./sermon-tagging";
 
 export type ResourceType = "book" | "article" | "ministry" | "video" | "podcast" | "prayer" | "other";
 
@@ -74,17 +75,24 @@ function fallbackTitle(url: string): string {
 }
 
 /**
- * Finds-or-creates a Sanity `resource` document for each URL, returning
+ * Finds-or-creates a Sanity `resource` document for each link, returning
  * their _ids in the same order (deduped — a URL repeated within the same
  * array collapses to one id). Never throws: Sanity errors are logged and
  * that URL is skipped, since one bad resource link shouldn't block an
  * otherwise-good sermon sync.
+ *
+ * Accepts either a plain URL (legacy callers) or a { url, text } link —
+ * `text` is the actual words Curtis hyperlinked in the sheet ("His New
+ * Book"), used as the title instead of the `fallbackTitle()` placeholder
+ * whenever it's a real title and not just the bare URL repeated as the
+ * link's visible text.
  */
-export async function resolveResourceIds(urls: string[]): Promise<string[]> {
+export async function resolveResourceIds(links: (string | ResourceLink)[]): Promise<string[]> {
   const seen = new Set<string>();
   const ids: string[] = [];
 
-  for (const rawUrl of urls) {
+  for (const raw of links) {
+    const { url: rawUrl, text } = typeof raw === "string" ? { url: raw, text: undefined } : raw;
     const url = rawUrl.trim();
     if (!url || seen.has(url)) continue;
     seen.add(url);
@@ -99,11 +107,17 @@ export async function resolveResourceIds(urls: string[]): Promise<string[]> {
         continue;
       }
 
+      const linkedTitle = text?.trim();
+      // A linked title is only useful if it's not just the URL itself (a
+      // bare-link cell has its "text" equal to the URL — see
+      // extractResourceLinks's fallback-to-hyperlink path).
+      const title = linkedTitle && linkedTitle !== url ? linkedTitle : fallbackTitle(url);
+
       const id = `resource-${Buffer.from(url).toString("base64url").slice(0, 40)}`;
       await sanityWriteClient.createIfNotExists({
         _id: id,
         _type: "resource",
-        title: fallbackTitle(url),
+        title,
         type: guessType(url),
         url,
         status: "active",

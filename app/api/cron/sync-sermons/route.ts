@@ -358,8 +358,8 @@ export async function GET(req: NextRequest) {
       // (lib/sermon-tagging.ts) — resolved to Sanity resource doc ids,
       // creating new ones as needed. Never blocks the rest of the sync: a
       // bad/unreachable URL is skipped by resolveResourceIds itself.
-      const resourceIds = tagging?.resourceUrls?.length
-        ? await resolveResourceIds(tagging.resourceUrls).catch((err) => {
+      const resourceIds = tagging?.resourceLinks?.length
+        ? await resolveResourceIds(tagging.resourceLinks).catch((err) => {
             console.error(`[sync-sermons] ${date} resolveResourceIds threw:`, err);
             return [];
           })

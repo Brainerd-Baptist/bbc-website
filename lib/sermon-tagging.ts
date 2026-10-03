@@ -45,6 +45,14 @@ const TAGGING_TAB = "Tagging";
 const RANGE = `${TAGGING_TAB}!A:I`;
 const RESOURCES_RANGE = `${TAGGING_TAB}!J:J`;
 
+/** One resource link out of column J: the URL plus whatever text Curtis
+ * actually hyperlinked ("His New Book — Highly Recommend") — used as the
+ * resource's title instead of a bare "Resource from <host>" fallback. */
+export interface ResourceLink {
+  url: string;
+  text: string;
+}
+
 export interface TaggingRow {
   date: string; // "YYYY-MM-DD"
   series: string;
@@ -53,10 +61,10 @@ export interface TaggingRow {
   passage: string;
   teacher: string;
   summary: string;
-  /** Real hyperlink URLs pulled from column J for this date, deduped. Empty
-   * if the row has no resources, the grid-data fetch failed, or the date
-   * has no Tagging row at all. */
-  resourceUrls: string[];
+  /** Real hyperlinks pulled from column J for this date, deduped by URL.
+   * Empty if the row has no resources, the grid-data fetch failed, or the
+   * date has no Tagging row at all. */
+  resourceLinks: ResourceLink[];
 }
 
 /**
@@ -83,20 +91,65 @@ function normalizeSheetDate(raw: string): string | null {
   return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
+type ResourceCell = {
+  hyperlink?: string;
+  formattedValue?: string;
+  textFormatRuns?: { startIndex?: number; format?: { link?: { uri?: string } } }[];
+};
+
+/** Pulls { url, text } out of one cell: `text` is whatever Curtis actually
+ * hyperlinked, not the raw URL — "His New Book", not "amazon.com/...". A
+ * cell can hold several resources as separate linked runs on separate
+ * lines (one cell, multiple lines, each line its own link): textFormatRuns
+ * only gives each run's *start*, so a run's text is the slice of
+ * formattedValue from its startIndex up to the next run's startIndex (or
+ * the end of the string for the last run). Falls back to the whole-cell
+ * `hyperlink` field (set when the entire cell is one plain link with no
+ * run-level formatting) when there are no textFormatRuns at all. */
+function extractResourceLinks(cell: ResourceCell): ResourceLink[] {
+  const formatted = cell.formattedValue ?? "";
+  const links: ResourceLink[] = [];
+  const seen = new Set<string>();
+
+  const add = (url: string, text: string) => {
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl || seen.has(trimmedUrl)) return;
+    seen.add(trimmedUrl);
+    const trimmedText = text.trim();
+    links.push({ url: trimmedUrl, text: trimmedText || trimmedUrl });
+  };
+
+  const runs = cell.textFormatRuns ?? [];
+  const linkedRuns = runs.filter((r) => r.format?.link?.uri);
+  if (linkedRuns.length > 0) {
+    runs.forEach((run, i) => {
+      const uri = run.format?.link?.uri;
+      if (!uri) return;
+      const start = run.startIndex ?? 0;
+      const end = runs[i + 1]?.startIndex ?? formatted.length;
+      add(uri, formatted.slice(start, end));
+    });
+  } else if (cell.hyperlink) {
+    add(cell.hyperlink, formatted);
+  }
+
+  return links;
+}
+
 /**
- * Pulls real hyperlink URLs out of column J via the grid-data endpoint,
- * keyed by 0-based ROW INDEX into the sheet (row 0 = header, matching the
- * `values.get` response's own row indexing) so the caller can zip them
- * together with the plain-text rows by position. Returns {} (not a
- * rejection) on any failure — resources are a nice-to-have enrichment, and
- * losing them should never break the Date/Series/Passage sync that every
- * sermon doc already depends on.
+ * Pulls real hyperlinks (url + the text Curtis actually linked) out of
+ * column J via the grid-data endpoint, keyed by 0-based ROW INDEX into the
+ * sheet (row 0 = header, matching the `values.get` response's own row
+ * indexing) so the caller can zip them together with the plain-text rows
+ * by position. Returns {} (not a rejection) on any failure — resources are
+ * a nice-to-have enrichment, and losing them should never break the
+ * Date/Series/Passage sync that every sermon doc already depends on.
  */
-async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number, string[]>> {
+async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number, ResourceLink[]>> {
   try {
     const params = new URLSearchParams({
       ranges: RESOURCES_RANGE,
-      fields: "sheets.data.rowData.values(hyperlink,textFormatRuns.format.link.uri,userEnteredValue,formattedValue)",
+      fields: "sheets.data.rowData.values(hyperlink,textFormatRuns(startIndex,format.link.uri),formattedValue)",
     });
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${TAGGING_SHEET_ID}?${params.toString()}`;
     const res = await fetch(url, {
@@ -110,22 +163,15 @@ async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number
     }
 
     const json = await res.json();
-    const rowData = json?.sheets?.[0]?.data?.[0]?.rowData as
-      | { values?: { hyperlink?: string; textFormatRuns?: { format?: { link?: { uri?: string } } }[] }[] }[]
-      | undefined;
+    const rowData = json?.sheets?.[0]?.data?.[0]?.rowData as { values?: ResourceCell[] }[] | undefined;
     if (!rowData) return {};
 
-    const out: Record<number, string[]> = {};
+    const out: Record<number, ResourceLink[]> = {};
     rowData.forEach((row, rowIndex) => {
       const cell = row.values?.[0];
       if (!cell) return;
-      const urls = new Set<string>();
-      if (cell.hyperlink) urls.add(cell.hyperlink.trim());
-      for (const run of cell.textFormatRuns ?? []) {
-        const uri = run.format?.link?.uri;
-        if (uri) urls.add(uri.trim());
-      }
-      if (urls.size > 0) out[rowIndex] = [...urls];
+      const links = extractResourceLinks(cell);
+      if (links.length > 0) out[rowIndex] = links;
     });
     return out;
   } catch (err) {
@@ -215,7 +261,7 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
         passage: (passage ?? "").trim(),
         teacher: (teacher ?? "").trim(),
         summary: (summary ?? "").trim(),
-        resourceUrls: resourceUrlsByRow[rowIndex] ?? [],
+        resourceLinks: resourceUrlsByRow[rowIndex] ?? [],
       });
     });
 
