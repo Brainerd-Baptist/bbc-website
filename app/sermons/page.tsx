@@ -100,7 +100,7 @@ export default async function SermonsPage() {
         // alpha onto it (`${heroAccent}22`), and var(--accent)22 is not a colour.
         const heroAccent = hero.seriesAccent ?? "#00abc9";
         return (
-          <section className="px-5 md:px-8 pb-12">
+          <section className="px-5 md:px-8 pt-8 md:pt-10 pb-12">
             <div className="max-w-5xl mx-auto">
               <a
                 href={`/sermons/${slug}`}
