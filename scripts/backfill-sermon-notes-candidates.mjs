@@ -70,7 +70,7 @@ function resourceId(url) {
 
 const CANDIDATES = [
   {
-    date: "2026-09-06",
+    date: "2026-09-07",
     titleHint: "Choosing to Remember", // Esther 9-10
     resource: {
       title: "The Only Plane in the Sky: An Oral History of 9/11",
@@ -80,7 +80,7 @@ const CANDIDATES = [
     },
   },
   {
-    date: "2026-04-26",
+    date: "2026-04-27",
     titleHint: "The Limits of Legalism", // Colossians 2:16-23
     resource: {
       title: "The Grace Awakening",
