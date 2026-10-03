@@ -11,9 +11,13 @@ export async function GET(req: NextRequest) {
   if (!passage) return NextResponse.json({ error: "missing passage" }, { status: 400 });
 
   const apiKey = process.env.BIBLE_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: "scripture lookup unavailable" }, { status: 503 });
+  }
 
-  // Try CSB via api.bible
-  if (apiKey) {
+  // CSB via api.bible is the only translation this app serves — never fall
+  // back to a different translation (e.g. WEB), per 2026-10-03 direction.
+  {
     const pid = passageToId(passage);
     if (pid) {
       const params = new URLSearchParams({
@@ -57,26 +61,12 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(result, { headers: { "Cache-Control": CACHE } });
           }
         }
-      } catch { /* fall through to WEB */ }
+        return NextResponse.json({ error: "not found" }, { status: 404 });
+      } catch {
+        return NextResponse.json({ error: "fetch failed" }, { status: 500 });
+      }
     }
   }
 
-  // Fallback: WEB via bible-api.com
-  // Note: bible-api.com expects spaces encoded but colons/hyphens raw
-  try {
-    const encoded = passage.trim().replace(/ /g, "%20");
-    const res = await fetch(
-      `https://bible-api.com/${encoded}?translation=web`,
-      { next: { revalidate: 86400 } }
-    );
-    if (!res.ok) return NextResponse.json({ error: "not found" }, { status: 404 });
-    const data = await res.json();
-    // Normalize response to always include translation label
-    return NextResponse.json(
-      { ...data, translation_id: "web", translation_name: "World English Bible" },
-      { headers: { "Cache-Control": CACHE } }
-    );
-  } catch {
-    return NextResponse.json({ error: "fetch failed" }, { status: 500 });
-  }
+  return NextResponse.json({ error: "could not parse passage" }, { status: 400 });
 }

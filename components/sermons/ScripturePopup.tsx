@@ -26,8 +26,9 @@ interface Props {
  * clickable: the sermon page's Scripture chip, the hero passage link, the
  * manuscript's inline scripture marks, and auto-detected references inside
  * a user's own notes (see lib/tiptap-scripture-ref.ts). Backed by the same
- * /api/scripture endpoint /live's Passage tab already uses (CSB via
- * api.bible, falling back to the WEB translation via bible-api.com).
+ * /api/scripture endpoint /live's Passage tab already uses — CSB only
+ * (via api.bible), per 2026-10-03 direction: no other translation is ever
+ * shown.
  */
 export default function ScripturePopup({ reference, accentColor = "#00abc9", onClose }: Props) {
   const [data, setData] = useState<ScriptureResult | null>(null);
