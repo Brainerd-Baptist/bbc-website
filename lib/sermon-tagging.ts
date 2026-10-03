@@ -59,9 +59,24 @@ export interface TaggingRow {
   resourceUrls: string[];
 }
 
-/** "8/10/2025" or "08/10/2025" → "2025-08-10". Returns null if unparseable. */
+/**
+ * "8/10/2025", "08/10/2025", or "08.10.2025" → "2025-08-10". Returns null
+ * if unparseable.
+ *
+ * Found 2026-10-03: the live Tagging sheet's Date column actually uses
+ * dot separators ("08.10.2025"), not slashes — splitting on "/" alone
+ * silently matched zero rows, EVERY run, since this reader was first
+ * built. Nothing from the sheet (series, passage, teacher, summary, and
+ * now resources) was ever actually being read; every sermon's title,
+ * date, etc. was coming from YouTube title-parsing the whole time, which
+ * happened to look right because Curtis's YouTube titles are themselves
+ * descriptive. Accepting both separators here, split on whichever one the
+ * raw string actually contains, rather than assuming "/".
+ */
 function normalizeSheetDate(raw: string): string | null {
-  const parts = raw.trim().split("/");
+  const trimmed = raw.trim();
+  const separator = trimmed.includes(".") ? "." : "/";
+  const parts = trimmed.split(separator);
   if (parts.length !== 3) return null;
   const [m, d, y] = parts.map((p) => parseInt(p, 10));
   if (!m || !d || !y) return null;
@@ -139,9 +154,9 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
   const now = Date.now();
   if (cachedRows && now - cachedAt < CACHE_MS) return cachedRows;
   if (now - lastFailureAt < FAILURE_CACHE_MS) {
-    // TEMP diagnostic (2026-10-03): this used to be silent, which made a
-    // run-wide outage (every sermon in one cron invocation getting a null
-    // tagging row) indistinguishable in the logs from "nothing to sync."
+    // Logged (not silent): a run-wide outage here — every sermon in one
+    // cron invocation getting a null tagging row — would otherwise be
+    // indistinguishable in the logs from "nothing to sync."
     console.error(
       `[sermon-tagging] skipping fetch — still inside the ${FAILURE_CACHE_MS / 1000}s failure-cache window from an earlier failure this run`,
     );
@@ -173,15 +188,6 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
       console.error(`[sermon-tagging] Sheets returned no usable rows (got ${values?.length ?? 0})`);
       return [];
     }
-
-    // TEMP diagnostic (2026-10-03): every row is failing to parse into a
-    // TaggingRow (0 rows out of a non-empty values response, confirmed by
-    // the log two steps up the call chain) — this dumps the header plus
-    // the first 3 data rows' raw column-A values exactly as Sheets returns
-    // them, to see what normalizeSheetDate() is actually choking on.
-    console.log(
-      `[sermon-tagging] header row: ${JSON.stringify(values[0])}; first raw dates: ${JSON.stringify(values.slice(1, 4).map((r) => r[0]))}`,
-    );
 
     // Fetched in parallel with nothing else outstanding at this point in
     // the function, and tolerant of its own failure (returns {}) — a
@@ -215,16 +221,6 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
 
     cachedRows = rows;
     cachedAt = now;
-    // TEMP diagnostic (2026-10-03): the fetch itself has never logged an
-    // error in any run so far, yet every getTaggingRowByDate() lookup comes
-    // back null — so either the sheet is genuinely returning zero usable
-    // rows (would show rows.length: 0 here) or the dates it has don't
-    // match what resolveSermonDate()/the backfill reference compute (would
-    // show a populated list that still never contains the dates being
-    // looked up). This pins down which.
-    console.log(
-      `[sermon-tagging] fetched ${rows.length} rows; dates: ${JSON.stringify(rows.map((r) => r.date))}`,
-    );
     return rows;
   } catch (err) {
     console.error("[sermon-tagging] Sheets fetch error:", err);
