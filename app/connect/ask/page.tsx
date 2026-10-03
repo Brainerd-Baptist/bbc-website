@@ -10,7 +10,7 @@ export default function AskPage() {
       <ConnectSubpageHeader
         eyebrow="Ask a Quick Question"
         title="What Do You Want to Know?"
-        description="Ask about service times, what to expect, our beliefs, or anything else. If it's something a person should really answer, we'll point you the right way."
+        description="Ask about service times, what to expect, our beliefs, or anything else. Answers are automatic and aren't sent to our team. If a person should really answer, we'll point you the right way."
       />
       <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">

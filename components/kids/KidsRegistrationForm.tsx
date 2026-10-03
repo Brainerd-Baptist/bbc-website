@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import useScrollToSuccess from "@/components/connect/useScrollToSuccess";
 
 import Card from "@/components/ui/Card";
 const SERVICE_OPTIONS = [
@@ -98,6 +99,7 @@ export default function KidsRegistrationForm() {
   const [children, setChildren] = useState<ChildInfo[]>([{ ...EMPTY_CHILD }]);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const successRef = useScrollToSuccess(submitted);
   const [error, setError] = useState("");
 
   const setP = (key: keyof ParentInfo, value: string | boolean) =>
@@ -167,7 +169,8 @@ export default function KidsRegistrationForm() {
   if (submitted) {
     const count = children.length;
     return (
-      <Card className="rounded-2xl p-10 text-center max-w-xl mx-auto">
+      <div ref={successRef} className="max-w-xl mx-auto">
+      <Card className="rounded-2xl p-10 text-center">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
           style={{ background: "var(--accent-bg)" }}
@@ -200,6 +203,7 @@ export default function KidsRegistrationForm() {
           Register Another Family
         </button>
       </Card>
+      </div>
     );
   }
 
