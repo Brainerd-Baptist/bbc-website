@@ -191,13 +191,13 @@ export default function Navbar() {
         className={`fixed inset-0 z-[99] transition duration-300 ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        style={{ background: "var(--scrim)", backdropFilter: "blur(4px)" }}
+        style={{ background: "var(--scrim)", backdropFilter: "blur(6px)" }}
       />
 
       {/* ── Drawer ─────────────────────────────────────────────── */}
       <aside
-        className={`fixed top-0 right-0 bottom-0 z-[100] w-80 max-w-[90vw] flex flex-col bg-surface-raised transition-transform duration-300 ease-out ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
+        className={`nav-drawer fixed top-3 right-3 bottom-3 z-[100] w-80 max-w-[calc(100vw-1.5rem)] flex flex-col rounded-3xl overflow-hidden transition-transform duration-300 ease-out ${
+          menuOpen ? "translate-x-0" : "translate-x-[calc(100%+1.5rem)]"
         }`}
         aria-label="Site navigation"
       >
@@ -236,7 +236,8 @@ export default function Navbar() {
                     key={href}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-hover-subtle"
+                    aria-current={pathname === href ? "page" : undefined}
+                    className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-hover-subtle ${pathname === href ? "nav-drawer-pill" : ""}`}
                   >
                     <span className="text-sm font-medium transition-colors text-fg-muted group-hover:text-fg">
                       {linkLabel}

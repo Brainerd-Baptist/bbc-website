@@ -34,7 +34,7 @@
  * actually answer "is this the latest deploy."
  */
 
-export const APP_MILESTONE = "0.4";
+export const APP_MILESTONE = "0.5";
 
 export function getBuildInfo() {
   // BUILD_SHA is baked in by next.config.ts so server and browser agree.

@@ -663,9 +663,35 @@ body {
 
 /* ── Frosted glass nav ─────────────────────────────────── */
 .nav-glass {
-  background: var(--surface-overlay);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  background: var(--nav-glass-fill);
+  backdrop-filter: blur(22px) saturate(1.8);
+  border-bottom: 1px solid var(--glass-edge);
+  box-shadow: inset 0 -1px 0 var(--glass-edge-low), var(--glass-shadow-rest);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .nav-glass { background: var(--surface-overlay); }
+}
+
+/* Floating frosted menu panel: inset from the screen edge, rounded, with a
+   glass pill on the current page. */
+.nav-drawer {
+  background:
+    linear-gradient(115deg, var(--glass-sheen) 0%, transparent 38%),
+    var(--nav-drawer-fill);
+  backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid var(--glass-edge);
+  box-shadow:
+    inset 0 1px 0 var(--glass-hi),
+    inset 0 -1px 0 var(--glass-edge-low),
+    0 0 0 1px var(--glass-ring),
+    var(--glass-shadow-hover);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .nav-drawer { background: var(--surface-raised); }
+}
+.nav-drawer-pill {
+  background: var(--nav-drawer-pill);
+  box-shadow: inset 0 0 0 1px var(--accent-border);
 }
 
 /* ── Nav chrome ─────────────────────────────────────────────────────

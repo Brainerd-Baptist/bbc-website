@@ -175,6 +175,10 @@
   --surface:         #f7f8fb;
   --surface-raised:  #ffffff;
   --surface-overlay: rgba(255, 255, 255, 0.92);
+  /* Frosted nav bar and drawer: lighter than --surface-overlay so the page shows through. */
+  --nav-glass-fill:   rgba(255, 255, 255, 0.58);
+  --nav-drawer-fill:  rgba(255, 255, 255, 0.78);
+  --nav-drawer-pill:  rgba(0, 171, 201, 0.16);
 
   /* Foregrounds. --fg-subtle is LARGE TEXT ONLY at 3.01:1 — never body copy. */
   --fg:           #00205b;
@@ -673,6 +677,9 @@
   --surface:         #0d1525;
   --surface-raised:  #162030;
   --surface-overlay: #1b2738;
+  --nav-glass-fill:   rgba(22, 32, 48, 0.55);
+  --nav-drawer-fill:  rgba(22, 32, 48, 0.78);
+  --nav-drawer-pill:  rgba(0, 171, 201, 0.24);
 
   --fg:           #c8d4e8;
   --fg-muted:     #97a1b1;
