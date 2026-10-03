@@ -7,6 +7,8 @@ import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
 import { useAudio } from "@/lib/audio-context";
 import { deriveInk, inkVarsFor } from "@/lib/identity-colors";
+import { ScriptureRefHighlight } from "@/lib/tiptap-scripture-ref";
+import ScripturePopup from "./ScripturePopup";
 
 interface Props {
   /** Identifies the sermon for the notes storage key — a /sermons/[slug]
@@ -336,6 +338,12 @@ export default function SermonNotes({
   const [emailPrompt,   setEmailPrompt]   = useState(false);
   const [emailValue,    setEmailValue]    = useState("");
   const [emailStatus,   setEmailStatus]   = useState<"idle" | "sending" | "sent" | "error">("idle");
+  // A Scripture reference the user typed into their own notes (e.g. "John
+  // 3:16"), clicked to read inline. Detection runs live as they type — see
+  // lib/tiptap-scripture-ref.ts — so this is the one shared notes editor
+  // used on /sermons/[slug] (past and future sermons alike, same component)
+  // and on /live, meaning it applies everywhere notes are taken.
+  const [openRef,       setOpenRef]       = useState<string | null>(null);
 
   const saveTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initialContent = useRef<string>("");
@@ -385,9 +393,17 @@ export default function SermonNotes({
       }),
       Underline,
       Highlight.configure({ multicolor: false }),
+      ScriptureRefHighlight,
     ],
     content: initialContent.current || "<p></p>",
-    editorProps: { attributes: { class: "bbc-notes-editor", spellcheck: "true" } },
+    editorProps: {
+      attributes: { class: "bbc-notes-editor", spellcheck: "true" },
+      handleClickOn(_view, _pos, _node, _nodePos, event) {
+        const ref = (event.target as HTMLElement)?.closest?.("[data-ref]")?.getAttribute("data-ref");
+        if (ref) { setOpenRef(ref); return true; }
+        return false;
+      },
+    },
     onUpdate({ editor }) {
       const html = editor.getHTML();
       setWordCount(countWords(html));
@@ -543,6 +559,14 @@ export default function SermonNotes({
         .bbc-notes-editor s { text-decoration-color: var(--border-strong); color: var(--fg-muted); }
         .bbc-notes-editor mark { background-color: var(--highlight-bg); color: var(--highlight-fg); border-radius: 2px; padding: 0 2px; }
         .bbc-notes-editor ::selection { background: ${accentColor}25; }
+        /* Auto-detected Scripture reference ("John 3:16") typed into notes —
+           recomputed live as you type (lib/tiptap-scripture-ref.ts), never
+           part of the saved HTML. Click opens the passage inline. */
+        .bbc-notes-editor .bbc-scripture-ref {
+          color: ${accentColor}; text-decoration: underline; text-decoration-style: dotted;
+          text-underline-offset: 2px; cursor: pointer; border-radius: 2px;
+        }
+        .bbc-notes-editor .bbc-scripture-ref:hover { background: ${accentColor}15; }
 
         /* Mobile: bigger tap targets, sticky toolbar so it never scrolls
            out of reach while typing, and a scroll-fade hint since the
@@ -774,6 +798,10 @@ export default function SermonNotes({
           </div>
         )}
       </div>
+
+      {openRef && (
+        <ScripturePopup reference={openRef} accentColor={accentColor} onClose={() => setOpenRef(null)} />
+      )}
     </>
   );
 }

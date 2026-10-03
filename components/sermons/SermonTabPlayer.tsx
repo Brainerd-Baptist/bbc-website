@@ -5,6 +5,7 @@ import SermonPlayer from "./SermonPlayer";
 import AudioPlayer from "./AudioPlayer";
 import { type AudioTrack, useAudio } from "@/lib/audio-context";
 import SermonNotes from "./SermonNotes";
+import PassageLink from "./PassageLink";
 
 interface Props {
   slug: string;
@@ -105,15 +106,14 @@ export default function SermonTabPlayer({
                 Scripture
               </span>
               {passages.slice(0, 2).map((p) => (
-                <a
+                <PassageLink
                   key={p}
-                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(p)}&version=CSB`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ fontSize: "0.8rem", color: "var(--fg-muted)", textDecoration: "none", fontWeight: 500 }}
+                  passage={p}
+                  accentColor={accentColor}
+                  style={{ fontSize: "0.8rem", color: "var(--fg-muted)", fontWeight: 500 }}
                 >
                   {p}
-                </a>
+                </PassageLink>
               ))}
             </div>
           )}

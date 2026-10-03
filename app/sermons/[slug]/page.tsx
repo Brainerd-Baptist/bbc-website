@@ -17,6 +17,7 @@ import GiveCTA from "@/components/sermons/GiveCTA";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { getSermonNotesByDate, parseOutline } from "@/lib/sermon";
 import { inkVarsFor } from "@/lib/identity-colors";
+import PassageLink from "@/components/sermons/PassageLink";
 
 // ── Sermon notes helpers ──────────────────────────────────────────────────────
 
@@ -85,8 +86,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 // ── Portable Text components (light theme) ────────────────────────────────────
+// A factory (not a module-level constant) so the scripture mark can open the
+// inline passage popup in this sermon's own accent color.
 
-const ptComponents = {
+function buildPtComponents(accentColor: string) {
+  return {
   block: {
     normal: ({ children }: { children?: React.ReactNode }) => (
       <p className="leading-relaxed mb-4" style={{ color: "var(--fg-muted)" }}>{children}</p>
@@ -117,10 +121,9 @@ const ptComponents = {
       <em className="italic">{children}</em>
     ),
     scripture: ({ children, value }: { children?: React.ReactNode; value?: { reference?: string } }) => (
-      <a href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(value?.reference ?? "")}&version=ESV`}
-        target="_blank" rel="noopener noreferrer" className="text-accent-text hover:underline font-medium">
+      <PassageLink passage={value?.reference ?? ""} accentColor={accentColor} className="text-accent-text hover:underline font-medium">
         {children}
-      </a>
+      </PassageLink>
     ),
     link: ({ children, value }: { children?: React.ReactNode; value?: { href?: string } }) => (
       <a href={value?.href} target="_blank" rel="noopener noreferrer" className="text-accent-text hover:underline">
@@ -128,7 +131,8 @@ const ptComponents = {
       </a>
     ),
   },
-};
+  };
+}
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -293,13 +297,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             {s.passage && (
               <>
                 <span className="text-fg-on-dark-muted text-[10px]">·</span>
-                <a
-                  href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(s.passage)}&version=CSB`}
-                  target="_blank" rel="noopener noreferrer"
+                <PassageLink
+                  passage={s.passage}
+                  accentColor={accentColor}
                   className="text-fg-on-dark-muted text-[10px] font-medium hover:text-accent transition-colors"
                 >
                   {s.passage}
-                </a>
+                </PassageLink>
               </>
             )}
           </div>
@@ -390,7 +394,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <h2 className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-5">Outline</h2>
                   <div className="text-sm">
-                    <PortableText value={s.outline} components={ptComponents} />
+                    <PortableText value={s.outline} components={buildPtComponents(accentColor)} />
                   </div>
                 </div>
               )}
@@ -398,7 +402,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
                 <div>
                   <h2 className="text-accent-text text-xs font-semibold tracking-widest uppercase mb-5">Notes</h2>
                   <div className="prose-sm">
-                    <PortableText value={s.notes} components={ptComponents} />
+                    <PortableText value={s.notes} components={buildPtComponents(accentColor)} />
                   </div>
                 </div>
               )}
