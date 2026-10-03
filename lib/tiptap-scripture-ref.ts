@@ -60,8 +60,11 @@ export const ScriptureRefHighlight = Extension.create({
           },
         },
         props: {
+          // NOTE: inside a plugin's `props` functions, ProseMirror binds
+          // `this` to the EditorView, not the plugin — `this.getState` is
+          // undefined there. Look the state up by key instead.
           decorations(state) {
-            return this.getState(state);
+            return scriptureRefPluginKey.getState(state);
           },
         },
       }),

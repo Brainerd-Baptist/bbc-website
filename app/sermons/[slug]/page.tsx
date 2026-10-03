@@ -18,6 +18,7 @@ import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { getSermonNotesByDate, parseOutline } from "@/lib/sermon";
 import { inkVarsFor } from "@/lib/identity-colors";
 import PassageLink from "@/components/sermons/PassageLink";
+import { findScriptureRefs, passageToId } from "@/lib/scripture-refs";
 
 // ── Sermon notes helpers ──────────────────────────────────────────────────────
 
@@ -261,7 +262,34 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     ? await loadSermonNotes(s.date)
     : { outline: [], outlineType: "none" as const, rawText: null, highlights: [] };
 
-  const allPassages = [s.passage, ...(s.passages ?? [])].filter(Boolean);
+  // The tagged "passage"/"passages" fields are often a generic label pulled
+  // from the sermon title ("Selected Scriptures", "Selected Scriptures from
+  // 1 Samuel") rather than an actual reference — passageToId can't resolve
+  // those, so the Scripture chip would otherwise show nothing (or a link
+  // that always 404s). When none of the tagged values are real references,
+  // fall back to scanning the manuscript/notes text for actual Scripture
+  // references instead, so the chip shows what Curtis actually preached
+  // from rather than a placeholder title fragment.
+  const taggedPassages   = [s.passage, ...(s.passages ?? [])].filter(Boolean);
+  const resolvedTagged   = taggedPassages.filter((p) => passageToId(p));
+  let allPassages = resolvedTagged;
+  if (allPassages.length === 0 && sermonNotes.rawText) {
+    const seen = new Set<string>();
+    const detected: string[] = [];
+    for (const m of findScriptureRefs(sermonNotes.rawText)) {
+      const id = passageToId(m.ref);
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      detected.push(m.ref);
+      if (detected.length >= 6) break;
+    }
+    allPassages = detected;
+  }
+  // The hero's passage label stays whatever was tagged (even a generic
+  // "Selected Scriptures") since it reads as a subtitle there, but it's
+  // only made clickable when it's an actual resolvable reference — a
+  // placeholder label would otherwise open a popup that can never load.
+  const heroPassageIsReal = !!s.passage && !!passageToId(s.passage);
 
   return (
     <div className="min-h-screen">
@@ -297,13 +325,17 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
             {s.passage && (
               <>
                 <span className="text-fg-on-dark-muted text-[10px]">·</span>
-                <PassageLink
-                  passage={s.passage}
-                  accentColor={accentColor}
-                  className="text-fg-on-dark-muted text-[10px] font-medium hover:text-accent transition-colors"
-                >
-                  {s.passage}
-                </PassageLink>
+                {heroPassageIsReal ? (
+                  <PassageLink
+                    passage={s.passage}
+                    accentColor={accentColor}
+                    className="text-fg-on-dark-muted text-[10px] font-medium hover:text-accent transition-colors"
+                  >
+                    {s.passage}
+                  </PassageLink>
+                ) : (
+                  <span className="text-fg-on-dark-muted text-[10px] font-medium">{s.passage}</span>
+                )}
               </>
             )}
           </div>

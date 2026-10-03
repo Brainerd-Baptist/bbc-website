@@ -480,7 +480,7 @@ export function VideoProvider({ children }: { children: ReactNode }) {
   const transition = reducedMotion
     ? "none"
     : justChangedState
-    ? "top 340ms cubic-bezier(.32,.72,0,1), left 340ms cubic-bezier(.32,.72,0,1), width 340ms cubic-bezier(.32,.72,0,1), height 340ms cubic-bezier(.32,.72,0,1), border-radius 340ms, box-shadow 340ms"
+    ? "transform 340ms cubic-bezier(.32,.72,0,1), width 340ms cubic-bezier(.32,.72,0,1), height 340ms cubic-bezier(.32,.72,0,1), border-radius 340ms, box-shadow 340ms"
     : "width 200ms, height 200ms, border-radius 200ms, box-shadow 200ms";
 
   const ctxValue: VideoCtx = {
@@ -498,10 +498,19 @@ export function VideoProvider({ children }: { children: ReactNode }) {
             style={{
               position: "fixed",
               zIndex: state === "expanded" ? 70 : state === "docked" ? 50 : 30,
-              top: targetRect?.top ?? -9999,
-              left: targetRect?.left ?? -9999,
+              // Positioned via `transform` (GPU-compositable) rather than
+              // top/left: top/left changes force a layout recalc on every
+              // scroll-driven update (see useScrollDock), which is what made
+              // this fixed box visibly jitter/lag behind the page during
+              // momentum scrolling on mobile Safari. transform only needs
+              // compositing, so it tracks the spacer smoothly. top/left stay
+              // at 0 — translate3d carries the real position.
+              top: 0,
+              left: 0,
               width: targetRect?.width ?? 0,
               height: targetRect?.height ?? 0,
+              transform: `translate3d(${targetRect?.left ?? -9999}px, ${targetRect?.top ?? -9999}px, 0)`,
+              willChange: "transform",
               borderRadius: state === "inline" ? 16 : 12,
               overflow: "hidden",
               background: "var(--player-sheet)",

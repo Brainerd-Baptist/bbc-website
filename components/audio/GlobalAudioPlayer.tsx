@@ -461,6 +461,13 @@ export default function GlobalAudioPlayer() {
           borderTop: "1px solid var(--border-on-dark)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
+          // Promote to its own compositing layer. Without this, iOS Safari's
+          // auto-hiding address bar (which resizes the layout viewport on
+          // every scroll) can make a plain `position: fixed; bottom: 0`
+          // element visibly lag/slide for a frame or two before snapping
+          // back — exactly the "doesn't feel 100% sticky" symptom.
+          transform: "translateZ(0)",
+          WebkitTransform: "translateZ(0)",
         }}
       >
         {/* Up Next banner (mini) */}
