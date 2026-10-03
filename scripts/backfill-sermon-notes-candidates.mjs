@@ -91,6 +91,12 @@ const CANDIDATES = [
   },
 ];
 
+// A third candidate was considered and rejected: "Peace and the Word"
+// (Colossians 3:12-17, 2026-05-10) quotes Eugene Peterson's "The Message"
+// paraphrase of Col 3:16. Reviewed and explicitly declined by Josiah
+// 2026-10-03 — a quoted Bible paraphrase, not a resource recommendation.
+// Intentionally not in CANDIDATES above.
+
 // ── Step 1: find the 2 sermons ────────────────────────────────────────────
 
 const mutations = [];
