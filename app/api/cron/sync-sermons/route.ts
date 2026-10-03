@@ -5,7 +5,19 @@
  * in Sanity Studio" — see claude/sanity-sermon-auto-sync-scope-2026-10-02.md
  * for the full design writeup this implements.
  *
- * Runs on a daily Vercel Cron (see vercel.json). Each run:
+ * Runs on a daily Vercel Cron (see vercel.json). Scheduled for 7:45 AM
+ * Eastern (Brainerd's own timezone — Chattanooga, TN), per Josiah
+ * 2026-10-03: early enough to catch the sermon on the Tagging sheet
+ * right after Curtis finishes filling it out that morning, before anyone's
+ * checking the site. Vercel Cron schedules are plain UTC with no
+ * timezone field, so vercel.json's "45 11 * * *" is 7:45 AM EDT
+ * specifically — it'll read as 6:45 AM once Eastern falls back to
+ * Standard Time (after Nov 1, 2026); bump it to "45 12 * * *" then (and
+ * back again each spring) to keep hitting 7:45 AM local, or swap to a
+ * platform/cron provider with real timezone support if this manual
+ * twice-a-year flip becomes annoying.
+ *
+ * Each run:
  *   1. Pulls the last SYNC_WINDOW videos from the curated Sermons playlist
  *      (not just the newest one — catches anything a missed run would
  *      otherwise lose, and backfills on first deploy).

@@ -3,7 +3,7 @@
   "crons": [
     {
       "path": "/api/cron/sync-sermons",
-      "schedule": "0 13 * * *"
+      "schedule": "45 11 * * *"
     }
   ]
 }
