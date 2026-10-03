@@ -6,6 +6,7 @@ import { schemaTypes } from "./sanity/schemaTypes";
 export default defineConfig({
   name: "bbc-website",
   title: "Brainerd Baptist",
+  basePath: "/studio",
 
   projectId: "3l0knw74",
   dataset: "production",
