@@ -123,8 +123,14 @@ export default function Navbar() {
   // `.dark` re-points the same tokens in CSS.
   const chrome = treatment === "solid" || scrolled ? "glass" : "transparent";
 
+  // The button flips the look. If the flip lands on what the device already
+  // prefers (iOS/Android light or dark setting), go back to "system" instead
+  // of pinning it, so the site keeps following the device. Without this, one
+  // tap pinned the theme forever and the site stopped following iOS.
   function toggleTheme() {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    const next = resolvedTheme === "dark" ? "light" : "dark";
+    const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(next === (systemDark ? "dark" : "light") ? "system" : next);
   }
 
   return (
