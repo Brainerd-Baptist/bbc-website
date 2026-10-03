@@ -206,6 +206,16 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
 
     cachedRows = rows;
     cachedAt = now;
+    // TEMP diagnostic (2026-10-03): the fetch itself has never logged an
+    // error in any run so far, yet every getTaggingRowByDate() lookup comes
+    // back null — so either the sheet is genuinely returning zero usable
+    // rows (would show rows.length: 0 here) or the dates it has don't
+    // match what resolveSermonDate()/the backfill reference compute (would
+    // show a populated list that still never contains the dates being
+    // looked up). This pins down which.
+    console.log(
+      `[sermon-tagging] fetched ${rows.length} rows; dates: ${JSON.stringify(rows.map((r) => r.date))}`,
+    );
     return rows;
   } catch (err) {
     console.error("[sermon-tagging] Sheets fetch error:", err);
