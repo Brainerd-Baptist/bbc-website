@@ -110,8 +110,7 @@ export default function BeliefQuestion() {
               <button
                 onClick={() => handleAsk()}
                 disabled={!question.trim() || loading}
-                className="absolute bottom-4 right-4 font-condensed font-700 tracking-wide uppercase text-xs text-white px-5 py-2 rounded-full transition disabled:opacity-30"
-                style={{ background: "var(--accent)" }}
+                className="absolute bottom-4 right-4 font-condensed font-700 tracking-wide uppercase text-xs bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-5 py-2 rounded-full transition disabled:opacity-30"
               >
                 {loading ? "…" : "Ask"}
               </button>
