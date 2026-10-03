@@ -272,7 +272,7 @@ export default function VisitExperience() {
           </p>
         </div>
         <div className="max-w-2xl mx-auto">
-          <ConnectForm />
+          <ConnectForm showMembershipOption />
         </div>
       </section>
 

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import GuestCardQR from "@/components/connect/GuestCardQR";
+import FormRouteNote from "@/components/connect/FormRouteNote";
+import useScrollToSuccess from "@/components/connect/useScrollToSuccess";
 
 const HOW_HEARD_OPTIONS = [
   { id: "11728678", label: "Friend" },
@@ -96,6 +98,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
+  const successRef = useScrollToSuccess(success);
 
   function toggleHowHeard(id: string, checked: boolean) {
     setHowHeard((prev) =>
@@ -166,7 +169,7 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
 
   if (success) {
     return (
-      <div className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
+      <div ref={successRef} className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
         <div className="flex justify-center">
           <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20">
             <svg
@@ -189,6 +192,13 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
           Thanks! You&apos;re now in our church database and someone from our
           team will be in touch. We&apos;re glad you&apos;re here.
         </p>
+        <p className="text-fg-muted text-xs leading-relaxed max-w-sm mx-auto">
+          Want church newsletters by text or email?{" "}
+          <a href="/connect/stay-connected" className="text-accent-text font-semibold underline underline-offset-2">
+            Sign up here
+          </a>
+          . This is separate from the form you just sent.
+        </p>
         <GuestCardQR
           firstName={firstName}
           lastName={lastName}
@@ -201,6 +211,9 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
+      <FormRouteNote href="/ministries/kids#pre-register" linkLabel="Pre-register your kids.">
+        Bringing children with you? Skip the line at check-in.
+      </FormRouteNote>
       {/* Name row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">

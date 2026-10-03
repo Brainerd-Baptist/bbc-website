@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import useScrollToSuccess from "@/components/connect/useScrollToSuccess";
 
 const inputClass =
   "border border-border-strong rounded-xl px-4 py-3 w-full text-fg bg-surface-raised placeholder:text-fg-muted transition";
@@ -44,6 +45,7 @@ export default function SimpleContactForm({
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const successRef = useScrollToSuccess(success);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,7 +81,7 @@ export default function SimpleContactForm({
 
   if (success) {
     return (
-      <div className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
+      <div ref={successRef} className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
         <div className="flex justify-center">
           <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/20">
             <svg className="w-6 h-6 text-accent-text" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
