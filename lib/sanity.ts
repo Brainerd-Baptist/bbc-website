@@ -7,6 +7,33 @@ export const sanityClient = createClient({
   useCdn: true, // cached at edge; fine for public sermon data
 });
 
+/**
+ * Same dataset, no edge cache. Sanity's CDN (apicdn.sanity.io) caches full
+ * GROQ query *results* keyed by the exact query text, separately from the
+ * document-level sync state — so a document can finish propagating (new
+ * _rev, new sync tag on a direct lookup) while a *compound* query against it
+ * (anything with a `->` dereference, in our case) keeps serving a stale
+ * cached result well past any normal TTL. Confirmed 2026-10-03: a sermon's
+ * resourcesMentioned dereference kept returning a stale `null` over an hour
+ * after the resource was created, and republishing the sermon (which did
+ * update the CDN's copy of the plain document) didn't budge it.
+ *
+ * Used only for the two single-document detail fetches below
+ * (getSermonBySlug, getSeriesBySlug) that dereference resourcesMentioned —
+ * these already get page-level freshness control from Next's ISR
+ * (revalidate: 300 in app/sermons/[slug]/page.tsx etc.), so skipping
+ * Sanity's own edge cache here just removes a second, much less
+ * predictable cache on top of that. Listing queries stay on the CDN client:
+ * they're hit far more often and don't have this dereference problem (no
+ * single query result there depends on a document created minutes earlier).
+ */
+const sanityFreshClient = createClient({
+  projectId: "3l0knw74",
+  dataset: "production",
+  apiVersion: "2024-01-01",
+  useCdn: false,
+});
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface SanitySermon {
@@ -122,7 +149,7 @@ export async function getAllSermons(): Promise<SanitySermon[]> {
 
 /** Single sermon by slug */
 export async function getSermonBySlug(slug: string): Promise<SanitySermon | null> {
-  return sanityClient.fetch(
+  return sanityFreshClient.fetch(
     `*[_type == "sermon" && slug.current == $slug][0] { ${SERMON_DETAIL_FIELDS} }`,
     { slug },
     { next: { revalidate: 300 } }
@@ -202,7 +229,7 @@ export async function getSermonsByBook(book: string): Promise<SanitySermon[]> {
 
 /** Single series by slug */
 export async function getSeriesBySlug(slug: string): Promise<SanitySeries | null> {
-  return sanityClient.fetch(
+  return sanityFreshClient.fetch(
     `*[_type == "series" && slug.current == $slug][0] {
       _id, title, slug, description, accentColor, bgColor, active,
       "resourcesMentioned": resourcesMentioned[]->{ ${RESOURCE_FIELDS} }[${ACTIVE_RESOURCE_FILTER}]
