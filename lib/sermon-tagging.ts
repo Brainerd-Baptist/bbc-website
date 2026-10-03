@@ -19,6 +19,20 @@
  * Auth: same service account as lib/google-auth.ts (Drive + Sheets scopes
  * share one JWT client). The sheet must be shared with that service
  * account's email as Viewer — confirmed done 2026-10-02.
+ *
+ * Resources column (J): added by Curtis 2026-10-03 for the sermon resource
+ * catalog (see claude/sermon-resource-catalog-scope-2026-10-03.md). He
+ * enters one or more resources per week as real hyperlinks (Insert → Link)
+ * over whatever text he likes ("his new book", a bare URL, etc.), one per
+ * line in the same cell. Plain `values.get` only ever returns a cell's
+ * displayed TEXT — it cannot see a hyperlink layered over that text at all.
+ * Reading the real URLs out requires the richer `spreadsheets.get` endpoint
+ * with grid data, which exposes each cell's `hyperlink` field (whole-cell
+ * links, Curtis's primary flow) and `textFormatRuns[].format.link.uri`
+ * (an inline-range link within a longer line, in case he ever links only
+ * part of a line). This is a second, separate fetch from the plain-text one
+ * below — grid data is a materially heavier response, so it's worth paying
+ * for only on the one column that needs it.
  */
 
 import { getDriveAccessToken } from "./google-auth";
@@ -26,9 +40,10 @@ import { getDriveAccessToken } from "./google-auth";
 const TAGGING_SHEET_ID = "1TYpJRJMy0hRGW7X74TSgD2jbFULjsOIynD9Ien2mh0A";
 const TAGGING_TAB = "Tagging";
 
-// Column order on the "Tagging" tab, A → I:
-//   Date | Series | Part | Title | Text (passage) | Teacher | PODCAST/SERMON TAGGING | SERMON SUMMARY | LINK TO NOTES
+// Column order on the "Tagging" tab, A → J:
+//   Date | Series | Part | Title | Text (passage) | Teacher | PODCAST/SERMON TAGGING | SERMON SUMMARY | LINK TO NOTES | RESOURCES
 const RANGE = `${TAGGING_TAB}!A:I`;
+const RESOURCES_RANGE = `${TAGGING_TAB}!J:J`;
 
 export interface TaggingRow {
   date: string; // "YYYY-MM-DD"
@@ -38,6 +53,10 @@ export interface TaggingRow {
   passage: string;
   teacher: string;
   summary: string;
+  /** Real hyperlink URLs pulled from column J for this date, deduped. Empty
+   * if the row has no resources, the grid-data fetch failed, or the date
+   * has no Tagging row at all. */
+  resourceUrls: string[];
 }
 
 /** "8/10/2025" or "08/10/2025" → "2025-08-10". Returns null if unparseable. */
@@ -47,6 +66,57 @@ function normalizeSheetDate(raw: string): string | null {
   const [m, d, y] = parts.map((p) => parseInt(p, 10));
   if (!m || !d || !y) return null;
   return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+/**
+ * Pulls real hyperlink URLs out of column J via the grid-data endpoint,
+ * keyed by 0-based ROW INDEX into the sheet (row 0 = header, matching the
+ * `values.get` response's own row indexing) so the caller can zip them
+ * together with the plain-text rows by position. Returns {} (not a
+ * rejection) on any failure — resources are a nice-to-have enrichment, and
+ * losing them should never break the Date/Series/Passage sync that every
+ * sermon doc already depends on.
+ */
+async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number, string[]>> {
+  try {
+    const params = new URLSearchParams({
+      ranges: RESOURCES_RANGE,
+      fields: "sheets.data.rowData.values(hyperlink,textFormatRuns.format.link.uri,userEnteredValue,formattedValue)",
+    });
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${TAGGING_SHEET_ID}?${params.toString()}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error("[sermon-tagging] resources grid-data fetch error:", res.status, body.slice(0, 500));
+      return {};
+    }
+
+    const json = await res.json();
+    const rowData = json?.sheets?.[0]?.data?.[0]?.rowData as
+      | { values?: { hyperlink?: string; textFormatRuns?: { format?: { link?: { uri?: string } } }[] }[] }[]
+      | undefined;
+    if (!rowData) return {};
+
+    const out: Record<number, string[]> = {};
+    rowData.forEach((row, rowIndex) => {
+      const cell = row.values?.[0];
+      if (!cell) return;
+      const urls = new Set<string>();
+      if (cell.hyperlink) urls.add(cell.hyperlink.trim());
+      for (const run of cell.textFormatRuns ?? []) {
+        const uri = run.format?.link?.uri;
+        if (uri) urls.add(uri.trim());
+      }
+      if (urls.size > 0) out[rowIndex] = [...urls];
+    });
+    return out;
+  } catch (err) {
+    console.error("[sermon-tagging] resources grid-data fetch error:", err);
+    return {};
+  }
 }
 
 let cachedRows: TaggingRow[] | null = null;
@@ -92,13 +162,23 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
     const { values } = (await res.json()) as { values?: string[][] };
     if (!values || values.length < 2) return [];
 
+    // Fetched in parallel with nothing else outstanding at this point in
+    // the function, and tolerant of its own failure (returns {}) — a
+    // resources-column hiccup should never take down the Date/Series/
+    // Passage sync every sermon doc already depends on.
+    const resourceUrlsByRow = await fetchResourceUrlsByRowIndex(token);
+
     const rows: TaggingRow[] = [];
-    // values[0] is the header row — skip it.
-    for (const row of values.slice(1)) {
+    // values[0] is the header row — skip it. rowIndex tracks the ORIGINAL
+    // position in `values` (not the filtered `rows` array) so it lines up
+    // with fetchResourceUrlsByRowIndex's row indexing, which comes from the
+    // same sheet and never skips blank/unparseable rows.
+    values.slice(1).forEach((row, i) => {
+      const rowIndex = i + 1;
       const [rawDate, series, part, title, passage, teacher, , summary] = row;
-      if (!rawDate) continue;
+      if (!rawDate) return;
       const date = normalizeSheetDate(rawDate);
-      if (!date) continue;
+      if (!date) return;
 
       rows.push({
         date,
@@ -108,8 +188,9 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
         passage: (passage ?? "").trim(),
         teacher: (teacher ?? "").trim(),
         summary: (summary ?? "").trim(),
+        resourceUrls: resourceUrlsByRow[rowIndex] ?? [],
       });
-    }
+    });
 
     cachedRows = rows;
     cachedAt = now;

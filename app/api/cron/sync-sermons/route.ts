@@ -42,6 +42,7 @@ import { getTaggingRowByDate } from "@/lib/sermon-tagging";
 import { getSermonNotesByDate } from "@/lib/sermon";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { sanityWriteClient, hasSanityWriteToken } from "@/lib/sanity-write";
+import { resolveResourceIds, promoteSeriesResources } from "@/lib/sermon-resources";
 import { slugify } from "@/lib/slugify";
 import { sendMail } from "@/lib/mail";
 import backfillReference from "@/lib/data/sermon-backfill-reference.json";
@@ -234,6 +235,11 @@ export async function GET(req: NextRequest) {
 
   const created: { title: string; date: string }[] = [];
   const skipped: { title: string; speaker: string }[] = [];
+  // Every series touched by this run — re-checked for resource auto-
+  // promotion (3+ consecutive weeks, see lib/sermon-resources.ts) once all
+  // of this run's sermons are written, so the check sees this run's own
+  // just-written resourcesMentioned rather than stale pre-sync data.
+  const touchedSeriesIds = new Set<string>();
 
   // maxDuration is 60s; Vercel kills the function hard at that point with
   // no chance to return a response. Found 2026-10-02: a full ?limit=500
@@ -334,6 +340,15 @@ export async function GET(req: NextRequest) {
       const audioUrl = podcastMap[key] || podcastMap[prevKey] || undefined;
 
       const seriesId = seriesTitle ? await resolveSeriesId(seriesTitle) : undefined;
+      if (seriesId) touchedSeriesIds.add(seriesId);
+
+      // Resources mentioned this week, per the Tagging sheet's column J
+      // (lib/sermon-tagging.ts) — resolved to Sanity resource doc ids,
+      // creating new ones as needed. Never blocks the rest of the sync: a
+      // bad/unreachable URL is skipped by resolveResourceIds itself.
+      const resourceIds = tagging?.resourceUrls?.length
+        ? await resolveResourceIds(tagging.resourceUrls).catch(() => [])
+        : [];
 
       const doc = {
         _id: `sermon-${video.videoId}`,
@@ -349,6 +364,9 @@ export async function GET(req: NextRequest) {
         ...(audioUrl ? { audioUrl } : {}),
         ...(tagging?.summary ? { description: tagging.summary.slice(0, 300) } : {}),
         ...(outlineLines.length > 0 ? { outline: toPortableText(outlineLines) } : {}),
+        ...(resourceIds.length > 0
+          ? { resourcesMentioned: resourceIds.map((id) => ({ _type: "reference" as const, _ref: id, _key: `res-${id}` })) }
+          : {}),
       };
 
       await sanityWriteClient.createOrReplace(doc);
@@ -358,6 +376,12 @@ export async function GET(req: NextRequest) {
       console.error(`[sync-sermons] failed to sync ${video.videoId}:`, err);
       // Keep going — one bad sermon shouldn't block the rest of the batch.
     }
+  }
+
+  for (const seriesId of touchedSeriesIds) {
+    await promoteSeriesResources(seriesId).catch((err) =>
+      console.error(`[sync-sermons] series resource promotion failed for ${seriesId}:`, err),
+    );
   }
 
   if (created.length > 0) {
