@@ -23,6 +23,7 @@
  *     it reads once, at the series level, rather than three-plus times).
  */
 
+import { createHash } from "node:crypto";
 import { sanityWriteClient } from "./sanity-write";
 import type { ResourceLink } from "./sermon-tagging";
 
@@ -113,7 +114,14 @@ export async function resolveResourceIds(links: (string | ResourceLink)[]): Prom
       // extractResourceLinks's fallback-to-hyperlink path).
       const title = linkedTitle && linkedTitle !== url ? linkedTitle : fallbackTitle(url);
 
-      const id = `resource-${Buffer.from(url).toString("base64url").slice(0, 40)}`;
+      // Hashed (not a truncated base64 encoding of the URL) — two URLs sharing a
+      // long common prefix (e.g. two crossway.org/books/ links, or two
+      // logos.com/product/ links) used to collapse onto the same truncated id
+      // and silently collide (createIfNotExists would then no-op for every
+      // URL after the first, merging what should be distinct resources).
+      // Found + fixed 2026-10-03 during the /areyouin backfill migration —
+      // see claude/sermon-resource-catalog-scope-2026-10-03.md.
+      const id = `resource-${createHash("sha256").update(url).digest("hex").slice(0, 40)}`;
       await sanityWriteClient.createIfNotExists({
         _id: id,
         _type: "resource",
