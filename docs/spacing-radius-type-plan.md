@@ -154,3 +154,7 @@ one at a time, each proven before moving on.
 6. Extract the finished tokens into the published Design System artifact
    alongside color, and rewrite its README to describe the completed system
    rather than color alone.
+
+
+## Update 2026-10-03
+The `--spacing-gutter*`, `--spacing-control-*`, `--spacing-card-pad`, `--spacing-section` and `--radius-control/panel/input/tag` tokens were never adopted (no `gap-gutter`, `rounded-panel` etc. anywhere) and were removed from `app/tokens.css`. `--radius-card` stays (used), as do the `--font-weight-*` tokens (needed for `font-700/800/900`). Use plain Tailwind numbers (`gap-3`, `rounded-xl`, `px-6`).
