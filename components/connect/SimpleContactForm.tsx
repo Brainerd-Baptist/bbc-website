@@ -33,7 +33,7 @@ export default function SimpleContactForm({
   messageLabel = "Message",
   messageRequired = true,
   successTitle = "You're all set!",
-  successBody = "Thanks for reaching out. Someone from our team will be in touch soon.",
+  successBody = "Thanks for reaching out. Your message went to our team by email and someone will reply.",
   submitLabel = "Send",
 }: Props) {
   const [name, setName] = useState("");

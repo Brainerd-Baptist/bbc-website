@@ -186,8 +186,8 @@ export default function ConnectForm({ showMembershipOption = false }: { showMemb
         </div>
         <p className="text-fg font-semibold text-lg">You&apos;re all set!</p>
         <p className="text-fg-muted text-sm leading-relaxed max-w-sm mx-auto">
-          Thanks! Someone from our team will be in touch soon. We&apos;re glad
-          you&apos;re here.
+          Thanks! You&apos;re now in our church database and someone from our
+          team will be in touch. We&apos;re glad you&apos;re here.
         </p>
         <GuestCardQR
           firstName={firstName}

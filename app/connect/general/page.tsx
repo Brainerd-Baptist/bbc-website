@@ -1,4 +1,5 @@
 import ConnectSubpageHeader from "@/components/connect/ConnectSubpageHeader";
+import FormRouteNote from "@/components/connect/FormRouteNote";
 import SimpleContactForm from "@/components/connect/SimpleContactForm";
 
 import Section from "@/components/ui/Section";
@@ -14,11 +15,14 @@ export default function GeneralContactPage() {
       />
       <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">
+          <FormRouteNote className="mb-6" href="/connect" linkLabel="See all the ways to connect.">
+            General questions and comments only. Need prayer, care, or a specific person?
+          </FormRouteNote>
           <SimpleContactForm
             endpoint="/api/contact/general"
             submitLabel="Send Message"
             successTitle="Message sent!"
-            successBody="Thanks for reaching out. Someone from our team will get back to you soon."
+            successBody="This went to our connect team inbox. Someone will reply by email. It doesn't add you to our church database, so if you're visiting, use the introduction form on the Visit page too."
           />
         </div>
       </Section>

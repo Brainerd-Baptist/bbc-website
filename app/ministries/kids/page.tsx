@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import FormRouteNote from "@/components/connect/FormRouteNote";
 import KidsRegistrationForm from "@/components/kids/KidsRegistrationForm";
 
 import Card from "@/components/ui/Card";
@@ -536,6 +537,14 @@ export default function KidsPage() {
               you arrive. First-time check-in takes about 60 seconds.
             </p>
           </div>
+          <FormRouteNote
+            className="text-center max-w-md mx-auto mb-8"
+            href="/visit#connect"
+            linkLabel="Introduce yourself instead."
+          >
+            This form is for families registering children for Sunday. No kids to
+            register?
+          </FormRouteNote>
           <KidsRegistrationForm />
         </div>
       </section>

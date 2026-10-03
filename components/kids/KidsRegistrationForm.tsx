@@ -189,8 +189,8 @@ export default function KidsRegistrationForm() {
         </h3>
         <p className="text-fg-muted leading-relaxed mb-8">
           We&apos;ll see you Sunday. Look for a welcome text if you opted in.
-          Your {count === 1 ? "child" : "children"} will be in our system before
-          you arrive — first-time check-in takes about 60 seconds.
+          Your {count === 1 ? "child" : "children"} will be in our church database
+          before you arrive — first-time check-in takes about 60 seconds.
         </p>
         <button
           onClick={resetForm}

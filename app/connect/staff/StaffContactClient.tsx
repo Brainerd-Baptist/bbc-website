@@ -38,7 +38,7 @@ export default function StaffContactClient() {
           messagePlaceholder={`What would you like to ask ${selected.split(" ")[0]}?`}
           submitLabel="Send Message"
           successTitle="Message sent!"
-          successBody={`${selected.split(" ")[0]} will get back to you soon.`}
+          successBody={`This went to ${selected.split(" ")[0]}'s inbox, and they'll reply by email.`}
         />
       </div>
     );

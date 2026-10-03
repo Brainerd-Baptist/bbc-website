@@ -1,4 +1,5 @@
 import ConnectSubpageHeader from "@/components/connect/ConnectSubpageHeader";
+import FormRouteNote from "@/components/connect/FormRouteNote";
 import SimpleContactForm from "@/components/connect/SimpleContactForm";
 
 import Section from "@/components/ui/Section";
@@ -14,6 +15,9 @@ export default function CarePage() {
       />
       <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">
+          <FormRouteNote className="mb-6" href="/connect/general" linkLabel="Send a general message instead.">
+            For care needs only: hospital, grief, hardship, family crisis. Just have a question?
+          </FormRouteNote>
           <SimpleContactForm
             endpoint="/api/contact/care"
             showPhone
@@ -21,7 +25,7 @@ export default function CarePage() {
             messagePlaceholder="Share as much or as little as you'd like — we just want to know how to help."
             submitLabel="Send to Care Team"
             successTitle="We've received this."
-            successBody="Someone from our care team will reach out soon, personally and privately."
+            successBody="This went only to our care team inbox. Someone will reach out personally and privately by email or phone."
           />
         </div>
       </Section>

@@ -59,7 +59,7 @@ export default function MissionsContactForm() {
         </div>
         <p className="text-fg font-semibold text-lg">You&apos;re all set!</p>
         <p className="text-fg-muted text-sm leading-relaxed max-w-sm mx-auto">
-          Thanks for reaching out. Our missions office will follow up soon.
+          Your message went to our missions office by email and they&apos;ll follow up.
         </p>
       </div>
     );
