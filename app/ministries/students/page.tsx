@@ -183,7 +183,7 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Staff ─────────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Our Team</p>

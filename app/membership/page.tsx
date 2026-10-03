@@ -112,7 +112,7 @@ export default function MembershipPage() {
       </section>
 
       {/* ── Big Prayer ─────────────────────────────────────── */}
-      <section className="py-16 px-6 bg-surface-sunken border-b border-border">
+      <section className="py-16 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <p className="eyebrow mb-4">Our Big Prayer</p>
           <p
@@ -245,7 +245,7 @@ export default function MembershipPage() {
       </Section>
 
       {/* ── Path to membership ──────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface-sunken">
+      <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
             <p className="eyebrow mb-4">The Process</p>

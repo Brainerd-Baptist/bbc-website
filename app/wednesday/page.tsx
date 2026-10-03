@@ -158,7 +158,6 @@ export default function WednesdayPage() {
       {/* ── Quick-glance time bar ──────────────────────────── */}
       <div
         className="py-5 px-6 border-b border-border"
-        style={{ background: "var(--surface-sunken)" }}
       >
         <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-2">
           {PROGRAMS.map(({ key, time, label, color }) => (

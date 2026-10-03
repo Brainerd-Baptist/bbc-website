@@ -157,7 +157,7 @@ export default function BXPage() {
       </section>
 
       {/* ── Amenities strip ──────────────────────────────────── */}
-      <Section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <Section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-3">What&apos;s Inside</p>
           <h2
@@ -261,7 +261,7 @@ export default function BXPage() {
       </section>
 
       {/* ── Calendar ─────────────────────────────────────────── */}
-      <Section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <Section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-3">What&apos;s Happening</p>

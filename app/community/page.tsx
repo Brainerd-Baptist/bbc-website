@@ -156,7 +156,7 @@ export default function CommunityPage() {
       <div className="border-t border-border" />
 
       {/* ── Food Pantry + Benevolence ────────────────────────── */}
-      <Section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <Section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Practical Help</p>

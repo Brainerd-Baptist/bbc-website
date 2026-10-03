@@ -62,7 +62,7 @@ export default function WhoIsJesusPage() {
       </section>
 
       {/* ── Who Is Jesus (theology) ─────────────────────────────── */}
-      <Section className="px-6 pb-20" style={{ background: "var(--surface-sunken)" }}>
+      <Section className="px-6 pb-20">
         <div className="max-w-5xl mx-auto pt-16">
           <p className="eyebrow-muted text-center mb-4">More on Jesus</p>
           <h2

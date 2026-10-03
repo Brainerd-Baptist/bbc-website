@@ -129,7 +129,7 @@ export default function BXJournalPage() {
       </section>
 
       {/* ── Room 2: Strength & Equipment — small offset photo, more text-led ── */}
-      <section className="px-6 py-8" style={{ background: "var(--surface-sunken)" }}>
+      <section className="px-6 py-8">
         <div className="max-w-5xl mx-auto grid md:grid-cols-5 gap-10 items-center py-16">
           <div className="md:col-span-2">
             <div

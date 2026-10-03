@@ -205,7 +205,7 @@ export default function VisitExperience() {
           </Section>
 
           {/* ── Worship Care of Kids ───────────────────────────── */}
-          <Section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+          <Section className="py-24 px-6">
             <div className="max-w-5xl mx-auto">
               <p className="eyebrow text-center mb-4">Your Kids Matter Here</p>
               <h2 className="text-fg text-center mb-4 h-hero">Worship Care for Kids</h2>

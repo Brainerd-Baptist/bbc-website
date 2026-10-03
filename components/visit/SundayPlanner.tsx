@@ -154,7 +154,7 @@ export default function SundayPlanner() {
   const canSubmit = who.length > 0 && time !== "" && connect !== "";
 
   return (
-    <Section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
+    <Section className="py-20 px-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <p className="eyebrow text-center mb-3">Before You Arrive</p>

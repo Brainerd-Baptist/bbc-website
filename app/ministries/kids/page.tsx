@@ -391,7 +391,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Wednesday Midweek ─────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -517,7 +517,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Pre-Register Form ─────────────────────────────── */}
-      <section id="pre-register" className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section id="pre-register" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Pre-Register Your Family</p>

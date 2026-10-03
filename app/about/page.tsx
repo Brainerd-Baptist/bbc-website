@@ -125,7 +125,6 @@ export default function AboutPage() {
       {/* ── Three Pillars ──────────────────────────────────────── */}
       <section
         className="py-24 px-6"
-        style={{ background: "var(--surface-sunken)" }}
       >
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">What We Do Together</p>
@@ -260,7 +259,6 @@ export default function AboutPage() {
       {/* ── Pastor quote ───────────────────────────────────────── */}
       <section
         className="py-20 px-6"
-        style={{ background: "var(--surface-sunken)" }}
       >
         <div className="max-w-2xl mx-auto text-center">
           <blockquote

@@ -60,7 +60,7 @@ export default function MissionsPage() {
       </p>
 
       {/* ── World Reach ──────────────────────────────────────── */}
-      <section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-3">Where We Serve</p>
