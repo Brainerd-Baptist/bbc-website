@@ -66,6 +66,12 @@ function dedupeResources(resources: SanityResource[]): SanityResource[] {
   const seen = new Set<string>();
   const out: SanityResource[] = [];
   for (const r of resources) {
+    // A reference can dereference to null — a dangling `_ref` (the resource
+    // doc was deleted, or a write raced with a read) rather than something
+    // that should ever crash the build. Found 2026-10-03: the very first
+    // real resourcesMentioned write hit exactly this on
+    // /sermons/a-good-clear-conscience-20260927.
+    if (!r) continue;
     if (seen.has(r._id)) continue;
     seen.add(r._id);
     out.push(r);
