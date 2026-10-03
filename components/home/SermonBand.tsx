@@ -5,6 +5,7 @@ import ListenButton from "./ListenButton";
 import { getLatestSermon, formatSermonDate } from "@/lib/sermon";
 import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 
+import Card from "@/components/ui/Card";
 export default async function SermonBand() {
   const sermon = await getLatestSermon();
 
@@ -62,7 +63,7 @@ export default async function SermonBand() {
 
         {/* Featured sermon card */}
         <ScrollReveal delay={100}>
-          <div className="glass-frost rounded-2xl overflow-hidden">
+          <Card lift className="rounded-2xl overflow-hidden">
             <div className="grid md:grid-cols-5">
 
               {/* Thumbnail / Play */}
@@ -172,7 +173,7 @@ export default async function SermonBand() {
               </div>
 
             </div>
-          </div>
+          </Card>
         </ScrollReveal>
       </div>
     </section>

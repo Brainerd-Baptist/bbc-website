@@ -2,6 +2,8 @@ import Link from "next/link";
 import BeliefQuestion from "@/components/beliefs/BeliefQuestion";
 import ScriptureRef from "@/components/beliefs/ScriptureRef";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 export const metadata = {
   title: "What We Believe — Brainerd Baptist Church",
   description:
@@ -168,7 +170,7 @@ function BeliefCard({ icon, title, body, verse }: {
 }) {
   const refs = verse.split(" · ");
   return (
-    <div className="flex gap-6 p-7 rounded-2xl glass-frost glass-static">
+    <Card className="flex gap-6 p-7 rounded-2xl">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
       <div>
         <h3
@@ -189,7 +191,7 @@ function BeliefCard({ icon, title, body, verse }: {
           ))}
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -215,8 +217,7 @@ export default function BeliefsPage() {
       </section>
 
       {/* ── Beliefs grid ───────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-5">
             {BELIEFS.map((b) => (
@@ -224,7 +225,7 @@ export default function BeliefsPage() {
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── AI Question box ────────────────────────────────── */}
       <BeliefQuestion />

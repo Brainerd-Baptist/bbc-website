@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import Card from "@/components/ui/Card";
 const SERVICE_OPTIONS = [
   { id: "2971216", label: "Sanctuary | 8:30" },
   { id: "6060961", label: "Life Group | 9:45" },
@@ -166,7 +167,7 @@ export default function KidsRegistrationForm() {
   if (submitted) {
     const count = children.length;
     return (
-      <div className="rounded-2xl p-10 text-center max-w-xl mx-auto glass-frost glass-static">
+      <Card className="rounded-2xl p-10 text-center max-w-xl mx-auto">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
           style={{ background: "var(--accent-bg)" }}
@@ -198,7 +199,7 @@ export default function KidsRegistrationForm() {
         >
           Register Another Family
         </button>
-      </div>
+      </Card>
     );
   }
 
@@ -253,7 +254,7 @@ export default function KidsRegistrationForm() {
         </p>
       </div>
 
-      <div className="rounded-2xl p-8 glass-frost glass-static">
+      <Card className="rounded-2xl p-8">
         {/* Step 1 — Parent Info */}
         {step === 1 && (
           <div className="space-y-5">
@@ -494,7 +495,7 @@ export default function KidsRegistrationForm() {
             </Field>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Error */}
       {error && (

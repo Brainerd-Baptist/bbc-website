@@ -1,6 +1,8 @@
 import Link from "next/link";
 import ScriptureRef from "@/components/beliefs/ScriptureRef";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 export const metadata = {
   title: "Membership — Brainerd Baptist Church",
   description:
@@ -124,8 +126,7 @@ export default function MembershipPage() {
       </section>
 
       {/* ── Three pillars ──────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14 max-w-xl mx-auto">
             <p className="eyebrow mb-4">A Family of People</p>
@@ -142,7 +143,7 @@ export default function MembershipPage() {
             {PILLARS.map((p) => {
               const refs = p.verse.split(" · ");
               return (
-                <div key={p.title} className="p-7 rounded-2xl glass-frost glass-static">
+                <Card key={p.title} className="p-7 rounded-2xl">
                   <div className="mb-4">{p.icon}</div>
                   <h3
                     className="font-condensed font-800 text-fg mb-3"
@@ -161,12 +162,12 @@ export default function MembershipPage() {
                       </span>
                     ))}
                   </div>
-                </div>
+                </Card>
               );
             })}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Called: mission stats ──────────────────────────── */}
       <section className="py-16 px-6" style={{ background: "var(--brand-band)" }}>
@@ -207,10 +208,9 @@ export default function MembershipPage() {
       </section>
 
       {/* ── Beliefs + Covenant teaser ───────────────────────── */}
-      <section className="py-20 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="py-20 px-6">
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-          <div className="p-7 rounded-2xl glass-frost glass-static">
+          <Card className="p-7 rounded-2xl">
             <h3 className="font-condensed font-800 text-fg mb-3" style={{ fontSize: "1.3rem" }}>
               Core Beliefs
             </h3>
@@ -225,8 +225,8 @@ export default function MembershipPage() {
             <Link href="/beliefs" className="text-sm font-semibold text-accent-text hover:underline">
               See what we believe →
             </Link>
-          </div>
-          <div className="p-7 rounded-2xl glass-frost glass-static">
+          </Card>
+          <Card className="p-7 rounded-2xl">
             <h3 className="font-condensed font-800 text-fg mb-3" style={{ fontSize: "1.3rem" }}>
               The Membership Covenant
             </h3>
@@ -240,9 +240,9 @@ export default function MembershipPage() {
             <Link href="/connect/next-step" className="text-sm font-semibold text-accent-text hover:underline">
               Ask about the covenant →
             </Link>
-          </div>
+          </Card>
         </div>
-      </section>
+      </Section>
 
       {/* ── Path to membership ──────────────────────────────── */}
       <section className="py-24 px-6 bg-surface-sunken">

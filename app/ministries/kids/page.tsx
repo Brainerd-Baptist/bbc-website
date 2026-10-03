@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import KidsRegistrationForm from "@/components/kids/KidsRegistrationForm";
 
+import Card from "@/components/ui/Card";
 export const metadata: Metadata = {
   title: "Kids — Brainerd Baptist Church",
   description:
@@ -205,9 +206,9 @@ export default function KidsPage() {
 
           <div className="grid md:grid-cols-3 gap-5">
             {AGE_GROUPS.map(({ icon, label, ages, body, note }) => (
-              <div
+              <Card
                 key={label}
-                className="glass-frost rounded-2xl p-8"
+                lift className="rounded-2xl p-8"
               >
                 {/* Icon */}
                 <div
@@ -244,7 +245,7 @@ export default function KidsPage() {
                     ↗ {note}
                   </p>
                 )}
-              </div>
+              </Card>
             ))}
           </div>
         </div>

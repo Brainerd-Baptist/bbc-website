@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import Card from "@/components/ui/Card";
 export const metadata = {
   title: "Page not found — Brainerd Baptist Church",
 };
@@ -8,7 +9,7 @@ export default function NotFound() {
   return (
     <main className="relative overflow-hidden min-h-screen px-6 pt-40 pb-24 flex items-start justify-center">
       <div className="bx-bloom" aria-hidden="true" />
-      <div className="relative glass-frost glass-static rounded-2xl p-10 max-w-lg w-full text-center">
+      <Card className="relative rounded-2xl p-10 max-w-lg w-full text-center">
         <p className="eyebrow mb-3">404</p>
         <h1
           className="font-condensed font-800 text-fg mb-3"
@@ -39,7 +40,7 @@ export default function NotFound() {
             Contact Us
           </Link>
         </div>
-      </div>
+      </Card>
     </main>
   );
 }

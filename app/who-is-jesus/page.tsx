@@ -1,6 +1,8 @@
 import Link from "next/link";
 import ThreeCircles from "@/components/jesus/ThreeCircles";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 export const metadata = {
   title: "Who Is Jesus — Brainerd Baptist Church",
   description:
@@ -60,8 +62,7 @@ export default function WhoIsJesusPage() {
       </section>
 
       {/* ── Who Is Jesus (theology) ─────────────────────────────── */}
-      <section className="px-6 pb-20 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="px-6 pb-20" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto pt-16">
           <p className="eyebrow-muted text-center mb-4">More on Jesus</p>
           <h2
@@ -93,9 +94,9 @@ export default function WhoIsJesusPage() {
                 body: "Three days after his crucifixion, Jesus physically rose from the dead — seen by hundreds of eyewitnesses. This is the event on which everything depends. It's either the most important fact in history or the greatest lie ever told.",
               },
             ].map((item) => (
-              <div
+              <Card
                 key={item.num}
-                className="rounded-2xl p-7 glass-frost glass-static"
+                className="rounded-2xl p-7"
               >
                 <span
                   className="font-condensed font-900 block mb-4"
@@ -112,11 +113,11 @@ export default function WhoIsJesusPage() {
                   {item.title}
                 </h3>
                 <p className="text-fg-muted text-sm leading-relaxed">{item.body}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Still working through it? ───────────────────────────── */}
       <section className="px-6 py-20">

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 
+import Card from "@/components/ui/Card";
 export default function ErrorPage({
   error,
   retry,
@@ -17,7 +18,7 @@ export default function ErrorPage({
   return (
     <main className="relative overflow-hidden min-h-screen px-6 pt-40 pb-24 flex items-start justify-center">
       <div className="bx-bloom" aria-hidden="true" />
-      <div className="relative glass-frost glass-static rounded-2xl p-10 max-w-lg w-full text-center">
+      <Card className="relative rounded-2xl p-10 max-w-lg w-full text-center">
         <p className="eyebrow mb-3">Something went wrong</p>
         <h1
           className="font-condensed font-800 text-fg mb-3"
@@ -43,7 +44,7 @@ export default function ErrorPage({
             Home
           </Link>
         </div>
-      </div>
+      </Card>
     </main>
   );
 }

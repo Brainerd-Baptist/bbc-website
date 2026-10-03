@@ -11,6 +11,8 @@ import {
 import { ALL_SERIES as FALLBACK_SERIES, SERMONS as FALLBACK_SERMONS } from "@/lib/sermons";
 import { inkOn, inkVarsFor } from "@/lib/identity-colors";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 export const revalidate = 300;
 
 // Pre-generate series slugs at build time
@@ -149,8 +151,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
       </div>
 
       {/* ── Sermon list ───────────────────────────────────────────────── */}
-      <section className="px-5 md:px-8 py-14 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="px-5 md:px-8 py-14">
         <div className="max-w-3xl mx-auto space-y-3">
           {sermons.length === 0 && (
             <p className="text-center text-fg-muted py-20">No sermons yet in this series.</p>
@@ -167,9 +168,9 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
               : null;
 
             return (
-              <div
+              <Card
                 key={sermon.id}
-                className="group flex gap-0 rounded-2xl overflow-hidden transition duration-200 glass-frost glass-lite"
+                lift lite className="group flex gap-0 rounded-2xl overflow-hidden transition duration-200"
               >
                 {/* Episode number + thumbnail — links to sermon.
                     Kept (smaller) on mobile instead of hidden: the series
@@ -249,11 +250,11 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
                     </svg>
                   </div>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>
-      </section>
+      </Section>
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section

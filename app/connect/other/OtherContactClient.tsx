@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import ConnectSubpageHeader from "@/components/connect/ConnectSubpageHeader";
 import SimpleContactForm from "@/components/connect/SimpleContactForm";
 
+import Section from "@/components/ui/Section";
 const CATEGORY_COPY: Record<string, { eyebrow: string; title: string; description: string; placeholder: string }> = {
   "website-issue": {
     eyebrow: "Report a Website Issue",
@@ -33,8 +34,7 @@ export default function OtherContactClient() {
   return (
     <div className="min-h-screen">
       <ConnectSubpageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
-      <section className="pb-24 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">
           <SimpleContactForm
             endpoint="/api/contact/utility"
@@ -43,7 +43,7 @@ export default function OtherContactClient() {
             submitLabel="Send"
           />
         </div>
-      </section>
+      </Section>
     </div>
   );
 }

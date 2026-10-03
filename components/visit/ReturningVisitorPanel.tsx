@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import Section from "@/components/ui/Section";
 interface NextStepTile {
   href: string;
   title: string;
@@ -55,8 +56,7 @@ const TILES: NextStepTile[] = [
 
 export default function ReturningVisitorPanel() {
   return (
-    <section className="py-20 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+    <Section className="py-20 px-6">
       <div className="max-w-5xl mx-auto">
         <p className="eyebrow text-center mb-4">Welcome Back</p>
         <h2 className="text-fg text-center mb-4 h-hero">What&apos;s Next for You?</h2>
@@ -95,6 +95,6 @@ export default function ReturningVisitorPanel() {
           .
         </p>
       </div>
-    </section>
+    </Section>
   );
 }

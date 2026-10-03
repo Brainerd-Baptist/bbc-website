@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 export const metadata: Metadata = {
   title: "Community — Brainerd Baptist Church",
   description:
@@ -154,8 +156,7 @@ export default function CommunityPage() {
       <div className="border-t border-border" />
 
       {/* ── Food Pantry + Benevolence ────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Practical Help</p>
@@ -169,7 +170,7 @@ export default function CommunityPage() {
           <div className="grid md:grid-cols-2 gap-6">
 
             {/* Food Pantry */}
-            <div className="rounded-2xl overflow-hidden glass-frost glass-static">
+            <Card className="rounded-2xl overflow-hidden">
               <div className="h-1" style={{ background: "var(--accent)" }} />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/carousel/food-pantry-checkin.jpg" alt="Food pantry volunteers helping community members" className="w-full object-cover" style={{ height: "200px", objectPosition: "center 30%" }} />
@@ -202,10 +203,10 @@ export default function CommunityPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </Card>
 
             {/* Benevolence */}
-            <div className="rounded-2xl overflow-hidden glass-frost glass-static">
+            <Card className="rounded-2xl overflow-hidden">
               <div className="h-1" style={{ background: "var(--color-brand-navy)" }} />
               <div className="p-8">
                 <div
@@ -240,11 +241,11 @@ export default function CommunityPage() {
                   </svg>
                 </a>
               </div>
-            </div>
+            </Card>
 
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Dark CTA ─────────────────────────────────────────── */}
       <section

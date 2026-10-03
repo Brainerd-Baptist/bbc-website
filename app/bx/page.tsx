@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 export const metadata: Metadata = {
   title: "The BX — Brainerd Crossroads Community Center",
   description:
@@ -155,8 +157,7 @@ export default function BXPage() {
       </section>
 
       {/* ── Amenities strip ──────────────────────────────────── */}
-      <section className="py-20 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-3">What&apos;s Inside</p>
           <h2
@@ -166,20 +167,20 @@ export default function BXPage() {
           </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
             {AMENITIES.map(({ label, desc }) => (
-              <div
+              <Card
                 key={label}
-                className="rounded-2xl p-6 glass-frost glass-static"
+                className="rounded-2xl p-6"
               >
                 <div className="w-1.5 h-6 rounded-full mb-4" style={{ background: "var(--accent)" }} />
                 <h3 className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.1rem" }}>
                   {label}
                 </h3>
                 <p className="text-fg-muted text-sm leading-relaxed">{desc}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Membership ───────────────────────────────────────── */}
       <section className="py-24 px-6">
@@ -260,8 +261,7 @@ export default function BXPage() {
       </section>
 
       {/* ── Calendar ─────────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
         <div className="max-w-5xl mx-auto">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-3">What&apos;s Happening</p>
@@ -274,7 +274,7 @@ export default function BXPage() {
               Classes, events, and activities at the BX — updated in real time.
             </p>
           </div>
-          <div className="rounded-2xl overflow-hidden glass-frost glass-static">
+          <Card className="rounded-2xl overflow-hidden">
             <iframe
               src="https://calendar.google.com/calendar/u/0/embed?ctz=America/New_York&src=brainerdbaptist.org_euq009n6fp8pm5u9ljmnq80ql4@group.calendar.google.com&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA"
               style={{ border: 0 }}
@@ -283,13 +283,12 @@ export default function BXPage() {
               title="BX Calendar"
               aria-label="BX events calendar"
             />
-          </div>
+          </Card>
         </div>
-      </section>
+      </Section>
 
       {/* ── Room Reservations ────────────────────────────────── */}
-      <section id="reservations" className="py-24 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section id="reservations" className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="mb-14">
             <p className="eyebrow mb-3">Events &amp; Meetings</p>
@@ -350,7 +349,7 @@ export default function BXPage() {
           </div>
 
           {/* Policy details */}
-          <div className="rounded-2xl p-8 mb-8 glass-frost glass-static">
+          <Card className="rounded-2xl p-8 mb-8">
             <h3 className="font-condensed font-800 text-fg mb-5" style={{ fontSize: "1.2rem" }}>
               Before you book
             </h3>
@@ -369,7 +368,7 @@ export default function BXPage() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Card>
 
           <div className="flex flex-wrap gap-4">
             <a
@@ -389,7 +388,7 @@ export default function BXPage() {
             </a>
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Food Pantry callout ───────────────────────────────── */}
       <section

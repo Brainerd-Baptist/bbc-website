@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
 
+import Card from "@/components/ui/Card";
 export const metadata: Metadata = {
   title: "Students — Brainerd Baptist Church",
   description:
@@ -120,9 +121,9 @@ export default function StudentsPage() {
           </div>
           <div className="grid md:grid-cols-3 gap-5">
             {PILLARS.map(({ label, body }) => (
-              <div
+              <Card
                 key={label}
-                className="glass-frost rounded-2xl p-8"
+                lift className="rounded-2xl p-8"
                 style={{ "--pillar-hue": IDENTITY.students.hue } as React.CSSProperties}
               >
                 <div
@@ -136,7 +137,7 @@ export default function StudentsPage() {
                   {label}
                 </h3>
                 <p className="text-fg-muted text-sm leading-relaxed">{body}</p>
-              </div>
+              </Card>
             ))}
           </div>
         </div>

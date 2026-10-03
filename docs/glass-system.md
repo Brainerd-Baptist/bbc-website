@@ -52,3 +52,20 @@ Only `transform` and `opacity` animate. Durations 200 to 600ms. Easing and durat
 | `verify:contrast` | Text pairings below WCAG AA in either theme |
 
 Known baseline: `lint:css`, `lint:color` and `ratchet` already failed on `main` before this work. The goal is that they never get worse.
+
+
+## Shared components (use these, don't copy markup)
+
+- `<Section className="py-24 px-6">` (components/ui/Section.tsx): a section with the bloom backdrop built in. Put glass cards inside it.
+- `<Card>` (components/ui/Card.tsx): the frosted card. `lift` adds the hover lift (for cards that are links), `lite` drops the blur (for long lists), `as="li"` changes the tag. Extra classes go in `className` (padding, grid, border accents).
+
+```tsx
+<Section className="py-24 px-6">
+  <div className="max-w-5xl mx-auto grid sm:grid-cols-2 gap-6">
+    <Card className="rounded-2xl p-8">...</Card>
+    <Card lift className="rounded-2xl p-8">...</Card>
+  </div>
+</Section>
+```
+
+`npm run verify:shared-ui` fails if new code writes the raw `glass-frost` class string instead of using `<Card>`. Four existing link-style cards still use the raw class; that baseline can only go down.

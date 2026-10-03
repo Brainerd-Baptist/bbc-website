@@ -19,7 +19,7 @@ const ROOT = process.cwd();
 const EXEMPT = new Map([
   ["app/bx-map/page.tsx", "self-contained embedded document; \"glass\" is its own CSS variable, not a card class"],
 ]);
-const GLASS = /\bglass(?:-frost|-md)?\b(?!-)/;
+const GLASS = /\bglass(?:-frost|-md)?\b(?!-)|<Card\b/;
 const ROUTE = /(?:^|\/)(?:page|not-found|error)\.tsx$/;
 
 function walk(dir, out = []) {
@@ -40,13 +40,13 @@ for (const f of files) {
   if (EXEMPT.has(path.relative(ROOT, f))) continue;
   if (!GLASS.test(src)) continue;
   withGlass++;
-  if (!src.includes("bx-bloom")) flat.push(path.relative(ROOT, f));
+  if (!src.includes("bx-bloom") && !src.includes("<Section")) flat.push(path.relative(ROOT, f));
 }
 
 console.log(`verify-backdrop: ${withGlass} route files use glass`);
 if (flat.length) {
   for (const f of flat) console.log(`  ✗ ${f} uses glass but has no bx-bloom backdrop`);
-  console.log("\n✗ add <div className=\"bx-bloom\" aria-hidden=\"true\" /> inside a relative overflow-hidden section.");
+  console.log("\n✗ wrap the cards in <Section> (components/ui/Section.tsx), which adds the bloom backdrop.");
   process.exit(1);
 }
 console.log("✓ every glass route has a backdrop to blur");

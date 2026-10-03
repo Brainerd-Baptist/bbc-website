@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SERMONS, ALL_SERIES, SERIES_META, formatDate } from "@/lib/sermons";
 import { IDENTITY } from "@/lib/identity-colors";
 
+import Section from "@/components/ui/Section";
 export const revalidate = 300;
 
 export function generateStaticParams() {
@@ -124,8 +125,7 @@ export default async function SeriesPage({
       </div>
 
       {/* ── Sermon list ──────────────────────────────────────────────────── */}
-      <section className="px-5 md:px-8 py-12 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="px-5 md:px-8 py-12">
         <div className="max-w-4xl mx-auto space-y-3">
           {sermons.map((sermon, i) => {
             const thumb = sermon.youtubeId
@@ -210,7 +210,7 @@ export default async function SeriesPage({
             );
           })}
         </div>
-      </section>
+      </Section>
 
       {/* ── Back CTA ────────────────────────────────────────────────────── */}
       <div className="px-6 pb-24 text-center">

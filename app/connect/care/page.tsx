@@ -1,6 +1,7 @@
 import ConnectSubpageHeader from "@/components/connect/ConnectSubpageHeader";
 import SimpleContactForm from "@/components/connect/SimpleContactForm";
 
+import Section from "@/components/ui/Section";
 export const metadata = { title: "Care & Support — Brainerd Baptist Church" };
 
 export default function CarePage() {
@@ -11,8 +12,7 @@ export default function CarePage() {
         title="We're Here for You"
         description="Hospital visits, grief, financial hardship, a family crisis — whatever you're walking through, this goes straight to our care team and stays private. No one else sees it."
       />
-      <section className="pb-24 px-6 relative overflow-hidden isolate">
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+      <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">
           <SimpleContactForm
             endpoint="/api/contact/care"
@@ -24,7 +24,7 @@ export default function CarePage() {
             successBody="Someone from our care team will reach out soon, personally and privately."
           />
         </div>
-      </section>
+      </Section>
     </div>
   );
 }

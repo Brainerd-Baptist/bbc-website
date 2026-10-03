@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import Card from "@/components/ui/Card";
+import Section from "@/components/ui/Section";
 // ── Types ───────────────────────────────────────────────────
 type WhoOption = {
   id: string;
@@ -152,8 +154,7 @@ export default function SundayPlanner() {
   const canSubmit = who.length > 0 && time !== "" && connect !== "";
 
   return (
-    <section className="py-20 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
+    <Section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <p className="eyebrow text-center mb-3">Before You Arrive</p>
@@ -169,7 +170,7 @@ export default function SundayPlanner() {
 
         {/* ── Result view ── */}
         {result ? (
-          <div className="rounded-2xl p-8 glass-frost glass-static">
+          <Card className="rounded-2xl p-8">
             {/* Plan bullets */}
             <p className="eyebrow mb-5">Your Sunday Plan</p>
             <ul className="space-y-4 mb-6">
@@ -252,10 +253,10 @@ export default function SundayPlanner() {
             >
               Start over
             </button>
-          </div>
+          </Card>
         ) : (
           /* ── Question view ── */
-          <div className="rounded-2xl p-8 space-y-10 glass-frost glass-static">
+          <Card className="rounded-2xl p-8 space-y-10">
             {/* Q1 */}
             <div>
               <StepLabel num={1} label="Who's coming with you?" />
@@ -329,9 +330,9 @@ export default function SundayPlanner() {
             {error && (
               <p className="text-sm text-danger-text text-center -mt-4">{error}</p>
             )}
-          </div>
+          </Card>
         )}
       </div>
-    </section>
+    </Section>
   );
 }
