@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function BXJournalPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Opening: two photos pinned together, not one hero banner ──── */}
       <div className="pt-28 pb-16 px-6" style={{ background: "var(--brand-band)" }}>
@@ -75,7 +75,7 @@ export default function BXJournalPage() {
       </div>
 
       {/* ── Intro copy — direct, not brochure copy ─────────────────────── */}
-      <section className="pt-24 pb-16 px-6 bg-surface">
+      <section className="pt-24 pb-16 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-fg text-xl leading-relaxed" style={{ fontFamily: "var(--font-inter), sans-serif" }}>
             The BX isn&apos;t a gym you go to. It&apos;s a place you show up to —
@@ -222,7 +222,7 @@ export default function BXJournalPage() {
       </section>
 
       {/* ── Practical info, kept plain and short — not another card grid ── */}
-      <section className="px-6 py-20 bg-surface">
+      <section className="px-6 py-20">
         <div className="max-w-3xl mx-auto grid sm:grid-cols-2 gap-10">
           <div>
             <h3 className="font-condensed font-800 text-fg mb-3" style={{ fontSize: "1.1rem" }}>
@@ -255,7 +255,7 @@ export default function BXJournalPage() {
       </section>
 
       {/* ── Closing CTA ──────────────────────────────────────────────── */}
-      <section className="px-6 pb-24 pt-4 bg-surface">
+      <section className="px-6 pb-24 pt-4">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-fg mb-6 h-section">Come see it for yourself.</h2>
           <div className="flex flex-wrap justify-center gap-3">

@@ -5,13 +5,14 @@ export const metadata = { title: "Ask a Question — Brainerd Baptist Church" };
 
 export default function AskPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       <ConnectSubpageHeader
         eyebrow="Ask a Quick Question"
         title="What Do You Want to Know?"
         description="Ask about service times, what to expect, our beliefs, or anything else. If it's something a person should really answer, we'll point you the right way."
       />
-      <section className="pb-24 px-6">
+      <section className="pb-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-2xl mx-auto">
           <AskConnectQuestion />
         </div>

@@ -67,7 +67,7 @@ export default async function SermonsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Header ────────────────────────────────────────────────────── */}
       <div

@@ -260,7 +260,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
   const allPassages = [s.passage, ...(s.passages ?? [])].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Dark gradient hero strip ────────────────────────────────── */}
       <div

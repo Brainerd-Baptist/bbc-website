@@ -31,9 +31,10 @@ export default function OtherContactClient() {
   const copy = CATEGORY_COPY[category] ?? CATEGORY_COPY.other;
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       <ConnectSubpageHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
-      <section className="pb-24 px-6">
+      <section className="pb-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-2xl mx-auto">
           <SimpleContactForm
             endpoint="/api/contact/utility"

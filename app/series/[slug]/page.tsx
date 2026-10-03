@@ -87,7 +87,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
     : null;
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <div className="relative pt-32 pb-16 px-6 overflow-hidden" style={{ background: bgColor }}>
@@ -149,7 +149,8 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
       </div>
 
       {/* ── Sermon list ───────────────────────────────────────────────── */}
-      <section className="px-5 md:px-8 py-14">
+      <section className="px-5 md:px-8 py-14 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-3xl mx-auto space-y-3">
           {sermons.length === 0 && (
             <p className="text-center text-fg-muted py-20">No sermons yet in this series.</p>
@@ -168,7 +169,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
             return (
               <div
                 key={sermon.id}
-                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition duration-200"
+                className="group flex gap-0 rounded-2xl overflow-hidden transition duration-200 glass-frost"
               >
                 {/* Episode number + thumbnail — links to sermon.
                     Kept (smaller) on mobile instead of hidden: the series

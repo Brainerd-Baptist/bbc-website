@@ -58,7 +58,7 @@ export default async function SeriesPage({
     .sort((a, b) => b.date.localeCompare(a.date));
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Dark gradient hero strip ──────────────────────────────────── */}
       <div
@@ -124,7 +124,8 @@ export default async function SeriesPage({
       </div>
 
       {/* ── Sermon list ──────────────────────────────────────────────────── */}
-      <section className="px-5 md:px-8 py-12">
+      <section className="px-5 md:px-8 py-12 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-4xl mx-auto space-y-3">
           {sermons.map((sermon, i) => {
             const thumb = sermon.youtubeId
@@ -136,7 +137,7 @@ export default async function SeriesPage({
               <a
                 key={sermon.id}
                 href={url}
-                className="group flex gap-0 rounded-2xl overflow-hidden border border-border hover:border-accent/30 bg-surface-raised hover:shadow-md transition duration-200"
+                className="group flex gap-0 rounded-2xl overflow-hidden transition duration-200 glass-frost"
                 style={{ animationDelay: `${i * 25}ms` }}
               >
                 {/* Thumbnail */}

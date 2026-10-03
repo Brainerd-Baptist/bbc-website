@@ -103,7 +103,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Dark gradient hero strip ───────────────────────────────────── */}
       <div

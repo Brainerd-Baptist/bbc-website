@@ -5,13 +5,14 @@ export const metadata = { title: "Take a Next Step — Brainerd Baptist Church" 
 
 export default function NextStepPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       <ConnectSubpageHeader
         eyebrow="Take a Next Step"
         title="Ready to Go Deeper?"
         description="Membership, baptism, a Life Group, or serving — tell us what you're interested in and we'll follow up."
       />
-      <section className="pb-24 px-6">
+      <section className="pb-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-2xl mx-auto">
           <ConnectForm showMembershipOption />
         </div>

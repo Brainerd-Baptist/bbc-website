@@ -24,7 +24,7 @@ const AMENITIES = [
 
 export default function BXPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <div
@@ -78,7 +78,7 @@ export default function BXPage() {
       </div>
 
       {/* ── Overview + Hours ─────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-start">
 
           <div>
@@ -155,7 +155,8 @@ export default function BXPage() {
       </section>
 
       {/* ── Amenities strip ──────────────────────────────────── */}
-      <section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section className="py-20 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-3">What&apos;s Inside</p>
           <h2
@@ -167,7 +168,7 @@ export default function BXPage() {
             {AMENITIES.map(({ label, desc }) => (
               <div
                 key={label}
-                className="bg-surface-raised rounded-2xl p-6 border border-border hover:border-accent/30 transition-colors"
+                className="rounded-2xl p-6 glass-frost glass-static"
               >
                 <div className="w-1.5 h-6 rounded-full mb-4" style={{ background: "var(--accent)" }} />
                 <h3 className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.1rem" }}>
@@ -181,7 +182,7 @@ export default function BXPage() {
       </section>
 
       {/* ── Membership ───────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
           <div>
@@ -259,7 +260,8 @@ export default function BXPage() {
       </section>
 
       {/* ── Calendar ─────────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+      <section className="py-24 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto">
           <div className="mb-10 text-center">
             <p className="eyebrow mb-3">What&apos;s Happening</p>
@@ -272,7 +274,7 @@ export default function BXPage() {
               Classes, events, and activities at the BX — updated in real time.
             </p>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-border bg-surface-raised shadow-sm">
+          <div className="rounded-2xl overflow-hidden glass-frost glass-static">
             <iframe
               src="https://calendar.google.com/calendar/u/0/embed?ctz=America/New_York&src=brainerdbaptist.org_euq009n6fp8pm5u9ljmnq80ql4@group.calendar.google.com&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA"
               style={{ border: 0 }}
@@ -286,7 +288,8 @@ export default function BXPage() {
       </section>
 
       {/* ── Room Reservations ────────────────────────────────── */}
-      <section id="reservations" className="py-24 px-6 bg-surface">
+      <section id="reservations" className="py-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto">
           <div className="mb-14">
             <p className="eyebrow mb-3">Events &amp; Meetings</p>
@@ -347,7 +350,7 @@ export default function BXPage() {
           </div>
 
           {/* Policy details */}
-          <div className="bg-surface-raised rounded-2xl p-8 border border-border mb-8">
+          <div className="rounded-2xl p-8 mb-8 glass-frost glass-static">
             <h3 className="font-condensed font-800 text-fg mb-5" style={{ fontSize: "1.2rem" }}>
               Before you book
             </h3>

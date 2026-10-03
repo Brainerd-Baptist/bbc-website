@@ -5,13 +5,14 @@ export const metadata = { title: "Stay Connected — Brainerd Baptist Church" };
 
 export default function StayConnectedPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       <ConnectSubpageHeader
         eyebrow="Stay Connected"
         title="Get Texts & Emails from Brainerd"
         description="Sign up to receive announcements, event reminders, and updates from Brainerd Baptist."
       />
-      <section className="pb-24 px-6">
+      <section className="pb-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-lg mx-auto">
           <ClearstreamForm />
         </div>

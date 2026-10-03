@@ -5,13 +5,14 @@ export const metadata = { title: "Get in Touch — Brainerd Baptist Church" };
 
 export default function GeneralContactPage() {
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       <ConnectSubpageHeader
         eyebrow="Get in Touch"
         title="Send Us a Message"
         description="Have a general question or comment? Send it our way and someone will get back to you."
       />
-      <section className="pb-24 px-6">
+      <section className="pb-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-2xl mx-auto">
           <SimpleContactForm
             endpoint="/api/contact/general"
