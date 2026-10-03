@@ -156,14 +156,6 @@ export const COLOR_LITERAL_EXEMPTIONS = [
       "Flows into GlobalAudioPlayer (`${accent}99`) and SpeakerCard " +
       "(accentColor + '33'); converting it breaks both at runtime.",
   },
-  {
-    file: "app/sermons/[slug]/notes/NotesEditor.tsx",
-    atRule: "@media print",
-    reason:
-      "The print-time token reset. Paper has no dark mode, so this block " +
-      "deliberately re-points the tokens at ink values; that is the whole " +
-      "point of it, and it is the one place literals belong in this file.",
-  },
 ];
 
 /**
