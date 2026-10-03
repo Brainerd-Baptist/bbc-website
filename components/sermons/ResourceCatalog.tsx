@@ -90,42 +90,53 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
           {filtered.map((r) => (
-            <a
+            // Not a single <a> around the whole card: the mentionedIn chips
+            // below link internally (to the sermon/series page) while the
+            // rest of the card links out to the resource's own URL — an <a>
+            // nested inside an <a> is invalid HTML and the inner link won't
+            // reliably work, so the two link targets have to be siblings.
+            <div
               key={r._id}
-              href={r.url}
-              target="_blank"
-              rel="noopener noreferrer"
               style={{
                 display: "flex", flexDirection: "column", gap: "0.375rem",
-                textDecoration: "none", padding: "1.125rem 1.25rem",
+                padding: "1.125rem 1.25rem",
                 borderRadius: "0.875rem", border: "1px solid var(--border)",
                 background: "var(--surface-sunken)", transition: "border-color 0.15s, transform 0.15s",
               }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--border-strong)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; }}
             >
-              <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent)" }}>
-                {TYPE_LABEL[r.type] ?? "Resource"}
-              </span>
-              <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--fg)", lineHeight: 1.3 }}>{r.title}</span>
-              {r.creator && <span style={{ fontSize: "0.8rem", color: "var(--fg-muted)" }}>{r.creator}</span>}
-              {r.blurb && <span style={{ fontSize: "0.82rem", color: "var(--fg-muted)", lineHeight: 1.5 }}>{r.blurb}</span>}
+              <a
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "flex", flexDirection: "column", gap: "0.375rem", textDecoration: "none" }}
+              >
+                <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent)" }}>
+                  {TYPE_LABEL[r.type] ?? "Resource"}
+                </span>
+                <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--fg)", lineHeight: 1.3 }}>{r.title}</span>
+                {r.creator && <span style={{ fontSize: "0.8rem", color: "var(--fg-muted)" }}>{r.creator}</span>}
+                {r.blurb && <span style={{ fontSize: "0.82rem", color: "var(--fg-muted)", lineHeight: 1.5 }}>{r.blurb}</span>}
+              </a>
               {r.mentionedIn && r.mentionedIn.length > 0 && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem", marginTop: "0.25rem" }}>
                   {r.mentionedIn.slice(0, 3).map((m) => (
-                    <span
+                    <a
                       key={`${m.kind}-${m.slug}`}
+                      href={m.kind === "series" ? `/series/${m.slug}` : `/sermons/${m.slug}`}
                       style={{
                         fontSize: "0.65rem", fontWeight: 600, color: "var(--fg-subtle)",
                         background: "var(--hover-subtle)", borderRadius: "9999px", padding: "0.2rem 0.55rem",
+                        textDecoration: "none",
                       }}
                     >
                       {m.title}
-                    </span>
+                    </a>
                   ))}
                 </div>
               )}
-            </a>
+            </div>
           ))}
         </div>
       )}
