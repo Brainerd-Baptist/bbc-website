@@ -344,7 +344,11 @@
        --bloom-a/b/c       soft colour layers placed BEHIND glass so the blur
                            has something to bend. Without them glass over a
                            flat page just looks like a solid card. */
-  --glass-fill-frost: rgba(255, 255, 255, 0.55);
+  --glass-fill-frost: rgba(255, 255, 255, 0.62);
+  --glass-fill-frost-end: rgba(255, 255, 255, 0.28);
+  --glass-sheen:      rgba(255, 255, 255, 0.50);
+  --glass-edge-low:   rgba(255, 255, 255, 0.45);
+  --glass-glow:       rgba(255, 255, 255, 0.30);
   --glass-fill-md:    rgba(255, 255, 255, 0.66);
   --glass-edge:       rgba(255, 255, 255, 0.85);
   --glass-hi:         rgba(255, 255, 255, 0.90);
@@ -355,9 +359,9 @@
   --glass-shadow-hover:
     0 2px 4px rgba(0, 32, 91, 0.12),
     0 22px 44px -10px rgba(0, 32, 91, 0.32);
-  --bloom-a: rgba(0, 171, 201, 0.46);
-  --bloom-b: rgba(40, 80, 190, 0.36);
-  --bloom-c: rgba(255, 190, 90, 0.32);
+  --bloom-a: rgba(0, 171, 201, 0.55);
+  --bloom-b: rgba(40, 80, 190, 0.44);
+  --bloom-c: rgba(255, 190, 90, 0.38);
 
   /* ── On-dark content ──────────────────────────────────────────────────
      Theme-INVARIANT on purpose. These sit on ground that is dark in BOTH
@@ -725,7 +729,11 @@
   --elev-xl:  0 12px 28px rgba(0, 0, 0, 0.40), 0 32px 72px rgba(0, 0, 0, 0.50);
   --elev-2xl: 0 16px 36px rgba(0, 0, 0, 0.45), 0 40px 90px rgba(0, 0, 0, 0.55);
 
-  --glass-fill-frost: rgba(30, 44, 72, 0.50);
+  --glass-fill-frost: rgba(44, 62, 98, 0.50);
+  --glass-fill-frost-end: rgba(20, 30, 54, 0.32);
+  --glass-sheen:      rgba(190, 220, 255, 0.14);
+  --glass-edge-low:   rgba(150, 190, 255, 0.10);
+  --glass-glow:       rgba(120, 170, 255, 0.07);
   --glass-fill-md:    rgba(22, 32, 48, 0.66);
   --glass-edge:       rgba(150, 190, 255, 0.22);
   --glass-hi:         rgba(180, 210, 255, 0.30);
@@ -736,8 +744,8 @@
   --glass-shadow-hover:
     0 2px 4px rgba(0, 0, 0, 0.50),
     0 26px 48px -10px rgba(0, 0, 0, 0.70);
-  --bloom-a: rgba(0, 171, 201, 0.38);
-  --bloom-b: rgba(60, 100, 230, 0.38);
+  --bloom-a: rgba(0, 171, 201, 0.46);
+  --bloom-b: rgba(60, 100, 230, 0.46);
   --bloom-c: rgba(255, 170, 70, 0.20);
 
   /* The nav's glass surface is dark here, so its chrome inverts. This pair is

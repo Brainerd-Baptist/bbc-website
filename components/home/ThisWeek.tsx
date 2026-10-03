@@ -141,7 +141,7 @@ export default function ThisWeek() {
             href="https://brainerdbaptist.churchcenter.com/calendar"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-outline-navy text-sm flex-shrink-0"
+            className="btn-outline-navy text-sm flex-shrink-0 whitespace-nowrap"
           >
             Full Calendar
             <svg
