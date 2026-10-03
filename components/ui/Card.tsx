@@ -8,8 +8,8 @@ import type { ElementType, HTMLAttributes } from "react";
  *   lite   no blur, frosted look only. Use inside long lists for performance.
  *   as     change the tag, default "div".
  *
- * Put it inside a <Section> (or any element with a bx-bloom backdrop), because
- * glass needs something behind it to blur. See docs/glass-system.md.
+ * Glass needs colour behind it: the site-wide fixed .bx-backdrop provides it, so
+ * cards just work on any page. See docs/glass-system.md.
  */
 type CardProps = HTMLAttributes<HTMLElement> & {
   as?: ElementType;

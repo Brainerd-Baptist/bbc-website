@@ -56,7 +56,7 @@ Known baseline: `lint:css`, `lint:color` and `ratchet` already failed on `main` 
 
 ## Shared components (use these, don't copy markup)
 
-- `<Section className="py-24 px-6">` (components/ui/Section.tsx): a section with the bloom backdrop built in. Put glass cards inside it.
+- `<Section className="py-24 px-6">` (components/ui/Section.tsx): the standard section wrapper. No overflow-hidden, so card shadows and hover lift aren't clipped.
 - `<Card>` (components/ui/Card.tsx): the frosted card. `lift` adds the hover lift (for cards that are links), `lite` drops the blur (for long lists), `as="li"` changes the tag. Extra classes go in `className` (padding, grid, border accents).
 
 ```tsx
@@ -69,3 +69,8 @@ Known baseline: `lint:css`, `lint:color` and `ratchet` already failed on `main` 
 ```
 
 `npm run verify:shared-ui` fails if new code writes the raw `glass-frost` class string instead of using `<Card>`. Four existing link-style cards still use the raw class; that baseline can only go down.
+
+
+## Page backdrop (cards float over it)
+
+The colour behind the glass is ONE fixed layer, `.bx-backdrop`, rendered in `ConditionalLayout`. It doesn't scroll, so cards slide over it and blur whatever colour is under them at that moment. Don't add per-section glows. `.bx-bloom` is now only for opaque dark bands (navy, brand-band) that cover the page backdrop. `npm run verify:backdrop` checks the layer is still rendered and fixed.

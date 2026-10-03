@@ -40,8 +40,7 @@ export default async function SermonBand() {
   }
 
   return (
-    <section className="relative overflow-hidden section-pad">
-      <div className="bx-bloom" aria-hidden="true" />
+    <section className="section-pad">
       <div className="relative max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">

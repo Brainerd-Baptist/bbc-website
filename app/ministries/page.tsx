@@ -165,8 +165,7 @@ export default function MinistriesPage() {
       </div>
 
       {/* ── Ministry cards ───────────────────────────────────── */}
-      <section className="relative overflow-hidden py-20 px-6">
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="py-20 px-6">
         <div className="relative max-w-5xl mx-auto space-y-6">
           {MINISTRIES.map(({ key, name, ages, color, ink, photo, href, body, detail }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">

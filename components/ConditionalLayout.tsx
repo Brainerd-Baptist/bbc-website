@@ -23,6 +23,7 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
 
   return (
     <>
+      <div className="bx-backdrop" aria-hidden="true" />
       <Navbar />
       <main>{children}</main>
       <Footer />

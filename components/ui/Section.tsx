@@ -1,19 +1,13 @@
 import type { HTMLAttributes } from "react";
 
 /**
- * Page section with the frosted-glass backdrop built in. Renders a <section>
- * with the soft color bloom behind its content, so cards inside have
- * something to blur. Pass spacing through className, e.g. "py-24 px-6".
+ * Standard page section. Pass spacing through className, e.g. "py-24 px-6".
+ *
+ * The frosted-glass backdrop is NOT per section: one fixed colour layer
+ * (.bx-backdrop, rendered in ConditionalLayout) sits behind the whole site,
+ * so cards scroll over it. Don't add overflow-hidden here, it would clip the
+ * cards' shadows and hover lift.
  */
-export default function Section({
-  className = "",
-  children,
-  ...rest
-}: HTMLAttributes<HTMLElement>) {
-  return (
-    <section className={`relative overflow-hidden isolate ${className}`.trim()} {...rest}>
-      <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
-      {children}
-    </section>
-  );
+export default function Section({ className = "", ...rest }: HTMLAttributes<HTMLElement>) {
+  return <section className={`relative ${className}`.trim()} {...rest} />;
 }

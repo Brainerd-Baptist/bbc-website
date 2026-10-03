@@ -81,8 +81,7 @@ export default function CollegeYoungAdultsPage() {
       </div>
 
       {/* ── Sections ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-20 px-6">
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="py-20 px-6">
         <div className="relative max-w-4xl mx-auto space-y-16">
           {SECTIONS.map(({ key, name, ages, ink, detail, body, schedule, leader, instagram, photos }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">

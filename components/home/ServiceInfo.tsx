@@ -4,8 +4,7 @@ import ScrollReveal from "./ScrollReveal";
 import Card from "@/components/ui/Card";
 export default function ServiceInfo() {
   return (
-    <section className="relative overflow-hidden py-20 px-6">
-      <div className="bx-bloom" aria-hidden="true" />
+    <section className="py-20 px-6">
       <div className="relative max-w-7xl mx-auto">
         <ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">

@@ -108,8 +108,7 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Three pillars ──────────────────────────────────── */}
-      <section className="relative overflow-hidden py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="py-24 px-6">
         <div className="relative max-w-5xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">What we&apos;re about</p>

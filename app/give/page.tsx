@@ -49,8 +49,7 @@ export default function GivePage() {
       </div>
 
       {/* Giving options */}
-      <section className="relative overflow-hidden pb-12 px-6">
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="pb-12 px-6">
         <div className="relative max-w-4xl mx-auto">
           <h2 className="font-condensed font-800 text-fg text-2xl mb-6">Ways to Give</h2>
           <div className="grid md:grid-cols-3 gap-5 mb-8">

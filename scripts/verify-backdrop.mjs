@@ -2,51 +2,24 @@
 /**
  * scripts/verify-backdrop.mjs
  *
- * Glass needs something to blur. A route file that uses .glass, .glass-md or
- * .glass-frost but has no <div className="bx-bloom"> reads as a flat solid
- * card on a flat page, which is the look the glass work exists to remove.
- *
- * Scope: route files (app/**\/page.tsx, not-found, error). Shared components
- * such as ConnectTiles are covered by the page that renders them.
+ * Glass needs something to blur. The site has ONE fixed colour layer
+ * (.bx-backdrop) rendered in ConditionalLayout, behind every page. This guard
+ * checks that the layer is still rendered and still styled; without it every
+ * glass card turns into a flat solid card.
  *
  *   node scripts/verify-backdrop.mjs
  */
 import fs from "node:fs";
-import path from "node:path";
 
-const ROOT = process.cwd();
-// Route files that match for a reason other than a glass card class.
-const EXEMPT = new Map([
-  ["app/bx-map/page.tsx", "self-contained embedded document; \"glass\" is its own CSS variable, not a card class"],
-]);
-const GLASS = /\bglass(?:-frost|-md)?\b(?!-)|<Card\b/;
-const ROUTE = /(?:^|\/)(?:page|not-found|error)\.tsx$/;
+const layout = fs.readFileSync("components/ConditionalLayout.tsx", "utf8");
+const css = fs.readFileSync("app/globals.css", "utf8");
+const problems = [];
+if (!layout.includes("bx-backdrop")) problems.push("components/ConditionalLayout.tsx no longer renders <div className=\"bx-backdrop\" />");
+if (!/\.bx-backdrop\s*\{[^}]*position:\s*fixed/.test(css)) problems.push("app/globals.css has no fixed-position .bx-backdrop rule");
 
-function walk(dir, out = []) {
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
-    const p = path.join(dir, e.name);
-    if (e.isDirectory()) walk(p, out);
-    else if (ROUTE.test(p)) out.push(p);
-  }
-  return out;
-}
-
-const files = walk(path.join(ROOT, "app"));
-const flat = [];
-let withGlass = 0;
-for (const f of files) {
-  const src = fs.readFileSync(f, "utf8");
-  if (EXEMPT.has(path.relative(ROOT, f))) continue;
-  if (!GLASS.test(src)) continue;
-  withGlass++;
-  if (!src.includes("bx-bloom") && !src.includes("<Section")) flat.push(path.relative(ROOT, f));
-}
-
-console.log(`verify-backdrop: ${withGlass} route files use glass`);
-if (flat.length) {
-  for (const f of flat) console.log(`  ✗ ${f} uses glass but has no bx-bloom backdrop`);
-  console.log("\n✗ wrap the cards in <Section> (components/ui/Section.tsx), which adds the bloom backdrop.");
+console.log("verify-backdrop: checking the global page backdrop");
+if (problems.length) {
+  for (const p of problems) console.log("  ✗ " + p);
   process.exit(1);
 }
-console.log("✓ every glass route has a backdrop to blur");
+console.log("✓ the page backdrop is rendered and fixed behind every page");

@@ -116,8 +116,7 @@ export default function ThisWeek() {
   return (
     // No background of its own: the page's grain and gradient show through, and
     // the bloom below puts colour behind the glass cards for them to blur.
-    <section className="relative overflow-hidden py-20 px-6 md:px-12">
-      <div className="bx-bloom" aria-hidden="true" />
+    <section className="py-20 px-6 md:px-12">
       <div className="relative max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">

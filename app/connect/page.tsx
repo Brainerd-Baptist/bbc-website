@@ -27,8 +27,7 @@ export default function ConnectPage() {
       </div>
 
       {/* Main grid: tiles + info */}
-      <section className="relative overflow-hidden pb-24 px-6">
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="pb-24 px-6">
         <div className="relative max-w-5xl mx-auto grid md:grid-cols-[1fr_340px] gap-10">
           <ConnectTiles />
           <ConnectSidebar />

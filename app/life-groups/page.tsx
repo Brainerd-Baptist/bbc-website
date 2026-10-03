@@ -49,8 +49,7 @@ export default function LifeGroupsPage() {
       </div>
 
       {/* Why a Life Group */}
-      <section className="relative overflow-hidden py-12 px-6">
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="py-12 px-6">
         <div className="relative max-w-5xl mx-auto">
           <h2 className="font-condensed font-800 text-fg text-3xl mb-8">
             Why a Life Group?

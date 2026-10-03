@@ -7,8 +7,7 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <main className="relative overflow-hidden min-h-screen px-6 pt-40 pb-24 flex items-start justify-center">
-      <div className="bx-bloom" aria-hidden="true" />
+    <main className="min-h-screen px-6 pt-40 pb-24 flex items-start justify-center">
       <Card className="relative rounded-2xl p-10 max-w-lg w-full text-center">
         <p className="eyebrow mb-3">404</p>
         <h1

@@ -371,10 +371,64 @@ body {
   }
 }
 
+/* ── Page backdrop ─────────────────────────────────────────────────────────
+   ONE fixed colour layer behind the whole site (rendered in ConditionalLayout).
+   It does not scroll, so cards and sections slide over it and the glass blurs
+   whatever colour is under them at that moment, instead of each card being
+   tied to its own glow. Three large soft blobs spread across the viewport; the
+   two pseudo-elements drift slowly (transform only). z-index -1 keeps it above
+   the body background and below all page content. Opaque bands (navy, photos)
+   simply cover it. */
+.bx-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(closest-side at 82% 18%, var(--bloom-c), transparent),
+    radial-gradient(closest-side at 12% 82%, var(--bloom-c), transparent);
+  background-size: 70vmax 70vmax, 60vmax 60vmax;
+  background-repeat: no-repeat;
+  background-position: 82% 18%, 12% 82%;
+}
+.bx-backdrop::before,
+.bx-backdrop::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  animation: bx-bloom-drift 22s var(--ease-out) infinite alternate;
+}
+.bx-backdrop::before {
+  width: 80vmax;
+  height: 80vmax;
+  left: -25vmax;
+  top: -15vmax;
+  background: radial-gradient(closest-side, var(--bloom-a), transparent);
+}
+.bx-backdrop::after {
+  width: 90vmax;
+  height: 90vmax;
+  right: -30vmax;
+  top: 25vh;
+  background: radial-gradient(closest-side, var(--bloom-b), transparent);
+  animation-duration: 28s;
+  animation-delay: -9s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bx-backdrop::before,
+  .bx-backdrop::after {
+    animation: none;
+  }
+}
+
 /* ── Bloom ─────────────────────────────────────────────────────────────────
    Soft colour layers placed behind glass so the blur has something to bend.
-   Drop <div className="bx-bloom" aria-hidden="true" /> as the FIRST child of a
-   `relative overflow-hidden` section; later positioned siblings paint above it.
+   Only for opaque dark bands (navy, brand-band), where the fixed page backdrop
+   is covered: drop <div className="bx-bloom" aria-hidden="true" /> as the FIRST
+   child of a `relative overflow-hidden` section. Everywhere else the page
+   backdrop (.bx-backdrop) does this job.
    Three blobs: two pseudo-elements that drift slowly (transform only, so it
    never causes layout), and the third drawn by the element's own background. */
 .bx-bloom {
@@ -394,12 +448,6 @@ body {
   /* Fade the top and bottom edges so a blob cut off by its section's
      overflow:hidden never leaves a visible seam between two sections. */
   mask-image: linear-gradient(to bottom, transparent, currentColor 18%, currentColor 82%, transparent);
-}
-/* Variant for sections whose content is not wrapped in a positioned element:
-   put the bloom behind the content instead of above it. The section must also
-   carry `isolate` so z-index -1 stays inside it and above its own background. */
-.bx-bloom-under {
-  z-index: -1;
 }
 .bx-bloom::before,
 .bx-bloom::after {

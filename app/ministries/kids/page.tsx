@@ -182,8 +182,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Age groups ─────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="py-24 px-6">
         <div className="relative max-w-6xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Every age, every Sunday</p>

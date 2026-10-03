@@ -176,8 +176,7 @@ export default function WednesdayPage() {
       </div>
 
       {/* ── Program cards ─────────────────────────────────── */}
-      <section className="relative overflow-hidden py-20 px-6">
-        <div className="bx-bloom" aria-hidden="true" />
+      <section className="py-20 px-6">
         <div className="relative max-w-5xl mx-auto space-y-6">
           {PROGRAMS.map(({ key, time, label, ages, color, ink, location, href, body, icon, photo }) => (
             <div
