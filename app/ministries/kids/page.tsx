@@ -251,7 +251,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Check-in & Safety ─────────────────────────────── */}
-      <section id="checkin" className="py-24 px-6 bg-surface">
+      <section id="checkin" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-start">
 
@@ -435,7 +435,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── Staff ─────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 text-center">
             <p className="eyebrow mb-3">Our Team</p>
@@ -541,7 +541,7 @@ export default function KidsPage() {
       </section>
 
       {/* ── First-time CTA ─────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <p className="eyebrow mb-3">Ready to visit?</p>
           <h2

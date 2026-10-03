@@ -166,7 +166,7 @@ export default function KidsRegistrationForm() {
   if (submitted) {
     const count = children.length;
     return (
-      <div className="rounded-2xl bg-surface-raised border border-border p-10 text-center max-w-xl mx-auto shadow-sm">
+      <div className="rounded-2xl p-10 text-center max-w-xl mx-auto glass-frost glass-static">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
           style={{ background: "var(--accent-bg)" }}
@@ -253,7 +253,7 @@ export default function KidsRegistrationForm() {
         </p>
       </div>
 
-      <div className="bg-surface-raised rounded-2xl border border-border p-8 shadow-sm">
+      <div className="rounded-2xl p-8 glass-frost glass-static">
         {/* Step 1 — Parent Info */}
         {step === 1 && (
           <div className="space-y-5">

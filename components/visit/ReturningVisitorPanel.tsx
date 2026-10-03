@@ -55,7 +55,8 @@ const TILES: NextStepTile[] = [
 
 export default function ReturningVisitorPanel() {
   return (
-    <section className="py-20 px-6 bg-surface">
+    <section className="py-20 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
       <div className="max-w-5xl mx-auto">
         <p className="eyebrow text-center mb-4">Welcome Back</p>
         <h2 className="text-fg text-center mb-4 h-hero">What&apos;s Next for You?</h2>
@@ -68,7 +69,7 @@ export default function ReturningVisitorPanel() {
             <Link
               key={tile.href}
               href={tile.href}
-              className="group flex gap-5 p-6 rounded-2xl border border-border bg-surface-raised hover:border-accent/30 transition-colors"
+              className="group flex gap-5 p-6 rounded-2xl glass-frost"
             >
               <span
                 className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"

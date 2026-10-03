@@ -10,7 +10,7 @@ export default function VisitorToggle({
   onChange: (v: VisitorType) => void;
 }) {
   return (
-    <section className="py-10 px-6 bg-surface border-b border-border">
+    <section className="py-10 px-6 border-b border-border">
       <div className="max-w-md mx-auto text-center">
         <p className="text-fg-muted text-xs uppercase tracking-widest font-semibold mb-4">
           Tell us a little about you

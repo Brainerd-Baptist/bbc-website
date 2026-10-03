@@ -227,7 +227,7 @@ export default function BXReservationsAdmin() {
                         </button>
                         <button
                           onClick={() => setStatus(r.id, "declined")}
-                          style={{ fontSize: "0.75rem", fontWeight: 700, padding: "0.45rem 0.9rem", borderRadius: "0.6rem", background: "transparent", color: "#b02a2a", border: "1px solid rgba(200,40,40,0.25)", cursor: "pointer" }}
+                          style={{ fontSize: "0.75rem", fontWeight: 700, padding: "0.45rem 0.9rem", borderRadius: "0.6rem", background: "transparent", color: "var(--danger-text)", border: "1px solid var(--danger-border)", cursor: "pointer" }}
                         >
                           Decline
                         </button>

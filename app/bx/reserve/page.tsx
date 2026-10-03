@@ -127,7 +127,7 @@ export default function BXReservePage() {
     return (
       <div style={{ minHeight: "100vh", background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
         <div style={{ maxWidth: "32rem", textAlign: "center" }}>
-          <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(0,150,90,0.12)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", fontSize: "1.75rem" }}>✓</div>
+          <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--success-bg)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem", fontSize: "1.75rem" }}>✓</div>
           <p style={{ color: "var(--accent-text)", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
             Request Submitted — Mockup
           </p>
@@ -306,7 +306,7 @@ export default function BXReservePage() {
                 </div>
 
                 {overCapacity && (
-                  <p style={{ fontSize: "0.78rem", color: "#b02a2a", background: "rgba(200,40,40,0.08)", borderRadius: "0.6rem", padding: "0.6rem 0.9rem", marginBottom: "1.25rem" }}>
+                  <p style={{ fontSize: "0.78rem", color: "var(--danger-text)", background: "var(--danger-bg)", borderRadius: "0.6rem", padding: "0.6rem 0.9rem", marginBottom: "1.25rem" }}>
                     {guests} guests is over {room.name}'s capacity for this layout ({cap}). Consider a larger room or a different setup.
                   </p>
                 )}

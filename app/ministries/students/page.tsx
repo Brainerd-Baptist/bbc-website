@@ -143,7 +143,7 @@ export default function StudentsPage() {
       </section>
 
       {/* ── Schedule ───────────────────────────────────────── */}
-      <section id="schedule" className="py-24 px-6 bg-surface">
+      <section id="schedule" className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-14 text-center">
             <p className="eyebrow mb-3">Find your week</p>

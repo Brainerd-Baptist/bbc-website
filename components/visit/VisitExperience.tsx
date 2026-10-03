@@ -39,7 +39,7 @@ export default function VisitExperience() {
   const returning = visitorType === "returning";
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen">
       {/* Video hero — copy adapts to visitor type */}
       {returning ? (
         <VideoHero
@@ -68,7 +68,7 @@ export default function VisitExperience() {
       )}
 
       {/* ── Service times ──────────────────────────────────── */}
-      <section id="service-times" className="py-24 px-6 bg-surface">
+      <section id="service-times" className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Sunday Mornings</p>
           <h2
@@ -175,13 +175,14 @@ export default function VisitExperience() {
           <SundayWalkthrough />
 
           {/* ── What to expect ─────────────────────────────────── */}
-          <section className="py-24 px-6 bg-surface">
+          <section className="py-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
             <div className="max-w-5xl mx-auto">
               <p className="eyebrow text-center mb-4">Before You Arrive</p>
               <h2 className="text-fg text-center mb-16 h-hero">What to Expect</h2>
               <div className="grid sm:grid-cols-2 gap-6">
                 {EXPECT_ITEMS.map((item) => (
-                  <div key={item.title} className="flex gap-5 p-6 rounded-2xl border border-border bg-surface-raised hover:border-accent/30 transition-colors">
+                  <div key={item.title} className="flex gap-5 p-6 rounded-2xl glass-frost glass-static">
                     <span
                       className="font-condensed font-900 leading-none flex-shrink-0 mt-0.5"
                       aria-hidden="true"
@@ -203,7 +204,8 @@ export default function VisitExperience() {
           </section>
 
           {/* ── Worship Care of Kids ───────────────────────────── */}
-          <section className="py-24 px-6" style={{ background: "var(--surface-sunken)" }}>
+          <section className="py-24 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
             <div className="max-w-5xl mx-auto">
               <p className="eyebrow text-center mb-4">Your Kids Matter Here</p>
               <h2 className="text-fg text-center mb-4 h-hero">Worship Care for Kids</h2>
@@ -212,7 +214,7 @@ export default function VisitExperience() {
               </p>
               <div className="grid sm:grid-cols-2 gap-5 mb-10">
                 {CHILD_CARE.map((c) => (
-                  <div key={c.age} className="bg-surface-raised rounded-2xl p-7 border-l-4 border-accent shadow-sm">
+                  <div key={c.age} className="rounded-2xl p-7 border-l-4 border-accent glass-frost glass-static">
                     <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>{c.age}</p>
                     <p className="text-fg-muted text-sm">{c.times}</p>
                   </div>
@@ -227,12 +229,13 @@ export default function VisitExperience() {
       )}
 
       {/* ── Find Us ────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-surface">
+      <section className="py-24 px-6 relative overflow-hidden isolate">
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
         <div className="max-w-5xl mx-auto">
           <p className="eyebrow text-center mb-4">Getting Here</p>
           <h2 className="text-fg text-center mb-16 h-hero">Find Us</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl p-8 border border-border bg-surface-raised">
+            <div className="rounded-2xl p-8 glass-frost glass-static">
               <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Brainerd Baptist Church</p>
               <p className="text-fg-muted text-sm leading-relaxed mb-6">
                 300 Brookfield Ave<br />Chattanooga, TN 37411
@@ -247,7 +250,7 @@ export default function VisitExperience() {
               </a>
             </div>
 
-            <div className="rounded-2xl p-8 border-t-4 border-accent border border-border bg-surface-raised">
+            <div className="rounded-2xl p-8 border-t-4 border-accent glass-frost glass-static">
               <p className="eyebrow mb-3">Ministerio Hispano · Hispanic Ministry</p>
               <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
               <p className="text-fg-muted text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.address}</p>
@@ -261,7 +264,7 @@ export default function VisitExperience() {
       </section>
 
       {/* ── Connect form ───────────────────────────────────── */}
-      <section id="connect" className="py-24 px-6 bg-surface">
+      <section id="connect" className="py-24 px-6">
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="eyebrow mb-4">Questions? Reach Out.</p>
           <h2 className="text-fg mb-4 h-hero">We&apos;d love to hear from you.</h2>

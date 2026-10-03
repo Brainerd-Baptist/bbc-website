@@ -152,7 +152,8 @@ export default function SundayPlanner() {
   const canSubmit = who.length > 0 && time !== "" && connect !== "";
 
   return (
-    <section className="py-20 px-6" style={{ background: "var(--surface-sunken)" }}>
+    <section className="py-20 px-6 relative overflow-hidden isolate" style={{ background: "var(--surface-sunken)" }}>
+        <div className="bx-bloom bx-bloom-under" aria-hidden="true" />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <p className="eyebrow text-center mb-3">Before You Arrive</p>
@@ -168,7 +169,7 @@ export default function SundayPlanner() {
 
         {/* ── Result view ── */}
         {result ? (
-          <div className="bg-surface-raised rounded-2xl p-8 shadow-sm border border-border">
+          <div className="rounded-2xl p-8 glass-frost glass-static">
             {/* Plan bullets */}
             <p className="eyebrow mb-5">Your Sunday Plan</p>
             <ul className="space-y-4 mb-6">
@@ -254,7 +255,7 @@ export default function SundayPlanner() {
           </div>
         ) : (
           /* ── Question view ── */
-          <div className="bg-surface-raised rounded-2xl p-8 shadow-sm border border-border space-y-10">
+          <div className="rounded-2xl p-8 space-y-10 glass-frost glass-static">
             {/* Q1 */}
             <div>
               <StepLabel num={1} label="Who's coming with you?" />
