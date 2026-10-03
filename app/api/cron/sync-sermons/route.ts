@@ -358,9 +358,23 @@ export async function GET(req: NextRequest) {
       // (lib/sermon-tagging.ts) — resolved to Sanity resource doc ids,
       // creating new ones as needed. Never blocks the rest of the sync: a
       // bad/unreachable URL is skipped by resolveResourceIds itself.
+      // TEMP diagnostic (2026-10-03): confirms whether the Tagging sheet's
+      // column J is actually being read for this date at all, before
+      // trying to explain why a resource didn't show up on the site.
+      // Safe to remove once Phase 2 is confirmed working end-to-end.
+      console.log(
+        `[sync-sermons] ${date} resourceUrls from sheet: ${JSON.stringify(tagging?.resourceUrls ?? null)}`,
+      );
+
       const resourceIds = tagging?.resourceUrls?.length
-        ? await resolveResourceIds(tagging.resourceUrls).catch(() => [])
+        ? await resolveResourceIds(tagging.resourceUrls).catch((err) => {
+            console.error(`[sync-sermons] ${date} resolveResourceIds threw:`, err);
+            return [];
+          })
         : [];
+      if (tagging?.resourceUrls?.length) {
+        console.log(`[sync-sermons] ${date} resolved resource ids: ${JSON.stringify(resourceIds)}`);
+      }
 
       const doc = {
         _id: `sermon-${video.videoId}`,
