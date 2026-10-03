@@ -138,10 +138,19 @@ let lastFailureAt = 0;
 async function fetchTaggingRows(): Promise<TaggingRow[]> {
   const now = Date.now();
   if (cachedRows && now - cachedAt < CACHE_MS) return cachedRows;
-  if (now - lastFailureAt < FAILURE_CACHE_MS) return cachedRows ?? [];
+  if (now - lastFailureAt < FAILURE_CACHE_MS) {
+    // TEMP diagnostic (2026-10-03): this used to be silent, which made a
+    // run-wide outage (every sermon in one cron invocation getting a null
+    // tagging row) indistinguishable in the logs from "nothing to sync."
+    console.error(
+      `[sermon-tagging] skipping fetch — still inside the ${FAILURE_CACHE_MS / 1000}s failure-cache window from an earlier failure this run`,
+    );
+    return cachedRows ?? [];
+  }
 
   const token = await getDriveAccessToken();
   if (!token) {
+    console.error("[sermon-tagging] no Drive access token — see [google-auth] log above for why");
     lastFailureAt = now;
     return cachedRows ?? [];
   }
@@ -160,7 +169,10 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
     }
 
     const { values } = (await res.json()) as { values?: string[][] };
-    if (!values || values.length < 2) return [];
+    if (!values || values.length < 2) {
+      console.error(`[sermon-tagging] Sheets returned no usable rows (got ${values?.length ?? 0})`);
+      return [];
+    }
 
     // Fetched in parallel with nothing else outstanding at this point in
     // the function, and tolerant of its own failure (returns {}) — a

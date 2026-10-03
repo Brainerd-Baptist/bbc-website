@@ -30,7 +30,14 @@ let cachedClient: JWT | null = null;
 
 function getClient(): JWT | null {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
-  if (!raw) return null;
+  if (!raw) {
+    // TEMP diagnostic (2026-10-03): this used to fail silently, which made
+    // a run-wide Tagging sheet outage indistinguishable from "nothing to
+    // sync" in the logs. See lib/sermon-tagging.ts's FAILURE_CACHE_MS
+    // comment — one silent null here poisons every sermon in that run.
+    console.error("[google-auth] GOOGLE_SERVICE_ACCOUNT_KEY is not set in this environment");
+    return null;
+  }
 
   if (!cachedClient) {
     let creds: { client_email: string; private_key: string };
