@@ -11,10 +11,10 @@ export default function useScrollToSuccess(done: boolean) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!done) return;
-    const id = requestAnimationFrame(() => {
+    const id = window.setTimeout(() => {
       ref.current?.scrollIntoView({ block: "center", behavior: "smooth" });
-    });
-    return () => cancelAnimationFrame(id);
+    }, 60);
+    return () => window.clearTimeout(id);
   }, [done]);
   return ref;
 }
