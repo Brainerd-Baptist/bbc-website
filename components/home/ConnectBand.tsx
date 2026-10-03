@@ -5,6 +5,7 @@ import { LEAD_PASTOR } from "@/lib/constants";
 export default function ConnectBand() {
   return (
     <section className="relative overflow-hidden" style={{ background: "var(--color-brand-navy)" }}>
+      <div className="bx-bloom" aria-hidden="true" />
       {/* Logo-mark watermark, top right.
           The comment here used to say mix-blend-mode: screen "leaves only the
           white logo lines visible" — but the asset has no white lines. Every
@@ -119,7 +120,7 @@ export default function ConnectBand() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/40 rounded-xl px-5 py-4 transition duration-200"
+                  className="group flex items-center gap-4 glass-on-dark rounded-xl px-5 py-4"
                 >
                   <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent shrink-0 group-hover:bg-accent-solid group-hover:text-white transition">
                     {item.icon}
