@@ -8,6 +8,8 @@ How the frosted, floating look is built and how to keep it working. Source of tr
 | --- | --- | --- |
 | `.glass-frost` | Hero-level cards: sermon card, service cards, event cards, Connect tiles, Kids and Students cards, error pages | Strongest blur (18px, saturate 1.5), top highlight, ring, two-layer shadow. Lifts on hover where hover exists. Add `.glass-static` for cards that are not links. |
 | `.glass` | Quieter cards and nested panels | Blur 16px. Do not nest glass in glass more than one level; it gets muddy and slow. |
+| `.glass-frost.glass-lite` | Rows in long lists (series pages) | Same look without the blur, so dozens of rows scroll smoothly on older phones. |
+| `.glass-on-dark` | Cards on a navy band or photo | Theme-invariant; pair with a bloom. |
 | `.glass-md` | Large container panels that hold other cards (Give "Other ways", Life Groups panels) | Translucent fill, blur 12px, plain border. |
 | `.glass-dark` | Chips and counters over photos or navy | Dark fill, used by the countdown. |
 | `.nav-glass` | The navbar once it leaves the hero | Driven by `data-chrome` in `Navbar.tsx`. |

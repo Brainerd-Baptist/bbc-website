@@ -169,7 +169,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
             return (
               <div
                 key={sermon.id}
-                className="group flex gap-0 rounded-2xl overflow-hidden transition duration-200 glass-frost"
+                className="group flex gap-0 rounded-2xl overflow-hidden transition duration-200 glass-frost glass-lite"
               >
                 {/* Episode number + thumbnail — links to sermon.
                     Kept (smaller) on mobile instead of hidden: the series

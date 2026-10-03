@@ -291,6 +291,13 @@ body {
   }
 }
 
+/* Long lists (a series can have 30+ rows): keep the frosted look (sheen, rim,
+   translucent fill) but skip the blur, because dozens of stacked backdrop
+   filters make scrolling stutter on older phones. */
+.glass-frost.glass-lite {
+  backdrop-filter: none;
+}
+
 /* Countdown digit: slides in when its value changes (Countdown.tsx keys the
    span on the value, so each change remounts it). */
 .digit-tick {
