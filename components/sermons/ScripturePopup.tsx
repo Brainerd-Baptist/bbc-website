@@ -59,7 +59,7 @@ export default function ScripturePopup({ reference, accentColor = "#00abc9", onC
       onClick={onClose}
       style={{
         position: "fixed", inset: 0, zIndex: 300,
-        background: "rgba(10,22,40,0.55)",
+        background: "var(--scrim)",
         display: "flex", alignItems: "center", justifyContent: "center",
         padding: "1.25rem",
       }}

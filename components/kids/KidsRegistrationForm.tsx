@@ -82,7 +82,7 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <label className={labelCls}>
         {label}
         {required && <span className="text-accent-text ml-0.5">*</span>}
