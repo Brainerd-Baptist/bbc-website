@@ -94,6 +94,13 @@
   outline: none;
 }
 
+/* In-page anchors (#pre-register, #connect...) stop below the fixed nav bar
+   instead of tucking their heading underneath it. */
+section[id],
+div[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
