@@ -86,13 +86,18 @@ function getEasternState(now: Date): StateInfo {
 
 // ── Tab system ────────────────────────────────────────────────────────────────
 
-type Tab = "watch" | "passage" | "outline" | "notes" | "prayer";
+type Tab = "watch" | "passage" | "notes" | "prayer";
 
 // Ordered for mobile thumb reach: the tabs people touch mid-service
-// (Outline, Notes) sit right after Watch, not stranded at the far right.
+// sit right after Watch, not stranded at the far right.
+// Note: an "Outline" tab (auto-extracted from Curtis's raw notes doc) was
+// removed 2026-10-03 — the extraction was pulling raw yellow-highlight
+// fragments and regex-matched scripture lines straight out of the notes
+// doc, often mid-sentence and out of context. Going back to the drawing
+// board on that rather than shipping junk. See OutlineTab / getSermonNotesByDate
+// in lib/sermon.ts, still intact but no longer rendered anywhere.
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "watch",   label: "Watch",   icon: "▶" },
-  { id: "outline", label: "Outline", icon: "📋" },
   { id: "notes",   label: "Notes",   icon: "✏️" },
   { id: "passage", label: "Passage", icon: "📖" },
   { id: "prayer",  label: "Prayer",  icon: "🙏" },
@@ -305,7 +310,6 @@ function ActiveView({
             <div className="flex-1 overflow-y-auto">
               {tab === "watch"   && <WatchTab   sermon={sermon} />}
               {tab === "passage" && <PassageTab sermon={sermon} />}
-              {tab === "outline" && <OutlineTab sermon={sermon} />}
               {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
               {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
             </div>
@@ -344,7 +348,7 @@ function ActiveView({
 
           {/* Bulletin tab bar */}
           <div className="flex border-b border-border-on-dark">
-            {(["outline", "passage", "notes", "prayer"] as Tab[]).map((t) => {
+            {(["passage", "notes", "prayer"] as Tab[]).map((t) => {
               const meta = TABS.find((x) => x.id === t)!;
               return (
                 <button
@@ -364,8 +368,7 @@ function ActiveView({
 
           {/* Bulletin tab content */}
           <div className="flex-1 overflow-y-auto">
-            {(tab === "watch" || tab === "outline") && <OutlineTab sermon={sermon} />}
-            {tab === "passage" && <PassageTab sermon={sermon} />}
+            {(tab === "watch" || tab === "passage") && <PassageTab sermon={sermon} />}
             {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
             {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
           </div>
@@ -476,50 +479,6 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
           </p>
         </>
       )}
-    </div>
-  );
-}
-
-// ── Outline tab ───────────────────────────────────────────────────────────────
-
-function OutlineTab({ sermon }: { sermon: SermonData }) {
-  if (!sermon.outline.length) {
-    return (
-      <div className="px-5 py-10 text-center text-fg-on-dark-muted text-sm">
-        {sermon.passage
-          ? "Outline will appear closer to the service."
-          : "Outline will appear when Curtis’s notes are available."}
-      </div>
-    );
-  }
-
-  const isScripture = sermon.outlineType === "scripture";
-
-  return (
-    <div className="px-5 py-6 max-w-xl mx-auto">
-      <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-1">
-        {isScripture ? "Scripture Journey" : "Sermon Outline"}
-      </p>
-      <h3 className="text-lg font-bold text-fg-on-dark mb-1">{sermon.title}</h3>
-      {isScripture && (
-        <p className="text-fg-on-dark-muted text-xs mb-5">
-          This week&apos;s sermon visits multiple passages. Follow along below.
-        </p>
-      )}
-      {!isScripture && <div className="mb-5" />}
-
-      <ol className="space-y-3">
-        {sermon.outline.map((point, i) => (
-          <li key={i} className="flex gap-3">
-            <span
-              className="mt-0.5 w-5 h-5 rounded-full bg-brand-navy text-accent text-[10px] font-bold flex items-center justify-center shrink-0"
-            >
-              {i + 1}
-            </span>
-            <span className="text-sm text-fg-on-dark-body leading-snug">{point}</span>
-          </li>
-        ))}
-      </ol>
     </div>
   );
 }

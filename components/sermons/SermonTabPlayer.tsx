@@ -17,9 +17,11 @@ interface Props {
   audioTrack?: AudioTrack | null;
   nextTrack?: AudioTrack | null;
   passages?: string[];
-  outline: string[];
-  outlineType: "structured" | "scripture" | "none";
-  rawText: string | null;
+  // Still accepted from the caller (app/sermons/[slug]/page.tsx) but no
+  // longer rendered — see the 2026-10-03 note near hasScriptureChip below.
+  outline?: string[];
+  outlineType?: "structured" | "scripture" | "none";
+  rawText?: string | null;
   highlights?: string[];
   accentColor: string;
 }
@@ -35,10 +37,6 @@ export default function SermonTabPlayer({
   audioTrack,
   nextTrack,
   passages = [],
-  outline,
-  outlineType,
-  rawText,
-  highlights = [],
   accentColor,
 }: Props) {
   const { setNextTrack } = useAudio();
@@ -49,12 +47,16 @@ export default function SermonTabPlayer({
     return () => setNextTrack(null);
   }, [nextTrack, setNextTrack]);
   const hasMedia = !!(youtubeId || audioTrack);
-  const hasOutline = outline.length > 0 || highlights.length > 0 || passages.length > 0;
-  // Notes download is available if we have outline content or raw text
-  const hasNotes = rawText || outline.length > 0 || highlights.length > 0;
-
-  // Scripture-only fallback: show a softer label
-  const showScriptureLabel = outlineType === "scripture" && !highlights.length;
+  // The auto-extracted outline/highlights block (parsed out of Curtis's raw
+  // notes doc — yellow-highlight fragments and regex-matched scripture
+  // lines) was removed 2026-10-03: it was surfacing junk, out-of-context
+  // snippets rather than usable notes. Going back to the drawing board on
+  // that — see lib/sermon.ts's parseOutline/parseHighlights, still intact
+  // but no longer rendered. The "Scripture" chip below is real tagged
+  // passage metadata (Sanity/Tagging sheet), not scraped from notes, so it
+  // stays.
+  const hasScriptureChip = passages.length > 0;
+  const hasNotes = true; // jump-to-notes link always available — notes live client-side
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
@@ -86,8 +88,8 @@ export default function SermonTabPlayer({
         </div>
       )}
 
-      {/* ── Section 2: Outline + Notes download card ── */}
-      {(hasOutline || hasNotes) && (
+      {/* ── Section 2: Scripture chip + jump-to-notes link ── */}
+      {(hasScriptureChip || hasNotes) && (
         <div
           style={{
             background: "var(--surface-sunken)",
@@ -96,8 +98,8 @@ export default function SermonTabPlayer({
             padding: "1.5rem 1.75rem",
           }}
         >
-          {/* ── Key passage chip — only when we have a real structured outline below ── */}
-          {passages.length > 0 && outlineType !== "scripture" && (
+          {/* ── Key passage chip — real tagged passage metadata, not scraped from notes ── */}
+          {hasScriptureChip && (
             <div style={{ marginBottom: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.375rem 0.625rem", alignItems: "center" }}>
               <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--fg-subtle)", marginRight: "0.25rem" }}>
                 Scripture
@@ -116,66 +118,9 @@ export default function SermonTabPlayer({
             </div>
           )}
 
-          {/* ── Main outline points ── */}
-          {hasOutline && (
-            <div>
-              {showScriptureLabel && (
-                <p style={{ color: "var(--fg-muted)", fontSize: "0.75rem", marginBottom: "1rem", lineHeight: "1.625" }}>
-                  Passages from this message
-                </p>
-              )}
-
-              {outline.length > 0 && (
-                <ol style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                  {outline.map((item, i) => (
-                    <li key={i} style={{ display: "flex", gap: "0.75rem", fontSize: "0.875rem" }}>
-                      <span
-                        style={{
-                          color: accentColor,
-                          fontWeight: 700,
-                          fontSize: "0.75rem",
-                          marginTop: "0.125rem",
-                          flexShrink: 0,
-                          width: "1.25rem",
-                        }}
-                      >
-                        {outlineType === "scripture" ? "—" : `${i + 1}.`}
-                      </span>
-                      <span style={{ color: "var(--fg-muted)" }}>{item}</span>
-                    </li>
-                  ))}
-                </ol>
-              )}
-
-              {/* ── Key phrases (highlights) — shown below outline ── */}
-              {highlights.length > 0 && (
-                <div style={{ marginTop: outline.length > 0 ? "1.5rem" : 0 }}>
-                  <p style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "var(--fg-subtle)",
-                    marginBottom: "0.75rem",
-                  }}>
-                    Key Phrases
-                  </p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    {highlights.map((phrase, i) => (
-                      <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", fontSize: "0.8rem" }}>
-                        <span style={{ color: accentColor, fontWeight: 700, flexShrink: 0, marginTop: "0.1rem" }}>›</span>
-                        <span style={{ color: "var(--fg-muted)", fontStyle: "italic" }}>{phrase}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ── Download Notes button ── */}
+          {/* ── Jump-to-notes link ── */}
           {hasNotes && (
-            <div style={{ marginTop: hasOutline ? "1.5rem" : 0, paddingTop: hasOutline ? "1.25rem" : 0, borderTop: hasOutline ? "1px solid var(--border)" : "none" }}>
+            <div style={{ marginTop: hasScriptureChip ? "1.5rem" : 0, paddingTop: hasScriptureChip ? "1.25rem" : 0, borderTop: hasScriptureChip ? "1px solid var(--border)" : "none" }}>
               <a
                 href="#notes"
                 onClick={(e) => {
