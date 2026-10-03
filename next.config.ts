@@ -13,10 +13,15 @@ import type { NextConfig } from "next";
 // it's always true to the instant, never dependent on how much history
 // Vercel happened to check out.
 const BUILD_TIME = new Date().toISOString();
+// Baked in like BUILD_TIME: VERCEL_GIT_COMMIT_SHA is server-only, so without
+// this the footer renders the SHA on the server and "dev" in the browser, which
+// is a hydration text mismatch (React error #418).
+const BUILD_SHA = process.env.VERCEL_GIT_COMMIT_SHA ?? "";
 
 const nextConfig: NextConfig = {
   env: {
     BUILD_TIME,
+    BUILD_SHA,
   },
 
   // @react-pdf/renderer has Node.js-only deps (canvas, fontkit, etc.) that

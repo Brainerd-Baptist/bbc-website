@@ -37,8 +37,9 @@
 export const APP_MILESTONE = "0.4";
 
 export function getBuildInfo() {
-  const sha = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "dev";
-  const dirty = !process.env.VERCEL_GIT_COMMIT_SHA; // local/dev build
+  // BUILD_SHA is baked in by next.config.ts so server and browser agree.
+  const sha = process.env.BUILD_SHA?.slice(0, 7) || "dev";
+  const dirty = !process.env.BUILD_SHA; // local/dev build
 
   let built = "unknown time";
   if (process.env.BUILD_TIME) {
