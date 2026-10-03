@@ -174,6 +174,15 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
       return [];
     }
 
+    // TEMP diagnostic (2026-10-03): every row is failing to parse into a
+    // TaggingRow (0 rows out of a non-empty values response, confirmed by
+    // the log two steps up the call chain) — this dumps the header plus
+    // the first 3 data rows' raw column-A values exactly as Sheets returns
+    // them, to see what normalizeSheetDate() is actually choking on.
+    console.log(
+      `[sermon-tagging] header row: ${JSON.stringify(values[0])}; first raw dates: ${JSON.stringify(values.slice(1, 4).map((r) => r[0]))}`,
+    );
+
     // Fetched in parallel with nothing else outstanding at this point in
     // the function, and tolerant of its own failure (returns {}) — a
     // resources-column hiccup should never take down the Date/Series/

@@ -13,7 +13,7 @@ export default async function ResourcesPage() {
   const resources = await getAllResources().catch(() => []);
 
   return (
-    <div className="min-h-screen px-5 md:px-8 py-10">
+    <div className="min-h-screen px-5 md:px-8 pt-28 pb-10">
       <div className="max-w-5xl mx-auto">
         <h1
           style={{
