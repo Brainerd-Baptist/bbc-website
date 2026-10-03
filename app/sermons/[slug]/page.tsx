@@ -18,7 +18,9 @@ import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { getSermonNotesByDate, parseOutline } from "@/lib/sermon";
 import { inkVarsFor } from "@/lib/identity-colors";
 import PassageLink from "@/components/sermons/PassageLink";
+import ResourcesMentioned from "@/components/sermons/ResourcesMentioned";
 import { findScriptureRefs, passageToId } from "@/lib/scripture-refs";
+import type { SanityResource } from "@/lib/sanity";
 
 // ── Sermon notes helpers ──────────────────────────────────────────────────────
 
@@ -58,6 +60,17 @@ async function loadSermonNotes(date: string): Promise<{
 
 function isCurtisHill(speaker: string): boolean {
   return speaker.toLowerCase().includes("curtis");
+}
+
+function dedupeResources(resources: SanityResource[]): SanityResource[] {
+  const seen = new Set<string>();
+  const out: SanityResource[] = [];
+  for (const r of resources) {
+    if (seen.has(r._id)) continue;
+    seen.add(r._id);
+    out.push(r);
+  }
+  return out;
 }
 
 export const revalidate = 300;
@@ -156,6 +169,7 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
     accentColor: string;
     outline?: Parameters<typeof PortableText>[0]["value"];
     notes?: Parameters<typeof PortableText>[0]["value"];
+    resources: SanityResource[];
   };
 
   let s: NormSermon;
@@ -176,6 +190,13 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       accentColor: sanitySermon.series?.accentColor ?? "#00abc9",
       outline:     sanitySermon.outline as NormSermon["outline"],
       notes:       sanitySermon.notes   as NormSermon["notes"],
+      // Sermon-specific resources + series-wide ones together, deduped by id
+      // (a resource could in principle be referenced from both). See
+      // claude/sermon-resource-catalog-scope-2026-10-03.md.
+      resources: dedupeResources([
+        ...(sanitySermon.resourcesMentioned ?? []),
+        ...(sanitySermon.series?.resourcesMentioned ?? []),
+      ]),
     };
   } else {
     const staticS = SERMONS.find((x) => x.id === slug);
@@ -192,6 +213,9 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
       date:        staticS.date,
       duration:    staticS.duration,
       accentColor: "#00abc9",
+      // Static fallback sermons predate this feature — no Sanity resource
+      // references to pull from.
+      resources: [],
     };
   }
 
@@ -378,6 +402,10 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
               highlights={sermonNotes.highlights}
             />
           </Suspense>
+
+          {s.resources.length > 0 && (
+            <ResourcesMentioned resources={s.resources} accentColor={accentColor} />
+          )}
 
           {/* Action row */}
           <div>

@@ -24,12 +24,14 @@ export interface SanitySermon {
   description?: string;
   outline?: unknown[];   // Portable Text
   notes?: unknown[];     // Portable Text
+  resourcesMentioned?: SanityResource[];
   series: {
     _id: string;
     title: string;
     slug: { current: string };
     accentColor?: string;
     bgColor?: string;
+    resourcesMentioned?: SanityResource[];
   };
 }
 
@@ -41,7 +43,34 @@ export interface SanitySeries {
   accentColor?: string;
   bgColor?: string;
   active?: boolean;
+  resourcesMentioned?: SanityResource[];
 }
+
+export interface SanityResource {
+  _id: string;
+  title: string;
+  creator?: string;
+  type: "book" | "article" | "ministry" | "video" | "podcast" | "prayer" | "other";
+  url: string;
+  blurb?: string;
+  topics?: string[];
+  relatedPassage?: string;
+  status: "active" | "archived";
+  featured?: boolean;
+  needsReview?: boolean;
+  /** Populated client-side when building the catalog — which sermon(s)/series
+   * this resource was pulled from, for the "mentioned in" chips. Not part of
+   * the Sanity document itself. */
+  mentionedIn?: { title: string; slug: string; kind: "sermon" | "series" }[];
+}
+
+const RESOURCE_FIELDS = `
+  _id, title, creator, type, url, blurb, topics, relatedPassage, status, featured, needsReview
+`;
+
+/** Only ever surface active resources on the public site — archived ones stay
+ * referenced (so no sermon page link ever 404s) but drop out of search/catalog. */
+const ACTIVE_RESOURCE_FILTER = `status != "archived"`;
 
 // ── Queries ───────────────────────────────────────────────────────────────────
 
@@ -67,10 +96,19 @@ const SERMON_FIELDS = `
   }
 `;
 
+// Note: this repeats series{...} fully (rather than spreading SERMON_FIELDS)
+// because GROQ object projections can't declare the same key ("series")
+// twice — the base SERMON_FIELDS' plain series-> block has to be left out
+// here and replaced with this richer one instead.
 const SERMON_DETAIL_FIELDS = `
-  ${SERMON_FIELDS},
+  _id, title, slug, date, speaker, passage, book, youtubeId, duration, audioUrl, passages, description,
   outline,
-  notes
+  notes,
+  "resourcesMentioned": resourcesMentioned[]->{ ${RESOURCE_FIELDS} }[${ACTIVE_RESOURCE_FILTER}],
+  series->{
+    _id, title, slug, accentColor, bgColor,
+    "resourcesMentioned": resourcesMentioned[]->{ ${RESOURCE_FIELDS} }[${ACTIVE_RESOURCE_FILTER}]
+  }
 `;
 
 /** All sermons, newest first */
@@ -166,9 +204,28 @@ export async function getSermonsByBook(book: string): Promise<SanitySermon[]> {
 export async function getSeriesBySlug(slug: string): Promise<SanitySeries | null> {
   return sanityClient.fetch(
     `*[_type == "series" && slug.current == $slug][0] {
-      _id, title, slug, description, accentColor, bgColor, active
+      _id, title, slug, description, accentColor, bgColor, active,
+      "resourcesMentioned": resourcesMentioned[]->{ ${RESOURCE_FIELDS} }[${ACTIVE_RESOURCE_FILTER}]
     }`,
     { slug },
+    { next: { revalidate: 3600 } }
+  );
+}
+
+/** Every active resource, for the /resources catalog — with the sermon(s)
+ * and series it's referenced from, for the "mentioned in" chips. A resource
+ * with no reference anywhere (orphaned — e.g. its one sermon reference got
+ * removed) is left out, since it'd have nothing to link to. */
+export async function getAllResources(): Promise<SanityResource[]> {
+  return sanityClient.fetch(
+    `*[_type == "resource" && ${ACTIVE_RESOURCE_FILTER}] | order(title asc) {
+      ${RESOURCE_FIELDS},
+      "mentionedIn": [
+        ...*[_type == "sermon" && references(^._id)]{ "title": title, "slug": slug.current, "kind": "sermon" },
+        ...*[_type == "series" && references(^._id)]{ "title": title, "slug": slug.current, "kind": "series" }
+      ]
+    }[count(mentionedIn) > 0]`,
+    {},
     { next: { revalidate: 3600 } }
   );
 }

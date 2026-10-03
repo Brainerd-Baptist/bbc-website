@@ -143,6 +143,16 @@ export const sermonType = defineType({
         },
       ],
     }),
+    defineField({
+      name: "resourcesMentioned",
+      title: "Resources Mentioned",
+      description:
+        "Books, articles, ministries, etc. mentioned in THIS sermon specifically. " +
+        "A resource used across the whole series belongs on the Series document instead — " +
+        "see claude/sermon-resource-catalog-scope-2026-10-03.md.",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "resource" }] }],
+    }),
   ],
   preview: {
     select: {

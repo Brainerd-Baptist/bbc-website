@@ -53,6 +53,16 @@ export const seriesType = defineType({
       type: "boolean",
       initialValue: false,
     }),
+    defineField({
+      name: "resourcesMentioned",
+      title: "Resources Mentioned (series-wide)",
+      description:
+        "Books, articles, ministries, etc. that apply across the WHOLE series (e.g. the main " +
+        "commentary used every week) — added once here instead of re-added to every sermon. " +
+        "A resource specific to one week's text belongs on that Sermon document instead.",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "resource" }] }],
+    }),
   ],
   preview: {
     select: { title: "title", active: "active" },
