@@ -1,3 +1,5 @@
+"use client";
+
 import type { SanityResource } from "@/lib/sanity";
 
 const TYPE_LABEL: Record<SanityResource["type"], string> = {
