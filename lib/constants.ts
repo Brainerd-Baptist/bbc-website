@@ -137,6 +137,7 @@ export const FOOTER_LINKS = {
   ],
   Resources: [
     { label: "Sermons", href: "/sermons" },
+    { label: "My Notes", href: "/my-notes" },
     { label: "Give", href: "/give" },
     { label: "Events", href: "/events" },
     { label: "Prayer", href: "/prayer" },
