@@ -21,6 +21,7 @@ import {
   useRef,
   useCallback,
   type FormEvent,
+  type ReactNode,
 } from "react";
 import type { SermonData } from "@/lib/sermon";
 // NOT from "@/lib/sermon" — that file imports google-auth-library at module
@@ -56,11 +57,49 @@ type Tab = "watch" | "passage" | "notes" | "prayer";
 // doc, often mid-sentence and out of context. Going back to the drawing
 // board on that rather than shipping junk. See OutlineTab / getSermonNotesByDate
 // in lib/sermon.ts, still intact but no longer rendered anywhere.
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: "watch",   label: "Watch",   icon: "▶" },
-  { id: "notes",   label: "Notes",   icon: "✏️" },
-  { id: "passage", label: "Passage", icon: "📖" },
-  { id: "prayer",  label: "Prayer",  icon: "🙏" },
+//
+// Icons are small outline SVGs, not emoji — emoji render inconsistently
+// across platforms (color, baseline, even which glyph shows up at all)
+// and read as decoration rather than UI. Matches the stroke-based icon
+// style SermonNotes.tsx's own toolbar already uses (IconBold, IconBullets,
+// etc.) — the Notes icon here is literally the same pencil path as that
+// toolbar's "Your Notes" header icon, so the same glyph means the same
+// thing everywhere notes show up.
+function TabIconWatch() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function TabIconNotes() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+    </svg>
+  );
+}
+function TabIconPassage() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 6c-1.5-1.3-3.5-2-6-2v14c2.5 0 4.5.7 6 2m0-14c1.5-1.3 3.5-2 6-2v14c-2.5 0-4.5.7-6 2m0-14v14"/>
+    </svg>
+  );
+}
+function TabIconPrayer() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3v7"/><path d="M12 21c-2-1.5-4-4-4-7.5V8l4-2 4 2v5.5c0 3.5-2 6-4 7.5z"/>
+    </svg>
+  );
+}
+
+const TABS: { id: Tab; label: string; icon: () => ReactNode }[] = [
+  { id: "watch",   label: "Watch",   icon: TabIconWatch },
+  { id: "notes",   label: "Notes",   icon: TabIconNotes },
+  { id: "passage", label: "Passage", icon: TabIconPassage },
+  { id: "prayer",  label: "Prayer",  icon: TabIconPrayer },
 ];
 
 // ── Scripture fetching ────────────────────────────────────────────────────────
@@ -309,7 +348,7 @@ function ActiveView({
                       : "text-fg-on-dark-muted hover:text-fg-on-dark"
                   }`}
                 >
-                  <span className="text-base leading-none">{t.icon}</span>
+                  <span className="leading-none">{t.icon()}</span>
                   {t.label}
                 </button>
               ))}
@@ -372,7 +411,7 @@ function ActiveView({
                       : "text-fg-on-dark-muted hover:text-fg-on-dark"
                   }`}
                 >
-                  {meta.icon} {meta.label}
+                  <span className="inline-flex items-center gap-1.5 align-middle">{meta.icon()} {meta.label}</span>
                 </button>
               );
             })}
@@ -552,8 +591,10 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
   if (status === "sent") {
     return (
       <div className="px-5 py-14 max-w-xl mx-auto text-center">
-        <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4 text-2xl">
-          🙏
+        <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4 text-accent">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
         </div>
         <h3 className="text-lg font-bold text-fg-on-dark mb-2">We&apos;re praying for you</h3>
         <p className="text-sm text-fg-on-dark-muted">

@@ -429,9 +429,20 @@ export default function SermonNotes({
     content: initialContent || "<p></p>",
     editorProps: {
       attributes: { class: "bbc-notes-editor", spellcheck: "true" },
-      handleClickOn(_view, _pos, _node, _nodePos, event) {
+      handleClickOn(view, _pos, _node, _nodePos, event) {
         const ref = (event.target as HTMLElement)?.closest?.("[data-ref]")?.getAttribute("data-ref");
-        if (ref) { setOpenRef(ref); return true; }
+        if (ref) {
+          // Tapping a reference opens a read-only popup over the editor,
+          // but the contenteditable underneath still has focus — on
+          // mobile that leaves the on-screen keyboard sitting open
+          // behind the popup (reported 2026-10-04: "when tapping a
+          // verse, the keyboard opens by default"). Blurring the
+          // ProseMirror view's own DOM node dismisses it without
+          // otherwise touching the editor's content or selection.
+          view.dom.blur();
+          setOpenRef(ref);
+          return true;
+        }
         return false;
       },
     },
@@ -772,8 +783,15 @@ export default function SermonNotes({
           <Divider />
           <ToolBtn onClick={() => editor.chain().focus().toggleBulletList().run()}           active={editor.isActive("bulletList")}  title="Bullet list"   accentColor={accentColor}><IconBullets /></ToolBtn>
           <ToolBtn onClick={() => editor.chain().focus().toggleOrderedList().run()}          active={editor.isActive("orderedList")} title="Numbered list" accentColor={accentColor}><IconNumbers /></ToolBtn>
-          <ToolBtn onClick={() => editor.chain().focus().sinkListItem("listItem").run()}     active={false}                        title="Indent"      accentColor={accentColor}><IconIndent /></ToolBtn>
+          {/* Outdent (left arrow, decrease) before Indent (right arrow,
+              increase) — the standard order in every other editor's
+              toolbar (Docs, Word). Previously reversed, which put the
+              right-pointing "indent further" arrow on the LEFT button
+              and the left-pointing "outdent" arrow on the RIGHT one —
+              backwards from what the icons themselves point toward
+              (reported 2026-10-04). */}
           <ToolBtn onClick={() => editor.chain().focus().liftListItem("listItem").run()}     active={false}                        title="Outdent"     accentColor={accentColor}><IconOutdent /></ToolBtn>
+          <ToolBtn onClick={() => editor.chain().focus().sinkListItem("listItem").run()}     active={false}                        title="Indent"      accentColor={accentColor}><IconIndent /></ToolBtn>
           <Divider />
           <ToolBtn onClick={() => editor.chain().focus().undo().run()} active={false} title="Undo" accentColor={accentColor}><IconUndo /></ToolBtn>
           <ToolBtn onClick={() => editor.chain().focus().redo().run()} active={false} title="Redo" accentColor={accentColor}><IconRedo /></ToolBtn>
