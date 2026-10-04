@@ -219,7 +219,13 @@ function ActiveView({
   const embedUrl = `https://www.youtube.com/embed/live_stream?channel=${YOUTUBE_CHANNEL_ID}&autoplay=1&rel=0&modestbranding=1`;
 
   return (
-    <div className="min-h-screen bg-theater-bg text-fg-on-dark flex flex-col">
+    // pt-16 clears the fixed Navbar (h-16, 64px, fixed top-0 z-50 in
+    // ConditionalLayout/Navbar.tsx). OffHours below already had this (pt-24
+    // on its own hero div); this live/pre/post view never did, so the fixed
+    // navbar's logo sat directly on top of the status bar's first 64px —
+    // reported live this morning as the logo and "We're Live" bar looking
+    // "scrunched together" on /live's Notes tab (and every other tab).
+    <div className="min-h-screen bg-theater-bg text-fg-on-dark flex flex-col pt-16">
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={`flex items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
