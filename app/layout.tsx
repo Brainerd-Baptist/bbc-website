@@ -43,6 +43,18 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
     shortcut: "/icon.png",
   },
+  // Without an explicit title here, "Add to Home Screen" on iOS falls back
+  // to truncating the full page <title> ("Brainerd Baptist Church —
+  // Chattanooga, TN"), which is where the squished "BrainerdBaptist..."
+  // label (reported 2026-10-04) came from. This is what actually controls
+  // that label — short and deliberate, not left to iOS's own truncation.
+  appleWebApp: {
+    title: "Brainerd Baptist",
+  },
+  // Same label, for Android/Chrome's "Install app" — applicationName is
+  // the non-manifest fallback; app/manifest.ts's name/short_name cover the
+  // full PWA installed-app case.
+  applicationName: "Brainerd Baptist",
 };
 
 export const viewport: Viewport = {
