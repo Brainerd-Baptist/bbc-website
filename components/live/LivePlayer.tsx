@@ -28,61 +28,21 @@ import type { SermonData } from "@/lib/sermon";
 // the moment a "use client" component imports any runtime value from it.
 // See lib/sermon-shared.ts's doc comment.
 import { YOUTUBE_CHANNEL_ID, formatSermonDate } from "@/lib/sermon-shared";
+import {
+  type LiveState,
+  type ServiceWindow,
+  type LiveStateInfo as StateInfo,
+  getEasternState,
+  getEasternDateString,
+} from "@/lib/live-schedule";
 import SermonNotes from "@/components/sermons/SermonNotes";
 
 const DEFAULT_ACCENT = "#00abc9";
 
-/** Extracts the /sermons/[slug] slug from an internal watchUrl, if any. */
-function slugFromWatchUrl(watchUrl: string, isInternal: boolean): string | null {
-  if (!isInternal) return null;
-  const m = watchUrl.match(/^\/sermons\/([^/?#]+)/);
-  return m?.[1] ?? null;
-}
-
-// ── Service schedule ──────────────────────────────────────────────────────────
-
-type ServiceWindow = {
-  label: string;
-  startH: number; startM: number;
-  endH:   number; endM:   number;
-};
-
-const SERVICES: ServiceWindow[] = [
-  { label: "8:30 AM Service",  startH: 8,  startM: 30, endH: 9,  endM: 45 },
-  { label: "11:00 AM Service", startH: 11, startM: 0,  endH: 12, endM: 15 },
-];
-
-const PRE_MINUTES  = 20;
-const POST_MINUTES = 45;
-
-type LiveState = "pre" | "live" | "post" | "off";
-
-interface StateInfo {
-  state:        LiveState;
-  service:      ServiceWindow | null;
-  minutesUntil: number;
-}
-
-function getEasternState(now: Date): StateInfo {
-  const etStr = now.toLocaleString("en-US", { timeZone: "America/New_York" });
-  const et    = new Date(etStr);
-  const dow   = et.getDay();
-  const total = et.getHours() * 60 + et.getMinutes();
-
-  if (dow !== 0) return { state: "off", service: null, minutesUntil: 0 };
-
-  for (const svc of SERVICES) {
-    const start = svc.startH * 60 + svc.startM;
-    const end   = svc.endH   * 60 + svc.endM;
-    if (total >= start && total < end)
-      return { state: "live", service: svc, minutesUntil: 0 };
-    if (total >= start - PRE_MINUTES && total < start)
-      return { state: "pre",  service: svc, minutesUntil: start - total };
-    if (total >= end && total < end + POST_MINUTES)
-      return { state: "post", service: svc, minutesUntil: 0 };
-  }
-  return { state: "off", service: null, minutesUntil: 0 };
-}
+// ── Service schedule ────────────────────────────────────────────────────────
+// SERVICES / PRE_MINUTES / POST_MINUTES / getEasternState now live in
+// lib/live-schedule.ts (imported above) so the homepage banner and nav
+// badge can run the exact same clock — see that file's doc comment.
 
 // ── Tab system ────────────────────────────────────────────────────────────────
 
@@ -132,11 +92,22 @@ function useScripture(passage: string) {
 
 // ── Notes (localStorage) ──────────────────────────────────────────────────────
 
-/** Falls back to a stable per-date draft key before a sermon has a real
- * /sermons/[slug] page, so notes typed during the live stream converge onto
- * the same SermonNotes storage key once the slug exists later that week. */
-function draftNoteKey(sermonDate: string): string {
-  return `live-draft-${sermonDate}`;
+/** Stable per-date draft key for notes taken during the live stream.
+ *
+ * MUST be keyed by TODAY's real Eastern-time date, never by sermon.date —
+ * sermon.date comes from getLatestSermon(), which during the live window
+ * is always last week's already-synced sermon (this week's doesn't sync
+ * until Mon/Tue/Wed). Found 2026-10-03: this used to fall through to the
+ * resolved sermon's own slug whenever one existed (slugFromWatchUrl), which
+ * by Sunday morning it always does — last week's sermon was synced days
+ * earlier — so live notes were silently writing into last week's real,
+ * permanent bbc-notes-${slug} storage instead of a draft. See
+ * claude/sunday-morning-live-pipeline-audit-2026-10-03.md. Always using
+ * today's actual date here (never a resolved slug) makes that collision
+ * structurally impossible; SermonNotes.tsx's mount effect migrates this
+ * draft onto the real bbc-notes-${slug} key once that page exists. */
+function draftNoteKey(todayEasternDate: string): string {
+  return `live-draft-${todayEasternDate}`;
 }
 
 // ── Prayer form ───────────────────────────────────────────────────────────────
@@ -168,9 +139,17 @@ function usePrayerForm() {
 
 // ── Root component ────────────────────────────────────────────────────────────
 
-interface Props { sermon: SermonData }
+interface Props {
+  sermon: SermonData;
+  /** True when we're in the live window but today's Tagging-sheet row
+   * isn't in yet, so `sermon` is the stale last-synced (last week's)
+   * fallback rather than today's real info — see app/live/page.tsx and
+   * lib/live-today.ts. Lets the bulletin say so honestly instead of
+   * presenting last week's facts as if they were today's. */
+  isStaleFallback?: boolean;
+}
 
-export default function LivePlayer({ sermon }: Props) {
+export default function LivePlayer({ sermon, isStaleFallback = false }: Props) {
   const [mounted, setMounted] = useState(false);
   const [info, setInfo]       = useState<StateInfo>({ state: "off", service: null, minutesUntil: 0 });
   const intervalRef           = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -195,7 +174,15 @@ export default function LivePlayer({ sermon }: Props) {
   const effectiveState = previewState ?? state;
 
   if (effectiveState === "live" || effectiveState === "pre" || effectiveState === "post") {
-    return <ActiveView sermon={sermon} state={effectiveState} service={service} minutesUntil={minutesUntil} />;
+    return (
+      <ActiveView
+        sermon={sermon}
+        state={effectiveState}
+        service={service}
+        minutesUntil={minutesUntil}
+        isStaleFallback={isStaleFallback}
+      />
+    );
   }
   return <OffHours sermon={sermon} />;
 }
@@ -207,11 +194,13 @@ function ActiveView({
   state,
   service,
   minutesUntil,
+  isStaleFallback,
 }: {
   sermon:       SermonData;
   state:        "live" | "pre" | "post";
   service:      ServiceWindow | null;
   minutesUntil: number;
+  isStaleFallback: boolean;
 }) {
   const [tab, setTab] = useState<Tab>("watch");
 
@@ -308,7 +297,7 @@ function ActiveView({
               ))}
             </div>
             <div className="flex-1 overflow-y-auto">
-              {tab === "watch"   && <WatchTab   sermon={sermon} />}
+              {tab === "watch"   && <WatchTab   sermon={sermon} isStaleFallback={isStaleFallback} />}
               {tab === "passage" && <PassageTab sermon={sermon} />}
               {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
               {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
@@ -317,7 +306,7 @@ function ActiveView({
 
           {/* Desktop: Give + Prayer row below stream */}
           <div className="hidden lg:block">
-            <WatchTab sermon={sermon} />
+            <WatchTab sermon={sermon} isStaleFallback={isStaleFallback} />
           </div>
         </div>
 
@@ -344,6 +333,11 @@ function ActiveView({
               {sermon.title}
             </h2>
             <p className="text-fg-on-dark-muted text-xs mt-1">Follow along · {service?.label ?? "Live Service"}</p>
+            {isStaleFallback && (
+              <p className="text-[11px] text-fg-on-dark-muted mt-2 px-2.5 py-1.5 rounded-md bg-surface-on-dark leading-snug">
+                Showing last week&apos;s message — today&apos;s title posts here by Wednesday.
+              </p>
+            )}
           </div>
 
           {/* Bulletin tab bar */}
@@ -380,10 +374,15 @@ function ActiveView({
 
 // ── Watch tab ─────────────────────────────────────────────────────────────────
 
-function WatchTab({ sermon }: { sermon: SermonData }) {
+function WatchTab({ sermon, isStaleFallback = false }: { sermon: SermonData; isStaleFallback?: boolean }) {
   const date = formatSermonDate(sermon.date);
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
+      {isStaleFallback && (
+        <p className="text-[11px] text-fg-on-dark-muted mb-3 px-2.5 py-1.5 rounded-md bg-surface-on-dark leading-snug inline-block">
+          Showing last week&apos;s message — today&apos;s title posts here by Wednesday.
+        </p>
+      )}
       {sermon.passage && (
         <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">
           {sermon.passage}
@@ -485,20 +484,26 @@ function PassageTab({ sermon }: { sermon: SermonData }) {
 
 // ── Notes tab ─────────────────────────────────────────────────────────────────
 
-/** /live's Notes tab, now the same rich editor used on /sermons/[slug] —
+/** /live's Notes tab, the same rich editor used on /sermons/[slug] —
  * formatting, numbered/bulleted lists, one-click PDF download, and real
  * email-with-attachment, instead of the old plain textarea + mailto: link.
- * Before a slug exists for this week's sermon, notes are kept under a
- * per-date draft key and will carry over once SermonNotes is opened again
- * from the sermon's own page (same `bbc-notes-${slug}` key). */
+ *
+ * Always saves under today's date-based draft key, NEVER the resolved
+ * sermon's slug — see draftNoteKey()'s comment for why: `sermon` here is
+ * whatever getLatestSermon() resolved, which during the live window is
+ * last week's already-synced sermon with a real slug, so falling through
+ * to that slug (the old behavior) silently wrote live notes into last
+ * week's permanent notes. SermonNotes.tsx migrates this draft onto the
+ * real bbc-notes-${slug} key once this week's sermon is synced and its
+ * page is opened. */
 function LiveNotesTab({ sermon }: { sermon: SermonData }) {
-  const slug = slugFromWatchUrl(sermon.watchUrl, sermon.watchUrlIsInternal);
+  const todayKey = draftNoteKey(getEasternDateString(new Date()));
 
   return (
     <div className="px-5 py-6 max-w-xl mx-auto">
       <SermonNotes
-        slug={slug ?? draftNoteKey(sermon.date)}
-        noteKey={slug ? undefined : draftNoteKey(sermon.date)}
+        slug={todayKey}
+        noteKey={todayKey}
         accentColor={DEFAULT_ACCENT}
         sermonTitle={sermon.title}
         speaker={sermon.speaker}

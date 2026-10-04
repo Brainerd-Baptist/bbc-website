@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { getNavTreatment } from "@/lib/nav-treatment";
+import { getEasternState, type LiveState } from "@/lib/live-schedule";
 
 // ── Nav groups shown in the drawer ─────────────────────────────
 const NAV_GROUPS = [
@@ -87,12 +88,27 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // Same Eastern-time clock the live page and homepage banner use — see
+  // lib/live-schedule.ts. Drives the pulsing "live" badge on the hamburger
+  // trigger itself (not just the drawer row inside it), so it's visible on
+  // mobile without opening the menu. "off" the other ~164 hours/week, by
+  // construction — see claude/sunday-morning-live-pipeline-audit-2026-10-03.md.
+  const [liveState, setLiveState] = useState<LiveState>("off");
 
   const pathname = usePathname();
   const { theme, resolvedTheme, setTheme } = useTheme();
 
   // Avoid hydration mismatch — only render theme-aware icons after mount
   useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    const tick = () => setLiveState(getEasternState(new Date()).state);
+    tick();
+    const id = setInterval(tick, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const isLiveNow = liveState === "live" || liveState === "pre";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
@@ -177,12 +193,19 @@ export default function Navbar() {
               {!mounted ? <span className="w-5 h-5 block" /> : isDark ? <SunIcon /> : <MoonIcon />}
             </button>
 
-            {/* Hamburger button */}
+            {/* Hamburger button — pulsing dot during the live window so
+                mobile visitors see it's live without opening the menu */}
             <button
               onClick={() => setMenuOpen(true)}
-              aria-label="Open navigation menu"
-              className="nav-ctl flex flex-col gap-1.5 p-2 cursor-pointer rounded-lg transition-colors"
+              aria-label={isLiveNow ? "Open navigation menu — live now" : "Open navigation menu"}
+              className="nav-ctl relative flex flex-col gap-1.5 p-2 cursor-pointer rounded-lg transition-colors"
             >
+              {isLiveNow && (
+                <span className="absolute top-1 right-1 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-solid opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent-solid" />
+                </span>
+              )}
               <span className="nav-bar-line w-6 h-0.5 rounded-full" />
               <span className="nav-bar-line w-6 h-0.5 rounded-full" />
               <span className="nav-bar-line w-4 h-0.5 rounded-full" />
@@ -238,28 +261,37 @@ export default function Navbar() {
                 {label}
               </p>
               <div className="space-y-1">
-                {links.map(({ label: linkLabel, href }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setMenuOpen(false)}
-                    aria-current={pathname === href ? "page" : undefined}
-                    className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-hover-subtle ${pathname === href ? "nav-drawer-pill" : ""}`}
-                  >
-                    <span className="text-sm font-medium transition-colors text-fg-muted group-hover:text-fg">
-                      {linkLabel}
-                    </span>
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      className="transition-colors text-fg-subtle group-hover:text-fg-muted"
+                {links.map(({ label: linkLabel, href }) => {
+                  const isLiveLink = href === "/live" && isLiveNow;
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      aria-current={pathname === href ? "page" : undefined}
+                      className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-hover-subtle ${pathname === href ? "nav-drawer-pill" : ""}`}
                     >
-                      <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </Link>
-                ))}
+                      <span className={`flex items-center gap-2 text-sm font-medium transition-colors ${isLiveLink ? "text-accent-text" : "text-fg-muted group-hover:text-fg"}`}>
+                        {isLiveLink && (
+                          <span className="relative flex h-2 w-2 shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-solid opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-solid" />
+                          </span>
+                        )}
+                        {isLiveLink && liveState === "live" ? "Live Now" : linkLabel}
+                      </span>
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        className="transition-colors text-fg-subtle group-hover:text-fg-muted"
+                      >
+                        <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}

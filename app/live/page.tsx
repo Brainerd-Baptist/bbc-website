@@ -13,6 +13,8 @@
 
 import type { Metadata } from "next";
 import { getLatestSermon } from "@/lib/sermon";
+import { getEasternState, getEasternDateString } from "@/lib/live-schedule";
+import { getTodayLiveOverlay } from "@/lib/live-today";
 import LivePlayer from "@/components/live/LivePlayer";
 
 export const metadata: Metadata = {
@@ -35,5 +37,47 @@ export default async function LivePage({
 }) {
   const { fileId } = await searchParams;
   const sermon = await getLatestSermon(fileId);
-  return <LivePlayer sermon={sermon} />;
+
+  // During the live window (and only then), prefer TODAY's actual Tagging
+  // sheet row over the stale getLatestSermon() result, which during this
+  // window always resolves to last week's already-synced sermon — see
+  // lib/live-today.ts's doc comment. Gated on the same Eastern-time clock
+  // the player itself uses, so this never runs on a weekday page load and
+  // automatically stops the moment the live window ends.
+  const now = new Date();
+  const { state } = getEasternState(now);
+  const inLiveWindow = !fileId && (state === "pre" || state === "live" || state === "post");
+
+  let liveSermon = sermon;
+  let isStaleFallback = false;
+
+  if (inLiveWindow) {
+    const overlay = await getTodayLiveOverlay(getEasternDateString(now));
+    if (overlay) {
+      liveSermon = {
+        ...sermon,
+        title:   overlay.title,
+        passage: overlay.passage,
+        speaker: overlay.speaker,
+        series:  overlay.series,
+        part:    overlay.part,
+        summary: overlay.summary,
+        date:    overlay.date,
+        outline: overlay.outline,
+        outlineType: overlay.outlineType,
+        // No synced video for today's sermon yet — keep whatever "watch
+        // elsewhere" fallback getLatestSermon() already resolved (last
+        // week's internal page or the channel), rather than claiming a
+        // /sermons/[slug] page exists for a sermon not synced yet.
+      };
+    } else {
+      // Curtis's row isn't in the Tagging sheet yet — fall back to the
+      // existing (stale, last week's) sermon rather than showing nothing,
+      // and tell the UI so it can say so honestly instead of presenting
+      // last week's facts as if they were today's.
+      isStaleFallback = true;
+    }
+  }
+
+  return <LivePlayer sermon={liveSermon} isStaleFallback={isStaleFallback} />;
 }

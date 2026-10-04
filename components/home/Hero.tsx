@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Countdown from "./Countdown";
+import LiveBanner from "@/components/live/LiveBanner";
 
 // ── Cloudflare Stream (same asset as Visit page) ───────────────────
 const CF_CUSTOMER = "customer-4oim3t3sdsmhrdq9";
@@ -177,6 +178,13 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-end overflow-hidden">
+      {/* ── Live banner — only mounts during the live window, sits just
+           below the fixed nav (top-16 = nav's own h-16) regardless of
+           scroll position. See components/live/LiveBanner.tsx. ── */}
+      <div className="absolute top-16 inset-x-0 z-20">
+        <LiveBanner />
+      </div>
+
       {/* ── Parallax background ── */}
       <div
         ref={parallaxRef}

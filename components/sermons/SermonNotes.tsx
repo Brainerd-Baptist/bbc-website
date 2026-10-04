@@ -364,6 +364,24 @@ export default function SermonNotes({
 
   useEffect(() => {
     try {
+      // Live-draft migration: this is the real, slug-keyed usage (noteKey
+      // wasn't passed to override storageKey) for a sermon whose date we
+      // know. If nothing's saved here yet, but a live-window draft exists
+      // from when this sermon was still streaming and not yet synced
+      // (components/live/LivePlayer.tsx's LiveNotesTab always saves under
+      // `live-draft-${that Sunday's date}`, never this page's slug key —
+      // see that file's comment on why), adopt it here once and clear the
+      // draft, so notes taken live land on the sermon's real page instead
+      // of staying stranded under the old date-only key forever.
+      if (!noteKey && date && !localStorage.getItem(storageKey)) {
+        const draftKey = `live-draft-${date}`;
+        const draft = localStorage.getItem(draftKey);
+        if (draft) {
+          localStorage.setItem(storageKey, draft);
+          localStorage.removeItem(draftKey);
+        }
+      }
+
       const saved = localStorage.getItem(storageKey);
       if (saved) initialContent.current = migrateLegacyNotes(saved);
     } catch { /* private mode */ }
