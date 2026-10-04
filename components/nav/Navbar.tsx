@@ -5,18 +5,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { getNavTreatment } from "@/lib/nav-treatment";
+import { CHURCH_CENTER_CALENDAR_URL } from "@/lib/constants";
 import { getEasternState, type LiveState } from "@/lib/live-schedule";
+import { useSpecialLiveCheck } from "@/lib/use-special-live";
 
 // ── Nav groups shown in the drawer ─────────────────────────────
 const NAV_GROUPS = [
   {
     label: "Sunday",
     links: [
+      // "Who Is Jesus?" kept first, ahead of Watch Live — it's the one
+      // pre-decision, exploratory page for someone who isn't sure about
+      // faith yet, so it gets first look rather than being buried under
+      // Next Steps, which assumes someone's already decided to get more
+      // involved (asked about 2026-10-04).
+      { label: "Who Is Jesus?", href: "/who-is-jesus" },
       { label: "Watch Live", href: "/live" },
       { label: "Plan a Visit", href: "/visit" },
       { label: "Sermons", href: "/sermons" },
       { label: "Resources", href: "/resources" },
-      { label: "Who Is Jesus?", href: "/who-is-jesus" },
     ],
   },
   {
@@ -36,22 +43,34 @@ const NAV_GROUPS = [
     links: [
       { label: "Brainerd Baptist in the Community", href: "/community" },
       { label: "The BX Community Center", href: "/bx" },
+      // Real destination for "Events" — the site has no /events page of
+      // its own; see lib/constants.ts's CHURCH_CENTER_CALENDAR_URL.
+      { label: "Events", href: CHURCH_CENTER_CALENDAR_URL },
     ],
   },
   {
     label: "Next Steps",
     links: [
       { label: "Membership", href: "/membership" },
-      { label: "Baptism", href: "/connect/next-step" },
+      // Previously both Baptism and Serving pointed at the exact same
+      // /connect/next-step URL with nothing distinguishing them (found
+      // during the 2026-10-04 nav/footer audit) — same general intake
+      // form either way, and a duplicate React key to boot. ConnectForm
+      // now reads ?interest= to preselect the right checkbox instead.
+      { label: "Baptism", href: "/connect/next-step?interest=baptism" },
       { label: "Life Groups", href: "/life-groups" },
-      { label: "Serving", href: "/connect/next-step" },
+      { label: "Serving", href: "/connect/next-step?interest=serving" },
       { label: "Mission Trips", href: "/missions" },
       { label: "Connect With Us", href: "/connect" },
+      { label: "Prayer Request", href: "/connect/care" },
     ],
   },
   {
     label: "More",
     links: [
+      { label: "About", href: "/about" },
+      { label: "Our Beliefs", href: "/beliefs" },
+      { label: "Our History", href: "/about#founded" },
       { label: "Staff", href: "/staff" },
       { label: "Give", href: "/give" },
     ],
@@ -108,7 +127,14 @@ export default function Navbar() {
     return () => clearInterval(id);
   }, []);
 
-  const isLiveNow = liveState === "live" || liveState === "pre";
+  // Special, non-Sunday livestreams (a Christmas Eve service, a
+  // conference, etc.) — same YouTube-backed check LivePlayer and the
+  // homepage banner use. Only polls while the regular schedule says
+  // "off" — see lib/youtube-live.ts and lib/use-special-live.ts.
+  const specialLive = useSpecialLiveCheck(liveState === "off");
+  const effectiveLiveState: LiveState = liveState === "off" && specialLive ? "live" : liveState;
+
+  const isLiveNow = effectiveLiveState === "live" || effectiveLiveState === "pre";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 48);
@@ -270,6 +296,9 @@ export default function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       aria-current={pathname === href ? "page" : undefined}
                       className={`flex items-center justify-between group w-full px-3 py-2.5 rounded-xl transition-colors hover:bg-hover-subtle ${pathname === href ? "nav-drawer-pill" : ""}`}
+                      {...(href.startsWith("http")
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                     >
                       <span className={`flex items-center gap-2 text-sm font-medium transition-colors ${isLiveLink ? "text-accent-text" : "text-fg-muted group-hover:text-fg"}`}>
                         {isLiveLink && (
@@ -278,7 +307,7 @@ export default function Navbar() {
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-solid" />
                           </span>
                         )}
-                        {isLiveLink && liveState === "live" ? "Live Now" : linkLabel}
+                        {isLiveLink && effectiveLiveState === "live" ? "Live Now" : linkLabel}
                       </span>
                       <svg
                         width="14"

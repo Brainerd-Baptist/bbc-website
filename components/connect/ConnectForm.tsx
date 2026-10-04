@@ -25,6 +25,19 @@ const INTEREST_OPTIONS = [
   { id: "11728677", label: "Baptism" },
 ];
 
+/** Maps a friendly ?interest= URL slug to its INTEREST_OPTIONS id above —
+ * lets a link (e.g. the nav drawer's Baptism/Serving entries) pre-check
+ * the right box on load instead of dropping everyone on an identical,
+ * unmarked form. See app/connect/next-step/page.tsx. */
+export const INTEREST_ID_BY_SLUG: Record<string, string> = {
+  baptism: "11728677",
+  serving: "11728676",
+  "life-groups": "11728672",
+  kids: "11728673",
+  students: "11728674",
+  "college": "11728675",
+};
+
 const inputClass =
   "border border-border-strong rounded-xl px-4 py-3 w-full text-fg bg-surface-raised placeholder:text-fg-muted transition";
 
@@ -84,13 +97,20 @@ function CheckboxGroup({
   );
 }
 
-export default function ConnectForm({ showMembershipOption = false }: { showMembershipOption?: boolean }) {
+export default function ConnectForm({
+  showMembershipOption = false,
+  initialInterestIds,
+}: {
+  showMembershipOption?: boolean;
+  /** Pre-checks these INTEREST_OPTIONS ids on load — see INTEREST_ID_BY_SLUG. */
+  initialInterestIds?: string[];
+}) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [howHeard, setHowHeard] = useState<string[]>([]);
-  const [interests, setInterests] = useState<string[]>([]);
+  const [interests, setInterests] = useState<string[]>(initialInterestIds ?? []);
   const [wantsMembership, setWantsMembership] = useState(false);
   const [notes, setNotes] = useState("");
 

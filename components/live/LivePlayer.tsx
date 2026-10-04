@@ -37,6 +37,7 @@ import {
   getEasternDateString,
 } from "@/lib/live-schedule";
 import SermonNotes from "@/components/sermons/SermonNotes";
+import { useSpecialLiveCheck } from "@/lib/use-special-live";
 
 const DEFAULT_ACCENT = "#00abc9";
 
@@ -207,10 +208,17 @@ export default function LivePlayer({ sermon, isStaleFallback = false }: Props) {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, []);
 
+  // Special, non-Sunday livestreams (a Christmas Eve service, a
+  // conference, etc.) — see lib/youtube-live.ts. Only polls while the
+  // regular Sunday schedule says "off"; during a normal service this is
+  // disabled and ignored, same as before this existed.
+  const specialLive = useSpecialLiveCheck(info.state === "off");
+
   if (!mounted) return <OffHours sermon={sermon} />;
 
   const { state, service, minutesUntil } = info;
-  const effectiveState = previewState ?? state;
+  const scheduleOrSpecialState: LiveState = state === "off" && specialLive ? "live" : state;
+  const effectiveState = previewState ?? scheduleOrSpecialState;
 
   if (effectiveState === "live" || effectiveState === "pre" || effectiveState === "post") {
     return (
@@ -284,7 +292,7 @@ function ActiveView({
       }`}>
         {state === "live" && (
           <><span className="w-1.5 h-1.5 rounded-full bg-accent-fg animate-pulse" />
-          We&apos;re Live — {service?.label}</>
+          We&apos;re Live{service ? ` — ${service.label}` : ""}</>
         )}
         {state === "pre" && (
           <><span className="w-1.5 h-1.5 rounded-full bg-accent" />

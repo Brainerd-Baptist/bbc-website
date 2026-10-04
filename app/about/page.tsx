@@ -74,7 +74,9 @@ export default function AboutPage() {
       </div>
 
       {/* ── Founded section ────────────────────────────────────── */}
-      <section className="py-20 px-6">
+      {/* id="founded" — the footer's "History" link (lib/constants.ts) points
+          here as /about#founded; there's no separate /history page. */}
+      <section id="founded" className="py-20 px-6 scroll-mt-24">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             {/* Image */}

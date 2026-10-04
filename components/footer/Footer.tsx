@@ -101,6 +101,9 @@ export default function Footer() {
                     <Link
                       href={link.href}
                       className="text-white/60 hover:text-white text-sm transition-colors"
+                      {...(link.href.startsWith("http")
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                     >
                       {link.label}
                     </Link>

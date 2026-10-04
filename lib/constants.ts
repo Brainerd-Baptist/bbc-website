@@ -118,12 +118,32 @@ export const NAV_LINKS = [
   { label: "Connect", href: "/connect" },
 ];
 
+// Church Center's hosted calendar — the actual destination for "Events"
+// (the site itself has no /events page; see components/home/ThisWeek.tsx,
+// which already links here). Shared as a constant so the footer below and
+// anything else linking to it stay in sync.
+export const CHURCH_CENTER_CALENDAR_URL = "https://brainerdbaptist.churchcenter.com/calendar";
+
+// Kept in sync with components/nav/Navbar.tsx's NAV_GROUPS by hand — see
+// claude/sermon-series-and-metadata-audit-2026-10-04.md-adjacent nav/footer
+// reconciliation (asked about 2026-10-04): previously the footer and the
+// nav drawer each had pages the other couldn't reach at all (About,
+// Our Beliefs, History, Events, and Prayer were footer-only; Watch Live,
+// Resources, Who Is Jesus?, Wednesday Night, and Membership were
+// nav-only), and /history, /events, and /prayer below pointed at pages
+// that don't exist on this site. Fixed: History points at the "Est. 1928"
+// section of /about (its actual content), Events at the real Church
+// Center calendar this site already uses elsewhere, and Prayer at the
+// always-available Care & Support form (the dedicated in-service prayer
+// tab on /live only exists during a live service, so it's not a fit for a
+// footer link people may click any day of the week).
 export const FOOTER_LINKS = {
   "Who We Are": [
     { label: "About", href: "/about" },
     { label: "Our Beliefs", href: "/beliefs" },
     { label: "Staff", href: "/staff" },
-    { label: "History", href: "/history" },
+    { label: "History", href: "/about#founded" },
+    { label: "Who Is Jesus?", href: "/who-is-jesus" },
   ],
   Ministries: [
     { label: "Children's Ministry", href: "/ministries/kids" },
@@ -134,13 +154,17 @@ export const FOOTER_LINKS = {
     { label: "Adults", href: "/connect" },
     { label: "Community", href: "/community" },
     { label: "The BX", href: "/bx" },
+    { label: "Wednesday Night", href: "/wednesday" },
   ],
   Resources: [
     { label: "Sermons", href: "/sermons" },
     { label: "My Notes", href: "/my-notes" },
+    { label: "Books & Resources", href: "/resources" },
     { label: "Give", href: "/give" },
-    { label: "Events", href: "/events" },
-    { label: "Prayer", href: "/prayer" },
-  { label: "Connect", href: "/connect" },
+    { label: "Events", href: CHURCH_CENTER_CALENDAR_URL },
+    { label: "Prayer", href: "/connect/care" },
+    { label: "Connect", href: "/connect" },
+    { label: "Watch Live", href: "/live" },
+    { label: "Membership", href: "/membership" },
   ],
 };
