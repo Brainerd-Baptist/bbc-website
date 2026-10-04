@@ -225,7 +225,19 @@ function ActiveView({
     // navbar's logo sat directly on top of the status bar's first 64px —
     // reported live this morning as the logo and "We're Live" bar looking
     // "scrunched together" on /live's Notes tab (and every other tab).
-    <div className="min-h-screen bg-theater-bg text-fg-on-dark flex flex-col pt-16">
+    // h-screen (not min-h-screen): the notes/passage/prayer panes below are
+    // meant to scroll *within themselves* (flex-1 overflow-y-auto), with the
+    // video and tab bar staying put — reported 2026-10-04 as "the notes are
+    // still scrolling the whole page, rather than a window that scrolls
+    // within the page." That requires an actual bounded height to flex
+    // against; min-h-screen only sets a *minimum*, so once notes content
+    // grew taller than the viewport the whole column (and the page) grew
+    // with it instead of clipping. h-screen together with min-h-0 on every
+    // flex ancestor below (the classic flexbox-doesn't-shrink gotcha — a
+    // flex item's default min-height is `auto`, i.e. "at least as tall as my
+    // content", which silently overrides `overflow-y-auto` until you
+    // override it back to 0) is what actually makes overflow-y-auto clip.
+    <div className="h-screen bg-theater-bg text-fg-on-dark flex flex-col pt-16">
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
       <div className={`flex items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
@@ -246,10 +258,10 @@ function ActiveView({
       </div>
 
       {/* ── Main content: stream + bulletin side-by-side on desktop ──── */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
 
         {/* Stream column */}
-        <div className="lg:flex-1 flex flex-col">
+        <div className="lg:flex-1 flex flex-col min-h-0">
           {/* YouTube embed */}
           {/* The embed well. Was bg-black, which reads as a hole punched in a
                  #0d1525 page while the iframe loads; --theater-sunken is a well,
@@ -285,7 +297,7 @@ function ActiveView({
           </div>
 
           {/* Mobile: tab bar + tab content */}
-          <div className="lg:hidden flex flex-col flex-1">
+          <div className="lg:hidden flex flex-col flex-1 min-h-0">
             <div className="flex border-b border-border-on-dark bg-theater-bg overflow-x-auto scrollbar-hide">
               {TABS.map((t) => (
                 <button
@@ -302,7 +314,7 @@ function ActiveView({
                 </button>
               ))}
             </div>
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto min-h-0">
               {tab === "watch"   && <WatchTab   sermon={sermon} isStaleFallback={isStaleFallback} />}
               {tab === "passage" && <PassageTab sermon={sermon} />}
               {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
@@ -317,7 +329,7 @@ function ActiveView({
         </div>
 
         {/* Bulletin sidebar — desktop only ─────────────────────────────── */}
-        <div className="hidden lg:flex flex-col w-[380px] xl:w-[420px] border-l border-border-on-dark bg-theater-sunken overflow-y-auto">
+        <div className="hidden lg:flex flex-col w-[380px] xl:w-[420px] border-l border-border-on-dark bg-theater-sunken overflow-y-auto min-h-0">
           {/* Sermon header */}
           <div className="px-6 pt-6 pb-4 border-b border-border-on-dark">
             {sermon.series && (
@@ -367,7 +379,7 @@ function ActiveView({
           </div>
 
           {/* Bulletin tab content */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto min-h-0">
             {(tab === "watch" || tab === "passage") && <PassageTab sermon={sermon} />}
             {tab === "notes"   && <LiveNotesTab sermon={sermon} />}
             {tab === "prayer"  && <PrayerTab  sermon={sermon} />}
