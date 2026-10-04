@@ -5,6 +5,14 @@ import { useState, useEffect } from "react";
 // Returns the UTC timestamp for the next Sunday 8:30 AM Eastern time.
 // Uses Intl to find what "Sunday 8:30 AM America/New_York" means in UTC,
 // so DST transitions (March and November) are handled automatically.
+//
+// "Next" means: if today is Sunday and 8:30 AM ET hasn't happened yet,
+// that's today's target — not a week away. (Bug found 2026-10-04: the
+// Sunday case was hardcoded to "+7 days" unconditionally, so the
+// countdown showed "7 days" instead of "~3 hours" at 5am on a Sunday
+// morning, before that morning's own service.) We compute the
+// candidate target for "this Sunday" and only roll forward a week if
+// that moment has already passed.
 function getNextSunday830ET(): number {
   const now = new Date();
 
@@ -18,47 +26,57 @@ function getNextSunday830ET(): number {
   });
   const parts = Object.fromEntries(etFmt.formatToParts(now).map((p) => [p.type, p.value]));
   const etDay = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(parts.weekday);
-  const daysUntilSunday = etDay === 0 ? 7 : 7 - etDay;
+  const daysUntilSunday = etDay === 0 ? 0 : 7 - etDay;
 
-  // Build the target date string: next Sunday in ET, at 08:30:00.
+  // Build the target date string for a given day-offset at 08:30:00 ET.
   // Do the "add N days" math as pure UTC milliseconds (Date.UTC + getUTC*),
   // never local getDate()/setDate() — those read/write in the *browser's*
   // local timezone, which silently shifts this by a day whenever the
   // viewer's device isn't set to UTC (e.g. anyone on US Eastern time).
-  const [month, day, year] = [parts.month, parts.day, parts.year];
-  const targetUTCMillis = Date.UTC(+year, +month - 1, +day) + daysUntilSunday * 86_400_000;
-  const targetDate = new Date(targetUTCMillis);
+  function targetForOffset(daysOffset: number): number {
+    const [month, day, year] = [parts.month, parts.day, parts.year];
+    const targetUTCMillis = Date.UTC(+year, +month - 1, +day) + daysOffset * 86_400_000;
+    const targetDate = new Date(targetUTCMillis);
 
-  const yyyy = targetDate.getUTCFullYear();
-  const mm = String(targetDate.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(targetDate.getUTCDate()).padStart(2, "0");
+    const yyyy = targetDate.getUTCFullYear();
+    const mm = String(targetDate.getUTCMonth() + 1).padStart(2, "0");
+    const dd = String(targetDate.getUTCDate()).padStart(2, "0");
 
-  // "2026-09-21T08:30:00" interpreted as Eastern by converting via Intl
-  // Trick: parse the wall-clock string as if it were UTC, then correct for
-  // the ET offset at that moment using a known-good offset calculation.
-  const wallClockStr = `${yyyy}-${mm}-${dd}T08:30:00`;
+    // "2026-09-21T08:30:00" interpreted as Eastern by converting via Intl
+    // Trick: parse the wall-clock string as if it were UTC, then correct for
+    // the ET offset at that moment using a known-good offset calculation.
+    const wallClockStr = `${yyyy}-${mm}-${dd}T08:30:00`;
 
-  // Find the UTC offset for that ET wall-clock moment by formatting a UTC
-  // date and comparing. We iterate: start with a UTC guess, measure the
-  // ET representation of that guess, adjust.
-  let utcGuess = new Date(wallClockStr + "Z"); // treat as UTC first
-  for (let i = 0; i < 3; i++) {
-    const etRepr = new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/New_York",
-      year: "numeric", month: "2-digit", day: "2-digit",
-      hour: "2-digit", minute: "2-digit", second: "2-digit",
-      hour12: false,
-    }).format(utcGuess);
-    // etRepr looks like "09/21/2026, 04:30:00" — parse it
-    const m = etRepr.match(/(\d+)\/(\d+)\/(\d+),\s+(\d+):(\d+):(\d+)/);
-    if (!m) break;
-    const etDate = new Date(Date.UTC(+m[3], +m[1]-1, +m[2], +m[4], +m[5], +m[6]));
-    const target = new Date(wallClockStr + "Z");
-    const diff = target.getTime() - etDate.getTime();
-    utcGuess = new Date(utcGuess.getTime() + diff);
+    // Find the UTC offset for that ET wall-clock moment by formatting a UTC
+    // date and comparing. We iterate: start with a UTC guess, measure the
+    // ET representation of that guess, adjust.
+    let utcGuess = new Date(wallClockStr + "Z"); // treat as UTC first
+    for (let i = 0; i < 3; i++) {
+      const etRepr = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: false,
+      }).format(utcGuess);
+      // etRepr looks like "09/21/2026, 04:30:00" — parse it
+      const m = etRepr.match(/(\d+)\/(\d+)\/(\d+),\s+(\d+):(\d+):(\d+)/);
+      if (!m) break;
+      const etDate = new Date(Date.UTC(+m[3], +m[1]-1, +m[2], +m[4], +m[5], +m[6]));
+      const target = new Date(wallClockStr + "Z");
+      const diff = target.getTime() - etDate.getTime();
+      utcGuess = new Date(utcGuess.getTime() + diff);
+    }
+
+    return utcGuess.getTime();
   }
 
-  return utcGuess.getTime();
+  const candidate = targetForOffset(daysUntilSunday);
+  // If "this Sunday's" 8:30 AM has already passed (we're past it today,
+  // or — defensively — any other stale candidate), roll forward a week.
+  if (candidate <= now.getTime()) {
+    return targetForOffset(daysUntilSunday + 7);
+  }
+  return candidate;
 }
 
 interface TimeUnit {
