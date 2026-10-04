@@ -538,7 +538,7 @@ export default function SermonNotes({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           to: emailValue.trim(), title: sermonTitle, series, passage, speaker,
-          formattedDate: formatDateLong(date), notesHtml: editor.getHTML(),
+          formattedDate: formatDateLong(date), notesHtml: editor.getHTML(), accentColor,
         }),
       });
       setEmailStatus(res.ok ? "sent" : "error");
@@ -546,7 +546,7 @@ export default function SermonNotes({
     } catch {
       setEmailStatus("error");
     }
-  }, [editor, emailValue, sermonTitle, series, passage, speaker, date]);
+  }, [editor, emailValue, sermonTitle, series, passage, speaker, date, accentColor]);
 
   const handleShareBtn = useCallback(() => {
     if (!editor || !editor.getText().trim()) return;

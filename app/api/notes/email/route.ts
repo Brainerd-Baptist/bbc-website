@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { NotesPDFDocument, htmlToNotesBlocks, notesBlocksHaveContent } from "@/lib/notes-pdf";
 import { sendMail } from "@/lib/mail";
+import { buildNotesEmailHtml } from "@/lib/email-templates";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
   const passage = typeof body.passage === "string" ? body.passage : "";
   const speaker = typeof body.speaker === "string" ? body.speaker : "";
   const formattedDate = typeof body.formattedDate === "string" ? body.formattedDate : "";
+  const accentColor = typeof body.accentColor === "string" ? body.accentColor : undefined;
 
   const blocks = htmlToNotesBlocks(notesHtml);
   if (!notesBlocksHaveContent(blocks)) {
@@ -57,6 +59,7 @@ export async function POST(req: NextRequest) {
     to,
     subject: `My Notes — ${title}`,
     text: `Your notes from "${title}"${formattedDate ? ` (${formattedDate})` : ""} are attached as a PDF.\n\nBrainerd Baptist Church\nbrainerdbaptist.org`,
+    html: buildNotesEmailHtml({ title, series, passage, speaker, formattedDate, accentColor }),
     attachments: [{ filename: `${safeTitle}-my-notes.pdf`, content: Buffer.from(buffer) }],
   });
 

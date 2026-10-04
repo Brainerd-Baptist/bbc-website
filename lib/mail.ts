@@ -25,6 +25,13 @@ export interface SendMailArgs {
   to: string;
   subject: string;
   text: string;
+  /** Optional HTML body. Resend (like any mail client) renders whichever
+   * part the recipient's client prefers, falling back to `text` for
+   * clients that don't do HTML — pass both, never html-only. Without
+   * this, every email sendMail() sent rendered as bare unstyled plain
+   * text, which is why "My Notes" emails looked like a raw text dump
+   * (reported 2026-10-04) rather than anything resembling the site. */
+  html?: string;
   replyTo?: string;
   attachments?: SendMailAttachment[];
 }
@@ -35,7 +42,7 @@ export interface SendMailResult {
   queued?: boolean;
 }
 
-export async function sendMail({ to, subject, text, replyTo, attachments }: SendMailArgs): Promise<SendMailResult> {
+export async function sendMail({ to, subject, text, html, replyTo, attachments }: SendMailArgs): Promise<SendMailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.MAIL_FROM || "Brainerd Baptist Church <onboarding@resend.dev>";
 
@@ -54,6 +61,7 @@ export async function sendMail({ to, subject, text, replyTo, attachments }: Send
       to,
       subject,
       text,
+      ...(html ? { html } : {}),
       ...(replyTo ? { replyTo } : {}),
       ...(attachments?.length
         ? { attachments: attachments.map((a) => ({ filename: a.filename, content: a.content })) }
