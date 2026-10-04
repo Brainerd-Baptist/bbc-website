@@ -108,8 +108,22 @@ const EXCLUDED_SPEAKERS = ["Jim Shaddix", "Kevin Baggett", "Paul Laso", "Blaine 
 // variants) is filtered out before series resolution runs.
 const NON_SERIES_LABELS = ["standalone messages", "standalone message", "standalone"];
 
+// Spreadsheet shorthand for "this cell doesn't apply" — the sheet's Series
+// (and occasionally Title) column is sometimes literally "n/a" instead of
+// left blank. Found 2026-10-03: treated as a real series title the same way
+// "Standalone Messages" was, this creates/links an actual "series" doc
+// titled "n/a" (sermon-Y3ExvOqAz0Y, 2026-09-13, was the first to hit it) —
+// a single tacky-looking tile with no real grouping behind it. Same filter
+// also applies to the Title cell: a blank-meaning "n/a" there should fall
+// through to the parsed/YouTube title, not become the sermon's literal title.
+const BLANK_CELL_LABELS = ["n/a", "na", "n.a.", "none"];
+
+function isBlankCellLabel(value: string): boolean {
+  return BLANK_CELL_LABELS.includes(value.trim().toLowerCase());
+}
+
 function isNonSeriesLabel(title: string): boolean {
-  return NON_SERIES_LABELS.includes(title.trim().toLowerCase());
+  return NON_SERIES_LABELS.includes(title.trim().toLowerCase()) || isBlankCellLabel(title);
 }
 
 // Some 2022-era Tagging sheet rows (guest-speaker weeks) have their
@@ -299,7 +313,13 @@ export async function GET(req: NextRequest) {
       // YouTube title-parsing is the last resort.
       const { title: parsedTitle, passage: parsedPassage, speaker: parsedSpeaker } =
         parseYoutubeSermonTitle(video.rawTitle);
-      const title = tagging?.title || parsedTitle || video.title;
+      // A "n/a"-style Title cell means the sheet has no special title for
+      // this sermon (it's a plain passage-only message), not that the
+      // sermon's title should literally be "n/a" — fall through the same
+      // precedence chain as if the cell were blank.
+      const rawTaggingTitle = tagging?.title || "";
+      const title = (rawTaggingTitle && !isBlankCellLabel(rawTaggingTitle) ? rawTaggingTitle : "")
+        || parsedTitle || video.title;
       const passage = tagging?.passage || parsedPassage;
 
       // Trust the Tagging sheet's Teacher cell UNLESS it looks like a
