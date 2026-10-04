@@ -22,6 +22,15 @@ interface SavedNote {
   wordCount: number;
 }
 
+interface DraftNote {
+  date: string;
+  preview: string;
+  wordCount: number;
+}
+
+/** Matches components/live/LivePlayer.tsx's draftNoteKey() — "live-draft-YYYY-MM-DD". */
+const LIVE_DRAFT_RE = /^live-draft-(\d{4}-\d{2}-\d{2})$/;
+
 /**
  * Same "every HTML empty state actually means empty" check SermonNotes.tsx
  * uses for its own clear/save logic (saveContent / clearNotes) — a brand
@@ -66,6 +75,7 @@ function formatDate(iso: string): string {
 
 export default function MyNotesList({ sermons }: { sermons: SermonForNotes[] }) {
   const [notes, setNotes] = useState<SavedNote[] | null>(null);
+  const [drafts, setDrafts] = useState<DraftNote[]>([]);
 
   useEffect(() => {
     const found: SavedNote[] = [];
@@ -86,13 +96,46 @@ export default function MyNotesList({ sermons }: { sermons: SermonForNotes[] }) 
       }
     }
     setNotes(found);
+
+    // Live-service notes land under `live-draft-YYYY-MM-DD` (see
+    // components/live/LivePlayer.tsx) until the real sermon syncs into
+    // Sanity and SermonNotes.tsx's migration adopts them onto the
+    // sermon's own bbc-notes-${slug} key — at which point the draft key
+    // itself is deleted, so a still-present draft here always means the
+    // sermon hasn't posted yet. Without this, notes taken during/right
+    // after a live service were invisible everywhere — not on this page
+    // (no bbc-notes-${slug} exists yet) and not on /live either, once that
+    // page's 45-minute post-service window closes and it falls back to
+    // the generic off-hours view with no Notes tab. Surfacing the draft
+    // itself here (read-only — there's no page to resume editing it on
+    // until the sermon posts) at least proves the words are still safe.
+    const draftsFound: DraftNote[] = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        const match = key.match(LIVE_DRAFT_RE);
+        if (!match) continue;
+        const html = localStorage.getItem(key);
+        if (isEmptyNotesHtml(html)) continue;
+        draftsFound.push({
+          date: match[1],
+          preview: htmlToPreview(html as string),
+          wordCount: countWords(html as string),
+        });
+      }
+      draftsFound.sort((a, b) => b.date.localeCompare(a.date));
+    } catch {
+      // private mode, or no localStorage
+    }
+    setDrafts(draftsFound);
   }, [sermons]);
 
   // Loading pass (first client render, before the effect runs) — render
   // nothing rather than flash an empty state that then pops in content.
   if (notes === null) return null;
 
-  if (notes.length === 0) {
+  if (notes.length === 0 && drafts.length === 0) {
     return (
       <div className="max-w-2xl mx-auto text-center py-16 px-6">
         <div
@@ -120,8 +163,45 @@ export default function MyNotesList({ sermons }: { sermons: SermonForNotes[] }) 
   return (
     <div className="max-w-3xl mx-auto px-5 md:px-8 pb-24">
       <p className="text-fg-subtle text-xs mb-6">
-        {notes.length} sermon{notes.length === 1 ? "" : "s"} with saved notes — stored privately in this browser only.
+        {notes.length > 0
+          ? `${notes.length} sermon${notes.length === 1 ? "" : "s"} with saved notes — stored privately in this browser only.`
+          : "Stored privately in this browser only."}
       </p>
+
+      {/* ── Live drafts: sermon hasn't posted yet, notes aren't lost ──── */}
+      {drafts.length > 0 && (
+        <div className="space-y-3 mb-3">
+          {drafts.map(({ date, preview, wordCount }) => (
+            <div
+              key={date}
+              className="rounded-2xl p-5"
+              style={{
+                background: "var(--surface-sunken)",
+                border: "1px dashed var(--border)",
+              }}
+            >
+              <div className="flex items-start justify-between gap-4 mb-2">
+                <div className="min-w-0 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "var(--accent)" }} />
+                  <p className="label-micro" style={{ color: "var(--accent-text)" }}>
+                    Sermon not posted yet
+                  </p>
+                </div>
+                <span className="text-fg-subtle text-xs flex-shrink-0 mt-0.5 tabular-nums">
+                  {formatDate(date)}
+                </span>
+              </div>
+              <p className="text-fg-subtle text-sm italic leading-relaxed">
+                &ldquo;{preview}&rdquo;
+              </p>
+              <p className="text-fg-subtle text-[11px] mt-3">
+                {wordCount.toLocaleString()} {wordCount === 1 ? "word" : "words"} · will move onto the sermon&apos;s page automatically once it&apos;s posted
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="space-y-3">
         {notes.map(({ sermon, urlSlug, preview, wordCount }) => {
           const accent = sermon.seriesAccent ?? "var(--accent)";
