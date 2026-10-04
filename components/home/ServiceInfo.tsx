@@ -15,19 +15,11 @@ export default function ServiceInfo() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Card className="rounded-2xl p-6">
                   <div className="text-accent-text font-condensed font-900 text-3xl mb-1">8:30 AM</div>
-                  <div className="font-semibold text-fg mb-2">Choir & Orchestra</div>
-                  <p className="text-fg-muted text-sm leading-relaxed">
-                    Full choir and orchestra. If you grew up singing hymns out of a book,
-                    this one will feel familiar.
-                  </p>
+                  <div className="font-semibold text-fg">Choir & Orchestra</div>
                 </Card>
                 <Card className="rounded-2xl p-6">
                   <div className="text-accent-text font-condensed font-900 text-3xl mb-1">11:00 AM</div>
-                  <div className="font-semibold text-fg mb-2">Band-Led</div>
-                  <p className="text-fg-muted text-sm leading-relaxed">
-                    Contemporary band leading worship. Same sermon, same church —
-                    different sound.
-                  </p>
+                  <div className="font-semibold text-fg">Band-Led</div>
                 </Card>
               </div>
               <p className="text-fg-subtle text-sm mt-4 italic" style={{ fontFamily: "Georgia, serif" }}>
