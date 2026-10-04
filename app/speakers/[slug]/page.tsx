@@ -33,10 +33,17 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
   const info = getSpeaker(name);
 
-  // Collect sermons — Sanity first, then fill in static ones not already covered
+  // Collect sermons — Sanity is authoritative once it has any data at all
+  // (same "Sanity or fallback", never both, rule as /sermons and
+  // /series/[slug]). Previously this merged Sanity sermons with the static
+  // SERMONS array, deduped only by comparing a static sermon's internal id
+  // (e.g. "acts-1") against a Sanity sermon's slug (a YouTube id) — those
+  // never match, so any series migrated into Sanity ended up listed twice
+  // on a speaker page: once as its old static card, once as its live Sanity
+  // card, each with a different sermon count. See duplicate-series-tiles
+  // investigation, 2026-10-03.
   const sanityAll = await getAllSermons().catch(() => []);
-  const sanityBySpeaker = sanityAll.filter((s) => s.speaker === name);
-  const staticBySpeaker = SERMONS.filter((s) => s.speaker === name);
+  const usingSanity = sanityAll.length > 0;
 
   type SermonRow = {
     slug: string;
@@ -50,37 +57,33 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
     accentColor: string;
   };
 
-  const sanityRows: SermonRow[] = sanityBySpeaker.map((s) => ({
-    slug: s.slug?.current ?? "",
-    title: s.title,
-    series: s.series?.title ?? "",
-    seriesId: s.series?.slug?.current ?? "",
-    passage: s.passage ?? "",
-    date: s.date ?? "",
-    youtubeId: s.youtubeId ?? "",
-    duration: s.duration,
-    accentColor: s.series?.accentColor ?? "#00abc9",
-  }));
-
-  const sanitySlugSet = new Set(sanityRows.map((r) => r.slug));
-
-  const staticRows: SermonRow[] = staticBySpeaker
-    .filter((s) => !sanitySlugSet.has(s.id))
-    .map((s) => ({
-      slug: s.id,
-      title: s.title,
-      series: s.series,
-      seriesId: s.seriesId,
-      passage: s.passage,
-      date: s.date,
-      youtubeId: s.youtubeId,
-      duration: s.duration,
-      accentColor: "#00abc9",
-    }));
-
-  const sermons: SermonRow[] = [...sanityRows, ...staticRows].sort(
-    (a, b) => (b.date > a.date ? 1 : -1)
-  );
+  const sermons: SermonRow[] = (
+    usingSanity
+      ? sanityAll
+          .filter((s) => s.speaker === name)
+          .map((s) => ({
+            slug: s.slug?.current ?? "",
+            title: s.title,
+            series: s.series?.title ?? "",
+            seriesId: s.series?.slug?.current ?? "",
+            passage: s.passage ?? "",
+            date: s.date ?? "",
+            youtubeId: s.youtubeId ?? "",
+            duration: s.duration,
+            accentColor: s.series?.accentColor ?? "#00abc9",
+          }))
+      : SERMONS.filter((s) => s.speaker === name).map((s) => ({
+          slug: s.id,
+          title: s.title,
+          series: s.series,
+          seriesId: s.seriesId,
+          passage: s.passage,
+          date: s.date,
+          youtubeId: s.youtubeId,
+          duration: s.duration,
+          accentColor: "#00abc9",
+        }))
+  ).sort((a, b) => (b.date > a.date ? 1 : -1));
 
   const hasSermons = sermons.length > 0;
 
