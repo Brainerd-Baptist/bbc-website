@@ -203,13 +203,19 @@ export default function AudioPlayer({ track, accentColor = "var(--accent)", them
 
         {/* Controls */}
         <div className="flex items-center gap-1 md:gap-2">
-          {/* Skip back */}
+          {/* Skip back — the standard "rotate" glyph (same shape as Lucide's
+              rotate-ccw/rotate-cw), a true horizontal mirror of Skip fwd
+              below via scaleX(-1), not a second hand-derived arc. The old
+              pair (two independently-drawn arcs) rendered as visually
+              near-identical shapes instead of opposite directions
+              (reported 2026-10-04 as "seem odd"). */}
           <button onClick={() => isActive && seek(Math.max(0, ct - 15))}
             className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors"
             style={{ color: dim }}
             aria-label="Back 15 seconds">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <path d="M9.5 3A8.5 8.5 0 1 0 18 9.5"/><path d="M9.5 3L7 6l3.5.5"/>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: "scaleX(-1)" }}>
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
             </svg>
             <span className="text-[9px] font-semibold">15</span>
           </button>
@@ -238,8 +244,9 @@ export default function AudioPlayer({ track, accentColor = "var(--accent)", them
             className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors"
             style={{ color: dim }}
             aria-label="Forward 15 seconds">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <path d="M14.5 3A8.5 8.5 0 1 1 6 9.5"/><path d="M14.5 3L17 6l-3.5.5"/>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
             </svg>
             <span className="text-[9px] font-semibold">15</span>
           </button>

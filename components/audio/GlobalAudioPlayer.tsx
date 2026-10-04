@@ -22,28 +22,28 @@ function nextSpeed(current: number) {
 }
 
 // ── Skip icon ────────────────────────────────────────────────────────────────
+// Previously a hand-drawn arc in a 24×17 viewBox that clipped the bottom of
+// the circle AND most of the arrowhead stroke off-canvas (reported
+// 2026-10-04 as the skip buttons "seem odd" — rendered as a broken ring with
+// a stray diagonal line, not a directional arrow). Replaced with the
+// standard "rotate" glyph (the same shape as Lucide's rotate-ccw/rotate-cw,
+// widely recognized from exactly this replay/skip-15 use), full 24×24
+// viewBox so nothing is cropped, and "back" is a literal horizontal mirror
+// of "forward" rather than a second hand-derived arc — so the two can no
+// longer drift into looking identical the way AudioPlayer.tsx's pair did.
 function SkipIcon({ direction, seconds = 15, size = 22 }: { direction: "back" | "fwd"; seconds?: number; size?: number }) {
   const label = String(seconds);
   // Scale the label font proportionally
   const fontSize = size <= 24 ? 9 : 13;
   return (
     <span className="flex flex-col items-center leading-none" style={{ gap: size > 24 ? 3 : 1 }}>
-      <svg width={size} height={size * 0.72} viewBox="0 0 24 17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        {direction === "back" ? (
-          <>
-            {/* CCW arc */}
-            <path d="M17.5 2.5A9 9 0 1 0 20 9" />
-            {/* Arrowhead pointing left/CCW */}
-            <path d="M17.5 2.5L14 1M17.5 2.5L19 6" />
-          </>
-        ) : (
-          <>
-            {/* CW arc */}
-            <path d="M6.5 2.5A9 9 0 1 1 4 9" />
-            {/* Arrowhead pointing right/CW */}
-            <path d="M6.5 2.5L10 1M6.5 2.5L5 6" />
-          </>
-        )}
+      <svg
+        width={size} height={size} viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        style={direction === "back" ? { transform: "scaleX(-1)" } : undefined}
+      >
+        <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+        <path d="M21 3v5h-5"/>
       </svg>
       <span style={{ fontSize, fontWeight: 600, fontFamily: "system-ui, sans-serif", lineHeight: 1 }}>
         {label}
