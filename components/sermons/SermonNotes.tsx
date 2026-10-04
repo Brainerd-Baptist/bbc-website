@@ -346,23 +346,22 @@ export default function SermonNotes({
   const [openRef,       setOpenRef]       = useState<string | null>(null);
 
   const saveTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const initialContent = useRef<string>("");
   const shareRef       = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-  }, []);
-
-  useEffect(() => {
-    if (!shareOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (shareRef.current && !shareRef.current.contains(e.target as Node)) setShareOpen(false);
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [shareOpen]);
-
-  useEffect(() => {
+  // Loaded via a lazy useState initializer (runs synchronously during the
+  // very first render), NOT a useEffect writing to a ref. Found 2026-10-03
+  // while verifying the live-notes fix: useEditor({ content }) below only
+  // ever reads this value at the moment the editor is first created — a
+  // ref populated by a *later* effect never reaches it, so a page refresh
+  // visually showed an empty editor every time even though the saved HTML
+  // was sitting right there in localStorage the whole time (confirmed on
+  // both /live and the real /sermons/[slug] page — pre-existing, not
+  // specific to the live-notes key fix). A lazy initializer runs before
+  // useEditor reads it, so the editor is created with the right content
+  // the first time, no race. Safe during SSR too: localStorage doesn't
+  // exist in Node, so this throws there and the catch below returns ""
+  // either way — same as the old behavior, no hydration mismatch.
+  const [initialContent] = useState<string>(() => {
     try {
       // Live-draft migration: this is the real, slug-keyed usage (noteKey
       // wasn't passed to override storageKey) for a sermon whose date we
@@ -383,10 +382,24 @@ export default function SermonNotes({
       }
 
       const saved = localStorage.getItem(storageKey);
-      if (saved) initialContent.current = migrateLegacyNotes(saved);
-    } catch { /* private mode */ }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      return saved ? migrateLegacyNotes(saved) : "";
+    } catch {
+      return ""; // private mode, or no localStorage (SSR)
+    }
+  });
+
+  useEffect(() => {
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
   }, []);
+
+  useEffect(() => {
+    if (!shareOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (shareRef.current && !shareRef.current.contains(e.target as Node)) setShareOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [shareOpen]);
 
   const saveContent = useCallback((html: string) => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -413,7 +426,7 @@ export default function SermonNotes({
       Highlight.configure({ multicolor: false }),
       ScriptureRefHighlight,
     ],
-    content: initialContent.current || "<p></p>",
+    content: initialContent || "<p></p>",
     editorProps: {
       attributes: { class: "bbc-notes-editor", spellcheck: "true" },
       handleClickOn(_view, _pos, _node, _nodePos, event) {
