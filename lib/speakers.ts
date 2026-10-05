@@ -48,7 +48,18 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
       "Outside of church, Josiah loves spending time with his family, camping, and coffee—especially finding local coffee roasters wherever he travels, whether across town or across the world. He has also been known to weigh his coffee beans while weighing the decisions of the day. He is often accused of overthinking and asking a few (or several) more questions than necessary, especially when it comes to the details. He would probably tell you that the details matter. His family might tell you that he occasionally has a hard time letting them go.",
     ],
   },
-  "Paul Christensen":  { title: "Associate Pastor for Students",          photo: "christensen_paul_studentspastor",      email: "pchristensen@brainerdbaptist.org" },
+  "Paul Christensen": {
+    title: "Associate Pastor for Students",
+    photo: "christensen_paul_studentspastor",
+    email: "pchristensen@brainerdbaptist.org",
+    // familyPhoto: not uploaded yet — the speaker page shows a
+    // "Family photo coming soon" placeholder until this is set.
+    bio: [
+      "Paul was born and raised in Kansas City, Missouri. He attended Union University (Jackson, TN) and then Southeastern Baptist Theological Seminary (Wake Forest, NC) before coming to Brainerd in 2018. Paul was ordained at Brainerd in 2020 before stepping into his role as Associate Pastor to Students in 2021.",
+      "Paul is married to Hannah and they have three kids – Ellie, Graham, and Brooks. Hannah works as a nurse and is passionate about caring for kids and students. In their spare time, you can find Paul and Hannah working on a house project, baking cookies (or eating Hannah's cookies), playing outside, cheering on the Kansas City Chiefs, or dreaming about their next trip to Disney World.",
+      "Whether he's challenging students to a game of dodgeball or unpacking big life questions over coffee, Paul is passionate about helping students believe the gospel, belong in a safe community, and become lifelong followers of Jesus.",
+    ],
+  },
   "Micah Frink":       { title: "Associate Pastor for Young Adults",      photo: "frink_micah_youngadultspastor",        email: "mfrink@brainerdbaptist.org" },
   "Abigail Frink":     { title: "Ministry Director for Worship",         photo: "frink_abigail_worshipdirector",        email: "afrink@brainerdbaptist.org" },
   "Bryan Skinner":     { title: "Associate Pastor for Worship", photo: "skinner_bryan_worshippastor",          email: "bskinner@brainerdbaptist.org" },

@@ -202,18 +202,29 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               )}
             </div>
 
-            {/* Family photo sidebar */}
-            {info.familyPhoto && (
+            {/* Family photo sidebar — once a bio exists, always show this
+                slot: the real photo if we have one, otherwise a visible
+                placeholder so it's obvious a photo still needs uploading. */}
+            {info.bio && info.bio.length > 0 && (
               <div>
                 <p className="eyebrow-muted mb-3">Family</p>
-                <div className="rounded-2xl overflow-hidden shadow-lg border border-border">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={info.familyPhoto}
-                    alt={info.familyPhotoAlt ?? `${name}'s family`}
-                    className="w-full object-cover object-center"
-                  />
-                </div>
+                {info.familyPhoto ? (
+                  <div className="rounded-2xl overflow-hidden shadow-lg border border-border">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={info.familyPhoto}
+                      alt={info.familyPhotoAlt ?? `${name}'s family`}
+                      className="w-full object-cover object-center"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="rounded-2xl flex items-center justify-center text-center px-6 border border-dashed border-border"
+                    style={{ aspectRatio: "4/3", background: "var(--surface-sunken)" }}
+                  >
+                    <p className="text-fg-subtle text-sm">Family photo coming soon</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
