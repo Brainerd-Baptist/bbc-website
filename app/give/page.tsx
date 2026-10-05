@@ -14,12 +14,7 @@ const FUNDS = [
   },
   {
     name: "Missions Fund",
-    desc: "Directly supports our global and local missionary partners and church-planting efforts.",
-    primary: false,
-  },
-  {
-    name: "Building Fund",
-    desc: "Designated gifts toward future facility needs and improvements.",
+    desc: "Every nation, tribe, language, and people gathered before Jesus (Revelation 7:9) — that's what this fund is for. It supports the Annie Armstrong Easter Offering (North American Mission Board) and the Lottie Moon Christmas Offering (International Mission Board), along with Brainerd's own mission scholarships, which help send our members to partner in that work firsthand.",
     primary: false,
   },
 ];
@@ -45,6 +40,11 @@ export default function GivePage() {
             for God loves a cheerful giver.&rdquo;
           </p>
           <p className="text-fg-muted text-xs mt-2 tracking-wide">— 2 Corinthians 9:7</p>
+          <p className="text-fg-muted text-sm leading-relaxed mt-8 max-w-md mx-auto">
+            Every gift continues something others were faithful to steward long
+            before us — not a monument to what&apos;s been built, but room for
+            what&apos;s next.
+          </p>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export default function GivePage() {
       <section className="pb-12 px-6">
         <div className="relative max-w-4xl mx-auto">
           <h2 className="font-condensed font-800 text-fg text-2xl mb-6">Ways to Give</h2>
-          <div className="grid md:grid-cols-3 gap-5 mb-8">
+          <div className="grid md:grid-cols-2 gap-5 mb-8">
             {FUNDS.map((f) => (
               <div
                 key={f.name}
