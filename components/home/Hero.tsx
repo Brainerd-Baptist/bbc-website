@@ -92,7 +92,25 @@ function getHeroContent(): HeroContent {
     };
   }
 
-  // Default — rest of week
+  // Default — rest of week. Countdown only starts building anticipation
+  // from Friday on (Fri, Sat before the evening branch above, and Sunday
+  // outside the live-morning window above). Monday–Thursday, a visitor
+  // is more likely mid-week than about to walk in the door, so the hero
+  // points them toward getting to know the church instead of a clock.
+  const isCountdownWindow = day === 5 || day === 6 || day === 0;
+  if (!isCountdownWindow) {
+    return {
+      eyebrow: "Sundays in Chattanooga",
+      headline: <>Get to Know<br /><span className="text-accent">Brainerd.</span></>,
+      sub: "New here? Start with what we believe and why — then come see it lived out this Sunday.",
+      primaryLabel: "What We Believe",
+      primaryHref: "/beliefs",
+      secondaryLabel: "Plan Your Visit",
+      secondaryHref: "/visit",
+      showCountdown: false,
+    };
+  }
+
   return {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
