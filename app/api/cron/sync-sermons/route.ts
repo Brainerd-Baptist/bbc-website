@@ -180,7 +180,7 @@ async function resolveSeriesId(seriesTitle: string): Promise<string | undefined>
     _type: "series",
     title,
     slug: { _type: "slug", current: slugify(title) },
-    active: true,
+    active: false,
   });
   return id;
 }
