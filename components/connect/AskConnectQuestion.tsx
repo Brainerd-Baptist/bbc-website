@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { stripMarkdown } from "@/lib/plain-text";
 
 const EXAMPLE_QUESTIONS = [
   "What time are Sunday services?",
@@ -33,7 +34,7 @@ export default function AskConnectQuestion() {
       });
       if (!res.ok) throw new Error("Request failed");
       const data = await res.json();
-      setAnswer(data.answer);
+      setAnswer(stripMarkdown(data.answer ?? ""));
     } catch {
       setError("Something went wrong. Try asking again.");
     } finally {

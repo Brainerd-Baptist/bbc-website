@@ -189,6 +189,12 @@ export default function MembershipPage() {
               </div>
             ))}
           </div>
+          <p className="text-fg-on-dark-muted text-sm mt-10 text-center">
+            This calling didn&apos;t start with us.{" "}
+            <Link href="/about#heritage" className="text-fg-on-dark underline underline-offset-2 font-semibold">
+              See how we got here →
+            </Link>
+          </p>
         </div>
       </section>
 

@@ -26,6 +26,33 @@ const PILLARS = [
   },
 ];
 
+// ── Heritage: what we've been given, organized the way Curtis
+// preached it — fellowship/people, neighbors/community,
+// property/resources, church planting, global partners. Real,
+// specific items, not abstractions — see /about#heritage.
+const HERITAGE = [
+  {
+    heading: "A school full of kids hearing about Jesus",
+    body: "Brainerd Baptist School started as a ministry of this church. It's independent now, but its halls are still filled with kids all week — not just on Sunday — hearing about Jesus.",
+  },
+  {
+    heading: "A building used almost every day",
+    body: "The BX was built for health, wellness, ministry, and non-profit space. Most church buildings sit empty five or six days a week. Ours doesn't — it's in use almost every day.",
+  },
+  {
+    heading: "Three houses, paid for outright",
+    body: "Three mission houses, owned free and clear by the church, give missionaries and ministry partners a place to live and work without that cost hanging over them.",
+  },
+  {
+    heading: "Churches planted, not just funded",
+    body: "Frawley Road, South Seminole, Salt River Community Church in Tempe, Red Letter Church in Southeast Asia, and North Georgia Fellowship, launching soon — congregations that exist because this one was willing to send people out, not just grow in place.",
+  },
+  {
+    heading: "Neighbors who worship alongside us",
+    body: "Cambodian, Spanish-speaking, Arabic-speaking, and Ukrainian congregations all worship in connection with Brainerd — neighbors from around the world who've found a church home here.",
+  },
+];
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
@@ -108,11 +135,11 @@ export default function AboutPage() {
                 A church that's been here a while — and plans to stay.
               </h2>
               <p className="text-fg-muted leading-relaxed mb-4">
-                Brainerd Baptist has been part of this neighborhood for nearly
-                a century. Through generations, the city has changed around us.
-                What hasn't changed is the reason we gather: the Word of God,
-                the worship of Jesus, and the love of the saints for one
-                another.
+                Brainerd Baptist turns 98 this year. Pastor Curtis has been
+                part of nearly 27 of them. The city has changed a lot around
+                us in that time. What hasn&apos;t changed is the reason we
+                gather: the Word of God, the worship of Jesus, and the love
+                of the saints for one another.
               </p>
               <p className="text-fg-muted leading-relaxed">
                 We're not a campus. We're not a brand. We're a church — a
@@ -176,6 +203,73 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Stewarding Our Heritage ─────────────────────────────── */}
+      {/* Real, specific evidence underneath the Three Pillars above —
+          not a brag reel. See heritage-related sermon material: the
+          question isn't "look what we built," it's "what will we do
+          with what we were given." */}
+      <section id="heritage" className="py-24 px-6 scroll-mt-24 border-t border-border">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14 max-w-2xl mx-auto">
+            <p className="eyebrow mb-4">Stewarding Our Heritage</p>
+            <h2
+              className="font-condensed font-900 mb-5"
+              style={{
+                color: "var(--fg)",
+                fontSize: "clamp(2rem, 4.5vw, 3rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              We didn&apos;t invent this. We inherited it.
+            </h2>
+            <p className="text-fg-muted leading-relaxed">
+              Our predecessors didn&apos;t build buildings to solve problems —
+              they built to give Brainerd opportunities in the future. Nearly
+              a century of faithfulness to the Word, to prayer, and to people
+              got handed to us. Here&apos;s some of what that looks like today.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-x-10 gap-y-10">
+            {HERITAGE.map((h) => (
+              <div key={h.heading}>
+                <h3
+                  className="font-condensed font-800 mb-2"
+                  style={{ color: "var(--fg)", fontSize: "1.2rem", letterSpacing: "-0.01em" }}
+                >
+                  {h.heading}
+                </h3>
+                <p className="text-fg-muted leading-relaxed text-sm">{h.body}</p>
+              </div>
+            ))}
+
+            {/* Global partners — reuses /membership's exact figures */}
+            <div>
+              <h3
+                className="font-condensed font-800 mb-2"
+                style={{ color: "var(--fg)", fontSize: "1.2rem", letterSpacing: "-0.01em" }}
+              >
+                A calling that reaches past this room
+              </h3>
+              <p className="text-fg-muted leading-relaxed text-sm mb-4">
+                50+ global partners, 12 families currently serving overseas,
+                109 members sent on a trip last year alone — people this
+                church supports because the calling God gave us was never
+                just for the people who show up on Sunday.
+              </p>
+            </div>
+          </div>
+
+          <p className="text-fg-muted leading-relaxed text-center max-w-2xl mx-auto mt-14 pt-10 border-t border-border">
+            None of it was given to us to put on a shelf. The question
+            isn&apos;t how we preserve it — it&apos;s how we&apos;ll steward
+            this heritage faithfully and fruitfully, for the people who come
+            after us.
+          </p>
         </div>
       </section>
 

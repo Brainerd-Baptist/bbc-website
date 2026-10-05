@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { stripMarkdown } from "@/lib/plain-text";
 
 const EXAMPLE_QUESTIONS = [
   "What do you believe about baptism?",
@@ -32,7 +33,7 @@ export default function BeliefQuestion() {
       });
       if (!res.ok) throw new Error("Request failed");
       const data = await res.json();
-      setAnswer(data.answer);
+      setAnswer(stripMarkdown(data.answer ?? ""));
     } catch {
       setError("Something went wrong. Try asking again.");
     } finally {
