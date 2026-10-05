@@ -31,6 +31,12 @@ export default async function NextStepPage({
           <FormRouteNote className="mb-6" href="/ministries/kids#pre-register" linkLabel="Pre-register your kids instead.">
             This adds you to our church database so a pastor can follow up. Registering children for Sunday?
           </FormRouteNote>
+          <p className="text-sm text-fg-muted leading-relaxed mb-6">
+            Thinking about baptism? It&apos;s simply the next step after being
+            changed by Jesus — a public profession of faith, not a program.
+            Check the Baptism box below and a pastor will reach out to walk
+            through it with you.
+          </p>
           <ConnectForm
             showMembershipOption
             initialInterestIds={preselectedId ? [preselectedId] : undefined}
