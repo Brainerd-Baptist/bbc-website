@@ -137,13 +137,23 @@ export const CHURCH_CENTER_CALENDAR_URL = "https://brainerdbaptist.churchcenter.
 // always-available Care & Support form (the dedicated in-service prayer
 // tab on /live only exists during a live service, so it's not a fit for a
 // footer link people may click any day of the week).
+//
+// 2026-10-05 reorder: "Who We Are" now mirrors the nav drawer's "More"
+// group order (About, Staff, Our Beliefs, History, then Prayer/Give/
+// Connect, moved here from Resources below to match). Resources dropped
+// its standalone "Books & Resources" row — that content is tucked into
+// the Sermons page itself now, same as the nav drawer's Sunday group —
+// and gained Baptism above Membership, mirroring Next Steps.
 export const FOOTER_LINKS = {
   "Who We Are": [
     { label: "About", href: "/about" },
-    { label: "Our Beliefs", href: "/beliefs" },
     { label: "Staff", href: "/staff" },
+    { label: "Our Beliefs", href: "/beliefs" },
     { label: "History", href: "/about#founded" },
     { label: "Who Is Jesus?", href: "/who-is-jesus" },
+    { label: "Prayer", href: "/connect/care" },
+    { label: "Give", href: "/give" },
+    { label: "Connect", href: "/connect" },
   ],
   Ministries: [
     { label: "Children's Ministry", href: "/ministries/kids" },
@@ -159,12 +169,9 @@ export const FOOTER_LINKS = {
   Resources: [
     { label: "Sermons", href: "/sermons" },
     { label: "My Notes", href: "/my-notes" },
-    { label: "Books & Resources", href: "/resources" },
-    { label: "Give", href: "/give" },
-    { label: "Events", href: CHURCH_CENTER_CALENDAR_URL },
-    { label: "Prayer", href: "/connect/care" },
-    { label: "Connect", href: "/connect" },
-    { label: "Watch Live", href: "/live" },
+    { label: "Baptism", href: "/connect/next-step?interest=baptism" },
     { label: "Membership", href: "/membership" },
+    { label: "Events", href: CHURCH_CENTER_CALENDAR_URL },
+    { label: "Watch Live", href: "/live" },
   ],
 };

@@ -23,7 +23,9 @@ const NAV_GROUPS = [
       { label: "Watch Live", href: "/live" },
       { label: "Plan a Visit", href: "/visit" },
       { label: "Sermons", href: "/sermons" },
-      { label: "Resources", href: "/resources" },
+      // Resources (was its own row here) is tucked into the Sermons page
+      // itself instead (asked 2026-10-05) — it's recommended-book/article
+      // content tied to specific sermons, not a separate destination.
     ],
   },
   {
@@ -51,28 +53,34 @@ const NAV_GROUPS = [
   {
     label: "Next Steps",
     links: [
-      { label: "Membership", href: "/membership" },
+      // Baptism moved above Membership (asked 2026-10-05) — it's the more
+      // immediate next step for someone newly changed by Jesus, where
+      // Membership assumes more context about what that even means.
+      //
       // Previously both Baptism and Serving pointed at the exact same
       // /connect/next-step URL with nothing distinguishing them (found
       // during the 2026-10-04 nav/footer audit) — same general intake
       // form either way, and a duplicate React key to boot. ConnectForm
       // now reads ?interest= to preselect the right checkbox instead.
       { label: "Baptism", href: "/connect/next-step?interest=baptism" },
+      { label: "Membership", href: "/membership" },
       { label: "Life Groups", href: "/life-groups" },
       { label: "Serving", href: "/connect/next-step?interest=serving" },
       { label: "Mission Trips", href: "/missions" },
-      { label: "Connect With Us", href: "/connect" },
-      { label: "Prayer Request", href: "/connect/care" },
+      // Connect With Us and Prayer Request moved to More (asked 2026-10-05)
+      // — see that group below.
     ],
   },
   {
     label: "More",
     links: [
       { label: "About", href: "/about" },
+      { label: "Staff", href: "/staff" },
       { label: "Our Beliefs", href: "/beliefs" },
       { label: "Our History", href: "/about#founded" },
-      { label: "Staff", href: "/staff" },
+      { label: "Prayer Request", href: "/connect/care" },
       { label: "Give", href: "/give" },
+      { label: "Connect With Us", href: "/connect" },
     ],
   },
 ];

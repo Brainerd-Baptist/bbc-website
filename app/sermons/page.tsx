@@ -185,6 +185,28 @@ export default async function SermonsPage() {
         />
       </Suspense>
 
+      {/* ── Books & Resources ─────────────────────────────────────────── */}
+      {/* Tucked in here instead of its own nav item (asked 2026-10-05) —
+          it's books/articles Curtis has recommended from the pulpit, tied
+          back to specific sermons, so it belongs with the sermons rather
+          than as a standalone top-level destination. */}
+      <section className="py-14 px-6 border-t border-border">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-fg-muted text-sm mb-4">
+            Looking for a book, article, or other resource Curtis has mentioned from the pulpit?
+          </p>
+          <a
+            href="/resources"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-accent-text hover:text-fg transition-colors"
+          >
+            Browse Books &amp; Resources
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 7h8M8 4l3 3-3 3"/>
+            </svg>
+          </a>
+        </div>
+      </section>
+
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}
       <section
         className="py-16 px-6 border-t border-border-on-dark"
