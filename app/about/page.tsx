@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { STAFF_ROSTER, SPEAKERS, speakerSlug } from "@/lib/speakers";
 
 export const metadata = {
   title: "About — Brainerd Baptist Church",
@@ -52,6 +53,28 @@ const HERITAGE = [
     body: "Cambodian, Spanish-speaking, Arabic-speaking, and Ukrainian congregations all worship in connection with Brainerd — neighbors from around the world who've found a church home here.",
   },
 ];
+
+// ── What We Believe: a short teaser, not a restatement of /beliefs.
+// Three of the eight categories there — the core of the gospel itself —
+// with a link out for anyone who wants the rest.
+const BELIEFS_SUMMARY = [
+  {
+    heading: "Scripture",
+    body: "The Bible is God's Word — fully true, fully sufficient, and the final authority for everything we believe and do.",
+  },
+  {
+    heading: "God",
+    body: "One God in three persons — Father, Son, and Holy Spirit — equal in nature, distinct in person, unified in purpose.",
+  },
+  {
+    heading: "Salvation",
+    body: "Every person is made in God's image and fallen by sin, in need of rescue. Jesus died in our place and rose again. Salvation is by grace through faith in him alone.",
+  },
+];
+
+// Leadership teaser — pulls live from the same roster /staff uses, so this
+// never drifts out of sync. Just the first handful, not the whole team.
+const LEADERSHIP_TEASER = STAFF_ROSTER.slice(0, 6);
 
 export default function AboutPage() {
   return (
@@ -273,6 +296,55 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── What We Believe (summary — full detail lives at /beliefs) ── */}
+      <section id="beliefs" className="py-24 px-6 scroll-mt-24 border-t border-border">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14 max-w-2xl mx-auto">
+            <p className="eyebrow mb-4">What We Believe</p>
+            <h2
+              className="font-condensed font-900 mb-5"
+              style={{
+                color: "var(--fg)",
+                fontSize: "clamp(2rem, 4.5vw, 3rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              A few things we won&apos;t compromise on.
+            </h2>
+            <p className="text-fg-muted leading-relaxed">
+              Everything else flows from these. If you&apos;re new, this is
+              the honest place to start — not a sales pitch, just what we
+              actually hold to.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            {BELIEFS_SUMMARY.map((b) => (
+              <div key={b.heading}>
+                <h3
+                  className="font-condensed font-800 mb-2"
+                  style={{ color: "var(--fg)", fontSize: "1.2rem", letterSpacing: "-0.01em" }}
+                >
+                  {b.heading}
+                </h3>
+                <p className="text-fg-muted leading-relaxed text-sm">{b.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-14">
+            <Link
+              href="/beliefs"
+              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition hover:-translate-y-0.5 inline-block"
+              style={{ border: "2px solid var(--border-strong)", color: "var(--fg)" }}
+            >
+              Read the Rest of What We Believe
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── Purpose statement ──────────────────────────────────── */}
       <section
         className="py-28 px-6"
@@ -352,6 +424,76 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ── Leadership teaser — live from the /staff roster ───────── */}
+      <section id="leadership" className="py-20 px-6 scroll-mt-24 border-t border-border">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10 max-w-2xl mx-auto">
+            <p className="eyebrow mb-4">Who Leads This</p>
+            <h2
+              className="font-condensed font-900 mb-5"
+              style={{
+                color: "var(--fg)",
+                fontSize: "clamp(2rem, 4.5vw, 3rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              Real people, not a logo.
+            </h2>
+            <p className="text-fg-muted leading-relaxed">
+              Whatever ministry fits where you are, there's a person leading
+              it you can actually meet.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 mb-10">
+            {LEADERSHIP_TEASER.map((name) => {
+              const info = SPEAKERS[name];
+              if (!info) return null;
+              return (
+                <Link key={name} href={`/speakers/${speakerSlug(name)}`} className="group">
+                  <div
+                    className="relative w-full overflow-hidden rounded-2xl mb-2"
+                    style={{ aspectRatio: "4/5" }}
+                  >
+                    {info.photo ? (
+                      <Image
+                        src={`/staff/${info.photo}.jpg`}
+                        alt={name}
+                        fill
+                        sizes="(max-width: 640px) 33vw, 16vw"
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div
+                        className="w-full h-full flex items-center justify-center text-xl font-bold text-fg-subtle"
+                        style={{ background: "var(--surface-sunken)" }}
+                      >
+                        {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-fg text-xs font-semibold leading-snug group-hover:text-accent-text transition-colors">
+                    {name}
+                  </p>
+                  <p className="text-fg-muted text-[11px] mt-0.5">{info.title}</p>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/staff"
+              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition hover:-translate-y-0.5 inline-block"
+              style={{ border: "2px solid var(--border-strong)", color: "var(--fg)" }}
+            >
+              Meet the Whole Team
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── Pastor quote ───────────────────────────────────────── */}
       <section
         className="py-20 px-6"
@@ -405,14 +547,14 @@ export default function AboutPage() {
               Plan a Visit
             </Link>
             <Link
-              href="/beliefs"
+              href="/membership"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition hover:-translate-y-0.5"
               style={{
                 border: "2px solid var(--border-strong)",
                 color: "var(--fg)",
               }}
             >
-              What We Believe
+              Take a Next Step
             </Link>
           </div>
         </div>

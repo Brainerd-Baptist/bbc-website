@@ -107,12 +107,12 @@ function getHeroContent(): HeroContent {
   if (!isCountdownWindow) {
     return {
       eyebrow: "Sundays in Chattanooga",
-      headline: <>Get to Know<br /><span className="text-accent">Brainerd.</span></>,
-      sub: "New here? Start with what we believe and why — then come see it lived out this Sunday.",
-      primaryLabel: "What We Believe",
-      primaryHref: "/beliefs",
-      secondaryLabel: "Plan Your Visit",
-      secondaryHref: "/visit",
+      headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
+      sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
+      primaryLabel: "Plan Your Visit",
+      primaryHref: "/visit",
+      secondaryLabel: "Learn More about Brainerd",
+      secondaryHref: "/about",
       showCountdown: false,
     };
   }
