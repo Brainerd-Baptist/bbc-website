@@ -52,8 +52,8 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
     title: "Associate Pastor for Students",
     photo: "christensen_paul_studentspastor",
     email: "pchristensen@brainerdbaptist.org",
-    // familyPhoto: not uploaded yet — the speaker page shows a
-    // "Family photo coming soon" placeholder until this is set.
+    familyPhoto: "/carousel/paul-family.jpg",
+    familyPhotoAlt: "Paul Christensen with his family",
     bio: [
       "Paul was born and raised in Kansas City, Missouri. He attended Union University (Jackson, TN) and then Southeastern Baptist Theological Seminary (Wake Forest, NC) before coming to Brainerd in 2018. Paul was ordained at Brainerd in 2020 before stepping into his role as Associate Pastor to Students in 2021.",
       "Paul is married to Hannah and they have three kids – Ellie, Graham, and Brooks. Hannah works as a nurse and is passionate about caring for kids and students. In their spare time, you can find Paul and Hannah working on a house project, baking cookies (or eating Hannah's cookies), playing outside, cheering on the Kansas City Chiefs, or dreaming about their next trip to Disney World.",
