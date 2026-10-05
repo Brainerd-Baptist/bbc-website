@@ -41,12 +41,12 @@ const HERITAGE = [
     body: "The BX was built for health, wellness, ministry, and non-profit space. Most church buildings sit empty five or six days a week. Ours doesn't — it's in use almost every day.",
   },
   {
-    heading: "Three houses, paid for outright",
-    body: "Three mission houses, owned free and clear by the church, give missionaries and ministry partners a place to live and work without that cost hanging over them.",
+    heading: "A place for those who serve",
+    body: "Three mission houses the Lord has provided give missionaries and ministry partners a place to live and work without that cost hanging over them.",
   },
   {
     heading: "Churches planted, not just funded",
-    body: "Frawley Road, South Seminole, Salt River Community Church in Tempe, Red Letter Church in Southeast Asia, and North Georgia Fellowship, launching soon — congregations that exist because this one was willing to send people out, not just grow in place.",
+    body: "Frawley Road, South Seminole, Salt River Community Church in Tempe, Red Letter Church in Southeast Asia, and North Georgia Fellowship — congregations that exist because this one was willing to send people out, not just grow in place.",
   },
   {
     heading: "Neighbors who worship alongside us",
@@ -158,16 +158,16 @@ export default function AboutPage() {
                 A church that's been here a while — and plans to stay.
               </h2>
               <p className="text-fg-muted leading-relaxed mb-4">
-                Brainerd Baptist turns 98 this year. Pastor Curtis has been
-                part of nearly 27 of them. The city has changed a lot around
-                us in that time. What hasn&apos;t changed is the reason we
-                gather: the Word of God, the worship of Jesus, and the love
-                of the saints for one another.
+                Brainerd Baptist has called this corner of Chattanooga home
+                since 1928. The city has changed a lot around us in that
+                time. What hasn&apos;t changed is the reason we gather: the
+                Word of God, the worship of Jesus, and the love of the saints
+                for one another.
               </p>
               <p className="text-fg-muted leading-relaxed">
-                We're not a campus. We're not a brand. We're a church — a
-                multi-generational family of people raising kids, navigating
-                hard seasons, and doing life together in the name of Jesus.
+                We're simply a church — a multi-generational family of people
+                raising kids, navigating hard seasons, and doing life
+                together in the name of Jesus.
               </p>
             </div>
           </div>
@@ -179,9 +179,9 @@ export default function AboutPage() {
         className="py-24 px-6"
       >
         <div className="max-w-5xl mx-auto">
-          <p className="eyebrow text-center mb-4">What We Do Together</p>
+          <p className="eyebrow text-center mb-4">Our Vision</p>
           <h2
-            className="font-condensed font-900 text-center mb-16"
+            className="font-condensed font-900 text-center mb-6"
             style={{
               color: "var(--fg)",
               fontSize: "clamp(2.2rem, 5vw, 3.5rem)",
@@ -189,9 +189,14 @@ export default function AboutPage() {
               lineHeight: 1,
             }}
           >
-            One purpose.<br />
-            <span style={{ color: "var(--accent-text)" }}>Many expressions.</span>
+            Changed.<br />
+            <span style={{ color: "var(--accent-text)" }}>Gathered. Called.</span>
           </h2>
+          <p className="text-fg-muted leading-relaxed text-center max-w-2xl mx-auto mb-16">
+            Jesus changes us, so we gather around him together — and he calls
+            every one of us into work only we can do. Here&apos;s what that
+            looks like in the ordinary rhythms of this church.
+          </p>
 
           <div className="grid md:grid-cols-3 gap-8">
             {PILLARS.map((p) => (
@@ -279,10 +284,10 @@ export default function AboutPage() {
                 A calling that reaches past this room
               </h3>
               <p className="text-fg-muted leading-relaxed text-sm mb-4">
-                50+ global partners, 12 families currently serving overseas,
-                109 members sent on a trip last year alone — people this
-                church supports because the calling God gave us was never
-                just for the people who show up on Sunday.
+                50+ global partners, a dozen families serving overseas, and a
+                steady stream of our own people going out on mission trips
+                year after year — supported because the calling God gave us
+                was never just for the people who show up on Sunday.
               </p>
             </div>
           </div>
@@ -438,7 +443,7 @@ export default function AboutPage() {
                 lineHeight: 1.05,
               }}
             >
-              Real people, not a logo.
+              People you can reach out to.
             </h2>
             <p className="text-fg-muted leading-relaxed">
               Whatever ministry fits where you are, there's a person leading
