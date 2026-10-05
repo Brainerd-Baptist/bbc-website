@@ -12,17 +12,20 @@ export const metadata = {
 const PILLARS = [
   {
     num: "01",
-    heading: "Gathered to Worship",
+    heading: "Changed.",
+    subheading: "Gathered to Worship",
     body: "Every Sunday, the church assembles — not as an audience, but as a congregation. Two services, one Body. We sing together, pray together, and sit under the teaching of God's Word verse by verse.",
   },
   {
     num: "02",
-    heading: "Rooted in Community",
+    heading: "Gathered.",
+    subheading: "Rooted in Community",
     body: "Life Groups meet Sunday mornings and throughout the week — every age and stage. Bible studies, pickleball, fitness, and shared space at the BX. The goal isn't programming. It's people who actually know each other.",
   },
   {
     num: "03",
-    heading: "Sent to the Nations",
+    heading: "Called.",
+    subheading: "Sent to the Nations",
     body: "Brainerd members partner with churches and missionaries around the world to carry the gospel to the edges of the earth. Every dollar given, every trip taken, every prayer offered — for the glory of Jesus among all peoples.",
   },
 ];
@@ -216,7 +219,7 @@ export default function AboutPage() {
                   {p.num}
                 </span>
                 <h3
-                  className="font-condensed font-800 mb-3"
+                  className="font-condensed font-800 mb-1"
                   style={{
                     color: "var(--fg)",
                     fontSize: "1.35rem",
@@ -225,6 +228,12 @@ export default function AboutPage() {
                 >
                   {p.heading}
                 </h3>
+                <p
+                  className="font-condensed font-700 tracking-wide uppercase text-xs mb-3"
+                  style={{ color: "var(--accent-text)" }}
+                >
+                  {p.subheading}
+                </p>
                 <p className="text-fg-muted leading-relaxed text-sm">
                   {p.body}
                 </p>
