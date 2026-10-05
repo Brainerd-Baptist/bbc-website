@@ -13,20 +13,20 @@ const PILLARS = [
   {
     num: "01",
     heading: "Changed.",
-    subheading: "Gathered to Worship",
-    body: "Every Sunday, the church assembles — not as an audience, but as a congregation. Two services, one Body. We sing together, pray together, and sit under the teaching of God's Word verse by verse.",
+    subheading: "New Creation in Christ",
+    body: "Through the cross and resurrection of Jesus, people are changed — guilty to forgiven, death to life, darkness to light, outsider to child of God. Not a one-time decision filed away, but desires, habits, and whole lives remade by the ongoing work of the Holy Spirit. That's why Jesus came, and why Brainerd exists.",
   },
   {
     num: "02",
     heading: "Gathered.",
-    subheading: "Rooted in Community",
-    body: "Life Groups meet Sunday mornings and throughout the week — every age and stage. Bible studies, pickleball, fitness, and shared space at the BX. The goal isn't programming. It's people who actually know each other.",
+    subheading: "Known, Loved, and Prayed For",
+    body: "Changed people are gathered around Jesus — with each other, not just on Sundays but as a regular part of life. On Sunday mornings that's two services, one Body, singing and praying and sitting under God's Word together. Through the week it's Life Groups, meals, and coffee — the slow, ordinary work of becoming a people who are truly known, loved, and prayed for by name.",
   },
   {
     num: "03",
     heading: "Called.",
-    subheading: "Sent to the Nations",
-    body: "Brainerd members partner with churches and missionaries around the world to carry the gospel to the edges of the earth. Every dollar given, every trip taken, every prayer offered — for the glory of Jesus among all peoples.",
+    subheading: "Sent to Serve and to the Nations",
+    body: "Changed and gathered people are called — not to themselves, but to the work God has for them, here and to the ends of the earth. That's members embracing the work right in front of them at Brainerd and across Chattanooga, and it's Brainerd members partnering with churches and missionaries around the world to carry the gospel to the nations — every dollar given, every trip taken, every prayer offered, for the glory of Jesus among all peoples.",
   },
 ];
 
