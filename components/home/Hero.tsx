@@ -93,11 +93,17 @@ function getHeroContent(): HeroContent {
   }
 
   // Default — rest of week. Countdown only starts building anticipation
-  // from Friday on (Fri, Sat before the evening branch above, and Sunday
-  // outside the live-morning window above). Monday–Thursday, a visitor
-  // is more likely mid-week than about to walk in the door, so the hero
-  // points them toward getting to know the church instead of a clock.
-  const isCountdownWindow = day === 5 || day === 6 || day === 0;
+  // Friday and Saturday (before the evening branch above takes over).
+  // Everything else that lands here — Monday–Thursday, AND Sunday outside
+  // the live-morning window above (so both very early Sunday and, notably,
+  // Sunday evening/night after both services are over) — is "mid-week" as
+  // far as the countdown is concerned: next Sunday is realistically a
+  // week away, so the hero points toward getting to know the church
+  // instead of a clock. (Bug found 2026-10-04: this used to also include
+  // `day === 0`, so the countdown reappeared the moment Sunday's live
+  // window ended — visible again by Sunday evening, not "not until
+  // Friday" as intended.)
+  const isCountdownWindow = day === 5 || day === 6;
   if (!isCountdownWindow) {
     return {
       eyebrow: "Sundays in Chattanooga",
