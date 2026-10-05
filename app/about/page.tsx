@@ -119,9 +119,9 @@ export default function AboutPage() {
             className="text-white/60 leading-relaxed max-w-xl"
             style={{ fontSize: "1.1rem" }}
           >
-            That's the promise — not the slogan. It's what we want for every
-            person who walks through these doors: to be genuinely known by
-            people, genuinely loved by them, and genuinely prayed for by name.
+            It's what we pray every person who walks through these doors
+            experiences: to be genuinely known by people, genuinely loved by
+            them, and genuinely prayed for by name.
           </p>
         </div>
       </div>
