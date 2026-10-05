@@ -1,4 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
+import { getPublicLifeGroups } from "@/lib/pco-groups";
+import { getSpeaker, speakerSlug } from "@/lib/speakers";
+import GroupBrowser from "@/components/life-groups/GroupBrowser";
+
+// Same Church Center host used elsewhere (see CHURCH_CENTER_CALENDAR_URL in
+// lib/constants.ts) — the groups directory there is the fallback browse
+// link if our own live fetch comes back empty (e.g. credential scope).
+const CHURCH_CENTER_GROUPS_URL = "https://brainerdbaptist.churchcenter.com/groups";
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: "Life Groups — Brainerd Baptist Church",
@@ -25,7 +36,11 @@ const WHYS = [
   },
 ];
 
-export default function LifeGroupsPage() {
+export default async function LifeGroupsPage() {
+  const groups = await getPublicLifeGroups();
+  const ben = getSpeaker("Benjamin Hovies");
+  const benSlug = speakerSlug("Benjamin Hovies");
+
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -130,30 +145,89 @@ export default function LifeGroupsPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 px-6 text-center">
-        <div className="max-w-xl mx-auto">
-          <h2 className="font-condensed font-800 text-fg text-3xl mb-4">
-            Find a Group
-          </h2>
-          <p className="text-fg-muted mb-8 leading-relaxed">
-            The best way to find a Life Group is to ask. Fill out a connect card and we
-            will help match you with a group near you.
+      {/* Find Your Group — live data */}
+      <section className="py-16 px-6">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-condensed font-800 text-fg text-3xl mb-2">Find Your Group</h2>
+          <p className="text-fg-muted text-sm mb-8 leading-relaxed max-w-2xl">
+            Browse our current Life Groups below, or skip straight to a personal recommendation —
+            whichever is easier for you.
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/connect"
-              className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-8 py-3.5 rounded-full transition-colors"
-            >
-              Find a Group
-            </Link>
-            <Link
-              href="/visit"
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-border hover:border-accent text-fg px-8 py-3.5 rounded-full transition-colors glass"
-            >
-              Plan Your Visit
-            </Link>
+
+          {groups.length > 0 ? (
+            <GroupBrowser groups={groups} />
+          ) : (
+            <div className="glass rounded-2xl p-8 text-center">
+              <p className="text-fg-muted text-sm leading-relaxed mb-4">
+                Our group list isn&apos;t loading here at the moment — you can still browse every
+                current Life Group directly on Church Center.
+              </p>
+              <a
+                href={CHURCH_CENTER_GROUPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-6 py-3 rounded-full transition-colors inline-block"
+              >
+                Browse Groups on Church Center
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Talk to a person instead */}
+      <section className="pb-16 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="glass-md rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+            <div className="relative w-20 h-20 rounded-full overflow-hidden bg-brand-navy/5 flex-shrink-0 flex items-center justify-center">
+              {ben.photo ? (
+                <Image src={`/staff/${ben.photo}.jpg`} alt="Benjamin Hovies" fill className="object-cover" />
+              ) : (
+                <span className="text-fg-subtle text-2xl font-semibold">BH</span>
+              )}
+            </div>
+            <div className="flex-1">
+              <p className="eyebrow-muted mb-1 text-xs">Not sure where to start?</p>
+              <h3 className="font-condensed font-800 text-fg text-xl mb-2">
+                Reach out to Ben Hovies
+              </h3>
+              <p className="text-fg-muted text-sm leading-relaxed">
+                Ben leads our Life Groups ministry and would love to get to know you and help you
+                find a group that fits your season of life.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 w-full sm:w-auto">
+              <Link
+                href="/connect/staff?staff=Benjamin+Hovies"
+                className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-6 py-3 rounded-full transition-colors text-center whitespace-nowrap"
+              >
+                Message Ben
+              </Link>
+              <Link
+                href={`/speakers/${benSlug}`}
+                className="text-accent-text hover:underline text-xs text-center"
+              >
+                View his profile
+              </Link>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 px-6 text-center">
+        <div className="max-w-xl mx-auto">
+          <h2 className="font-condensed font-800 text-fg text-2xl mb-4">New Here?</h2>
+          <p className="text-fg-muted mb-8 leading-relaxed">
+            Life Groups are an easy next step once you&apos;ve had a chance to visit. Plan your
+            first Sunday and we&apos;ll help you find a group from there.
+          </p>
+          <Link
+            href="/visit"
+            className="font-condensed font-700 tracking-wide uppercase text-sm border border-border hover:border-accent text-fg px-8 py-3.5 rounded-full transition-colors glass inline-block"
+          >
+            Plan Your Visit
+          </Link>
         </div>
       </section>
     </div>

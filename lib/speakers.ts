@@ -71,7 +71,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Jo Bobbitt":        { title: "Ministry Director for the BX",          photo: "bobbitt_jo_bxdirector",               email: "jbobbitt@brainerdbaptist.org" },
   "Brittany Kelly":    { title: "Ministry Director for Kids",            photo: "kelly_brittany_kidsdirector",          email: "bkelly@brainerdbaptist.org" },
   "Kristi Smith":      { title: "Parent's Day Out Coordinator",          photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org" },
-  "Benjamin Hovies":   { title: "Ministry Director for Adult Discipleship" },
+  "Benjamin Hovies":   { title: "Ministry Director for Adult Discipleship", email: "bhovies@brainerdbaptist.org" },
   "Caroline Bell":     { title: "Girls Student Ministry Coordinator" },
   "Abbie Bateman":     { title: "Ministry Coordinator for Kids" },
   "Jackson Bowman":    { title: "Associate Pastor for Member Care" },

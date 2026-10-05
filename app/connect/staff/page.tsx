@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ConnectSubpageHeader from "@/components/connect/ConnectSubpageHeader";
 import StaffContactClient from "./StaffContactClient";
 
@@ -14,7 +15,9 @@ export default function StaffContactPage() {
       />
       <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">
-          <StaffContactClient />
+          <Suspense fallback={null}>
+            <StaffContactClient />
+          </Suspense>
         </div>
       </Section>
     </div>

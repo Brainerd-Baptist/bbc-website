@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { STAFF_ROSTER, getSpeaker } from "@/lib/speakers";
 import SimpleContactForm from "@/components/connect/SimpleContactForm";
 
 export default function StaffContactClient() {
-  const [selected, setSelected] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const staffParam = searchParams.get("staff");
+  const preselected = staffParam && STAFF_ROSTER.includes(staffParam) ? staffParam : null;
+  const [selected, setSelected] = useState<string | null>(preselected);
 
   if (selected) {
     const info = getSpeaker(selected);

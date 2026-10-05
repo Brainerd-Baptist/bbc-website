@@ -85,7 +85,7 @@ export default function ConnectBand() {
                 {
                   label: "Life Groups",
                   desc: "Find a small group where you can belong and grow.",
-                  href: "/groups",
+                  href: "/life-groups",
                   icon: (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
