@@ -70,7 +70,7 @@ export default function Footer() {
                 />
             </div>
             <p className="text-fg-on-dark-muted text-sm leading-relaxed mb-6 max-w-[220px]">
-              A church in Chattanooga, TN where every person can experience the grace of Jesus Christ.
+              A church in Chattanooga, TN, praying that every person would experience the grace of Jesus Christ.
             </p>
             {/* Socials */}
             <div className="flex gap-3">
