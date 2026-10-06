@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { STAFF_ROSTER, getSpeaker } from "@/lib/speakers";
+import { STAFF_ROSTER, getSpeaker, speakerSlug } from "@/lib/speakers";
 import SimpleContactForm from "@/components/connect/SimpleContactForm";
 
 export default function StaffContactClient() {
@@ -34,6 +35,12 @@ export default function StaffContactClient() {
           <div>
             <p className="font-semibold text-fg text-lg">{selected}</p>
             <p className="text-fg-muted text-sm">{info.title}</p>
+            <Link
+              href={`/speakers/${speakerSlug(selected)}`}
+              className="text-accent-text hover:underline text-xs font-medium inline-block mt-1"
+            >
+              View full profile
+            </Link>
           </div>
         </div>
         <SimpleContactForm

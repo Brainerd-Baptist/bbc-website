@@ -1,13 +1,9 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
-// ClientEmailButton is a "use client" wrapper around EmailButton — it handles the
-// dynamic(ssr:false) import internally, which is required because ssr:false is not
-// allowed in Server Components. The email address only renders after JS runs in
-// the browser, keeping it invisible to scrapers and crawlers.
-import ClientEmailButton from "@/components/ui/ClientEmailButton";
 
 export const revalidate = 300;
 
@@ -181,7 +177,30 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
             <div className="md:col-span-2 space-y-6">
               {info.email && (
                 <div>
-                  <ClientEmailButton email={info.email} name={name} />
+                  {/* Routes through the same /connect/staff form every other
+                      staff-contact path on the site uses — the visitor's
+                      message gets relayed with their address as reply-to,
+                      rather than handing out this person's real inbox
+                      address via a raw mailto: link the way this used to
+                      work. See the "profile vs. contact page" discussion,
+                      2026-10-06: one real contact mechanism, reused, not a
+                      second one bolted on here. */}
+                  <Link
+                    href={`/connect/staff?staff=${encodeURIComponent(name)}`}
+                    className="inline-flex items-center gap-2 text-sm font-semibold transition-colors"
+                    style={{ color: "var(--accent-text)" }}
+                  >
+                    <svg
+                      width="16" height="16" viewBox="0 0 24 24"
+                      fill="none" stroke="currentColor" strokeWidth="1.75"
+                      strokeLinecap="round" strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <path d="m2 7 10 7 10-7" />
+                    </svg>
+                    Send {name.split(" ")[0]} a message
+                  </Link>
                 </div>
               )}
 

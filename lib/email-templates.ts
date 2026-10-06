@@ -90,6 +90,64 @@ export function wrapEmailHtml({
 </html>`;
 }
 
+/** Plain-text message body → safe HTML paragraphs, one per blank-line-separated chunk, preserving single line breaks within a chunk as <br/>. */
+function messageToHtml(message: string): string {
+  return message
+    .split(/\n{2,}/)
+    .map((para) => `<p style="margin:0 0 14px;">${escStr(para).replace(/\n/g, "<br/>")}</p>`)
+    .join("");
+}
+
+/**
+ * Shared template for every /api/contact/* route's "someone submitted the
+ * form" notification to a staff inbox — membership, general, staff, care,
+ * missions, utility. One function so a future tweak to how these look
+ * (or a future contact route) only has to change one place, same reason
+ * wrapEmailHtml() itself is shared.
+ */
+export function buildContactNotificationHtml({
+  heading,
+  fromName,
+  fromEmail,
+  message,
+  meta,
+}: {
+  /** Shown as the email's heading — usually the same text as the subject line, e.g. "Membership interest" or "Message from a visitor". */
+  heading: string;
+  fromName: string;
+  /** Omitted for the rare care-request submission with no email on file. */
+  fromEmail?: string;
+  message: string;
+  /** Extra label/value rows shown above the message — phone, category, interest, etc. Rendered in the order given. */
+  meta?: { label: string; value: string }[];
+}): string {
+  const fromLine = fromEmail
+    ? `${escStr(fromName)} — <a href="mailto:${escStr(fromEmail)}" style="color:${NAVY};">${escStr(fromEmail)}</a>`
+    : escStr(fromName);
+
+  const metaRows = (meta ?? [])
+    .map(
+      (m) =>
+        `<tr><td style="padding:2px 10px 2px 0;color:${INK_MUTED};font-size:13px;white-space:nowrap;">${escStr(m.label)}</td><td style="padding:2px 0;color:${NAVY};font-size:13px;">${escStr(m.value)}</td></tr>`,
+    )
+    .join("");
+
+  const bodyHtml = `
+    <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:${INK_MUTED};">From</p>
+    <p style="margin:0 0 16px;font-size:15px;">${fromLine}</p>
+    ${metaRows ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 16px;">${metaRows}</table>` : ""}
+    <div style="border-top:1px solid ${BORDER};padding-top:16px;">
+      ${messageToHtml(message)}
+    </div>
+  `;
+
+  return wrapEmailHtml({
+    preheader: `${fromName}: ${message.slice(0, 120)}`,
+    heading,
+    bodyHtml,
+  });
+}
+
 export function buildNotesEmailHtml({
   title, series, passage, speaker, formattedDate, accentColor,
 }: {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 // Catch-all for the small "utility" links on /connect that don't warrant
 // their own top-level tile: website issues, building/event space use.
@@ -25,6 +26,12 @@ export async function POST(req: NextRequest) {
     subject: `${label}: ${name.trim()}`,
     replyTo: email.trim(),
     text: `Category: ${label}\nFrom: ${name.trim()} <${email.trim()}>\n\n${message.trim()}`,
+    html: buildContactNotificationHtml({
+      heading: label,
+      fromName: name.trim(),
+      fromEmail: email.trim(),
+      message: message.trim(),
+    }),
   });
 
   return NextResponse.json({ ok: true, ...result });

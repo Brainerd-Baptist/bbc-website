@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
 import { SPEAKERS } from "@/lib/speakers";
+import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 export async function POST(req: NextRequest) {
   const { staffName, name, email, message } = await req.json();
@@ -22,6 +23,12 @@ export async function POST(req: NextRequest) {
     subject: `Message from ${name.trim()} via brainerdbaptist.org`,
     replyTo: email.trim(),
     text: `From: ${name.trim()} <${email.trim()}>\n\n${message.trim()}`,
+    html: buildContactNotificationHtml({
+      heading: "New message via brainerdbaptist.org",
+      fromName: name.trim(),
+      fromEmail: email.trim(),
+      message: message.trim(),
+    }),
   });
 
   return NextResponse.json({ ok: true, ...result });

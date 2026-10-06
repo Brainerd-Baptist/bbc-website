@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 // Missions inquiries — short-term team interest, questions about ongoing
 // partner support, or general contact with the missions office.
@@ -25,6 +26,13 @@ export async function POST(req: NextRequest) {
     subject: `Missions Inquiry (${label}): ${name.trim()}`,
     replyTo: email.trim(),
     text: `Interest: ${label}\nFrom: ${name.trim()} <${email.trim()}>\n\n${message.trim()}`,
+    html: buildContactNotificationHtml({
+      heading: "Missions inquiry",
+      fromName: name.trim(),
+      fromEmail: email.trim(),
+      message: message.trim(),
+      meta: [{ label: "Interest", value: label }],
+    }),
   });
 
   return NextResponse.json({ ok: true, ...result });

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 const TO = "connect@brainerdbaptist.org";
 
@@ -15,6 +16,12 @@ export async function POST(req: NextRequest) {
     subject: `Connect: ${name.trim()}`,
     replyTo: email.trim(),
     text: `From: ${name.trim()} <${email.trim()}>\n\n${message.trim()}`,
+    html: buildContactNotificationHtml({
+      heading: "New message via Connect",
+      fromName: name.trim(),
+      fromEmail: email.trim(),
+      message: message.trim(),
+    }),
   });
 
   return NextResponse.json({ ok: true, ...result });
