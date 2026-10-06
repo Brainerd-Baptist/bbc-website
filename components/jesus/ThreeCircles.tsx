@@ -27,9 +27,9 @@ const VISIBLE: Record<string,Elem[]> = {
 const vis = (step: string, e: Elem) => VISIBLE[step]?.includes(e) ?? false;
 
 /* ─── Geometry ───────────────────────────────────────────────────────── */
-const GDX=108, GDY=120, R=72;
-const BX =310, BY =120;
-const GPX=209, GPY=300;
+const GDX=100, GDY=120, R=72;
+const BX =347, BY =120;
+const GPX=233, GPY=310;
 
 /* ─── Per-step viewBox ───────────────────────────────────────────────── */
 type VB = [number,number,number,number];
@@ -37,13 +37,13 @@ type VB = [number,number,number,number];
 // the Gospel circle so their labels can sit outside the circle (like the
 // reference art) instead of stacked on top of the icon inside it.
 const VIEWBOXES: Record<string,VB> = {
-  brokenness: [206, 14, 200, 208],
-  design:     [ 22, 14, 360, 200],
-  sin:        [ 22,  6, 360, 190],
-  coping:     [ 22,  6, 374, 240],
-  gospel:     [ 22,  6, 360, 404],
-  repent:     [ 22,  6, 360, 404],
-  recover:    [ 22,  6, 360, 404],
+  brokenness: [243, 14, 208, 208],
+  design:     [ 14, 14, 430, 200],
+  sin:        [ 14,  6, 430, 190],
+  coping:     [ 14,  6, 470, 240],
+  gospel:     [  4,  6, 470, 412],
+  repent:     [  4,  6, 470, 412],
+  recover:    [  4,  6, 470, 412],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -146,7 +146,7 @@ function BrokenCircle({show, navy}:{show:boolean; navy:string}) {
       {on && <>
         <path d={`M ${BX+74},${BY-46} l 12,-8 l -6,12 l 10,-4`} stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
         <path d={`M ${BX+74},${BY+46} l 10,8 l -4,-12 l 8,6`}   stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
-        <path d={`M ${BX+20},${BY-76} l 6,-12 l 6,10 l 8,-6`}   stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <path d={`M ${BX+78},${BY-2} l 12,-8 l -6,12 l 10,-4`}   stroke={navy} strokeOpacity={0.38} strokeWidth="2" fill="none" strokeLinecap="round"/>
       </>}
     </g>
   );
@@ -306,7 +306,7 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
   }, [show, key]);
 
   return (
-    <g transform={`translate(${x},${y})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
+    <g transform={`translate(${x},${y}) scale(1.6)`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
         <g key={key} style={{transform:kneel?"translate(0px,5px)":"translate(0px,0px)", transition:"transform .5s cubic-bezier(.4,0,.2,1)"}}>
           {/* Standing */}
@@ -353,7 +353,7 @@ function RedeemedMan({x,y,color,show}:{x:number;y:number;color:string;show:boole
     ] as [number,number,number,number];
   });
   return (
-    <g transform={`translate(${x},${y})`} filter="url(#sk)">
+    <g transform={`translate(${x},${y}) scale(1.6)`} filter="url(#sk)">
       <g>
         <animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="1.5s" repeatCount="indefinite"/>
         <circle cx="0" cy="-14" r="4" fill={color}/>
@@ -415,9 +415,12 @@ export default function ThreeCircles() {
   };
 
   // Arrow geometry
-  const sinStart = {x: GDX+50, y: GDY-52};
-  const sinCtrl  = {x: 209, y: 22};
-  const sinEnd   = {x: BX-50, y: BY-52};
+  // Re-traced from the actual stroke in the reference (skeletonised, then a
+  // cubic fitted to it — RMS error ~3 reference px), not eyeballed.
+  const sinStart = {x: 172.5, y: 65.3};
+  const sinC1    = {x: 210,   y: 30};     // eased: lower, so the start no longer lifts steeply
+  const sinC2    = {x: 250,   y: 29};
+  const sinEnd   = {x: 281.2, y: 56};
 
   // Round 11: rounds 8-10 kept making these arrows bigger, further out,
   // structurally fancier — and each round Josiah said it was getting
@@ -429,27 +432,56 @@ export default function ThreeCircles() {
   // Repent & Believe floats free of both circles, but pulled in to about
   // half its previous length — it now sits in the gap between them
   // rather than reaching all the way to either circle's edge.
-  const repStart = {x: 321, y: 235};
-  const repCtrl  = {x: 305, y: 275};
-  const repEnd   = {x: 287, y: 326};
+  // Round 15: layout and arrows traced from Josiah's reference drawing.
+  // The reference ellipses were measured (centres, radii, gaps), and every
+  // arrow point was read off it and mapped through x*0.4645, y*0.6667 — the
+  // exact squash that turns the reference's ellipses into this file's
+  // circles — so arrows keep the same relationship to the circles. Both teal
+  // arrows start/end at the Gospel circle's middle (right side / left side),
+  // as cubic curves that bow out into open space.
+  // Same traced curve as the reference's Turn & Believe arrow, trimmed at
+  // the top so its length matches Restored & Forgiven and its label can sit
+  // above it (mirroring Restored & Forgiven) instead of leaving a gap.
+  const repStart = {x: 372, y: 250};
+  const repC1    = {x: 365.5,y: 279};
+  const repC2    = {x: 343.7,y: 300.9};
+  const repEnd   = {x: 320, y: 320};   // Gospel's right-middle, pointing in
 
-  const recStart = {x: GPX-50, y: GPY-52}; // Gospel circle, upper-left edge
-  const recCtrl  = {x: 118,   y: 212};
-  const recEnd   = {x: GDX+48, y: GDY+54}; // Design circle, lower-right edge
+  const recStart = {x: 145, y: 317};   // Gospel's left-middle
+  const recC1    = {x: 110, y: 313};
+  const recC2    = {x: 89.5,y: 279};
+  const recEnd   = {x: 82,  y: 249};   // below God's Design, pointing up
 
-  const sinMid  = { x:(sinStart.x+2*sinCtrl.x+sinEnd.x)/4,  y:(sinStart.y+2*sinCtrl.y+sinEnd.y)/4  };
-  const repMid  = { x:(repStart.x+2*repCtrl.x+repEnd.x)/4,  y:(repStart.y+2*repCtrl.y+repEnd.y)/4  };
-  const recMid  = { x:(recStart.x+2*recCtrl.x+recEnd.x)/4,  y:(recStart.y+2*recCtrl.y+recEnd.y)/4  };
+  // Point on the Sin curve at parameter t, and its first-half sub-curve.
+  const sinPts = [sinStart, sinC1, sinC2, sinEnd];
+  const lerp2 = (a:{x:number;y:number}, b:{x:number;y:number}, t:number) => ({x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t});
+  const sinAt = (t:number) => {
+    const [p0,p1,p2,p3] = sinPts;
+    const a = lerp2(p0,p1,t), b = lerp2(p1,p2,t), c = lerp2(p2,p3,t);
+    const d = lerp2(a,b,t), e = lerp2(b,c,t);
+    return lerp2(d,e,t);
+  };
+  // "Sin" label rides above the right-hand part of the arc, clear of the runner.
+  const sinMid = { x: sinAt(0.74).x, y: sinAt(0.74).y - 4 };
 
   // Runner travels a copy of the sin arrow, lifted above it so he isn't
   // stepping on the line itself.
-  const sinRunPath = `M ${sinStart.x},${sinStart.y-16} Q ${sinCtrl.x},${sinCtrl.y-16} ${sinEnd.x},${sinEnd.y-16}`;
+  // The runner only crosses the first ~40% of the arrow and stops above its
+  // start (as in the reference), so he never sits on top of the arrowhead.
+  const runT = 0.4;
+  const runSub = (() => {
+    const [p0,p1,p2,p3] = sinPts.map(q => ({x:q.x, y:q.y-16}));
+    const a = lerp2(p0,p1,runT), b = lerp2(p1,p2,runT), c = lerp2(p2,p3,runT);
+    const d = lerp2(a,b,runT), e = lerp2(b,c,runT), f = lerp2(d,e,runT);
+    return `M ${p0.x},${p0.y} C ${a.x},${a.y} ${d.x},${d.y} ${f.x},${f.y}`;
+  })();
+  const sinRunPath = runSub;
 
   // Figures sit near the Gospel-circle end of each arrow, just off the
   // curve — "Believe" happens on arrival at Gospel, "Restored" happens
   // on leaving it, matching where the reference places its two figures.
-  const prayPos = { x: repMid.x + 22, y: repMid.y + 6 };
-  const redeemPos = { x: recMid.x - 37, y: recMid.y + 55 };
+  const prayPos = { x: 436, y: 326 };
+  const redeemPos = { x: 56, y: 345 };
 
   return (
     <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
@@ -521,7 +553,7 @@ export default function ThreeCircles() {
             <DrawIcon cx={GDX} cy={GDY} show={vis(v,"design-circle")} delay={300} stroke={TEAL} fill={TEAL} sw={2.6}
               d="M 0,25.2 C -36.4,4.2 -19.6,-29.4 0,-12.6 C 19.6,-29.4 36.4,4.2 0,25.2 Z" len={170}/>
             <Fade show={vis(v,"design-inner")}>
-              <MLText x={GDX} y={GDY-R-12} lines={["God's Design"]} fill={TEAL} size={14}/>
+              <MLText x={GDX} y={GDY-R-12} lines={["God's Design"]} fill={TEAL} size={16}/>
             </Fade>
 
             {/* ═══ BROKENNESS (top-right) — navy arcs on white, no fill needed — squiggle icon ═══ */}
@@ -535,7 +567,7 @@ export default function ThreeCircles() {
               d="M -5,-6 L -5,6 L 5,6 L 5,-6 L -5,-6" len={44}/>
             <AnimCircle cx={BX+2} cy={BY+30} r={1.3} stroke={NAVY} sw={1.4} show={vis(v,"broken-circle")} delay={1700}/>
             <Fade show={vis(v,"broken-inner")}>
-              <MLText x={BX} y={BY-R-12} lines={["Brokenness"]} fill={NAVY} size={14}/>
+              <MLText x={BX+26} y={BY-R-14} lines={["Brokenness"]} fill={NAVY} size={16}/>
             </Fade>
             {/* Coping labels — only step 4. Moved up alongside the little
                 jagged "shrapnel" marks that fly off the Brokenness circle's
@@ -543,17 +575,17 @@ export default function ThreeCircles() {
                 the mark it sits beside, so it reads as "this word IS one of
                 the broken lines" rather than a caption floating below. */}
             <Fade show={vis(v,"cope-labels")}>
-              <g transform={`translate(${BX+30},${BY-96}) rotate(-20)`}>
+              <g transform={`translate(${BX+90},${BY-78}) rotate(-25)`}>
                 <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
                   fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
                   style={{textTransform:"uppercase", ...HALO}}>Money</text>
               </g>
-              <g transform={`translate(${BX+78},${BY-54}) rotate(0)`}>
+              <g transform={`translate(${BX+96},${BY-22}) rotate(0)`}>
                 <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
                   fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
                   style={{textTransform:"uppercase", ...HALO}}>Addiction</text>
               </g>
-              <g transform={`translate(${BX+78},${BY+58}) rotate(10)`}>
+              <g transform={`translate(${BX+92},${BY+62}) rotate(12)`}>
                 <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
                   fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
                   style={{textTransform:"uppercase", ...HALO}}>Religion</text>
@@ -601,21 +633,21 @@ export default function ThreeCircles() {
             <DrawIcon cx={GPX} cy={GPY-76} show={vis(v,"gospel-circle")} delay={1700} stroke={NAVY} sw={2.6}
               d="M -20,0 L -20,-15 L -10,-4 L 0,-30 L 10,-4 L 20,-15 L 20,0 Z" len={170}/>
             <Fade show={vis(v,"gospel-inner")}>
-              <MLText x={GPX} y={GPY+R+22} lines={["Gospel"]} fill={NAVY} size={16}/>
+              <MLText x={GPX} y={GPY+R+22} lines={["Gospel"]} fill={NAVY} size={18}/>
             </Fade>
 
             {/* ═══ SIN arrow ═══ */}
             <g filter="url(#sk)">
               <AnimPath
-                d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
-                stroke={RED} sw={2.5} show={vis(v,"sin-arrow")} len={240}/>
+                d={`M ${sinStart.x},${sinStart.y} C ${sinC1.x},${sinC1.y} ${sinC2.x},${sinC2.y} ${sinEnd.x},${sinEnd.y}`}
+                stroke={RED} sw={3.5} show={vis(v,"sin-arrow")} len={125}/>
             </g>
             {vis(v,"sin-arrow") && (
-              <path d={`M ${sinStart.x},${sinStart.y} Q ${sinCtrl.x},${sinCtrl.y} ${sinEnd.x},${sinEnd.y}`}
-                fill="none" stroke="none" markerEnd="url(#arrr)" strokeWidth="2.5"/>
+              <path d={`M ${sinStart.x},${sinStart.y} C ${sinC1.x},${sinC1.y} ${sinC2.x},${sinC2.y} ${sinEnd.x},${sinEnd.y}`}
+                fill="none" stroke="none" markerEnd="url(#arrr)" strokeWidth="4"/>
             )}
             <Fade show={vis(v,"sin-arrow")}>
-              <MLText x={sinMid.x} y={sinMid.y-6} lines={["Sin"]} fill={RED} size={14} weight={700} ls="0.12em"/>
+              <MLText x={sinMid.x} y={sinMid.y-6} lines={["Sin"]} fill={RED} size={16} weight={700} ls="0.12em"/>
             </Fade>
             <RunningMan path={sinRunPath} color={RED} show={vis(v,"sin-arrow")}/>
 
@@ -625,11 +657,11 @@ export default function ThreeCircles() {
                 bottom-right, never touching either circle. */}
             <g filter="url(#sk)">
               <AnimPath
-                d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
-                stroke={TEAL} sw={3} show={vis(v,"repent-arrow")} len={100}/>
+                d={`M ${repStart.x},${repStart.y} C ${repC1.x},${repC1.y} ${repC2.x},${repC2.y} ${repEnd.x},${repEnd.y}`}
+                stroke={TEAL} sw={3.5} show={vis(v,"repent-arrow")} len={92}/>
             </g>
             {vis(v,"repent-arrow") && (
-              <path d={`M ${repStart.x},${repStart.y} Q ${repCtrl.x},${repCtrl.y} ${repEnd.x},${repEnd.y}`}
+              <path d={`M ${repStart.x},${repStart.y} C ${repC1.x},${repC1.y} ${repC2.x},${repC2.y} ${repEnd.x},${repEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
             {/* The arrow is short enough now that the label used to sit
@@ -637,12 +669,7 @@ export default function ThreeCircles() {
                 offset to the side instead, so the arrow itself stays
                 visible. */}
             <Fade show={vis(v,"repent-arrow")}>
-              <text textAnchor="middle" fill={TEAL} fontSize={10} fontWeight={700}
-                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.06em"
-                transform={`translate(${repMid.x-17},${repMid.y-6.3}) rotate(-70)`}
-                style={{textTransform:"uppercase", ...HALO}}>
-                Repent &amp; Believe
-              </text>
+              <MLText x={350} y={219} lines={["Repent &","Believe"]} fill={TEAL} size={14} weight={700} anchor="start"/>
             </Fade>
             <PrayingMan x={prayPos.x} y={prayPos.y} color={TEAL} show={vis(v,"repent-arrow")}/>
 
@@ -650,20 +677,15 @@ export default function ThreeCircles() {
                 above. Renamed from "Recover & Pursue" per Josiah's request. */}
             <g filter="url(#sk)">
               <AnimPath
-                d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
-                stroke={TEAL} sw={4} show={vis(v,"recover-arrow")} len={140} delay={300}/>
+                d={`M ${recStart.x},${recStart.y} C ${recC1.x},${recC1.y} ${recC2.x},${recC2.y} ${recEnd.x},${recEnd.y}`}
+                stroke={TEAL} sw={3.5} show={vis(v,"recover-arrow")} len={102} delay={300}/>
             </g>
             {vis(v,"recover-arrow") && (
-              <path d={`M ${recStart.x},${recStart.y} Q ${recCtrl.x},${recCtrl.y} ${recEnd.x},${recEnd.y}`}
+              <path d={`M ${recStart.x},${recStart.y} C ${recC1.x},${recC1.y} ${recC2.x},${recC2.y} ${recEnd.x},${recEnd.y}`}
                 fill="none" stroke="none" markerEnd="url(#arht)" strokeWidth="4"/>
             )}
             <Fade show={vis(v,"recover-arrow")} delay={300}>
-              <text textAnchor="middle" fill={TEAL} fontSize={10} fontWeight={700}
-                fontFamily="var(--font-barlow-condensed),sans-serif" letterSpacing="0.06em"
-                transform={`translate(${recMid.x},${recMid.y}) rotate(-58)`}
-                style={{textTransform:"uppercase", ...HALO}}>
-                Restored &amp; Forgiven
-              </text>
+              <MLText x={106} y={222} lines={["Restored &","Forgiven"]} fill={TEAL} size={14} weight={700} anchor="end"/>
             </Fade>
             <RedeemedMan x={redeemPos.x} y={redeemPos.y} color={TEAL} show={vis(v,"recover-arrow")}/>
 
