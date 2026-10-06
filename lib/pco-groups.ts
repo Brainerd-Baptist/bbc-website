@@ -156,13 +156,24 @@ async function fetchNextEventDays(appId: string, secret: string, groupIds: strin
   const result = new Map<string, string>();
   const auth = pcoAuth(appId, secret);
   let requestErrors = 0;
+  let loggedSamples = 0;
+
+  // "gte" on starts_at, not just "order=starts_at" with no date floor. The
+  // first version of this (round 3, 2026-10-06) took the OLDEST event on
+  // each group ("per_page=1&order=starts_at" with no floor) and badged
+  // several groups with the wrong day — their earliest-ever event reflected
+  // an old meeting time from before the group's schedule changed, not its
+  // current one. Filtering to today-or-later and keeping ascending order
+  // gives the next real occurrence instead of the first one ever created.
+  const todayIso = new Date().toISOString();
 
   // Capped at 6 concurrent requests rather than firing all ~36 at once —
   // see fetchPco/mapWithConcurrency above for why.
   await mapWithConcurrency(groupIds, 6, async (groupId) => {
     try {
       const res = await fetchPco(
-        `${PCO_BASE}/groups/v2/groups/${groupId}/events?per_page=1&order=starts_at&fields[Event]=starts_at`,
+        `${PCO_BASE}/groups/v2/groups/${groupId}/events?per_page=1&order=starts_at` +
+          `&where[starts_at][gte]=${encodeURIComponent(todayIso)}&fields[Event]=starts_at`,
         auth,
       );
       if (!res.ok) {
@@ -172,6 +183,10 @@ async function fetchNextEventDays(appId: string, secret: string, groupIds: strin
       const data: { data?: { attributes?: { starts_at?: string } }[] } = await res.json();
       const startsAt = data.data?.[0]?.attributes?.starts_at;
       if (!startsAt) return;
+      if (loggedSamples < 3) {
+        loggedSamples++;
+        console.error(`[pco-groups] sample next-event date for group ${groupId}: ${startsAt} (floor was ${todayIso})`);
+      }
       const day = new Intl.DateTimeFormat("en-US", { timeZone: CHURCH_TIME_ZONE, weekday: "long" }).format(
         new Date(startsAt),
       );
