@@ -8,8 +8,8 @@ export const metadata = {
 
 const FUNDS = [
   {
-    name: "General Fund",
-    desc: "Supports the week-to-week ministry of Brainerd Baptist — worship, discipleship, staff, and facilities.",
+    name: "Ministry Fund",
+    desc: "Your tithes and offerings to support the week-to-week ministry of Brainerd Baptist — worship, discipleship, staff, and facilities.",
     primary: true,
   },
   {
