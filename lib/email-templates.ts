@@ -66,7 +66,7 @@ export function wrapEmailHtml({
           <tr>
             <td style="padding:36px 32px 8px;">
               <div style="width:40px;height:4px;background:${accentColor};border-radius:2px;margin-bottom:20px;"></div>
-              <h1 style="margin:0 0 18px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:22px;font-weight:800;color:${NAVY};letter-spacing:-0.3px;">
+              <h1 style="margin:0 0 18px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:18px;font-weight:800;color:${NAVY};letter-spacing:-0.2px;">
                 ${escStr(heading)}
               </h1>
               <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.65;color:#20304f;">
@@ -77,7 +77,8 @@ export function wrapEmailHtml({
           <tr>
             <td style="padding:28px 32px 32px;border-top:1px solid ${BORDER};margin-top:12px;">
               <p style="margin:20px 0 0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:12px;color:${INK_MUTED};">
-                Brainerd Baptist Church · 300 Brookfield Ave, Chattanooga, TN 37411<br/>
+                Brainerd Baptist Church<br/>
+                300 Brookfield Ave, Chattanooga, TN 37411<br/>
                 <a href="https://brainerdbaptist.org" style="color:${INK_MUTED};text-decoration:underline;">brainerdbaptist.org</a>
               </p>
             </td>
