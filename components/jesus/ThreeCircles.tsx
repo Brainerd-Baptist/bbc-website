@@ -16,14 +16,46 @@ function usePrefersReducedMotion(): boolean {
 }
 
 /* ─── Steps ──────────────────────────────────────────────────────────── */
+/* Scripture for each step — Christian Standard Bible (CSB), the translation
+   used in the NAMB 3 Circles Life Conversation Guide. Every reference on this
+   guide must stay CSB. */
+const SCRIPTURE: Record<string, { ref: string; text: string }[]> = {
+  design: [
+    { ref: "Genesis 1:31", text: "God saw all that he had made, and it was very good indeed." },
+    { ref: "Psalm 19:1", text: "The heavens declare the glory of God, and the expanse proclaims the work of his hands." },
+  ],
+  sin: [
+    { ref: "Romans 3:23", text: "For all have sinned and fall short of the glory of God." },
+    { ref: "Romans 6:23a", text: "For the wages of sin is death …" },
+  ],
+  coping: [
+    { ref: "Romans 1:25", text: "They exchanged the truth of God for a lie, and worshiped and served what has been created instead of the Creator." },
+    { ref: "Proverbs 14:12", text: "There is a way that seems right to a person, but its end is the way to death." },
+  ],
+  gospel: [
+    { ref: "John 3:16a", text: "For God loved the world in this way: He gave his one and only Son." },
+    { ref: "Colossians 2:14", text: "He erased the certificate of debt … and has taken it away by nailing it to the cross." },
+    { ref: "1 Corinthians 15:3\u20134", text: "Christ died for our sins according to the Scriptures … he was buried, that he was raised on the third day according to the Scriptures." },
+  ],
+  repent: [
+    { ref: "Mark 1:15", text: "Repent and believe the good news." },
+    { ref: "Ephesians 2:8\u20139", text: "For you are saved by grace through faith, and this is not from yourselves; it is God’s gift—not from works, so that no one can boast." },
+    { ref: "Romans 10:9", text: "If you confess with your mouth, ‘Jesus is Lord,’ and believe in your heart that God raised him from the dead, you will be saved." },
+  ],
+  recover: [
+    { ref: "Philippians 2:13", text: "For it is God who is working in you both to will and to work according to his good purpose." },
+    { ref: "Ephesians 2:10", text: "For we are his workmanship, created in Christ Jesus for good works, which God prepared ahead of time for us to do." },
+  ],
+};
+
 const STEPS = [
-  { id:"brokenness", num:1, title:"We Live in Brokenness",         body:"You feel it. Everyone does. Anxiety, loneliness, relationships that fall apart — a sense that something is deeply wrong with the world and with us. The Bible calls it brokenness.",                                              cta:"But how did we get here?" },
-  { id:"design",     num:2, title:"God's Original Design",          body:"God made the world good. He designed people to know him, love each other, and live in wholeness. This is what we were made for — purpose, peace, and relationship with God.",                                                    cta:"So what went wrong?" },
-  { id:"sin",        num:3, title:"Sin Broke Everything",           body:"Sin is the choice to leave God out — to do things our own way. That choice, made by the first humans and repeated by every person since, shattered God's design and brought brokenness into the world.",                       cta:"Can't we fix it ourselves?" },
-  { id:"coping",     num:4, title:"We Keep Trying to Escape",       body:"We reach for things to fill the gap — money, success, romance, religion. Some are good things. But none of them fix brokenness. They always loop us back to more of it.",                                                      cta:"Is there a way out?" },
-  { id:"gospel",     num:5, title:"God Had a Plan",                 body:"God sent his Son Jesus — fully God, fully human — to live the life we couldn't live, die the death we deserved, and rise from the dead three days later. Jesus defeated sin and opened a way back.",                          cta:"How do I get there?" },
-  { id:"repent",     num:6, title:"Repent and Believe",             body:"We move from brokenness to God's design by going through the Gospel. Repent — turn from sin. Believe — trust Jesus with your whole life. This is how we enter a restored relationship with God.",                             cta:"What if I fall back?" },
-  { id:"recover",    num:7, title:"The Way Back Is Always the Same",body:"Even after following Jesus, we stumble back into brokenness. But the Gospel is still the way home. Repent again. Believe again. Return to God's design — not through willpower, but through Jesus.",                        cta:null },
+  { id:"brokenness", num:1, title:"We Live in Brokenness",         body:"We live in a broken world, surrounded by broken lives, broken relationships, and broken systems. We see it in suffering, violence, poverty, pain, and death. And brokenness leads us to search for a way to make life work.",                                              cta:"But how did we get here?" },
+  { id:"design",     num:2, title:"God's Original Design",          body:"In contrast to all this brokenness, we also see beauty, purpose, and evidence of design around us. The Bible tells us God originally planned a world that worked perfectly, where everything and everyone fit together in harmony. He made each of us with a purpose: to worship him and walk with him.",                                                    cta:"So what went wrong?" },
+  { id:"sin",        num:3, title:"Sin Broke Everything",           body:"Life doesn’t work when we ignore God and his original design. We selfishly insist on doing things our own way. The Bible calls this sin, and we all sin and distort that design. The consequence is separation from God, in this life and for all eternity.",                       cta:"Can't we fix it ourselves?" },
+  { id:"coping",     num:4, title:"We Keep Trying to Escape",       body:"Sin leads to brokenness. We see it all around us and in our own lives. When we realize life isn’t working, we look for a way out, going in many directions and trying different things to figure it out on our own. Brokenness leads us to realize we need something greater.",                                                      cta:"Is there a way out?" },
+  { id:"gospel",     num:5, title:"God Had a Plan",                 body:"At this point we need a remedy, some good news. Because of his love, God didn’t leave us in our brokenness. Jesus, God in human flesh, came and lived perfectly according to God’s design. He came to rescue us, taking our sin and shame to the cross and paying the penalty with his death. Then God raised him from the dead, the only way for us to be restored to a relationship with God.",                          cta:"How do I get there?" },
+  { id:"repent",     num:6, title:"Repent and Believe",             body:"Simply hearing this good news isn’t enough. We must admit our sinful brokenness and stop trusting ourselves, because we can’t escape on our own. We ask God to forgive us, turning from sin to trust only in Jesus. This is what it means to repent and believe. Believing, we receive new life, and God turns our lives in a new direction.",                             cta:"What if I fall back?" },
+  { id:"recover",    num:7, title:"The Way Back Is Always the Same",body:"When God restores our relationship with him, we begin to find meaning and purpose in a broken world, and we can pursue his design in every area of life. Even when we fail, we know the way back: the same good news of Jesus. God’s Spirit empowers us to recover his design and assures us of his presence, now and forever.",                        cta:null },
 ];
 
 type Elem = "broken-circle"|"broken-inner"|"design-circle"|"design-inner"|"sin-arrow"|"cope-labels"|"gospel-circle"|"gospel-inner"|"repent-arrow"|"restore-arrow"|"recover-arrow";
@@ -755,6 +787,16 @@ export default function ThreeCircles() {
           <p className="text-fg-on-dark-body leading-relaxed mb-5" style={{fontSize:"1.05rem",maxWidth:420}}>
             {step.body}
           </p>
+          {SCRIPTURE[step.id] && (
+            <figure className="mb-5 pl-4 border-l-2" style={{borderColor:BAND_TEAL,maxWidth:420}}>
+              <figcaption className="font-condensed font-700 uppercase tracking-wide text-xs mb-2" style={{color:BAND_TEAL}}>The Bible says · CSB</figcaption>
+              {SCRIPTURE[step.id].map(v=>(
+                <blockquote key={v.ref} className="text-fg-on-dark-muted mb-2 last:mb-0" style={{fontSize:"0.9rem",lineHeight:1.5}}>
+                  “{v.text}” <cite className="not-italic font-700 whitespace-nowrap">({v.ref})</cite>
+                </blockquote>
+              ))}
+            </figure>
+          )}
           {step.cta && (
             <p className="font-condensed font-700 mb-8" style={{color:BAND_TEAL,fontSize:"1.05rem"}}>
               {step.cta}
