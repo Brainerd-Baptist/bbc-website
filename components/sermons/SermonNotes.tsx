@@ -811,13 +811,19 @@ export default function SermonNotes({
         </div>
 
         {/* ── Editor ────────────────────────────────────────────────── */}
+        {/* Fixed max-height + internal scroll, not unbounded growth — a
+            long note (reported 2026-10-06: a full Sunday's worth of
+            outline notes) used to just keep stretching this box taller,
+            pushing the whole page down instead of staying a contained
+            "sticky note" card you scroll within. */}
         <div
           onClick={() => editor.commands.focus()}
           style={{
             background: "var(--surface-raised)",
             border: `1.5px solid ${editorFocused ? `${accentColor}50` : "var(--border)"}`,
             borderRadius: "0.875rem", padding: "1rem 1.125rem",
-            cursor: "text", minHeight: "140px",
+            cursor: "text", minHeight: "140px", maxHeight: "420px",
+            overflowY: "auto", overscrollBehavior: "contain",
             transition: "border-color 0.15s, box-shadow 0.15s",
             boxShadow: editorFocused ? `0 0 0 3px ${accentColor}10` : "none",
             position: "relative",
