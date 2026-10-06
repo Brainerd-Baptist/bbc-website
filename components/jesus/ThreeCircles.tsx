@@ -41,9 +41,9 @@ const VIEWBOXES: Record<string,VB> = {
   design:     [ 14, 14, 430, 200],
   sin:        [ 14,  6, 430, 190],
   coping:     [ 14,  6, 516, 206],
-  gospel:     [  4,  6, 470, 412],
-  repent:     [  4,  6, 470, 412],
-  recover:    [  4,  6, 470, 412],
+  gospel:     [  4,  6, 446, 412],
+  repent:     [  4,  6, 446, 412],
+  recover:    [  4,  6, 446, 412],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -479,7 +479,7 @@ export default function ThreeCircles() {
   // Figures sit near the Gospel-circle end of each arrow, just off the
   // curve — "Believe" happens on arrival at Gospel, "Restored" happens
   // on leaving it, matching where the reference places its two figures.
-  const prayPos = { x: 436, y: 326 };
+  const prayPos = { x: 392, y: 330 };
   const redeemPos = { x: 56, y: 345 };
 
   return (
@@ -513,11 +513,11 @@ export default function ThreeCircles() {
       </div>
 
       {/* ── Layout: white card left, dark text right on lg; stacked on mobile ── */}
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-start">
+      <div className="flex flex-col lg:flex-row gap-5 lg:gap-12 items-center lg:items-start">
 
         {/* White card wrapping the SVG */}
         <div
-          className="w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0 rounded-2xl"
+          className="order-2 lg:order-1 w-full max-w-sm lg:max-w-none lg:w-[420px] flex-shrink-0 mx-auto lg:mx-0 rounded-2xl"
           style={{ background: "var(--plate)", padding:"20px 16px 16px", boxShadow:"var(--shadow-lg)", border:"1px solid var(--border-on-dark)" }}
         >
           {idx===0 && (
@@ -681,8 +681,8 @@ export default function ThreeCircles() {
         </div>
 
         {/* Text panel — stays dark */}
-        <div className="flex-1 flex flex-col justify-center lg:pt-6 px-1 lg:px-0">
-          <p className="font-condensed font-900 mb-2" style={{fontSize:"5rem",lineHeight:1,color:BAND_TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
+        <div className="order-1 lg:order-2 w-full flex-1 flex flex-col justify-center lg:pt-6 px-1 lg:px-0">
+          <p className="font-condensed font-900 mb-2" style={{fontSize:"clamp(2.75rem,11vw,5rem)",lineHeight:1,color:BAND_TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
             0{step.num}
           </p>
           <h3 className="font-condensed font-900 text-fg-on-dark mb-4"
