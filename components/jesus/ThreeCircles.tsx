@@ -1,6 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+
+/* Respect the visitor's "reduce motion" setting. CSS transitions are switched
+   off by a scoped rule on the root element; this hook covers the things CSS
+   can't reach — the SMIL animations (runner, pop, looping rays) and the
+   JS-driven draw-on / viewBox tween. */
+const RM_QUERY = "(prefers-reduced-motion: reduce)";
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(
+    (cb) => { const m = window.matchMedia(RM_QUERY); m.addEventListener("change", cb); return () => m.removeEventListener("change", cb); },
+    () => window.matchMedia(RM_QUERY).matches,
+    () => false,
+  );
+}
 
 /* ─── Steps ──────────────────────────────────────────────────────────── */
 const STEPS = [
@@ -48,6 +61,7 @@ const VIEWBOXES: Record<string,VB> = {
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
 function useAnimVB(target: VB): string {
+  const prm = usePrefersReducedMotion();
   const cur = useRef<VB>(target);
   const [vb, setVb] = useState<VB>(target);
   const raf = useRef<number|undefined>(undefined);
@@ -65,11 +79,12 @@ function useAnimVB(target: VB): string {
     raf.current = requestAnimationFrame(tick);
     return ()=>{ if(raf.current) cancelAnimationFrame(raf.current); };
   }, [target]);
-  return vb.join(" ");
+  return prm ? target.join(" ") : vb.join(" ");
 }
 
 /* ─── Draw-on helper ─────────────────────────────────────────────────── */
 function useDrawOn(show: boolean, delay=0) {
+  const prm = usePrefersReducedMotion();
   const [on, setOn] = useState(false);
   const prev = useRef(false);
   useEffect(()=>{
@@ -80,7 +95,7 @@ function useDrawOn(show: boolean, delay=0) {
     }
     prev.current = show;
   },[show,delay]);
-  return on;
+  return prm ? show : on;
 }
 
 /* ─── Animated circle ────────────────────────────────────────────────── */
@@ -102,13 +117,14 @@ function AnimPath({d,stroke,sw=2.6,show,delay=0,len=280}:{d:string;stroke:string
 
 /* ─── Fading label ───────────────────────────────────────────────────── */
 function Fade({show,delay=0,children}:{show:boolean;delay?:number;children:React.ReactNode}) {
+  const prm = usePrefersReducedMotion();
   const [op,setOp] = useState(0);
   const prev = useRef(false);
   useEffect(()=>{
     if(show && !prev.current){ setOp(0); const t=setTimeout(()=>setOp(1),delay+300); return ()=>clearTimeout(t); }
     prev.current=show;
   },[show,delay]);
-  return <g style={{opacity:show?op:0,transition:`opacity .35s ease`}}>{children}</g>;
+  return <g style={{opacity:show?(prm?1:op):0,transition:`opacity .35s ease`}}>{children}</g>;
 }
 
 /* ─── Multi-line text helper ─────────────────────────────────────────── */
@@ -171,13 +187,14 @@ function DrawIcon({cx,cy,d,len,stroke,sw=2.6,fill,show,delay=0,popDelay}:{
   cx:number;cy:number;d:string;len:number;stroke:string;sw?:number;fill?:string;
   show:boolean;delay?:number;popDelay?:number;
 }) {
+  const prm = usePrefersReducedMotion();
   const on = useDrawOn(show, delay);
   const pd = popDelay ?? delay + 950;
   return (
     <g transform={`translate(${cx},${cy})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
         <g>
-          {popTransform(pd)}
+          {!prm && popTransform(pd)}
           {fill && <path d={d} fill={fill} fillOpacity={on?0.14:0} stroke="none" style={{transition:"fill-opacity .5s ease .9s"}}/>}
           <path d={d} fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"
             strokeDasharray={len} strokeDashoffset={on?0:len}
@@ -193,6 +210,7 @@ function DrawIcon({cx,cy,d,len,stroke,sw=2.6,fill,show,delay=0,popDelay}:{
 function CrossIcon({cx,cy,stroke,show,delay=0,popDelay}:{
   cx:number;cy:number;stroke:string;show:boolean;delay?:number;popDelay?:number;
 }) {
+  const prm = usePrefersReducedMotion();
   const onV = useDrawOn(show, delay);
   const onH = useDrawOn(show, delay+380);
   const pd = popDelay ?? delay + 1000;
@@ -200,7 +218,7 @@ function CrossIcon({cx,cy,stroke,show,delay=0,popDelay}:{
     <g transform={`translate(${cx},${cy})`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
         <g>
-          {popTransform(pd)}
+          {!prm && popTransform(pd)}
           <path d="M 0,-34 L 0,10" fill="none" stroke={stroke} strokeWidth={3.2} strokeLinecap="round"
             strokeDasharray={44} strokeDashoffset={onV?0:44}
             style={{transition:onV?`stroke-dashoffset .5s cubic-bezier(.4,0,.2,1)`:undefined}}/>
@@ -217,7 +235,8 @@ function CrossIcon({cx,cy,stroke,show,delay=0,popDelay}:{
    with a looping leg/arm swing (SMIL animateTransform), so it reads as
    running rather than sliding. Mounted only while `show`, so nothing
    animates off-screen. ───────────────────────────────────────────────── */
-function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
+function RunningMan({path,color,show,rest}:{path:string;color:string;show:boolean;rest:{x:number;y:number}}) {
+  const prm = usePrefersReducedMotion();
   const [key,setKey] = useState(0);
   const prev = useRef(false);
   useEffect(()=>{ if(show && !prev.current) setKey(k=>k+1); prev.current = show; },[show]);
@@ -242,6 +261,20 @@ function RunningMan({path,color,show}:{path:string;color:string;show:boolean}) {
   }, [show, key]);
 
   if (!show) return null;
+  if (prm) {
+    // Reduced motion: no run, no leg swing — just the figure standing where
+    // the run would have ended.
+    return (
+      <g transform={`translate(${rest.x},${rest.y})`} filter="url(#sk)">
+        <circle cx="0" cy="-10" r="4" fill={color}/>
+        <line x1="0" y1="-6" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="4" x2="-7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="4" x2="7" y2="15" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="-5" x2="-7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+        <line x1="0" y1="-5" x2="7" y2="3" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+      </g>
+    );
+  }
   return (
     <g key={key} filter="url(#sk)">
       <g>
@@ -340,6 +373,7 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
 /* ─── Redeemed stick figure: a gentle standing bounce, with dashes
    radiating off it that blink in a staggered loop. ────────────────────── */
 function RedeemedMan({x,y,color,show}:{x:number;y:number;color:string;show:boolean}) {
+  const prm = usePrefersReducedMotion();
   if (!show) return null;
   // A full ring of rays around the figure, like the sunburst in the
   // reference art, rather than a partial cluster on one side.
@@ -354,7 +388,7 @@ function RedeemedMan({x,y,color,show}:{x:number;y:number;color:string;show:boole
   return (
     <g transform={`translate(${x},${y}) scale(1.6)`} filter="url(#sk)">
       <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="1.5s" repeatCount="indefinite"/>
+        {!prm && <animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="1.5s" repeatCount="indefinite"/>}
         <circle cx="0" cy="-14" r="4" fill={color}/>
         <line x1="0" y1="-10" x2="0" y2="4" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         <line x1="0" y1="4" x2="-6" y2="14" stroke={color} strokeWidth="2" strokeLinecap="round"/>
@@ -362,8 +396,8 @@ function RedeemedMan({x,y,color,show}:{x:number;y:number;color:string;show:boole
         <line x1="0" y1="-6" x2="-7" y2="-1" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         <line x1="0" y1="-6" x2="7" y2="-1" stroke={color} strokeWidth="2" strokeLinecap="round"/>
         {rays.map(([x1,y1,x2,y2],i)=>(
-          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="2" strokeLinecap="round">
-            <animate attributeName="opacity" values="0.15;1;0.15" dur="1.3s" begin={`${i*0.18}s`} repeatCount="indefinite"/>
+          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth="2" strokeLinecap="round" strokeOpacity={prm ? 0.7 : undefined}>
+            {!prm && <animate attributeName="opacity" values="0.15;1;0.15" dur="1.3s" begin={`${i*0.18}s`} repeatCount="indefinite"/>}
           </line>
         ))}
       </g>
@@ -399,6 +433,26 @@ export default function ThreeCircles() {
   const BAND_TEAL = "#00abc9";      // on the navy band, NOT the plate
 
   const viewBox = useAnimVB(VIEWBOXES[v]);
+
+  // Keyboard: ← / → move between steps while focus is inside the guide.
+  const onKey = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight" && canNext) { e.preventDefault(); setIdx(i=>Math.min(STEPS.length-1,i+1)); }
+    if (e.key === "ArrowLeft"  && canPrev) { e.preventDefault(); setIdx(i=>Math.max(0,i-1)); }
+  };
+
+  // The step lives in the URL (?step=4) so a refresh keeps your place and a
+  // pastor can send someone straight to a step. Step 1 keeps the URL clean.
+  useEffect(() => {
+    const n = parseInt(new URLSearchParams(window.location.search).get("step") ?? "", 10);
+    if (n >= 2 && n <= STEPS.length) { const t = setTimeout(() => setIdx(n-1), 0); return () => clearTimeout(t); }
+  }, []);
+  const urlReady = useRef(false);
+  useEffect(() => {
+    if (!urlReady.current) { urlReady.current = true; return; }
+    const url = new URL(window.location.href);
+    if (idx === 0) url.searchParams.delete("step"); else url.searchParams.set("step", String(idx+1));
+    window.history.replaceState(window.history.state, "", url);
+  }, [idx]);
 
   // Swipe
   const tx = useRef<number|null>(null), ty = useRef<number|null>(null);
@@ -472,9 +526,10 @@ export default function ThreeCircles() {
     const [p0,p1,p2,p3] = sinPts.map(q => ({x:q.x, y:q.y-16}));
     const a = lerp2(p0,p1,runT), b = lerp2(p1,p2,runT), c = lerp2(p2,p3,runT);
     const d = lerp2(a,b,runT), e = lerp2(b,c,runT), f = lerp2(d,e,runT);
-    return `M ${p0.x},${p0.y} C ${a.x},${a.y} ${d.x},${d.y} ${f.x},${f.y}`;
+    return { d: `M ${p0.x},${p0.y} C ${a.x},${a.y} ${d.x},${d.y} ${f.x},${f.y}`, end: f };
   })();
-  const sinRunPath = runSub;
+  const sinRunPath = runSub.d;
+  const runEnd = runSub.end;
 
   // Figures sit near the Gospel-circle end of each arrow, just off the
   // curve — "Believe" happens on arrival at Gospel, "Restored" happens
@@ -483,31 +538,38 @@ export default function ThreeCircles() {
   const redeemPos = { x: 56, y: 345 };
 
   return (
-    <div className="w-full select-none" onTouchStart={onTS} onTouchEnd={onTE}>
+    <div className="tc-root w-full select-none" onTouchStart={onTS} onTouchEnd={onTE} onKeyDown={onKey}
+      role="group" aria-label={`The Three Circles guide, step ${idx+1} of ${STEPS.length}`}>
+      <style>{`@media (prefers-reduced-motion: reduce){.tc-root *{transition:none !important}}`}</style>
 
       {/* ── Nav — stays dark, floats above the white card ── */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-wrap items-center justify-between gap-y-3 mb-5">
         <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
-          className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition"
-          style={{ borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)", color:canPrev?"var(--fg-on-dark-muted)":"var(--fg-on-dark-muted)", background:"transparent", cursor:canPrev?"pointer":"not-allowed" }}>
+          className="order-1 font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition"
+          style={{ borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)", color:"var(--fg-on-dark-muted)", background:"transparent", cursor:canPrev?"pointer":"not-allowed", opacity:canPrev?1:0.4 }}>
           ← Back
         </button>
-        <div className="flex items-center gap-2">
+        {/* Step dots. Each button is a 24px-tall tap target around the small
+            visible dot (WCAG 2.5.8); on phones the row drops under the
+            Back/Next pair so seven targets fit without crowding. */}
+        <div className="order-3 sm:order-2 w-full sm:w-auto flex items-center justify-center" role="group" aria-label="Choose a step">
           {STEPS.map((s,i)=>(
-            <button key={s.id} onClick={()=>setIdx(i)} aria-label={`Step ${i+1}`}
-              style={{ width:i===idx?26:7, height:7, borderRadius:4, padding:0, background:i===idx?"var(--accent)":"var(--border-on-dark-strong)", border:"none", cursor:"pointer",
+            <button key={s.id} onClick={()=>setIdx(i)} aria-label={`Step ${i+1}: ${s.title}`} aria-current={i===idx?"step":undefined}
+              style={{ width:i===idx?38:24, height:24, padding:0, background:"transparent", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              <span aria-hidden="true" style={{ display:"block", width:i===idx?26:7, height:7, borderRadius:4, background:i===idx?"var(--accent)":"var(--border-on-dark-strong)",
                   /* Not `all`: that animates outline-width too, so the focus
                      ring fades in from zero and the dot reads as having no
                      indicator at the moment focus lands. Only the two
                      properties that actually move are animated. */
                   transition:"width .3s ease, background-color .3s ease" }}/>
+            </button>
           ))}
         </div>
         {canNext
           ? <button onClick={()=>setIdx(i=>Math.min(STEPS.length-1,i+1))}
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-colors"
+              className="order-2 sm:order-3 font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-colors"
               style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)", cursor:"pointer" }}>Next →</button>
-          : <a href="/connect" className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full inline-block"
+          : <a href="/connect" className="order-2 sm:order-3 font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full inline-block"
               style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)" }}>Talk →</a>
         }
       </div>
@@ -524,7 +586,7 @@ export default function ThreeCircles() {
             <p className="text-center text-xs mb-3 lg:hidden font-condensed tracking-widest"
               style={{color: "var(--fg-subtle)"}}>SWIPE TO CONTINUE</p>
           )}
-          <svg viewBox={viewBox} className="w-full h-auto" style={{overflow:"visible"}}>
+          <svg viewBox={viewBox} className="w-full h-auto" style={{overflow:"visible"}} role="img" aria-label={`Diagram for step ${idx+1}: ${step.title}`}>
             <defs>
               <filter id="sk" x="-8%" y="-8%" width="116%" height="116%">
                 <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="5" result="n"/>
@@ -637,7 +699,7 @@ export default function ThreeCircles() {
             <Fade show={vis(v,"sin-arrow")}>
               <MLText x={sinMid.x} y={sinMid.y-6} lines={["Sin"]} fill={RED} size={16} weight={700} ls="0.12em"/>
             </Fade>
-            <RunningMan path={sinRunPath} color={RED} show={vis(v,"sin-arrow")}/>
+            <RunningMan path={sinRunPath} color={RED} show={vis(v,"sin-arrow")} rest={runEnd}/>
 
             {/* ═══ REPENT & BELIEVE: B → GP ═══ Floats free of both circles —
                 leaves Brokenness's bottom-right, bows out toward the
@@ -682,7 +744,8 @@ export default function ThreeCircles() {
 
         {/* Text panel — stays dark */}
         <div className="order-1 lg:order-2 w-full flex-1 flex flex-col justify-center lg:pt-6 px-1 lg:px-0">
-          <p className="font-condensed font-900 mb-2" style={{fontSize:"clamp(2.75rem,11vw,5rem)",lineHeight:1,color:BAND_TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
+          <div aria-live="polite" aria-atomic="true">
+          <p aria-hidden="true" className="font-condensed font-900 mb-2" style={{fontSize:"clamp(2.75rem,11vw,5rem)",lineHeight:1,color:BAND_TEAL,opacity:.14,letterSpacing:"-0.03em"}}>
             0{step.num}
           </p>
           <h3 className="font-condensed font-900 text-fg-on-dark mb-4"
@@ -697,11 +760,12 @@ export default function ThreeCircles() {
               {step.cta}
             </p>
           )}
+          </div>
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-4">
             <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={!canPrev}
               className="font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full border transition"
-              style={{borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)",color:canPrev?"var(--fg-on-dark-muted)":"var(--fg-on-dark-muted)",background:"transparent",cursor:canPrev?"pointer":"not-allowed"}}>
+              style={{borderColor:canPrev?"var(--border-on-dark-strong)":"var(--border-on-dark)",color:"var(--fg-on-dark-muted)",background:"transparent",cursor:canPrev?"pointer":"not-allowed",opacity:canPrev?1:0.4}}>
               ← Back
             </button>
             {canNext
