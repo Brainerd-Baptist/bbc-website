@@ -80,9 +80,6 @@ interface PcoGroupRecord {
     public_church_center_web_url: string | null;
     listed: boolean;
   };
-  relationships?: {
-    tags?: { data: { id: string }[] };
-  };
 }
 
 interface PcoTagGroupRecord {
@@ -211,6 +208,60 @@ function pcoAuth(appId: string, secret: string): string {
 }
 
 /**
+ * Fetch each given group's own tag ids via its `/tags` sub-resource.
+ *
+ * v1 of this (2026-10-06, commit 7e7e1a7) tried `include=tags` on the main
+ * `/groups/v2/groups` list and read each group's tag ids off
+ * `relationships.tags.data`. That shipped with clean logs (no error path in
+ * fetchSurfacedTagIndex ever fired) but Josiah reported Stage of Life and
+ * Gender-Specific never actually appeared on the live page — the same
+ * "include= doesn't sideload the way it's documented" failure already hit
+ * twice this debugging arc (events' `include=group`, tag_groups'
+ * `include=tags`), just silent this time because an empty
+ * `relationships.tags.data` array isn't an error, it's a valid empty result.
+ * Replaced with the same nested sub-resource pattern already proven for
+ * events and tag_groups: one request per group against its own `/tags`
+ * sub-resource, which needs no include-relationship guesswork at all.
+ *
+ * Fails soft (skips that one group) on any single request's error.
+ */
+async function fetchGroupTagIds(appId: string, secret: string, groupIds: string[]): Promise<Map<string, string[]>> {
+  const result = new Map<string, string[]>();
+  const auth = pcoAuth(appId, secret);
+  let requestErrors = 0;
+
+  // Capped at 6 concurrent, same as fetchNextEventDays — this runs
+  // alongside that fetch, so worst case is 12 concurrent PCO requests,
+  // still comfortably under the 100-per-20s org-wide limit that bit us
+  // before at ~38 unthrottled requests.
+  await mapWithConcurrency(groupIds, 6, async (groupId) => {
+    try {
+      const res = await fetchPco(`${PCO_BASE}/groups/v2/groups/${groupId}/tags?per_page=100`, auth);
+      if (!res.ok) {
+        requestErrors++;
+        return;
+      }
+      const data: { data?: { id: string }[] } = await res.json();
+      result.set(
+        groupId,
+        (data.data ?? []).map((t) => t.id),
+      );
+    } catch {
+      requestErrors++;
+    }
+  });
+
+  if (result.size === 0) {
+    console.error(
+      `[pco-groups] per-group tags fetch resolved 0 groups with tag data across ${groupIds.length} groups (${requestErrors} request errors). ` +
+        `If requestErrors is close to groupIds.length, check credential scope. If requestErrors is low but result is still 0, every group may genuinely have no tags, or "/groups/v2/groups/{id}/tags" may not be the right sub-resource path for this org's API version.`,
+    );
+  }
+
+  return result;
+}
+
+/**
  * Fetch PCO's Tag/TagGroup definitions once and build a lookup from tag id
  * to its name + tag-group name, restricted to SURFACED_TAG_GROUP_NAMES
  * above.
@@ -303,11 +354,13 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
 
   const auth = pcoAuth(appId, secret);
   const groups: PcoGroupRecord[] = [];
+  // No `include=tags` here — see fetchGroupTagIds above for why that
+  // relationship include doesn't actually sideload on this API. Each
+  // group's own tags are fetched separately, per group, below.
   let pageUrl: string | null =
     `${PCO_BASE}/groups/v2/groups?where[group_type_id]=${ADULT_LIFE_GROUPS_TYPE_ID}` +
-    `&per_page=100&order=name&include=tags` +
-    `&fields[Group]=name,schedule,memberships_count,public_church_center_web_url,listed` +
-    `&fields[Tag]=name`;
+    `&per_page=100&order=name` +
+    `&fields[Group]=name,schedule,memberships_count,public_church_center_web_url,listed`;
 
   try {
     while (pageUrl) {
@@ -325,15 +378,16 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
     return [];
   }
 
-  const [dayByGroupId, tagIndex] = await Promise.all([
+  const [dayByGroupId, tagIndex, groupTagIds] = await Promise.all([
     fetchNextEventDays(appId, secret, groups.map((g) => g.id)),
     fetchSurfacedTagIndex(appId, secret),
+    fetchGroupTagIds(appId, secret, groups.map((g) => g.id)),
   ]);
 
   return groups
     .filter((g) => g.attributes.listed)
     .map((g) => {
-      const tagIds = g.relationships?.tags?.data?.map((t) => t.id) ?? [];
+      const tagIds = groupTagIds.get(g.id) ?? [];
       const stageOfLifeTags: string[] = [];
       let genderSpecific: string | undefined;
       for (const tagId of tagIds) {
