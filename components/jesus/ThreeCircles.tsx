@@ -46,6 +46,15 @@ const SCRIPTURE: Record<string, { ref: string; text: string }[]> = {
     { ref: "Philippians 2:13", text: "For it is God who is working in you both to will and to work according to his good purpose." },
     { ref: "Ephesians 2:10", text: "For we are his workmanship, created in Christ Jesus for good works, which God prepared ahead of time for us to do." },
   ],
+  respond: [
+    { ref: "Romans 10:9", text: "If you confess with your mouth, ‘Jesus is Lord,’ and believe in your heart that God raised him from the dead, you will be saved." },
+    { ref: "Romans 10:13", text: "For everyone who calls on the name of the Lord will be saved." },
+  ],
+  next: [
+    { ref: "John 20:31", text: "But these are written so that you may believe that Jesus is the Messiah, the Son of God, and that by believing you may have life in his name." },
+    { ref: "Matthew 6:33", text: "But seek first the kingdom of God and his righteousness, and all these things will be provided for you." },
+    { ref: "Colossians 2:6", text: "So then, just as you have received Christ Jesus as Lord, continue to walk in him." },
+  ],
 };
 
 const STEPS = [
@@ -55,7 +64,20 @@ const STEPS = [
   { id:"coping",     num:4, title:"We Keep Trying to Escape",       body:"Sin leads to brokenness. We see it all around us and in our own lives. When we realize life isn’t working, we look for a way out, going in many directions and trying different things to figure it out on our own. Brokenness leads us to realize we need something greater.",                                                      cta:"Is there a way out?" },
   { id:"gospel",     num:5, title:"God Had a Plan",                 body:"At this point we need a remedy, some good news. Because of his love, God didn’t leave us in our brokenness. Jesus, God in human flesh, came and lived perfectly according to God’s design. He came to rescue us, taking our sin and shame to the cross and paying the penalty with his death. Then God raised him from the dead, the only way for us to be restored to a relationship with God.",                          cta:"How do I get there?" },
   { id:"repent",     num:6, title:"Repent and Believe",             body:"Simply hearing this good news isn’t enough. We must admit our sinful brokenness and stop trusting ourselves, because we can’t escape on our own. We ask God to forgive us, turning from sin to trust only in Jesus. This is what it means to repent and believe. Believing, we receive new life, and God turns our lives in a new direction.",                             cta:"What if I fall back?" },
-  { id:"recover",    num:7, title:"The Way Back Is Always the Same",body:"When God restores our relationship with him, we begin to find meaning and purpose in a broken world, and we can pursue his design in every area of life. Even when we fail, we know the way back: the same good news of Jesus. God’s Spirit empowers us to recover his design and assures us of his presence, now and forever.",                        cta:null },
+  { id:"recover",    num:7, title:"The Way Back Is Always the Same",body:"When God restores our relationship with him, we begin to find meaning and purpose in a broken world, and we can pursue his design in every area of life. Even when we fail, we know the way back: the same good news of Jesus. God’s Spirit empowers us to recover his design and assures us of his presence, now and forever.",                        cta:"So what do I do with this?" },
+  { id:"respond",    num:8, title:"What Should I Do?",              body:"Now that you’ve heard this good news, God invites you to respond to him. You can talk to him in your own words, or pray something like this:",
+    prayer:["My life is broken, and I see that it’s because of my sin. I need you.","I believe Jesus came, died, and rose again to rescue me from my sin.","Forgive me. I turn from my selfish ways and trust in you alone.","Jesus, you are Lord of all, and I will follow you."],
+    pastor:"If you prayed this, or you’re still working it out, you don’t have to carry it alone. A pastor here would love to talk and pray with you.",
+    cta:"What happens next?" },
+  { id:"next",       num:9, title:"What’s Next?",                   body:"This is the start of a new journey. God has a design for healthy relationships, and the Bible shows us how to pursue him.",
+    list:[
+      { k:"Pray",            v:"Talk to God about everything that matters to you." },
+      { k:"Dig into his Word", v:"The Bible reveals God’s design and how to follow him. Start reading, and keep going." },
+      { k:"Join a local church", v:"The church is God’s family. Commit to one, so you never walk with Jesus alone." },
+      { k:"Talk to a pastor", v:"Tell us about your decision. A pastor can pray with you, answer your questions, and help you take your next step." },
+    ],
+    pastor:"Don’t leave it here. Let a pastor know where you are today, and we’ll walk with you.",
+    cta:null },
 ];
 
 type Elem = "broken-circle"|"broken-inner"|"design-circle"|"design-inner"|"sin-arrow"|"cope-labels"|"gospel-circle"|"gospel-inner"|"repent-arrow"|"restore-arrow"|"recover-arrow";
@@ -68,6 +90,8 @@ const VISIBLE: Record<string,Elem[]> = {
   gospel:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner"],
   repent:     ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner","repent-arrow","restore-arrow"],
   recover:    ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner","repent-arrow","restore-arrow","recover-arrow"],
+  respond:    ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner","repent-arrow","restore-arrow","recover-arrow"],
+  next:       ["broken-circle","broken-inner","design-circle","design-inner","sin-arrow","gospel-circle","gospel-inner","repent-arrow","restore-arrow","recover-arrow"],
 };
 const vis = (step: string, e: Elem) => VISIBLE[step]?.includes(e) ?? false;
 
@@ -89,6 +113,8 @@ const VIEWBOXES: Record<string,VB> = {
   gospel:     [  4,  6, 446, 412],
   repent:     [  4,  6, 446, 412],
   recover:    [  4,  6, 446, 412],
+  respond:    [  4,  6, 446, 412],
+  next:       [  4,  6, 446, 412],
 };
 
 /* ─── Animated viewBox ───────────────────────────────────────────────── */
@@ -602,7 +628,7 @@ export default function ThreeCircles() {
               className="order-2 sm:order-3 font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition-colors"
               style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)", cursor:"pointer" }}>Next →</button>
           : <a href="/connect" className="order-2 sm:order-3 font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full inline-block"
-              style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)" }}>Talk →</a>
+              style={{ background:"var(--accent-solid)", color:"var(--fg-on-accent)", border:"1px solid var(--border-on-dark)" }}>Pastor →</a>
         }
       </div>
 
@@ -787,15 +813,49 @@ export default function ThreeCircles() {
           <p className="text-fg-on-dark-body leading-relaxed mb-5" style={{fontSize:"1.05rem",maxWidth:420}}>
             {step.body}
           </p>
-          {SCRIPTURE[step.id] && (
-            <figure className="mb-5 pl-4 border-l-2" style={{borderColor:BAND_TEAL,maxWidth:420}}>
-              <figcaption className="font-condensed font-700 uppercase tracking-wide text-xs mb-2" style={{color:BAND_TEAL}}>The Bible says · CSB</figcaption>
-              {SCRIPTURE[step.id].map(v=>(
-                <blockquote key={v.ref} className="text-fg-on-dark-muted mb-2 last:mb-0" style={{fontSize:"0.9rem",lineHeight:1.5}}>
-                  “{v.text}” <cite className="not-italic font-700 whitespace-nowrap">({v.ref})</cite>
-                </blockquote>
+          {step.prayer && (
+            <div className="mb-5 pl-4 border-l-2" style={{borderColor:BAND_TEAL,maxWidth:420}}>
+              {step.prayer.map(l=>(
+                <p key={l} className="text-fg-on-dark-body italic mb-2 last:mb-0" style={{fontSize:"1rem",lineHeight:1.5}}>{l}</p>
               ))}
-            </figure>
+            </div>
+          )}
+          {step.list && (
+            <dl className="mb-5" style={{maxWidth:420}}>
+              {step.list.map(it=>(
+                <div key={it.k} className="mb-3 last:mb-0">
+                  <dt className="font-condensed font-700 uppercase tracking-wide text-sm" style={{color:BAND_TEAL}}>{it.k}</dt>
+                  <dd className="text-fg-on-dark-body" style={{fontSize:"0.95rem",lineHeight:1.5}}>{it.v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {SCRIPTURE[step.id] && (
+            /* Collapsed by default so each step stays short on a phone: the
+               references show, a tap opens the verse text. key resets it to
+               closed on every step change. */
+            <details key={step.id} className="tc-verses group mb-5 pl-4 border-l-2" style={{borderColor:BAND_TEAL,maxWidth:420}}>
+              <summary className="flex items-start gap-2 cursor-pointer list-none py-2 min-h-[44px] [&::-webkit-details-marker]:hidden">
+                <span className="flex-1">
+                  <span className="block font-condensed font-700 uppercase tracking-wide text-xs mb-1" style={{color:BAND_TEAL}}>The Bible says · CSB — tap to read</span>
+                  <span className="block text-fg-on-dark-muted" style={{fontSize:"0.9rem",lineHeight:1.4}}>{SCRIPTURE[step.id].map(v=>v.ref).join("  ·  ")}</span>
+                </span>
+                <span aria-hidden="true" className="transition-transform group-open:rotate-180 mt-1" style={{color:BAND_TEAL}}>▾</span>
+              </summary>
+              <div className="pt-1 pb-1">
+                {SCRIPTURE[step.id].map(v=>(
+                  <blockquote key={v.ref} className="text-fg-on-dark-muted mb-2 last:mb-0" style={{fontSize:"0.9rem",lineHeight:1.5}}>
+                    “{v.text}” <cite className="not-italic font-700 whitespace-nowrap">({v.ref})</cite>
+                  </blockquote>
+                ))}
+              </div>
+            </details>
+          )}
+          {step.pastor && (
+            <p className="text-fg-on-dark-body mb-6" style={{fontSize:"1.05rem",maxWidth:420}}>
+              {step.pastor}{" "}
+              <a href="/connect" className="font-condensed font-700 underline underline-offset-4 whitespace-nowrap" style={{color:BAND_TEAL}}>Talk with a pastor →</a>
+            </p>
           )}
           {step.cta && (
             <p className="font-condensed font-700 mb-8" style={{color:BAND_TEAL,fontSize:"1.05rem"}}>
@@ -815,7 +875,7 @@ export default function ThreeCircles() {
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-2.5 rounded-full transition-colors"
                   style={{background:"var(--accent-solid)",color:"var(--fg-on-accent)",border:"1px solid var(--border-on-dark)",cursor:"pointer"}}>Next →</button>
               : <a href="/connect" className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-2.5 rounded-full inline-block"
-                  style={{background:"var(--accent-solid)",color:"var(--fg-on-accent)"}}>Talk to Someone</a>
+                  style={{background:"var(--accent-solid)",color:"var(--fg-on-accent)"}}>Talk to a Pastor</a>
             }
             <span className="text-fg-on-dark-muted text-sm font-condensed">{idx+1} / {STEPS.length}</span>
           </div>
