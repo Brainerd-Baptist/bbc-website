@@ -86,7 +86,8 @@ export default function GivePage() {
               <div className="glass rounded-xl p-5">
                 <p className="font-semibold text-fg mb-1">In Person</p>
                 <p className="text-fg-muted text-sm">
-                  Offering plates are passed during each Sunday service. Checks can be made payable to
+                  We invite you to give in person while at one of our worship services. There are blue
+                  giving boxes located in the lobby of the sanctuary. Checks can be made payable to
                   &ldquo;Brainerd Baptist Church.&rdquo;
                 </p>
               </div>
