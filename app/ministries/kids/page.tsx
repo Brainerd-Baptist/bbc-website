@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import FormRouteNote from "@/components/connect/FormRouteNote";
 import KidsRegistrationForm from "@/components/kids/KidsRegistrationForm";
 
+import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
 import Card from "@/components/ui/Card";
 export const metadata: Metadata = {
   title: "Kids — Brainerd Baptist Church",
@@ -549,6 +550,13 @@ export default function KidsPage() {
         </div>
       </section>
 
+      {/* ── Quick message ─────────────────────────────────── */}
+      <MinistryQuickMessage
+        ministry="kids"
+        title="Questions about Kids Ministry?"
+        blurb="Ask about check-in, ages, allergies, a tour — whatever's on your mind. It goes straight to our Kids team."
+      />
+
       {/* ── First-time CTA ─────────────────────────────────── */}
       <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto text-center">
@@ -585,12 +593,12 @@ export default function KidsPage() {
 
           {/* Contact fallback */}
           <p className="text-fg-muted text-xs mt-8">
-            Questions? Email us at{" "}
+            Questions?{" "}
             <a
-              href="mailto:kids@brainerdbaptist.org"
+              href="#quick-message"
               className="underline underline-offset-2 hover:text-fg-muted transition-colors"
             >
-              kids@brainerdbaptist.org
+              Send our Kids team a quick message
             </a>
           </p>
         </div>

@@ -1,3 +1,4 @@
+import ClientEmailButton from "@/components/ui/ClientEmailButton";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { IDENTITY } from "@/lib/identity-colors";
@@ -85,15 +86,9 @@ export default function MissionsPage() {
             </p>
           </div>
           <MissionsContactForm />
-          <p className="text-center text-fg-muted text-sm mt-8">
-            You can also email us directly at{" "}
-            <a
-              href="mailto:missions@brainerdbaptist.org"
-              className="underline underline-offset-2 identity-ink hover:opacity-80"
-              style={{ color: IDENTITY.missions.light }}
-            >
-              missions@brainerdbaptist.org
-            </a>
+          <p className="text-center text-fg-muted text-sm mt-8 flex flex-wrap items-center justify-center gap-x-2">
+            You can also email us directly:{" "}
+            <ClientEmailButton email="missions@brainerdbaptist.org" name="the Missions office" />
           </p>
         </div>
       </section>

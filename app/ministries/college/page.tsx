@@ -3,7 +3,8 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
 import PhotoLightboxGrid from "./PhotoLightboxGrid";
-import ExpandablePhoto from "./ExpandablePhoto";
+import ExpandablePhoto from "./ExpandablePhoto";import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
+
 
 export const metadata: Metadata = {
   title: "College & Young Adults — Brainerd Baptist Church",
@@ -170,10 +171,10 @@ export default function CollegeYoungAdultsPage() {
                       </p>
                       <p className="text-fg text-sm font-semibold">{leader.name}</p>
                       <a
-                        href={`mailto:${leader.email}`}
+                        href="#quick-message"
                         className="text-fg-muted text-sm hover:opacity-80 transition"
                       >
-                        {leader.email}
+                        Send a message
                       </a>
                       {leader.bio && (
                         <p className="text-fg-muted text-sm mt-1.5 leading-relaxed">{leader.bio}</p>
@@ -204,6 +205,13 @@ export default function CollegeYoungAdultsPage() {
           ))}
         </div>
       </section>
+
+      {/* ── Quick message ─────────────────────────────────── */}
+      <MinistryQuickMessage
+        ministry="college"
+        title="Questions about College & Young Adults?"
+        blurb="Ask about groups, meeting times, or how to get connected. It goes straight to our College & Young Adults team."
+      />
 
       {/* ── CTA band ─────────────────────────────────────────── */}
       <section

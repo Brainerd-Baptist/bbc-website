@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 // Missions inquiries — short-term team interest, questions about ongoing
@@ -33,6 +34,13 @@ export async function POST(req: NextRequest) {
       message: message.trim(),
       meta: [{ label: "Interest", value: label }],
     }),
+  });
+
+  await sendContactConfirmation({
+    to: email,
+    name: name,
+    teamLabel: "our Missions office",
+    replyTo: TO,
   });
 
   return NextResponse.json({ ok: true, ...result });

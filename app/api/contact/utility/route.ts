@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 // Catch-all for the small "utility" links on /connect that don't warrant
@@ -32,6 +33,13 @@ export async function POST(req: NextRequest) {
       fromEmail: email.trim(),
       message: message.trim(),
     }),
+  });
+
+  await sendContactConfirmation({
+    to: email,
+    name: name,
+    teamLabel: "our Connect team",
+    replyTo: TO,
   });
 
   return NextResponse.json({ ok: true, ...result });

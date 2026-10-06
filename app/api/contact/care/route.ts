@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 // Benevolence + pastoral care (hospital, funeral, wedding, crisis). Routes
@@ -40,6 +41,14 @@ export async function POST(req: NextRequest) {
       message: message.trim(),
       meta: meta.length > 0 ? meta : undefined,
     }),
+  });
+
+  await sendContactConfirmation({
+    to: email?.trim(),
+    name: name,
+    teamLabel: "our care team",
+    replyTo: TO,
+    careful: true,
   });
 
   return NextResponse.json({ ok: true, ...result });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { IDENTITY, inkVars } from "@/lib/identity-colors";
+import { IDENTITY, inkVars } from "@/lib/identity-colors";import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
+
 
 export const metadata: Metadata = {
   title: "Wednesday Nights — Brainerd Baptist Church",
@@ -258,6 +259,13 @@ export default function WednesdayPage() {
           ))}
         </div>
       </section>
+
+      {/* ── Quick message ─────────────────────────────────── */}
+      <MinistryQuickMessage
+        ministry="wednesday"
+        title="Questions about Wednesday Night?"
+        blurb="Ask about times, childcare, or what to expect. It goes straight to our team."
+      />
 
       {/* ── CTA band ──────────────────────────────────────── */}
       <section

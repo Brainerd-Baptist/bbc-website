@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
 import Card from "@/components/ui/Card";
 import Section from "@/components/ui/Section";
 export const metadata: Metadata = {
@@ -423,6 +424,13 @@ export default function BXPage() {
           </a>
         </div>
       </section>
+
+      {/* ── Quick message ─────────────────────────────────── */}
+      <MinistryQuickMessage
+        ministry="bx"
+        title="Questions about the BX?"
+        blurb="Ask about the community center, programs, or using the space. Ready to book a room? Use the reservation form instead."
+      />
 
     </div>
   );

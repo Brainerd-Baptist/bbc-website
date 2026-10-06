@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 const TO = "membership@brainerdbaptist.org";
@@ -33,6 +34,13 @@ export async function POST(req: NextRequest) {
       message: finalMessage,
       meta: phone?.trim() ? [{ label: "Phone", value: phone.trim() }] : undefined,
     }),
+  });
+
+  await sendContactConfirmation({
+    to: email,
+    name: name,
+    teamLabel: "our membership team",
+    replyTo: TO,
   });
 
   return NextResponse.json({ ok: true, ...result });

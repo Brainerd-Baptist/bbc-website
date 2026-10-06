@@ -60,6 +60,7 @@ import { getPodcastAudioMap, dateToKey } from "@/lib/podcast";
 import { sanityWriteClient, hasSanityWriteToken } from "@/lib/sanity-write";
 import { resolveResourceIds, promoteSeriesResources } from "@/lib/sermon-resources";
 import { slugify } from "@/lib/slugify";
+import { wrapEmailHtml } from "@/lib/email-templates";
 import { sendMail } from "@/lib/mail";
 import backfillReference from "@/lib/data/sermon-backfill-reference.json";
 
@@ -428,10 +429,21 @@ export async function GET(req: NextRequest) {
     const skippedLines = skipped.length > 0
       ? `\n\nSkipped (former staff):\n${skipped.map((s) => `• ${s.title} — ${s.speaker}`).join("\n")}`
       : "";
+    const li = (t: string) => `<li style="margin:0 0 6px;">${t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</li>`;
+    const createdHtml = `<ul style="margin:0 0 16px;padding-left:20px;">${created.map((c) => li(`${c.title} — ${c.date}`)).join("")}</ul>`;
+    const skippedHtml = skipped.length > 0
+      ? `<p style="margin:0 0 6px;font-weight:700;color:#00205B;">Skipped (former staff)</p><ul style="margin:0 0 16px;padding-left:20px;">${skipped.map((x) => li(`${x.title} — ${x.speaker}`)).join("")}</ul>`
+      : "";
     await sendMail({
       to: NOTIFY_EMAIL,
       subject: `Sermon sync: ${created.length} new sermon${created.length === 1 ? "" : "s"} added to Sanity`,
       text: `The sermon auto-sync added ${created.length} sermon${created.length === 1 ? "" : "s"} to Sanity:\n\n${lines}${skippedLines}\n\nWorth a quick glance in Sanity Studio to make sure titles/passages parsed cleanly — nothing's blocking on it, this is just a heads-up.`,
+      html: wrapEmailHtml({
+        preheader: `${created.length} new sermon${created.length === 1 ? "" : "s"} synced — worth a quick look in Studio.`,
+        heading: `${created.length} new sermon${created.length === 1 ? "" : "s"} synced`,
+        bodyHtml: `<p style="margin:0 0 12px;">The sermon auto-sync added:</p>${createdHtml}${skippedHtml}<p style="margin:0;">Worth a quick glance in Sanity Studio to make sure titles and passages parsed cleanly — nothing's blocking on it, this is just a heads-up.</p>`,
+        cta: { label: "Open Sanity Studio", url: "https://brainerdbaptist.org/studio" },
+      }),
     }).catch((err) => console.error("[sync-sermons] notification email failed:", err));
   }
 

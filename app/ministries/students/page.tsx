@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
 
+import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
 import Card from "@/components/ui/Card";
 export const metadata: Metadata = {
   title: "Students — Brainerd Baptist Church",
@@ -243,6 +244,13 @@ export default function StudentsPage() {
         </div>
       </section>
 
+      {/* ── Quick message ─────────────────────────────────── */}
+      <MinistryQuickMessage
+        ministry="students"
+        title="Questions about Students?"
+        blurb="Parents and students — ask about Wednesday nights, trips, or how to get plugged in. It goes straight to our Student Ministry team."
+      />
+
       {/* ── Dark CTA ───────────────────────────────────────── */}
       <section className="py-24 px-6" style={{ background: "var(--color-brand-navy)" }}>
         <div className="max-w-3xl mx-auto text-center">
@@ -278,12 +286,12 @@ export default function StudentsPage() {
             </Link>
           </div>
           <p className="text-fg-on-dark-muted text-xs mt-8">
-            Questions? Email{" "}
+            Questions?{" "}
             <a
-              href="mailto:students@brainerdbaptist.org"
+              href="#quick-message"
               className="underline underline-offset-2 hover:text-fg-on-dark transition-colors"
             >
-              students@brainerdbaptist.org
+              Send us a quick message
             </a>
           </p>
         </div>
