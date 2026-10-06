@@ -306,9 +306,9 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
   }, [show, key]);
 
   return (
-    <g transform={`translate(${x},${y}) scale(1.6)`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
+    <g transform={`translate(${x},${y}) scale(2)`} filter="url(#sk)" style={{opacity:show?1:0,transition:"opacity .3s ease"}}>
       {show && (
-        <g key={key} style={{transform:kneel?"translate(0px,5px)":"translate(0px,0px)", transition:"transform .5s cubic-bezier(.4,0,.2,1)"}}>
+        <g key={key} style={{transform:kneel?"translate(0px,2px)":"translate(0px,0px)", transition:"transform .5s cubic-bezier(.4,0,.2,1)"}}>
           {/* Standing */}
           <g style={{opacity:kneel?0:1, transition:"opacity .35s ease"}}>
             <circle cx="0" cy="-14" r="4" fill={color}/>
@@ -318,19 +318,18 @@ function PrayingMan({x,y,color,show}:{x:number;y:number;color:string;show:boolea
             <line x1="0" y1="-8" x2="-7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
             <line x1="0" y1="-8" x2="7" y2="0" stroke={color} strokeWidth="2" strokeLinecap="round"/>
           </g>
-          {/* Kneeling — mirrored to face left/down, toward the Gospel
-              circle and its cross, since that's the direction of this
-              figure relative to it. Head and torso lean that way, the
-              knee-to-heel line trails back to the right (away from the
-              facing direction, like a real kneel), and both arms are
-              raised up to a shared point near the face instead of down
-              in front — praying hands lifted toward the cross. */}
-          <g style={{opacity:kneel?1:0, transition:"opacity .4s ease .12s"}}>
-            <circle cx="-1" cy="-9" r="4" fill={color}/>
-            <line x1="-1" y1="-5" x2="-3" y2="5" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-            <path d="M -3,5 L -1,11 L 6,11" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <line x1="-2" y1="-3" x2="-6" y2="-9" stroke={color} strokeWidth="2" strokeLinecap="round"/>
-            <line x1="-2" y1="-3" x2="-5" y2="-10" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+          {/* Kneeling — traced from the pose in Josiah's reference drawing:
+              side view, facing left toward the Gospel circle. Torso comes
+              down and folds at the knee (the low point), the shin and foot
+              trail back to the right as two short lines, and one arm is
+              bent at the elbow and reaches out toward the cross. The group
+              is offset so the knee sits on the standing figure's ground
+              line (feet at y = 11) and the torso stays under the head. */}
+          <g transform="translate(-4,11)" style={{opacity:kneel?1:0, transition:"opacity .4s ease .12s"}}>
+            <circle cx="4.2" cy="-22" r="5" fill={color}/>
+            <path d="M 5.4,-16.8 L 6.3,-9.5 Q 6.3,-6 2.5,-3.5 L 0,0" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M 2.5,-3.5 L 8.8,-5.2 M 0,0 L 9.1,-2.2" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+            <path d="M 5.4,-15.4 L 1.2,-11.6 L -4.5,-16.5" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </g>
         </g>
       )}
