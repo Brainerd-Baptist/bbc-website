@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import ExpandablePhoto from "@/components/ui/ExpandablePhoto";
 import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
 import { SERMONS } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
@@ -126,7 +127,11 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
             {/* Photo */}
             {info.photo ? (
-              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex-shrink-0 shadow-2xl ring-2 ring-white/10">
+              <ExpandablePhoto
+                src={`/staff/${info.photo}.jpg`}
+                alt={name}
+                triggerClassName="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex-shrink-0 shadow-2xl ring-2 ring-white/10"
+              >
                 <Image
                   src={`/staff/${info.photo}.jpg`}
                   alt={name}
@@ -135,7 +140,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
                   className="w-full h-full object-cover object-top"
                   priority
                 />
-              </div>
+              </ExpandablePhoto>
             ) : (
               <div
                 className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl font-bold"
@@ -228,14 +233,18 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               <div>
                 <p className="eyebrow-muted mb-3">Family</p>
                 {info.familyPhoto ? (
-                  <div className="rounded-2xl overflow-hidden shadow-lg border border-border">
+                  <ExpandablePhoto
+                    src={info.familyPhoto}
+                    alt={info.familyPhotoAlt ?? `${name}'s family`}
+                    triggerClassName="w-full rounded-2xl overflow-hidden shadow-lg border border-border"
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={info.familyPhoto}
                       alt={info.familyPhotoAlt ?? `${name}'s family`}
                       className="w-full object-cover object-center"
                     />
-                  </div>
+                  </ExpandablePhoto>
                 ) : (
                   <div
                     className="rounded-2xl flex items-center justify-center text-center px-6 border border-dashed border-border"

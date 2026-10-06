@@ -1,0 +1,102 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
+/**
+ * Wraps a photo (passed as `children`, already rendered however the caller
+ * needs -- a square `next/image`, a plain `<img>`, with whatever
+ * rounding/shadow/border classes) in a cursor-zoom-in button. Clicking opens
+ * a full-screen lightbox with the same `src` shown large (object-contain).
+ *
+ * Generalizes app/ministries/college/ExpandablePhoto.tsx, which bakes in a
+ * fixed circular avatar thumbnail at a numeric `size`. That one still exists
+ * as-is (nothing wrong with it, not worth touching to re-point one caller),
+ * but it couldn't fit the speaker-profile hero photo (square, responsive
+ * w-28/sm:w-36) or the family photo (full-width, natural aspect ratio)
+ * without fighting its own hardcoded circle markup. This version leaves the
+ * thumbnail entirely to the caller and only adds the click-to-expand
+ * behavior and the overlay -- same Escape/scroll-lock/close-button pattern
+ * as the original. See "lightbox on every headshot?" discussion, 2026-10-06.
+ */
+export default function ExpandablePhoto({
+  src,
+  alt,
+  children,
+  triggerClassName = "",
+}: {
+  src: string;
+  alt: string;
+  children: React.ReactNode;
+  triggerClassName?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label={`Expand photo: ${alt}`}
+        className={`cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-2 ${triggerClassName}`}
+        style={{ outlineColor: "var(--accent)" }}
+      >
+        {children}
+      </button>
+
+      {open && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={alt}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
+          style={{ background: "var(--scrim-solid)", touchAction: "manipulation" }}
+          onClick={() => setOpen(false)}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            setOpen(false);
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setOpen(false);
+            }}
+            aria-label="Close"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-fg-on-dark hover:opacity-70 transition z-10"
+            style={{ touchAction: "manipulation" }}
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+          <div
+            className="relative w-full h-full max-w-xl"
+            onClick={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
+            style={{ touchAction: "manipulation" }}
+          >
+            <Image src={src} alt={alt} fill sizes="100vw" className="object-contain" priority />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
