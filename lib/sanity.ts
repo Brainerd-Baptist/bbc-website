@@ -195,6 +195,25 @@ export async function getSermonsBySeries(seriesSlug: string): Promise<SanitySerm
 }
 
 /**
+ * Same as getSermonsBySeries, but also pulls each sermon's own
+ * resourcesMentioned. Used only by the series page, which aggregates every
+ * resource mentioned anywhere across the series — not just the ones
+ * auto-promoted to the series document after 3+ consecutive weeks (see
+ * lib/sermon-resources.ts). getSermonsBySeries itself stays lean since its
+ * other caller (RelatedSermons) never needs this.
+ */
+export async function getSermonsBySeriesWithResources(seriesSlug: string): Promise<SanitySermon[]> {
+  return sanityClient.fetch(
+    `*[_type == "sermon" && series->slug.current == $seriesSlug] | order(date asc) {
+      ${SERMON_FIELDS},
+      "resourcesMentioned": resourcesMentioned[${ACTIVE_RESOURCE_REF_FILTER}]->{ ${RESOURCE_FIELDS} }
+    }`,
+    { seriesSlug },
+    { next: { revalidate: 300 } }
+  );
+}
+
+/**
  * Standalone sermons — no series assigned at all. The browse grid groups
  * these under a synthetic "Other" card (SermonGrid.tsx: seriesId falls back
  * to "other" when a sermon has no series), which links to /series/other.

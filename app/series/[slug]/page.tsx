@@ -3,16 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   getSeriesBySlug,
-  getSermonsBySeries,
+  getSermonsBySeriesWithResources,
   getStandaloneSermons,
   getAllSeries,
   formatDate,
 } from "@/lib/sanity";
+import type { SanityResource } from "@/lib/sanity";
 import { ALL_SERIES as FALLBACK_SERIES, SERMONS as FALLBACK_SERMONS } from "@/lib/sermons";
 import { inkOn, inkVarsFor } from "@/lib/identity-colors";
 
 import Card from "@/components/ui/Card";
 import Section from "@/components/ui/Section";
+import ResourcesMentioned from "@/components/sermons/ResourcesMentioned";
 export const revalidate = 300;
 
 // Pre-generate series slugs at build time
@@ -49,7 +51,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
   // through getSermonsBySeries (which matches a real series reference).
   const [seriesData, sanitySermons] = await Promise.all([
     isOther ? Promise.resolve(null) : getSeriesBySlug(slug).catch(() => null),
-    isOther ? getStandaloneSermons().catch(() => []) : getSermonsBySeries(slug).catch(() => []),
+    isOther ? getStandaloneSermons().catch(() => []) : getSermonsBySeriesWithResources(slug).catch(() => []),
   ]);
 
   // If Sanity has no series, try fallback
@@ -87,6 +89,23 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
   const heroThumb = sermons[sermons.length - 1]?.youtubeId
     ? `https://img.youtube.com/vi/${sermons[sermons.length - 1].youtubeId}/maxresdefault.jpg`
     : null;
+
+  // Every resource mentioned anywhere in this series — each sermon's own
+  // resourcesMentioned plus the series' own (the ones auto-promoted after
+  // 3+ consecutive weeks, per lib/sermon-resources.ts) — deduped by id.
+  // Not shown on "other" (no real series doc, so nothing to aggregate).
+  // Mirrors dedupeResources() in app/sermons/[slug]/page.tsx.
+  const seriesResources: SanityResource[] = (() => {
+    if (isOther) return [];
+    const seen = new Set<string>();
+    const out: SanityResource[] = [];
+    for (const r of [...sanitySermons.flatMap((s) => s.resourcesMentioned ?? []), ...(seriesData?.resourcesMentioned ?? [])]) {
+      if (!r || seen.has(r._id)) continue;
+      seen.add(r._id);
+      out.push(r);
+    }
+    return out;
+  })();
 
   return (
     <div className="min-h-screen">
@@ -255,6 +274,15 @@ export default async function SeriesPage({ params }: { params: Promise<{ slug: s
           })}
         </div>
       </Section>
+
+      {/* ── Resources from this series ───────────────────────────────── */}
+      {seriesResources.length > 0 && (
+        <Section className="px-5 md:px-8 pb-14">
+          <div className="max-w-3xl mx-auto">
+            <ResourcesMentioned resources={seriesResources} accentColor={accentColor} />
+          </div>
+        </Section>
+      )}
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section
