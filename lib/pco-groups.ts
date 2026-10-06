@@ -92,9 +92,7 @@ interface PcoTagGroupRecord {
 
 interface PcoTagRecord {
   id: string;
-  type: string;
-  attributes: { name: string };
-  relationships?: { tag_group?: { data: { id: string } | null } };
+  attributes?: { name?: string };
 }
 
 /** Where Chattanooga actually is — used to turn each event's UTC `starts_at` into the weekday a visitor would call it, not whatever day that UTC instant happens to fall on. */
@@ -102,72 +100,61 @@ const CHURCH_TIME_ZONE = "America/New_York";
 
 /**
  * Fetch each given group's next scheduled Event and return its local
- * weekday, keyed by group id. One batched call across every group in the
- * "Adult Life Groups" type (not one call per group) — ordering by
- * `starts_at` ascending and keeping the first event seen per group gives
- * each group's next occurrence without needing a date-range filter whose
- * exact bracket syntax (`where[starts_at][gte]` et al.) hasn't been
- * exercised against this org's real credential yet. Every one of the 36
- * active groups meets weekly (confirmed against live data, 2026-10-06), so
- * `per_page=100` comfortably covers at least one occurrence of all of them.
+ * weekday, keyed by group id.
  *
- * Fails soft to an empty map on any error, same reasoning as
- * getPublicLifeGroups() above — a broken day-of-week lookup should degrade
- * the page to "no day badges / no day filter," never take the whole Life
- * Groups page down. Check server logs after the first deploy to see
- * whether this actually resolves real event data for this credential.
+ * v1 of this (2026-10-06) tried one batched call across the whole "Adult
+ * Life Groups" type (`/groups/v2/events?where[group_type_id]=...`) to avoid
+ * 36 separate requests. Production logs that same day showed it came back
+ * with 100 events, 0 of which had a usable group relationship + starts_at —
+ * the org-wide filter isn't scoping or shaping the response the way that
+ * guess assumed. Replaced with one request per group against that group's
+ * own events sub-resource, which needs no filter guesswork at all: the
+ * group id comes from the URL itself, not from parsing a relationship.
+ * More requests (one per group, run in parallel), but each one is a shape
+ * PCO's API is far more likely to support consistently — the groups fetch
+ * itself already proved out that nested-resource style.
+ *
+ * Fails soft (skips that one group) on any single request's error — a
+ * broken day-of-week lookup should degrade to "no day badge for this
+ * group," never take the whole Life Groups page down.
  */
-async function fetchNextEventDays(appId: string, secret: string): Promise<Map<string, string>> {
+async function fetchNextEventDays(appId: string, secret: string, groupIds: string[]): Promise<Map<string, string>> {
   const result = new Map<string, string>();
   const auth = pcoAuth(appId, secret);
+  let requestErrors = 0;
 
-  try {
-    const res = await fetch(
-      `${PCO_BASE}/groups/v2/events?where[group_type_id]=${ADULT_LIFE_GROUPS_TYPE_ID}` +
-        `&per_page=100&order=starts_at&include=group&fields[Event]=starts_at`,
-      {
-        headers: { Authorization: auth, "Content-Type": "application/json" },
-        next: { revalidate: 3600 },
-      },
+  await Promise.all(
+    groupIds.map(async (groupId) => {
+      try {
+        const res = await fetch(
+          `${PCO_BASE}/groups/v2/groups/${groupId}/events?per_page=1&order=starts_at&fields[Event]=starts_at`,
+          {
+            headers: { Authorization: auth, "Content-Type": "application/json" },
+            next: { revalidate: 3600 },
+          },
+        );
+        if (!res.ok) {
+          requestErrors++;
+          return;
+        }
+        const data: { data?: { attributes?: { starts_at?: string } }[] } = await res.json();
+        const startsAt = data.data?.[0]?.attributes?.starts_at;
+        if (!startsAt) return;
+        const day = new Intl.DateTimeFormat("en-US", { timeZone: CHURCH_TIME_ZONE, weekday: "long" }).format(
+          new Date(startsAt),
+        );
+        result.set(groupId, day);
+      } catch {
+        requestErrors++;
+      }
+    }),
+  );
+
+  if (result.size === 0) {
+    console.error(
+      `[pco-groups] per-group events fetch resolved 0 days across ${groupIds.length} groups (${requestErrors} request errors). ` +
+        `If requestErrors is close to groupIds.length, check credential scope for Groups > Events. If requestErrors is low but result is still 0, check that each group actually has an upcoming event, or that "starts_at" is the right attribute name.`,
     );
-    if (!res.ok) {
-      console.error(`[pco-groups] events fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
-      return result;
-    }
-
-    const data: {
-      data?: { attributes?: { starts_at?: string }; relationships?: { group?: { data?: { id: string } | null } } }[];
-    } = await res.json();
-
-    const rawEvents = data.data ?? [];
-    let withGroupId = 0;
-
-    for (const event of rawEvents) {
-      // Defensive: not every event in the response necessarily carries a
-      // `relationships.group` object (confirmed in production, 2026-10-06 —
-      // some entries have no `relationships` key at all, which crashed this
-      // loop before this guard existed). Skip those rather than throw.
-      const groupId = event.relationships?.group?.data?.id;
-      const startsAt = event.attributes?.starts_at;
-      if (!groupId || !startsAt) continue;
-      withGroupId++;
-      if (result.has(groupId)) continue; // first (earliest) occurrence per group wins
-      const day = new Intl.DateTimeFormat("en-US", { timeZone: CHURCH_TIME_ZONE, weekday: "long" }).format(
-        new Date(startsAt),
-      );
-      result.set(groupId, day);
-    }
-
-    if (result.size === 0) {
-      console.error(
-        `[pco-groups] events fetch succeeded with ${rawEvents.length} raw events, ${withGroupId} had a usable group id + starts_at, resolved 0 group days. ` +
-          `If rawEvents.length is 0, where[group_type_id]=${ADULT_LIFE_GROUPS_TYPE_ID} is likely not a valid filter on this endpoint for this credential. ` +
-          `If rawEvents.length is >0 but withGroupId is 0, the "group" relationship (or "starts_at" attribute) isn't coming back the way this code expects.`,
-      );
-    }
-  } catch (err) {
-    console.error("[pco-groups] events fetch threw:", err);
-    return new Map();
   }
 
   return result;
@@ -180,19 +167,21 @@ function pcoAuth(appId: string, secret: string): string {
 /**
  * Fetch PCO's Tag/TagGroup definitions once and build a lookup from tag id
  * to its name + tag-group name, restricted to SURFACED_TAG_GROUP_NAMES
- * above. This is the piece that was blocked when Day of the Week first
- * shipped (2026-10-06) — no MCP tool or credential in the dev sandbox could
- * resolve a tag id to a name. Unblocked the same day once Josiah sent real
- * screenshots of Groups → Settings → Tags confirming the tag group names
- * used here.
+ * above.
  *
- * Still untested against this org's real API response shape (same
- * limitation as fetchNextEventDays below — no live credential in the
- * sandbox this was written in), so this fails soft to an empty map on any
- * error, same reasoning as the rest of this file: a broken lookup just
- * means no stage-of-life/gender badges or filters, never a broken page.
- * Check server logs after deploy to confirm it actually resolves real tag
- * data for this credential.
+ * v1 of this (2026-10-06) tried `/groups/v2/tag_groups?include=tags` to get
+ * everything in one request. Production logs that same day showed the
+ * top-level tag_groups list came back correctly (all 10 real names,
+ * including both "Stage of Life" and "Gender-Specific"), but the
+ * `include=tags` sideload produced 0 Tag resources — that include
+ * parameter isn't doing what was assumed. Replaced with the same
+ * nested-resource pattern used for fetchNextEventDays above: fetch each
+ * surfaced tag group's own `/tags` sub-resource directly (2 requests, one
+ * per surfaced category, not 1 per tag) instead of guessing at an include
+ * relationship name.
+ *
+ * Fails soft to an empty map on any error — a broken lookup just means no
+ * stage-of-life/gender badges or filters, never a broken page.
  */
 async function fetchSurfacedTagIndex(
   appId: string,
@@ -201,8 +190,9 @@ async function fetchSurfacedTagIndex(
   const result = new Map<string, { name: string; tagGroupName: string }>();
   const auth = pcoAuth(appId, secret);
 
+  let surfacedTagGroups: { id: string; name: string }[] = [];
   try {
-    const res = await fetch(`${PCO_BASE}/groups/v2/tag_groups?include=tags&per_page=100`, {
+    const res = await fetch(`${PCO_BASE}/groups/v2/tag_groups?per_page=100&fields[TagGroup]=name`, {
       headers: { Authorization: auth, "Content-Type": "application/json" },
       next: { revalidate: 3600 },
     });
@@ -210,39 +200,52 @@ async function fetchSurfacedTagIndex(
       console.error(`[pco-groups] tag_groups fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
       return result;
     }
-
-    const data: { data?: PcoTagGroupRecord[]; included?: PcoTagRecord[] } = await res.json();
-
-    const allTagGroupNames = (data.data ?? []).map((tg) => tg.attributes?.name).filter(Boolean);
-    const surfacedTagGroupNameById = new Map<string, string>();
-    for (const tagGroup of data.data ?? []) {
-      const name = tagGroup.attributes?.name;
-      if (name && SURFACED_TAG_GROUP_NAMES.includes(name)) {
-        surfacedTagGroupNameById.set(tagGroup.id, name);
-      }
-    }
-
-    const includedTags = (data.included ?? []).filter((t) => t.type === "Tag");
-    for (const tag of includedTags) {
-      const tagGroupId = tag.relationships?.tag_group?.data?.id;
-      const tagGroupName = tagGroupId ? surfacedTagGroupNameById.get(tagGroupId) : undefined;
-      if (!tagGroupName) continue; // not one of the categories we've decided to surface
-      result.set(tag.id, { name: tag.attributes.name, tagGroupName });
-    }
-
-    if (result.size === 0) {
-      console.error(
-        `[pco-groups] tag_groups fetch succeeded but resolved 0 tags. ` +
-          `Top-level tag groups returned (${(data.data ?? []).length} total): ${JSON.stringify(allTagGroupNames)}. ` +
-          `Matched against SURFACED_TAG_GROUP_NAMES (${SURFACED_TAG_GROUP_NAMES.join(", ")}) → ${surfacedTagGroupNameById.size} matches. ` +
-          `Sideloaded "included" Tag resources: ${includedTags.length} (of ${(data.included ?? []).length} total included items). ` +
-          `If allTagGroupNames is empty, this endpoint path or credential scope is likely wrong. If it has entries but 0 match, the real names differ from what's hardcoded here. ` +
-          `If matches > 0 but includedTags is 0, "include=tags" isn't sideloading Tag resources as expected — try "include=tag" or a relationship name other than "tags".`,
-      );
-    }
+    const data: { data?: PcoTagGroupRecord[] } = await res.json();
+    surfacedTagGroups = (data.data ?? [])
+      .filter((tg): tg is PcoTagGroupRecord & { attributes: { name: string } } =>
+        Boolean(tg.attributes?.name && SURFACED_TAG_GROUP_NAMES.includes(tg.attributes.name)),
+      )
+      .map((tg) => ({ id: tg.id, name: tg.attributes.name }));
   } catch (err) {
     console.error("[pco-groups] tag_groups fetch threw:", err);
-    return new Map();
+    return result;
+  }
+
+  if (surfacedTagGroups.length === 0) {
+    console.error(
+      `[pco-groups] tag_groups fetch succeeded but none of SURFACED_TAG_GROUP_NAMES (${SURFACED_TAG_GROUP_NAMES.join(", ")}) matched a real tag group name — check PCO admin (Groups → Settings → Tags) for the current exact names.`,
+    );
+    return result;
+  }
+
+  await Promise.all(
+    surfacedTagGroups.map(async ({ id: tagGroupId, name: tagGroupName }) => {
+      try {
+        const res = await fetch(`${PCO_BASE}/groups/v2/tag_groups/${tagGroupId}/tags?per_page=100&fields[Tag]=name`, {
+          headers: { Authorization: auth, "Content-Type": "application/json" },
+          next: { revalidate: 3600 },
+        });
+        if (!res.ok) {
+          console.error(
+            `[pco-groups] tags sub-resource fetch failed for "${tagGroupName}": ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`,
+          );
+          return;
+        }
+        const data: { data?: PcoTagRecord[] } = await res.json();
+        for (const tag of data.data ?? []) {
+          if (!tag.attributes?.name) continue;
+          result.set(tag.id, { name: tag.attributes.name, tagGroupName });
+        }
+      } catch (err) {
+        console.error(`[pco-groups] tags sub-resource fetch threw for "${tagGroupName}":`, err);
+      }
+    }),
+  );
+
+  if (result.size === 0) {
+    console.error(
+      `[pco-groups] resolved ${surfacedTagGroups.length} surfaced tag groups but 0 individual tags — check the sub-resource path (/groups/v2/tag_groups/{id}/tags) is right for this org's API version.`,
+    );
   }
 
   return result;
@@ -286,7 +289,7 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
   }
 
   const [dayByGroupId, tagIndex] = await Promise.all([
-    fetchNextEventDays(appId, secret),
+    fetchNextEventDays(appId, secret, groups.map((g) => g.id)),
     fetchSurfacedTagIndex(appId, secret),
   ]);
 
