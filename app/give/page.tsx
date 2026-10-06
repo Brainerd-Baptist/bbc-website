@@ -13,8 +13,8 @@ const FUNDS = [
     primary: true,
   },
   {
-    name: "Missions Fund",
-    desc: "Every nation, tribe, language, and people gathered before Jesus (Revelation 7:9) — that's what this fund is for. It supports the Annie Armstrong Easter Offering (North American Mission Board) and the Lottie Moon Christmas Offering (International Mission Board), along with Brainerd's own mission scholarships, which help send our members to partner in that work firsthand.",
+    name: "Mission Giving",
+    desc: "Every nation, tribe, language, and people gathered before Jesus (Revelation 7:9) — mission giving supports the Annie Armstrong Easter Offering (North American Mission Board) and the Lottie Moon Christmas Offering (International Mission Board), along with Brainerd's own mission scholarships, which help send our members to partner in that work firsthand.",
     primary: false,
   },
 ];
