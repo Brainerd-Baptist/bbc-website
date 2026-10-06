@@ -5,17 +5,21 @@
  * in Sanity Studio" — see claude/sanity-sermon-auto-sync-scope-2026-10-02.md
  * for the full design writeup this implements.
  *
- * Runs on a daily Vercel Cron (see vercel.json). Scheduled for 7:45 AM
- * Eastern (Brainerd's own timezone — Chattanooga, TN), per Josiah
- * 2026-10-03: early enough to catch the sermon on the Tagging sheet
- * right after Curtis finishes filling it out that morning, before anyone's
- * checking the site. Vercel Cron schedules are plain UTC with no
- * timezone field, so vercel.json's "45 11 * * *" is 7:45 AM EDT
- * specifically — it'll read as 6:45 AM once Eastern falls back to
- * Standard Time (after Nov 1, 2026); bump it to "45 12 * * *" then (and
- * back again each spring) to keep hitting 7:45 AM local, or swap to a
- * platform/cron provider with real timezone support if this manual
- * twice-a-year flip becomes annoying.
+ * Runs hourly on Vercel Cron (see vercel.json, "45 * * * *" — :45 past
+ * every hour). Bumped from once-daily to hourly 2026-10-06 per Josiah:
+ * a daily-only run meant a mid-week Tagging-sheet edit (Curtis adding a
+ * resource, fixing a title) could sit for up to 24 hours before it
+ * reached the site. This team's Vercel plan is Pro (confirmed
+ * 2026-08-22), which allows per-minute cron precision and has no
+ * once-a-day cap the way Hobby does, so hourly costs nothing in
+ * platform terms — the actual tradeoff is each run re-checking and
+ * rewriting its whole SYNC_WINDOW regardless of whether anything
+ * changed (see the createOrReplace comment below), so this is
+ * deliberately hourly rather than every-few-minutes: frequent enough
+ * that nothing sits stale for more than an hour, not so frequent that
+ * it rewrites unchanged Sanity docs dozens of times a day for no
+ * reason. Re-tune this (not the ±59-minute-imprecise Hobby plan's
+ * once-daily ceiling) if that balance ever needs to shift.
  *
  * Each run:
  *   1. Pulls the last SYNC_WINDOW videos from the curated Sermons playlist
