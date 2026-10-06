@@ -10,16 +10,28 @@ const inputClass =
 // where it falls in a sorted string list.
 const DAY_ORDER = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+// Display order for Stage of Life, matching the order Josiah's screenshots
+// of PCO admin (Groups → Settings → Tags, 2026-10-06) showed them in —
+// life-stage labels first, then decade bands.
+const STAGE_ORDER = [
+  "Multigenerational", "College", "Young Adult", "Single", "Married", "Widowed", "With Kids",
+  "20s", "30s", "40s", "50s", "60s", "70s + up",
+];
+
 // Matches SermonGrid.tsx's reusable Select — same look, same component
 // shape, just not worth extracting to a shared file yet for one more use.
-function DaySelect({
+function PlainSelect({
   value,
   onChange,
-  days,
+  options,
+  anyLabel,
+  ariaLabel,
 }: {
   value: string;
   onChange: (v: string) => void;
-  days: string[];
+  options: string[];
+  anyLabel: string;
+  ariaLabel: string;
 }) {
   return (
     <div className="relative">
@@ -27,12 +39,12 @@ function DaySelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="appearance-none bg-surface-raised border border-border-strong text-fg-muted text-xs font-semibold rounded-lg pl-3 pr-7 py-2.5 cursor-pointer hover:border-border-strong focus:border-accent transition shadow-sm"
-        aria-label="Filter by day of the week"
+        aria-label={ariaLabel}
       >
-        <option value="">Any day</option>
-        {days.map((d) => (
-          <option key={d} value={d}>
-            {d}
+        <option value="">{anyLabel}</option>
+        {options.map((o) => (
+          <option key={o} value={o}>
+            {o}
           </option>
         ))}
       </select>
@@ -50,12 +62,24 @@ function DaySelect({
 export default function GroupBrowser({ groups }: { groups: LifeGroup[] }) {
   const [query, setQuery] = useState("");
   const [day, setDay] = useState("");
+  const [stage, setStage] = useState("");
+  const [gender, setGender] = useState("");
 
-  // Only offer days that at least one group actually meets on — no point
-  // showing "Friday" in the dropdown if nothing's there to find.
+  // Only offer values that at least one group actually carries — no point
+  // showing "Friday" or "Widowed" in a dropdown if nothing's there to find.
   const availableDays = useMemo(() => {
     const present = new Set(groups.map((g) => g.dayOfWeek).filter((d): d is string => Boolean(d)));
     return DAY_ORDER.filter((d) => present.has(d));
+  }, [groups]);
+
+  const availableStages = useMemo(() => {
+    const present = new Set(groups.flatMap((g) => g.stageOfLifeTags));
+    return STAGE_ORDER.filter((s) => present.has(s));
+  }, [groups]);
+
+  const availableGenders = useMemo(() => {
+    const present = new Set(groups.map((g) => g.genderSpecific).filter((g): g is string => Boolean(g)));
+    return ["Men Only", "Women Only"].filter((g) => present.has(g));
   }, [groups]);
 
   const filtered = useMemo(() => {
@@ -63,9 +87,11 @@ export default function GroupBrowser({ groups }: { groups: LifeGroup[] }) {
     return groups.filter((g) => {
       const matchesQuery = !q || g.name.toLowerCase().includes(q) || g.schedule.toLowerCase().includes(q);
       const matchesDay = !day || g.dayOfWeek === day;
-      return matchesQuery && matchesDay;
+      const matchesStage = !stage || g.stageOfLifeTags.includes(stage);
+      const matchesGender = !gender || g.genderSpecific === gender;
+      return matchesQuery && matchesDay && matchesStage && matchesGender;
     });
-  }, [groups, query, day]);
+  }, [groups, query, day, stage, gender]);
 
   return (
     <div>
@@ -78,9 +104,17 @@ export default function GroupBrowser({ groups }: { groups: LifeGroup[] }) {
           className={`${inputClass} sm:flex-1`}
           aria-label="Search Life Groups"
         />
-        {availableDays.length > 0 && (
-          <DaySelect value={day} onChange={setDay} days={availableDays} />
-        )}
+        <div className="flex gap-3 flex-wrap">
+          {availableDays.length > 0 && (
+            <PlainSelect value={day} onChange={setDay} options={availableDays} anyLabel="Any day" ariaLabel="Filter by day of the week" />
+          )}
+          {availableStages.length > 0 && (
+            <PlainSelect value={stage} onChange={setStage} options={availableStages} anyLabel="Any stage of life" ariaLabel="Filter by stage of life" />
+          )}
+          {availableGenders.length > 0 && (
+            <PlainSelect value={gender} onChange={setGender} options={availableGenders} anyLabel="Men & women" ariaLabel="Filter by gender-specific group" />
+          )}
+        </div>
       </div>
 
       {filtered.length === 0 ? (
@@ -101,6 +135,20 @@ export default function GroupBrowser({ groups }: { groups: LifeGroup[] }) {
                   </span>
                 )}
               </div>
+              {(g.genderSpecific || g.stageOfLifeTags.length > 0) && (
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {g.genderSpecific && (
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-fg-muted bg-surface-sunken rounded-full px-2 py-0.5">
+                      {g.genderSpecific}
+                    </span>
+                  )}
+                  {g.stageOfLifeTags.map((tag) => (
+                    <span key={tag} className="text-[10px] font-semibold uppercase tracking-wide text-fg-muted bg-surface-sunken rounded-full px-2 py-0.5">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
               <p className="text-fg-muted text-sm leading-relaxed mb-4 flex-1">{g.schedule}</p>
               {g.churchCenterUrl ? (
                 <a

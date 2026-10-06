@@ -29,6 +29,16 @@ const PCO_BASE = "https://api.planningcenteronline.com";
 // BrainerdKids, etc.) is internal and must stay out of this fetch.
 const ADULT_LIFE_GROUPS_TYPE_ID = "71404";
 
+// Tag group categories worth surfacing as Life Groups filters, named exactly
+// as they appear in PCO admin (Groups → Settings → Tags — Josiah sent
+// screenshots of the real list, 2026-10-06). That same screen also has
+// Group Attributes, Other Languages, Bible Study Material, Parts, Serving
+// Needs, Music, and Length of Group tag groups — all real, all scoped out
+// (see the "bigger filter option" addendum in
+// claude/life-groups-page-rebuild-scope-2026-10-05.md for why each one
+// was or wasn't worth building).
+const SURFACED_TAG_GROUP_NAMES = ["Stage of Life", "Gender-Specific"];
+
 export interface LifeGroup {
   id: string;
   name: string;
@@ -49,6 +59,16 @@ export interface LifeGroup {
    * the Week filter.
    */
   dayOfWeek?: string;
+  /**
+   * Stage-of-life tag names this group carries, e.g. ["Married", "With
+   * Kids", "30s"] — a group can carry several (confirmed against the real
+   * PCO admin tag list, 2026-10-06). Empty when the group has none, or when
+   * tag resolution fails for any reason — never blocks the group from
+   * showing.
+   */
+  stageOfLifeTags: string[];
+  /** "Men Only" or "Women Only" when the group carries one of those two tags; undefined for the (vast majority of) mixed/co-ed groups. */
+  genderSpecific?: string;
 }
 
 interface PcoGroupRecord {
@@ -60,6 +80,21 @@ interface PcoGroupRecord {
     public_church_center_web_url: string | null;
     listed: boolean;
   };
+  relationships?: {
+    tags?: { data: { id: string }[] };
+  };
+}
+
+interface PcoTagGroupRecord {
+  id: string;
+  attributes: { name: string };
+}
+
+interface PcoTagRecord {
+  id: string;
+  type: string;
+  attributes: { name: string };
+  relationships?: { tag_group?: { data: { id: string } | null } };
 }
 
 /** Where Chattanooga actually is — used to turn each event's UTC `starts_at` into the weekday a visitor would call it, not whatever day that UTC instant happens to fall on. */
@@ -120,6 +155,60 @@ function pcoAuth(appId: string, secret: string): string {
 }
 
 /**
+ * Fetch PCO's Tag/TagGroup definitions once and build a lookup from tag id
+ * to its name + tag-group name, restricted to SURFACED_TAG_GROUP_NAMES
+ * above. This is the piece that was blocked when Day of the Week first
+ * shipped (2026-10-06) — no MCP tool or credential in the dev sandbox could
+ * resolve a tag id to a name. Unblocked the same day once Josiah sent real
+ * screenshots of Groups → Settings → Tags confirming the tag group names
+ * used here.
+ *
+ * Still untested against this org's real API response shape (same
+ * limitation as fetchNextEventDays below — no live credential in the
+ * sandbox this was written in), so this fails soft to an empty map on any
+ * error, same reasoning as the rest of this file: a broken lookup just
+ * means no stage-of-life/gender badges or filters, never a broken page.
+ * Check server logs after deploy to confirm it actually resolves real tag
+ * data for this credential.
+ */
+async function fetchSurfacedTagIndex(
+  appId: string,
+  secret: string,
+): Promise<Map<string, { name: string; tagGroupName: string }>> {
+  const result = new Map<string, { name: string; tagGroupName: string }>();
+  const auth = pcoAuth(appId, secret);
+
+  try {
+    const res = await fetch(`${PCO_BASE}/groups/v2/tag_groups?include=tags&per_page=100`, {
+      headers: { Authorization: auth, "Content-Type": "application/json" },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return result;
+
+    const data: { data?: PcoTagGroupRecord[]; included?: PcoTagRecord[] } = await res.json();
+
+    const surfacedTagGroupNameById = new Map<string, string>();
+    for (const tagGroup of data.data ?? []) {
+      if (SURFACED_TAG_GROUP_NAMES.includes(tagGroup.attributes.name)) {
+        surfacedTagGroupNameById.set(tagGroup.id, tagGroup.attributes.name);
+      }
+    }
+
+    for (const tag of data.included ?? []) {
+      if (tag.type !== "Tag") continue;
+      const tagGroupId = tag.relationships?.tag_group?.data?.id;
+      const tagGroupName = tagGroupId ? surfacedTagGroupNameById.get(tagGroupId) : undefined;
+      if (!tagGroupName) continue; // not one of the categories we've decided to surface
+      result.set(tag.id, { name: tag.attributes.name, tagGroupName });
+    }
+  } catch {
+    return new Map();
+  }
+
+  return result;
+}
+
+/**
  * Fetch the public Adult Life Groups list. Returns [] (never throws) on
  * missing credentials or a non-2xx response, so the page can fall back to
  * a plain Church Center link instead of breaking.
@@ -133,8 +222,9 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
   const groups: PcoGroupRecord[] = [];
   let pageUrl: string | null =
     `${PCO_BASE}/groups/v2/groups?where[group_type_id]=${ADULT_LIFE_GROUPS_TYPE_ID}` +
-    `&per_page=100&order=name` +
-    `&fields[Group]=name,schedule,memberships_count,public_church_center_web_url,listed`;
+    `&per_page=100&order=name&include=tags` +
+    `&fields[Group]=name,schedule,memberships_count,public_church_center_web_url,listed` +
+    `&fields[Tag]=name`;
 
   try {
     while (pageUrl) {
@@ -151,16 +241,33 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
     return [];
   }
 
-  const dayByGroupId = await fetchNextEventDays(appId, secret);
+  const [dayByGroupId, tagIndex] = await Promise.all([
+    fetchNextEventDays(appId, secret),
+    fetchSurfacedTagIndex(appId, secret),
+  ]);
 
   return groups
     .filter((g) => g.attributes.listed)
-    .map((g) => ({
-      id: g.id,
-      name: g.attributes.name,
-      schedule: g.attributes.schedule?.trim() || "Contact us for meeting details",
-      memberCount: g.attributes.memberships_count ?? 0,
-      churchCenterUrl: g.attributes.public_church_center_web_url,
-      dayOfWeek: dayByGroupId.get(g.id),
-    }));
+    .map((g) => {
+      const tagIds = g.relationships?.tags?.data?.map((t) => t.id) ?? [];
+      const stageOfLifeTags: string[] = [];
+      let genderSpecific: string | undefined;
+      for (const tagId of tagIds) {
+        const info = tagIndex.get(tagId);
+        if (!info) continue;
+        if (info.tagGroupName === "Stage of Life") stageOfLifeTags.push(info.name);
+        else if (info.tagGroupName === "Gender-Specific") genderSpecific = info.name;
+      }
+
+      return {
+        id: g.id,
+        name: g.attributes.name,
+        schedule: g.attributes.schedule?.trim() || "Contact us for meeting details",
+        memberCount: g.attributes.memberships_count ?? 0,
+        churchCenterUrl: g.attributes.public_church_center_web_url,
+        dayOfWeek: dayByGroupId.get(g.id),
+        stageOfLifeTags,
+        genderSpecific,
+      };
+    });
 }
