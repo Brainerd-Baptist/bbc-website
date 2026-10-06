@@ -28,7 +28,7 @@ export default function StaffContactClient() {
         <div className="flex items-center gap-4">
           {info.photo && (
             <div className="relative w-16 h-16 rounded-full overflow-hidden bg-brand-navy/5 flex-shrink-0">
-              <Image src={`/staff/${info.photo}.jpg`} alt={selected} fill className="object-cover" />
+              <Image src={`/staff/${info.photo}.jpg`} alt={selected} fill className="object-cover object-top" />
             </div>
           )}
           <div>
@@ -60,7 +60,7 @@ export default function StaffContactClient() {
           >
             <div className="relative w-16 h-16 rounded-full overflow-hidden bg-brand-navy/5 flex-shrink-0">
               {info.photo ? (
-                <Image src={`/staff/${info.photo}.jpg`} alt={name} fill className="object-cover" />
+                <Image src={`/staff/${info.photo}.jpg`} alt={name} fill className="object-cover object-top" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-fg-subtle text-xl font-semibold">
                   {name.split(" ").map((n) => n[0]).join("")}

@@ -181,7 +181,7 @@ export default async function LifeGroupsPage() {
           <div className="glass-md rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
             <div className="relative w-20 h-20 rounded-full overflow-hidden bg-brand-navy/5 flex-shrink-0 flex items-center justify-center">
               {ben.photo ? (
-                <Image src={`/staff/${ben.photo}.jpg`} alt="Benjamin Hovies" fill className="object-cover" />
+                <Image src={`/staff/${ben.photo}.jpg`} alt="Benjamin Hovies" fill className="object-cover object-top" />
               ) : (
                 <span className="text-fg-subtle text-2xl font-semibold">BH</span>
               )}
