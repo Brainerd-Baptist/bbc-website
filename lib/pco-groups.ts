@@ -99,6 +99,40 @@ interface PcoTagRecord {
 const CHURCH_TIME_ZONE = "America/New_York";
 
 /**
+ * fetch() wrapper that retries once on a 429, honoring PCO's `Retry-After`
+ * header when present (falling back to a flat 1.5s otherwise). Added
+ * 2026-10-06 after a real production build logged "429 Too Many Requests —
+ * Rate limit exceeded: 110 of 100 requests per 20 seconds" on the
+ * tag_groups call — almost certainly caused by this file's own ~38 PCO
+ * requests (36 per-group event fetches + 2-3 tag fetches) bursting
+ * alongside other pages' PCO calls during the same build. One retry is
+ * enough to ride out a shared-window collision without turning a transient
+ * rate limit into a silently empty result.
+ */
+async function fetchPco(url: string, auth: string): Promise<Response> {
+  const headers = { Authorization: auth, "Content-Type": "application/json" };
+  const res = await fetch(url, { headers, next: { revalidate: 3600 } });
+  if (res.status !== 429) return res;
+
+  const retryAfterSeconds = Number(res.headers.get("Retry-After"));
+  const delayMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds * 1000 : 1500;
+  await new Promise((resolve) => setTimeout(resolve, delayMs));
+  return fetch(url, { headers, next: { revalidate: 3600 } });
+}
+
+/** Runs async `fn` over `items` with at most `limit` in flight at once, instead of firing them all in one Promise.all burst — keeps this file's own request volume well under PCO's shared rate limit (100 requests / 20s) even when other pages are hitting the same API concurrently during a build. */
+async function mapWithConcurrency<T>(items: T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
+  let index = 0;
+  async function worker() {
+    while (index < items.length) {
+      const i = index++;
+      await fn(items[i]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+}
+
+/**
  * Fetch each given group's next scheduled Event and return its local
  * weekday, keyed by group id.
  *
@@ -123,32 +157,29 @@ async function fetchNextEventDays(appId: string, secret: string, groupIds: strin
   const auth = pcoAuth(appId, secret);
   let requestErrors = 0;
 
-  await Promise.all(
-    groupIds.map(async (groupId) => {
-      try {
-        const res = await fetch(
-          `${PCO_BASE}/groups/v2/groups/${groupId}/events?per_page=1&order=starts_at&fields[Event]=starts_at`,
-          {
-            headers: { Authorization: auth, "Content-Type": "application/json" },
-            next: { revalidate: 3600 },
-          },
-        );
-        if (!res.ok) {
-          requestErrors++;
-          return;
-        }
-        const data: { data?: { attributes?: { starts_at?: string } }[] } = await res.json();
-        const startsAt = data.data?.[0]?.attributes?.starts_at;
-        if (!startsAt) return;
-        const day = new Intl.DateTimeFormat("en-US", { timeZone: CHURCH_TIME_ZONE, weekday: "long" }).format(
-          new Date(startsAt),
-        );
-        result.set(groupId, day);
-      } catch {
+  // Capped at 6 concurrent requests rather than firing all ~36 at once —
+  // see fetchPco/mapWithConcurrency above for why.
+  await mapWithConcurrency(groupIds, 6, async (groupId) => {
+    try {
+      const res = await fetchPco(
+        `${PCO_BASE}/groups/v2/groups/${groupId}/events?per_page=1&order=starts_at&fields[Event]=starts_at`,
+        auth,
+      );
+      if (!res.ok) {
         requestErrors++;
+        return;
       }
-    }),
-  );
+      const data: { data?: { attributes?: { starts_at?: string } }[] } = await res.json();
+      const startsAt = data.data?.[0]?.attributes?.starts_at;
+      if (!startsAt) return;
+      const day = new Intl.DateTimeFormat("en-US", { timeZone: CHURCH_TIME_ZONE, weekday: "long" }).format(
+        new Date(startsAt),
+      );
+      result.set(groupId, day);
+    } catch {
+      requestErrors++;
+    }
+  });
 
   if (result.size === 0) {
     console.error(
@@ -192,10 +223,7 @@ async function fetchSurfacedTagIndex(
 
   let surfacedTagGroups: { id: string; name: string }[] = [];
   try {
-    const res = await fetch(`${PCO_BASE}/groups/v2/tag_groups?per_page=100&fields[TagGroup]=name`, {
-      headers: { Authorization: auth, "Content-Type": "application/json" },
-      next: { revalidate: 3600 },
-    });
+    const res = await fetchPco(`${PCO_BASE}/groups/v2/tag_groups?per_page=100&fields[TagGroup]=name`, auth);
     if (!res.ok) {
       console.error(`[pco-groups] tag_groups fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
       return result;
@@ -221,10 +249,7 @@ async function fetchSurfacedTagIndex(
   await Promise.all(
     surfacedTagGroups.map(async ({ id: tagGroupId, name: tagGroupName }) => {
       try {
-        const res = await fetch(`${PCO_BASE}/groups/v2/tag_groups/${tagGroupId}/tags?per_page=100&fields[Tag]=name`, {
-          headers: { Authorization: auth, "Content-Type": "application/json" },
-          next: { revalidate: 3600 },
-        });
+        const res = await fetchPco(`${PCO_BASE}/groups/v2/tag_groups/${tagGroupId}/tags?per_page=100&fields[Tag]=name`, auth);
         if (!res.ok) {
           console.error(
             `[pco-groups] tags sub-resource fetch failed for "${tagGroupName}": ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`,
@@ -271,10 +296,7 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
 
   try {
     while (pageUrl) {
-      const res: Response = await fetch(pageUrl, {
-        headers: { Authorization: auth, "Content-Type": "application/json" },
-        next: { revalidate: 3600 },
-      });
+      const res: Response = await fetchPco(pageUrl, auth);
       if (!res.ok) {
         console.error(`[pco-groups] groups fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
         return [];
