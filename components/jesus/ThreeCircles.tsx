@@ -40,7 +40,7 @@ const VIEWBOXES: Record<string,VB> = {
   brokenness: [243, 14, 208, 208],
   design:     [ 14, 14, 430, 200],
   sin:        [ 14,  6, 430, 190],
-  coping:     [ 14,  6, 470, 240],
+  coping:     [ 14,  6, 516, 206],
   gospel:     [  4,  6, 470, 412],
   repent:     [  4,  6, 470, 412],
   recover:    [  4,  6, 470, 412],
@@ -566,29 +566,18 @@ export default function ThreeCircles() {
               d="M -5,-6 L -5,6 L 5,6 L 5,-6 L -5,-6" len={44}/>
             <AnimCircle cx={BX+2} cy={BY+30} r={1.3} stroke={NAVY} sw={1.4} show={vis(v,"broken-circle")} delay={1700}/>
             <Fade show={vis(v,"broken-inner")}>
-              <MLText x={BX+26} y={BY-R-14} lines={["Brokenness"]} fill={NAVY} size={16}/>
+              {/* Nudged right only while the Sin runner is on screen, so it clears the arrowhead;
+                  otherwise (step 1, step 2) it centres over its circle. */}
+              <MLText x={BX+(vis(v,"sin-arrow")?26:0)} y={BY-R-(vis(v,"sin-arrow")?14:12)} lines={["Brokenness"]} fill={NAVY} size={16}/>
             </Fade>
-            {/* Coping labels — only step 4. Moved up alongside the little
-                jagged "shrapnel" marks that fly off the Brokenness circle's
-                cracks (drawn in BrokenCircle), each word angled to match
-                the mark it sits beside, so it reads as "this word IS one of
-                the broken lines" rather than a caption floating below. */}
+            {/* Coping labels — only step 4. Each word sits level with one of
+                the three jagged marks fanning off the right of Brokenness,
+                horizontal and left-aligned in a column so none of them
+                touches the ring, the Brokenness label, or each other. */}
             <Fade show={vis(v,"cope-labels")}>
-              <g transform={`translate(${BX+90},${BY-78}) rotate(-25)`}>
-                <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
-                  fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
-                  style={{textTransform:"uppercase", ...HALO}}>Money</text>
-              </g>
-              <g transform={`translate(${BX+96},${BY-22}) rotate(0)`}>
-                <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
-                  fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
-                  style={{textTransform:"uppercase", ...HALO}}>Addiction</text>
-              </g>
-              <g transform={`translate(${BX+92},${BY+62}) rotate(12)`}>
-                <text textAnchor="middle" fill={LABEL} fontSize={12} fontWeight={500}
-                  fontFamily="var(--font-barlow-condensed), sans-serif" letterSpacing="0.06em"
-                  style={{textTransform:"uppercase", ...HALO}}>Religion</text>
-              </g>
+              <MLText x={BX+100} y={BY-50} lines={["Money"]}     fill={LABEL} size={13} weight={600} anchor="start"/>
+              <MLText x={BX+104} y={BY+3}  lines={["Addiction"]} fill={LABEL} size={13} weight={600} anchor="start"/>
+              <MLText x={BX+100} y={BY+56} lines={["Religion"]}  fill={LABEL} size={13} weight={600} anchor="start"/>
             </Fade>
 
             {/* ═══ GOSPEL (bottom-center) — navy on white — cross + crown ═══
