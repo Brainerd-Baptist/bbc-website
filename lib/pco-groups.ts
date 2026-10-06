@@ -130,7 +130,10 @@ async function fetchNextEventDays(appId: string, secret: string): Promise<Map<st
         next: { revalidate: 3600 },
       },
     );
-    if (!res.ok) return result;
+    if (!res.ok) {
+      console.error(`[pco-groups] events fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
+      return result;
+    }
 
     const data: { data?: { attributes: { starts_at: string }; relationships: { group: { data: { id: string } | null } } }[] } =
       await res.json();
@@ -143,7 +146,14 @@ async function fetchNextEventDays(appId: string, secret: string): Promise<Map<st
       );
       result.set(groupId, day);
     }
-  } catch {
+
+    if (result.size === 0) {
+      console.error(
+        "[pco-groups] events fetch succeeded but resolved 0 group days — check that where[group_type_id] is a valid filter on /groups/v2/events for this credential, and that events actually have a group relationship included.",
+      );
+    }
+  } catch (err) {
+    console.error("[pco-groups] events fetch threw:", err);
     return new Map();
   }
 
@@ -183,7 +193,10 @@ async function fetchSurfacedTagIndex(
       headers: { Authorization: auth, "Content-Type": "application/json" },
       next: { revalidate: 3600 },
     });
-    if (!res.ok) return result;
+    if (!res.ok) {
+      console.error(`[pco-groups] tag_groups fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
+      return result;
+    }
 
     const data: { data?: PcoTagGroupRecord[]; included?: PcoTagRecord[] } = await res.json();
 
@@ -201,7 +214,14 @@ async function fetchSurfacedTagIndex(
       if (!tagGroupName) continue; // not one of the categories we've decided to surface
       result.set(tag.id, { name: tag.attributes.name, tagGroupName });
     }
-  } catch {
+
+    if (result.size === 0) {
+      console.error(
+        `[pco-groups] tag_groups fetch succeeded but resolved 0 tags — check that SURFACED_TAG_GROUP_NAMES (${SURFACED_TAG_GROUP_NAMES.join(", ")}) match the real tag group names exactly, and that the Tag resource's tag_group relationship key is actually "tag_group".`,
+      );
+    }
+  } catch (err) {
+    console.error("[pco-groups] tag_groups fetch threw:", err);
     return new Map();
   }
 
@@ -232,12 +252,16 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
         headers: { Authorization: auth, "Content-Type": "application/json" },
         next: { revalidate: 3600 },
       });
-      if (!res.ok) return [];
+      if (!res.ok) {
+        console.error(`[pco-groups] groups fetch failed: ${res.status} ${res.statusText} — ${await res.text().catch(() => "")}`);
+        return [];
+      }
       const data: { data?: PcoGroupRecord[]; links?: { next?: string } } = await res.json();
       groups.push(...(data.data ?? []));
       pageUrl = data.links?.next ?? null;
     }
-  } catch {
+  } catch (err) {
+    console.error("[pco-groups] groups fetch threw:", err);
     return [];
   }
 
