@@ -806,6 +806,50 @@ body {
 .nav-ctl:hover {
   background-color: var(--nav-hover);
 }
+/* Light that travels along the A-mark outline. The mask clips a gradient strip
+   to the artwork's own lines; only the strip moves (transform), so it stays
+   inside the motion rules. Place it over a .bbc-a-mark of the same size. */
+.bbc-a-mark-light {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  -webkit-mask-image: url("/logo-a-mark-mask.png");
+          mask-image: url("/logo-a-mark-mask.png");
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+}
+.bbc-a-mark-light::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    var(--accent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-120%) skewX(-12deg);
+  animation: a-mark-sweep 9s linear infinite;
+}
+@keyframes a-mark-sweep {
+  0%   { transform: translateX(-120%) skewX(-12deg); opacity: 0; }
+  10%  { opacity: 1; }
+  55%  { transform: translateX(260%) skewX(-12deg); opacity: 1; }
+  65%  { opacity: 0; }
+  100% { transform: translateX(260%) skewX(-12deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bbc-a-mark-light::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* The wordmark paints --nav-ink directly rather than inheriting currentColor.
    Inheriting looked right and was not: --nav-ink is applied to .nav-ctl and
    .nav-bar-line, NOT to the nav element, so the logo Link inherited the page's

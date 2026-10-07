@@ -15,9 +15,13 @@ export default function ConnectBand() {
           mode to do it. */}
       <div
         className="absolute top-0 right-0 pointer-events-none select-none text-fg-on-dark"
-        style={{ width: "40vw", maxWidth: 460, opacity: 0.09 }}
+        style={{ width: "40vw", maxWidth: 460 }}
       >
-        <span className="bbc-a-mark block w-full" aria-hidden="true" />
+        <div className="relative">
+          <span className="bbc-a-mark block w-full" style={{ opacity: 0.09 }} aria-hidden="true" />
+          {/* Slow light travelling across the outline (see .bbc-a-mark-light) */}
+          <span className="bbc-a-mark-light" style={{ opacity: 0.8 }} aria-hidden="true" />
+        </div>
       </div>
 
       {/* Subtle top border */}
