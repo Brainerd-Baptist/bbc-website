@@ -128,7 +128,8 @@ export default function AboutPage() {
 
       {/* ── Founded section ────────────────────────────────────── */}
       {/* id="founded" — the footer's "History" link (lib/constants.ts) points
-          here as /about#founded; there's no separate /history page. */}
+          here as /about#founded. The full hundred-year timeline lives at
+          /about/timeline (linked from this section). */}
       <section id="founded" className="py-20 px-6 scroll-mt-24">
         <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
@@ -172,6 +173,12 @@ export default function AboutPage() {
                 raising kids, navigating hard seasons, and doing life
                 together in the name of Jesus.
               </p>
+              <Link
+                href="/about/timeline"
+                className="inline-block mt-5 font-semibold text-accent-text hover:underline underline-offset-2"
+              >
+                Explore our hundred-year timeline →
+              </Link>
             </div>
           </div>
         </div>
