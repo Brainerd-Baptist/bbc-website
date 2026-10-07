@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
+import AMarkLight from "./AMarkLight";
 import { LEAD_PASTOR } from "@/lib/constants";
 
 export default function ConnectBand() {
@@ -15,9 +16,13 @@ export default function ConnectBand() {
           mode to do it. */}
       <div
         className="absolute top-0 right-0 pointer-events-none select-none text-fg-on-dark"
-        style={{ width: "40vw", maxWidth: 460, opacity: 0.09 }}
+        style={{ width: "40vw", maxWidth: 460 }}
       >
-        <span className="bbc-a-mark block w-full" aria-hidden="true" />
+        <div className="relative">
+          <span className="bbc-a-mark block w-full" style={{ opacity: 0.09 }} aria-hidden="true" />
+          {/* Light that runs along one random line at a time */}
+          <AMarkLight />
+        </div>
       </div>
 
       {/* Subtle top border */}

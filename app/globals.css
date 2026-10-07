@@ -806,6 +806,26 @@ body {
 .nav-ctl:hover {
   background-color: var(--nav-hover);
 }
+/* One bead of light running along a single line of the A mark (AMarkLight).
+   Only transform and opacity move; the bead fades in and out at the ends. */
+.a-mark-run {
+  animation-name: a-mark-run;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+@keyframes a-mark-run {
+  0%   { transform: translateX(0); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateX(var(--run)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .a-mark-run {
+    animation: none;
+    opacity: 0;
+  }
+}
+
 /* The wordmark paints --nav-ink directly rather than inheriting currentColor.
    Inheriting looked right and was not: --nav-ink is applied to .nav-ctl and
    .nav-bar-line, NOT to the nav element, so the logo Link inherited the page's
