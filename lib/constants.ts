@@ -150,6 +150,7 @@ export const FOOTER_LINKS = {
     { label: "Staff", href: "/staff" },
     { label: "Our Beliefs", href: "/beliefs" },
     { label: "History", href: "/about#founded" },
+    { label: "100 Years", href: "/about/timeline" },
     { label: "Who Is Jesus?", href: "/who-is-jesus" },
     { label: "Prayer", href: "/connect/care" },
     { label: "Give", href: "/give" },

@@ -78,6 +78,7 @@ const NAV_GROUPS = [
       { label: "Staff", href: "/staff" },
       { label: "Our Beliefs", href: "/beliefs" },
       { label: "Our History", href: "/about#founded" },
+      { label: "100 Years", href: "/about/timeline" },
       { label: "Prayer Request", href: "/connect/care" },
       { label: "Give", href: "/give" },
       { label: "Connect With Us", href: "/connect" },
