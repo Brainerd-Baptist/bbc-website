@@ -11,7 +11,7 @@ const CF_CUSTOMER = "customer-4oim3t3sdsmhrdq9";
 const CF_STREAM   = "c0a6915dae68d8fa78626b273768e44c";
 const CF_HLS  = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/manifest/video.m3u8`;
 const CF_MP4  = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/downloads/default.mp4`;
-const CF_POSTER = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/thumbnails/thumbnail.jpg?width=1920&height=1080&time=4s`;
+const CF_POSTER = `https://${CF_CUSTOMER}.cloudflarestream.com/${CF_STREAM}/thumbnails/thumbnail.jpg?width=1920&height=1080&time=0s`;
 
 // ── Time-aware content ─────────────────────────────────────────────
 
@@ -161,16 +161,66 @@ export default function Hero() {
   const parallaxRef = useParallax(0.3);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Load video source on desktop only — avoids downloading a large asset on mobile
+  // Load video source on desktop only — avoids downloading a large asset on mobile.
+  //
+  // Why this is not just <source src=mp4>: the fixed default.mp4 is one
+  // resolution for everyone (soft once stretched across a full-screen hero),
+  // while the adaptive HLS stream picks the best rendition for the screen and
+  // connection. Safari plays HLS natively; every other browser gets it through
+  // hls.js, loaded on demand so it stays out of the initial bundle. The MP4 is
+  // only the fallback if HLS fails.
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
     if (!mq.matches) return;
     const video = videoRef.current;
     if (!video) return;
+
+    let hls: { destroy: () => void } | null = null;
+    let cancelled = false;
+
+    const fallBackToMp4 = () => {
+      video.src = CF_MP4;
+      video.play().catch(() => {});
+    };
+
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = CF_HLS; // Safari — native HLS
+      video.play().catch(() => {});
+    } else {
+      import("hls.js")
+        .then(({ default: Hls }) => {
+          if (cancelled) return;
+          if (!Hls.isSupported()) {
+            fallBackToMp4();
+            return;
+          }
+          const player = new Hls({
+            // Without a bandwidth estimate HLS starts on the smallest rendition
+            // and takes seconds to climb — the blurry start. Assume a decent
+            // connection so it opens high and corrects down if it has to.
+            abrEwmaDefaultEstimate: 8_000_000,
+            // Never fetch more pixels than the element can show.
+            capLevelToPlayerSize: true,
+          });
+          hls = player;
+          player.on(Hls.Events.ERROR, (_e, data) => {
+            if (data.fatal) {
+              player.destroy();
+              hls = null;
+              fallBackToMp4();
+            }
+          });
+          player.loadSource(CF_HLS);
+          player.attachMedia(video);
+          video.play().catch(() => {}); // autoplay blocked — poster still shows
+        })
+        .catch(fallBackToMp4);
     }
-    video.play().catch(() => {}); // autoplay blocked — poster still shows
+
+    return () => {
+      cancelled = true;
+      hls?.destroy();
+    };
   }, []);
 
   // Hydrate content client-side so SSR doesn't mismatch
@@ -233,11 +283,9 @@ export default function Hero() {
           muted
           loop
           playsInline
-          preload="none"
+          preload="auto"
           poster={CF_POSTER}
-        >
-          <source src={CF_MP4} type="video/mp4" />
-        </video>
+        />
       </div>
 
       {/* ── Gradient overlay ── */}
