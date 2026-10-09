@@ -95,17 +95,17 @@ type ResourceCell = {
   hyperlink?: string;
   formattedValue?: string;
   textFormatRuns?: { startIndex?: number; format?: { link?: { uri?: string } } }[];
+  // Smart chips (typing "@" and picking a file/link) — a separate field from
+  // textFormatRuns, so a cell built from chips has NO textFormatRuns at all.
+  chipRuns?: { startIndex?: number; chip?: { richLinkProperties?: { uri?: string } } }[];
 };
 
-/** Pulls { url, text } out of one cell: `text` is whatever Curtis actually
- * hyperlinked, not the raw URL — "His New Book", not "amazon.com/...". A
- * cell can hold several resources as separate linked runs on separate
- * lines (one cell, multiple lines, each line its own link): textFormatRuns
- * only gives each run's *start*, so a run's text is the slice of
- * formattedValue from its startIndex up to the next run's startIndex (or
- * the end of the string for the last run). Falls back to the whole-cell
- * `hyperlink` field (set when the entire cell is one plain link with no
- * run-level formatting) when there are no textFormatRuns at all. */
+/** Pulls { url, text } out of one cell. A cell can hold several resources,
+ * one per line, however they were made: linked text runs (Insert → Link),
+ * smart chips, a whole-cell link, or plain pasted URLs. Every source is
+ * collected, then deduped by URL. For linked runs `text` is the slice of
+ * formattedValue from the run's startIndex to the next run's startIndex;
+ * for chips and bare URLs it's the line the link sits on. */
 function extractResourceLinks(cell: ResourceCell): ResourceLink[] {
   const formatted = cell.formattedValue ?? "";
   const links: ResourceLink[] = [];
@@ -113,24 +113,38 @@ function extractResourceLinks(cell: ResourceCell): ResourceLink[] {
 
   const add = (url: string, text: string) => {
     const trimmedUrl = url.trim();
-    if (!trimmedUrl || seen.has(trimmedUrl)) return;
+    if (!/^https?:\/\//i.test(trimmedUrl) || seen.has(trimmedUrl)) return;
     seen.add(trimmedUrl);
     const trimmedText = text.trim();
     links.push({ url: trimmedUrl, text: trimmedText || trimmedUrl });
   };
 
+  const lineAt = (index: number) => {
+    const start = formatted.lastIndexOf("\n", Math.max(0, index - 1)) + 1;
+    const nl = formatted.indexOf("\n", index);
+    return formatted.slice(index === 0 ? 0 : start, nl === -1 ? formatted.length : nl);
+  };
+
   const runs = cell.textFormatRuns ?? [];
-  const linkedRuns = runs.filter((r) => r.format?.link?.uri);
-  if (linkedRuns.length > 0) {
-    runs.forEach((run, i) => {
-      const uri = run.format?.link?.uri;
-      if (!uri) return;
-      const start = run.startIndex ?? 0;
-      const end = runs[i + 1]?.startIndex ?? formatted.length;
-      add(uri, formatted.slice(start, end));
-    });
-  } else if (cell.hyperlink) {
-    add(cell.hyperlink, formatted);
+  runs.forEach((run, i) => {
+    const uri = run.format?.link?.uri;
+    if (!uri) return;
+    const start = run.startIndex ?? 0;
+    const end = runs[i + 1]?.startIndex ?? formatted.length;
+    add(uri, formatted.slice(start, end));
+  });
+
+  for (const chip of cell.chipRuns ?? []) {
+    const uri = chip.chip?.richLinkProperties?.uri;
+    if (uri) add(uri, lineAt(chip.startIndex ?? 0));
+  }
+
+  // Whole-cell link (only set when the cell is a single plain link).
+  if (cell.hyperlink) add(cell.hyperlink, formatted);
+
+  // Plain URLs typed or pasted into the cell, one per line.
+  for (const m of formatted.matchAll(/https?:\/\/[^\s<>"')]+/gi)) {
+    add(m[0], lineAt(m.index ?? 0).replace(m[0], ""));
   }
 
   return links;
@@ -149,12 +163,12 @@ async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number
   try {
     const params = new URLSearchParams({
       ranges: RESOURCES_RANGE,
-      fields: "sheets.data.rowData.values(hyperlink,textFormatRuns(startIndex,format.link.uri),formattedValue)",
+      fields: "sheets.data.rowData.values(hyperlink,textFormatRuns(startIndex,format.link.uri),chipRuns(startIndex,chip.richLinkProperties.uri),formattedValue)",
     });
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${TAGGING_SHEET_ID}?${params.toString()}`;
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
-      next: { revalidate: 3600 },
+      cache: "no-store",
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -171,7 +185,10 @@ async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number
       const cell = row.values?.[0];
       if (!cell) return;
       const links = extractResourceLinks(cell);
-      if (links.length > 0) out[rowIndex] = links;
+      if (links.length > 0) {
+        out[rowIndex] = links;
+        console.log(`[sermon-tagging] row ${rowIndex + 1}: ${links.length} resource link(s): ${links.map((l) => l.url).join(" | ")}`);
+      }
     });
     return out;
   } catch (err) {
@@ -182,7 +199,7 @@ async function fetchResourceUrlsByRowIndex(token: string): Promise<Record<number
 
 let cachedRows: TaggingRow[] | null = null;
 let cachedAt = 0;
-const CACHE_MS = 3600_000; // 1h — matches the Next.js revalidate window elsewhere in lib/sermon.ts
+const CACHE_MS = 300_000; // 5m — edits to the sheet should reach the site on the next hourly sync, not an hour later
 
 // If a fetch fails (network, 403, quota, etc.), remember that for a short
 // window too — NOT just on success. Found 2026-10-02: every sermon in a
@@ -220,7 +237,7 @@ async function fetchTaggingRows(): Promise<TaggingRow[]> {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${TAGGING_SHEET_ID}/values/${encodeURIComponent(RANGE)}`;
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
-      next: { revalidate: 3600 },
+      cache: "no-store",
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
