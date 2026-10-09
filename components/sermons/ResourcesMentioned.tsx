@@ -70,8 +70,8 @@ export default function ResourcesMentioned({
             {r.creator && (
               <span style={{ fontSize: "0.75rem", color: "var(--fg-muted)" }}>{r.creator}</span>
             )}
-            {r.blurb && (
-              <span style={{ fontSize: "0.78rem", color: "var(--fg-muted)", lineHeight: 1.5 }}>{r.blurb}</span>
+            {(r.blurb || r.autoSummary) && (
+              <span style={{ fontSize: "0.78rem", color: "var(--fg-muted)", lineHeight: 1.5 }}>{r.blurb || r.autoSummary}</span>
             )}
           </a>
         ))}

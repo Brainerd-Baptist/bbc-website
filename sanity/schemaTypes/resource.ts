@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { RESOURCE_TOPICS } from "../../lib/resource-topics";
 
 export const RESOURCE_TYPES = [
   { title: "Book", value: "book" },
@@ -55,10 +56,23 @@ export const resourceType = defineType({
     defineField({
       name: "topics",
       title: "Topics",
-      description: 'Free-form tags, e.g. "Suffering", "Disability & the Gospel"',
+      description: "Pick the topics this resource speaks to — they become clickable filters on /resources. Bible book is added automatically from the sermon, so don't tag that here.",
       type: "array",
       of: [{ type: "string" }],
-      options: { layout: "tags" },
+      options: { list: RESOURCE_TOPICS.map((t) => ({ title: t, value: t })) },
+    }),
+    defineField({
+      name: "autoSummary",
+      title: "Auto-fetched description",
+      description: "Pulled from the link's own page by the nightly job. Shown on the card only when 'Why it was recommended' is empty — write a blurb above to replace it.",
+      type: "text",
+      rows: 2,
+    }),
+    defineField({
+      name: "enrichedAt",
+      title: "Auto-fill attempted",
+      type: "datetime",
+      readOnly: true,
     }),
     defineField({
       name: "relatedPassage",

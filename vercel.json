@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/sync-sermons",
       "schedule": "45 * * * *"
+    },
+    {
+      "path": "/api/cron/enrich-resources",
+      "schedule": "20 7 * * *"
     }
   ]
 }

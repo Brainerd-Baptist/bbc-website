@@ -53,6 +53,8 @@ export interface SanityResource {
   type: "book" | "article" | "ministry" | "video" | "podcast" | "prayer" | "other";
   url: string;
   blurb?: string;
+  /** Auto-fetched description; the card shows it only when `blurb` is empty. */
+  autoSummary?: string;
   topics?: string[];
   relatedPassage?: string;
   status: "active" | "archived";
@@ -61,11 +63,23 @@ export interface SanityResource {
   /** Populated client-side when building the catalog — which sermon(s)/series
    * this resource was pulled from, for the "mentioned in" chips. Not part of
    * the Sanity document itself. */
-  mentionedIn?: { title: string; slug: string; kind: "sermon" | "series" }[];
+  mentionedIn?: {
+    title: string;
+    slug: string;
+    kind: "sermon" | "series";
+    /** Sermon date, or for a series its most recent sermon's date (YYYY-MM-DD). */
+    date?: string;
+    /** Sermon only: Bible book preached from. */
+    book?: string;
+    /** Sermon: the series it belongs to. Series: its own title/slug. */
+    seriesTitle?: string;
+    seriesSlug?: string;
+    seriesAccent?: string;
+  }[];
 }
 
 const RESOURCE_FIELDS = `
-  _id, title, creator, type, url, blurb, topics, relatedPassage, status, featured, needsReview
+  _id, title, creator, type, url, blurb, autoSummary, topics, relatedPassage, status, featured, needsReview
 `;
 
 /** Only ever surface active resources on the public site — archived ones stay
@@ -259,8 +273,15 @@ export async function getAllResources(): Promise<SanityResource[]> {
     `*[_type == "resource" && ${ACTIVE_RESOURCE_FILTER}] | order(title asc) {
       ${RESOURCE_FIELDS},
       "mentionedIn": [
-        ...*[_type == "sermon" && references(^._id)]{ "title": title, "slug": slug.current, "kind": "sermon" },
-        ...*[_type == "series" && references(^._id)]{ "title": title, "slug": slug.current, "kind": "series" }
+        ...*[_type == "sermon" && references(^._id)]{
+          "title": title, "slug": slug.current, "kind": "sermon", date, book,
+          "seriesTitle": series->title, "seriesSlug": series->slug.current, "seriesAccent": series->accentColor
+        },
+        ...*[_type == "series" && references(^._id)]{
+          "title": title, "slug": slug.current, "kind": "series",
+          "seriesTitle": title, "seriesSlug": slug.current, "seriesAccent": accentColor,
+          "date": *[_type == "sermon" && series._ref == ^._id] | order(date desc)[0].date
+        }
       ]
     }[count(mentionedIn) > 0]`,
     {},

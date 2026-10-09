@@ -26,6 +26,7 @@
 import { createHash } from "node:crypto";
 import { sanityWriteClient } from "./sanity-write";
 import type { ResourceLink } from "./sermon-tagging";
+import { fetchResourceMeta } from "./resource-enrich";
 
 export type ResourceType = "book" | "article" | "ministry" | "video" | "podcast" | "prayer" | "other";
 
@@ -122,6 +123,10 @@ export async function resolveResourceIds(links: (string | ResourceLink)[]): Prom
       // Found + fixed 2026-10-03 during the /areyouin backfill migration —
       // see claude/sermon-resource-catalog-scope-2026-10-03.md.
       const id = `resource-${createHash("sha256").update(url).digest("hex").slice(0, 40)}`;
+      // Best-effort author + description from the link's own page (4s cap,
+      // never throws) so the new card isn't empty. Written only into fields
+      // a human hasn't filled; the resource stays needsReview regardless.
+      const meta = await fetchResourceMeta(url);
       await sanityWriteClient.createIfNotExists({
         _id: id,
         _type: "resource",
@@ -130,6 +135,9 @@ export async function resolveResourceIds(links: (string | ResourceLink)[]): Prom
         url,
         status: "active",
         needsReview: true,
+        ...(meta.creator ? { creator: meta.creator } : {}),
+        ...(meta.summary ? { autoSummary: meta.summary } : {}),
+        enrichedAt: new Date().toISOString(),
       });
       ids.push(id);
     } catch (err) {
