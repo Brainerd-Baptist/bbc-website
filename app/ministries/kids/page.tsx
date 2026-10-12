@@ -161,7 +161,7 @@ export default function KidsPage() {
             className="text-fg-on-dark-muted leading-relaxed mb-8 max-w-lg"
             style={{ fontSize: "1.05rem" }}
           >
-            From the nursery through 5th grade, your kids are cared for and
+            From the nursery through 5th grade, your kids are loved and
             taught God&apos;s Word while you worship — and they&apos;ll actually
             want to come back.
           </p>
