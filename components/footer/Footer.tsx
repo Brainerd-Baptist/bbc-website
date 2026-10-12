@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SITE, FOOTER_LINKS, HISPANIC_MINISTRY } from "@/lib/constants";
 import { getBuildInfo } from "@/lib/version";
 import SuggestChange from "./SuggestChange";
+import VisitorNote from "./VisitorNote";
 
 const SOCIAL = [
   {
@@ -146,6 +147,7 @@ export default function Footer() {
           <div className="flex gap-5">
             <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy</Link>
             <Link href="/contact" className="hover:text-white/60 transition-colors">Contact</Link>
+            <VisitorNote />
             <SuggestChange />
           </div>
         </div>
