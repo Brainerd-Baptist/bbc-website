@@ -145,8 +145,8 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-fg-on-dark-muted text-xs">
           <p>© {year} {SITE.name}. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy</Link>
-            <Link href="/contact" className="hover:text-white/60 transition-colors">Contact</Link>
+            <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Privacy</a>
+            <Link href="/connect" className="hover:text-white/60 transition-colors">Contact</Link>
             <VisitorNote />
             <SuggestChange />
           </div>
