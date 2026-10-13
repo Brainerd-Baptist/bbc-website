@@ -74,6 +74,51 @@ export interface SermonData {
  * bouncing them out to YouTube. Checks Sanity first, then the static
  * fallback library — same source order every other sermon lookup uses.
  */
+/**
+ * The cataloged record (Sanity first, static list second) for a YouTube
+ * video, with the fields the homepage/live cards care about. The catalog's
+ * `date` is the real service date, whereas YouTube's playlist-item
+ * `publishedAt` is when the video was added/published, which can land a day
+ * later (found 2026-10-13: Sunday Oct 11's sermon showed "October 12").
+ */
+async function findCatalogedSermon(youtubeId: string): Promise<{
+  slug: string;
+  date: string;
+  title: string;
+  speaker: string;
+  passage: string;
+  series: string;
+} | null> {
+  try {
+    const { getAllSermons } = await import("./sanity");
+    const all = await getAllSermons();
+    const m = all.find((x) => x.youtubeId === youtubeId);
+    if (m?.slug?.current) {
+      return {
+        slug: m.slug.current,
+        date: (m.date || "").slice(0, 10),
+        title: m.title || "",
+        speaker: m.speaker || "",
+        passage: m.passage || "",
+        series: m.series?.title || "",
+      };
+    }
+  } catch {
+    // fall through to static
+  }
+  const { SERMONS } = await import("./sermons");
+  const st = SERMONS.find((x) => x.youtubeId === youtubeId);
+  if (!st) return null;
+  return {
+    slug: st.id,
+    date: st.date,
+    title: st.title,
+    speaker: st.speaker,
+    passage: st.passage,
+    series: st.series,
+  };
+}
+
 async function findSlugForYoutubeId(youtubeId: string): Promise<string | null> {
   try {
     const { getAllSermons } = await import("./sanity");
@@ -578,8 +623,14 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
     return getFromDriveAndRss();
   }
 
-  const date = yt.publishedAt.slice(0, 10);
-  const slug = await findSlugForYoutubeId(yt.videoId);
+  const cataloged = await findCatalogedSermon(yt.videoId);
+  // Prefer the cataloged service date; otherwise YouTube's publish date in
+  // Chattanooga time (not UTC, which flips to "tomorrow" after 8 PM ET).
+  const ytDateET = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+  }).format(new Date(yt.publishedAt));
+  const date = cataloged?.date || ytDateET;
+  const slug = cataloged?.slug ?? null;
 
   // Best-effort: attach Curtis's outline/notes for this exact date if his
   // doc has made it into Drive by now. Matched by date (not "most recent
@@ -607,9 +658,9 @@ export async function getLatestSermon(overrideFileId?: string): Promise<SermonDa
   const tagging = await getTaggingRowByDate(date).catch(() => null);
 
   return {
-    title:       tagging?.title   || yt.title || "Latest Sermon",
-    passage:     tagging?.passage || yt.passage,
-    speaker:     tagging?.teacher || yt.speaker,
+    title:       tagging?.title   || cataloged?.title   || yt.title || "Latest Sermon",
+    passage:     tagging?.passage || cataloged?.passage || yt.passage,
+    speaker:     tagging?.teacher || cataloged?.speaker || yt.speaker,
     series:      tagging?.series  ?? "",
     part:        tagging?.part    ?? "",
     summary:     tagging?.summary ?? "",
