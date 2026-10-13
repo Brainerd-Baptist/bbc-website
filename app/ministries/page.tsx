@@ -85,7 +85,7 @@ const MINISTRIES = [
     ink: IDENTITY.adults,
     photo: "/carousel/adults-community-wide.jpg",
     href: "/connect",
-    body: "Whether you are newly married, raising teenagers, navigating an empty nest, or entering retirement, there is a place for you. Adults gather through Bible studies, Sunday classes, and Life Groups, along with men's and women's events like breakfasts and Bible studies throughout the year. See what's coming up on the events page, or ask Ben Hovies, our Director of Adult Discipleship, where you might fit.",
+    body: "Wherever you are in life, there's a place for you. Adults gather through Bible studies, Sunday classes, and Life Groups, along with men's and women's events like breakfasts and Bible studies throughout the year. See what's coming up on the events page, or ask Ben Hovies, our Director of Adult Discipleship, where you might fit.",
     detail: "Sunday mornings · Wednesday 6:15 PM",
     extraLink: { href: CHURCH_CENTER_CALENDAR_URL, label: "See Upcoming Events", external: true },
   },
