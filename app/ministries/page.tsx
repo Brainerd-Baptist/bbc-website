@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { IDENTITY, inkVars } from "@/lib/identity-colors";
+import { CHURCH_CENTER_CALENDAR_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Ministries — Brainerd Baptist Church",
@@ -84,8 +85,31 @@ const MINISTRIES = [
     ink: IDENTITY.adults,
     photo: "/carousel/adults-community-wide.jpg",
     href: "/connect",
-    body: "Whether you are newly married, raising teenagers, navigating an empty nest, or entering retirement — there is a place for you. Adult ministries include Bible studies, Sunday classes, and men's and women's events.",
+    body: "Whether you are newly married, raising teenagers, navigating an empty nest, or entering retirement, there is a place for you. Adults gather through Bible studies, Sunday classes, and Life Groups, along with men's and women's events like breakfasts and Bible studies throughout the year. See what's coming up on the events page, or ask Ben Hovies, our Director of Adult Discipleship, where you might fit.",
     detail: "Sunday mornings · Wednesday 6:15 PM",
+    extraLink: { href: CHURCH_CENTER_CALENDAR_URL, label: "See Upcoming Events", external: true },
+  },
+  {
+    key: "worship",
+    name: "Sing or Play",
+    ages: "Worship Teams",
+    color: IDENTITY.serve.hue,
+    ink: IDENTITY.serve,
+    photo: "/carousel/choir-orchestra.jpg",
+    href: "/connect/next-step?interest=serving",
+    body: "If you sing or play an instrument, there are two ways in: our Choir & Orchestra and our Band-Led team. Tell us what you sing or play, and we'll connect you with the people who lead worship.",
+    detail: "Choir & Orchestra · Band-Led",
+  },
+  {
+    key: "hispanic",
+    name: "Hispanic Ministry",
+    ages: "Ministerio Hispano",
+    color: IDENTITY.missions.hue,
+    ink: IDENTITY.missions,
+    photo: null,
+    href: "/ministries/hispanic",
+    body: "Un servicio en español cada domingo a las 11:00 AM. A Spanish-language service every Sunday at 11:00 AM. The best way to get connected is to join us on a Sunday.",
+    detail: "Domingos · Sundays 11:00 AM",
   },
 ];
 
@@ -120,6 +144,16 @@ const ICONS: Record<string, React.ReactNode> = {
   youngadults: (
     <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <rect x="8" y="14" width="24" height="18" rx="2" /><path d="M15 14v-3a5 5 0 0 1 10 0v3" /><path d="M8 22h24" />
+    </svg>
+  ),
+  worship: (
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 29V9l16-3v20" /><circle cx="11" cy="29" r="4" /><circle cx="27" cy="26" r="4" />
+    </svg>
+  ),
+  hispanic: (
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 9h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H16l-6 5v-5H6a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" /><path d="M32 16h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v4l-5-4h-7" />
     </svg>
   ),
   adults: (
@@ -167,7 +201,7 @@ export default function MinistriesPage() {
       {/* ── Ministry cards ───────────────────────────────────── */}
       <section className="py-20 px-6">
         <div className="relative max-w-5xl mx-auto space-y-6">
-          {MINISTRIES.map(({ key, name, ages, color, ink, photo, href, body, detail }) => (
+          {MINISTRIES.map(({ key, name, ages, color, ink, photo, href, body, detail, extraLink }) => (
             <div key={key} className="glass-md rounded-2xl overflow-hidden">
 
               {/* Color bar */}
@@ -237,6 +271,17 @@ export default function MinistriesPage() {
                       <path d="M2.5 6h7M6.5 3l3 3-3 3" />
                     </svg>
                   </Link>
+                  {extraLink && (
+                    <a
+                      href={extraLink.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 block text-center text-sm underline underline-offset-2 identity-ink"
+                      style={inkVars(ink)}
+                    >
+                      {extraLink.label}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
