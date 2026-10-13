@@ -17,7 +17,7 @@ export default function VisitorNote() {
       rel="noopener noreferrer"
       className="hover:text-white/60 transition-colors"
     >
-      Send us a note about this site
+      Share website feedback
     </a>
   );
 }

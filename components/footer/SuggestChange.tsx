@@ -39,7 +39,7 @@ export default function SuggestChange() {
       rel="noopener noreferrer"
       className="hover:text-white/60 transition-colors"
     >
-      Staff: suggest a change
+      Staff: request a change
     </a>
   );
 }
