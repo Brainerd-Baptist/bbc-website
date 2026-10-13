@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SITE } from "@/lib/constants";
 import useScrollToSuccess from "@/components/connect/useScrollToSuccess";
 
 import Card from "@/components/ui/Card";
@@ -83,13 +84,13 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0">
-      <label className={labelCls}>
+    <label className="block min-w-0">
+      <span className={labelCls}>
         {label}
         {required && <span className="text-accent-text ml-0.5">*</span>}
-      </label>
+      </span>
       {children}
-    </div>
+    </label>
   );
 }
 
@@ -101,6 +102,8 @@ export default function KidsRegistrationForm() {
   const [submitted, setSubmitted] = useState(false);
   const successRef = useScrollToSuccess(submitted);
   const [error, setError] = useState("");
+  const [serverError, setServerError] = useState(false);
+  const [alreadySaved, setAlreadySaved] = useState(0);
 
   const setP = (key: keyof ParentInfo, value: string | boolean) =>
     setParent((p) => ({ ...p, [key]: value }));
@@ -119,6 +122,7 @@ export default function KidsRegistrationForm() {
   async function handleSubmit() {
     setSubmitting(true);
     setError("");
+    setServerError(false);
     try {
       const res = await fetch("/api/pco/kids-registration", {
         method: "POST",
@@ -149,10 +153,23 @@ export default function KidsRegistrationForm() {
       if (data.success) {
         setSubmitted(true);
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        // Some children may have gone through before a later one failed.
+        // Drop those from the list so a retry doesn't register them twice.
+        const saved: number[] = Array.isArray(data.savedIndexes) ? data.savedIndexes : [];
+        if (saved.length > 0) {
+          setAlreadySaved((n) => n + saved.length);
+          setChildren((cs) => cs.filter((_, i) => !saved.includes(i)));
+        }
+        setServerError(true);
+        setError(
+          saved.length > 0
+            ? "Part of your registration went through, and part didn't. The kids who are already registered have been removed from this form. Please try again for the rest."
+            : "We couldn't save your registration just now. Please try again."
+        );
       }
     } catch {
-      setError("Network error. Please check your connection and try again.");
+      setServerError(true);
+      setError("We couldn't reach the server. Please check your connection and try again.");
     } finally {
       setSubmitting(false);
     }
@@ -164,10 +181,12 @@ export default function KidsRegistrationForm() {
     setStep(1);
     setSubmitted(false);
     setError("");
+    setServerError(false);
+    setAlreadySaved(0);
   }
 
   if (submitted) {
-    const count = children.length;
+    const count = children.length + alreadySaved;
     return (
       <div ref={successRef} className="max-w-xl mx-auto">
       <Card className="rounded-2xl p-10 text-center">
@@ -505,6 +524,24 @@ export default function KidsRegistrationForm() {
       {error && (
         <div className="mt-4 rounded-xl border border-danger-border bg-danger-bg px-4 py-3 text-sm text-danger-text">
           {error}
+          {serverError && (
+            <p className="mt-2">
+              Still stuck? You can{" "}
+              <a
+                href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 font-semibold"
+              >
+                register on Church Center
+              </a>{" "}
+              or call the church office at{" "}
+              <a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="underline underline-offset-2 font-semibold">
+                {SITE.phone}
+              </a>
+              .
+            </p>
+          )}
         </div>
       )}
 

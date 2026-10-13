@@ -168,7 +168,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap gap-4">
             <a
-              href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
+              href="#pre-register"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
               style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >
@@ -289,7 +289,7 @@ export default function KidsPage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
+                  href="#pre-register"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2 bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent"
                 >
                   Pre-Register Online
@@ -584,6 +584,17 @@ export default function KidsPage() {
             register?
           </FormRouteNote>
           <KidsRegistrationForm />
+          <p className="text-center text-fg-muted text-sm mt-8">
+            Prefer Church Center?{" "}
+            <a
+              href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent-text font-semibold underline underline-offset-2"
+            >
+              Register there instead.
+            </a>
+          </p>
         </div>
       </section>
 
@@ -614,7 +625,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
+              href="#pre-register"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
               style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >

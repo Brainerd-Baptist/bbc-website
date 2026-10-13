@@ -50,7 +50,7 @@ export default function ConnectPage() {
             <div>
               <dt className="text-fg font-semibold">Registering children for Sunday</dt>
               <dd className="text-fg-muted">
-                <Link href="https://brainerdbaptist.churchcenter.com/people/forms/376960" className="text-accent-text underline underline-offset-2">Kids pre-registration</Link>. Adds your family and each child.
+                <Link href="/ministries/kids#pre-register" className="text-accent-text underline underline-offset-2">Kids pre-registration</Link>. Adds your family and each child.
               </dd>
             </div>
             <div>

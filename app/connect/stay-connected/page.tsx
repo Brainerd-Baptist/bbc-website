@@ -22,7 +22,7 @@ export default function StayConnectedPage() {
               Introduce yourself
             </Link>
             . Bringing children?{" "}
-            <Link href="https://brainerdbaptist.churchcenter.com/people/forms/376960" className="text-accent-text font-semibold underline underline-offset-2">
+            <Link href="/ministries/kids#pre-register" className="text-accent-text font-semibold underline underline-offset-2">
               Pre-register them
             </Link>
             .

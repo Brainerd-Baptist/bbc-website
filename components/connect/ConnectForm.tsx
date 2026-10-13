@@ -231,7 +231,7 @@ export default function ConnectForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
-      <FormRouteNote href="https://brainerdbaptist.churchcenter.com/people/forms/376960" linkLabel="Pre-register your kids.">
+      <FormRouteNote href="/ministries/kids#pre-register" linkLabel="Pre-register your kids.">
         Bringing children with you? Skip the line at check-in.
       </FormRouteNote>
       {/* Name row */}

@@ -108,7 +108,8 @@ export async function POST(req: NextRequest) {
 
   // Submit one PCO form per child — shared parent fields on each
   const errors: string[] = [];
-  for (const child of children) {
+  const savedIndexes: number[] = [];
+  for (const [index, child] of children.entries()) {
     const answers: FieldAnswer[] = [
       // Phone
       { kind: "phone", fieldId: FIELD.phone, number: phone, location: "Mobile" },
@@ -148,6 +149,7 @@ export async function POST(req: NextRequest) {
 
     try {
       await submitForm(auth, "376960", personId, answers);
+      savedIndexes.push(index);
     } catch (err) {
       console.error(`PCO submission failed for child ${child.firstName}:`, err);
       errors.push(`${child.firstName} ${child.lastName}`);
@@ -156,7 +158,7 @@ export async function POST(req: NextRequest) {
 
   if (errors.length > 0) {
     return NextResponse.json(
-      { error: `Failed to submit to Planning Center for: ${errors.join(", ")}` },
+      { error: `Failed to submit to Planning Center for: ${errors.join(", ")}`, savedIndexes },
       { status: 502 }
     );
   }

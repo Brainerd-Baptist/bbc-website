@@ -28,7 +28,7 @@ All children who need check-in use the Albemarle Ave entrance. Kids ministry has
 - Nursery: 6 weeks through ~2 years
 - Toddlers/Preschool: ~2 years through PreK5
 - Elementary (Brainerd Kids): Kindergarten through 5th grade — Life Group at 9:45 only. Elementary kids join their families in the worship service at 8:30 and 11.
-- Security check-in tags are required for all children. Pre-registering your family before Sunday saves significant time at check-in: https://brainerdbaptist.churchcenter.com/people/forms/376960
+- Security check-in tags are required for all children. Pre-registering your family before Sunday saves significant time at check-in: the pre-registration form on the Kids Ministry page (/ministries/kids#pre-register)
 
 STUDENTS (Middle & High School):
 - Life Groups meet at the BX at 9:45 AM (also Wednesday nights and special events)
