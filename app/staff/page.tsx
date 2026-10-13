@@ -54,7 +54,8 @@ export default function StaffPage() {
                   {/* Name + title */}
                   <p className="text-fg font-semibold text-sm leading-snug group-hover:text-accent-text transition-colors"
                     style={{ letterSpacing: "-0.015em" }}>
-                    {name}
+                    <span className="block">{name.split(" ")[0]}</span>
+                    <span className="block text-fg-muted font-normal text-[0.85em]">{name.split(" ").slice(1).join(" ")}</span>
                   </p>
                   <p className="text-fg-muted text-xs mt-0.5">{info.title}</p>
                 </a>

@@ -189,7 +189,7 @@ export default async function LifeGroupsPage() {
             <div className="flex-1">
               <p className="eyebrow-muted mb-1 text-xs">Not sure where to start?</p>
               <h3 className="font-condensed font-800 text-fg text-xl mb-2">
-                Reach out to Ben Hovies
+                Reach out to Ben
               </h3>
               <p className="text-fg-muted text-sm leading-relaxed">
                 Ben leads our Life Groups ministry and would love to get to know you and help you

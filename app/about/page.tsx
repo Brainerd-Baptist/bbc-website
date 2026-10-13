@@ -495,7 +495,8 @@ export default function AboutPage() {
                     )}
                   </div>
                   <p className="text-fg text-xs font-semibold leading-snug group-hover:text-accent-text transition-colors">
-                    {name}
+                    <span className="block">{name.split(" ")[0]}</span>
+                    <span className="block text-fg-muted font-normal text-[0.85em]">{name.split(" ").slice(1).join(" ")}</span>
                   </p>
                   <p className="text-fg-muted text-[11px] mt-0.5">{info.title}</p>
                 </Link>
