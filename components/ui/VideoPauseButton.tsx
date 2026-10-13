@@ -11,7 +11,7 @@ export default function VideoPauseButton({
   videoRef,
   className = "",
 }: {
-  videoRef: React.RefObject<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
   className?: string;
 }) {
   const [paused, setPaused] = useState(false);
