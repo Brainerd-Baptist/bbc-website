@@ -231,8 +231,8 @@ export default function ConnectForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
-      <FormRouteNote href="/ministries/kids#pre-register" linkLabel="Pre-register your kids.">
-        Bringing children with you? Skip the line at check-in.
+      <FormRouteNote href="/ministries/kids#pre-register" linkLabel="Start here.">
+        Showing up with kids?
       </FormRouteNote>
       {/* Name row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -17,13 +17,13 @@ export default function StayConnectedPage() {
         <div className="max-w-lg mx-auto">
           <p className="text-sm text-fg-muted leading-relaxed mb-6">
             This is only for church newsletter texts and emails. It doesn&apos;t add you to our
-            church database or register your kids. Visiting?{" "}
-            <Link href="/visit#connect" className="text-accent-text font-semibold underline underline-offset-2">
-              Introduce yourself
+            church database or register your kids. Showing up without kids?{" "}
+            <Link href="/visit#connect" aria-label="Start here if you're showing up without kids" className="text-accent-text font-semibold underline underline-offset-2">
+              Start here
             </Link>
-            . Bringing children?{" "}
-            <Link href="/ministries/kids#pre-register" className="text-accent-text font-semibold underline underline-offset-2">
-              Pre-register them
+            . Showing up with kids?{" "}
+            <Link href="/ministries/kids#pre-register" aria-label="Start here if you're showing up with kids" className="text-accent-text font-semibold underline underline-offset-2">
+              Start here
             </Link>
             .
           </p>

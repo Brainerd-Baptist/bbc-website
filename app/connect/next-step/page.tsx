@@ -28,8 +28,8 @@ export default async function NextStepPage({
       />
       <Section className="pb-24 px-6">
         <div className="max-w-2xl mx-auto">
-          <FormRouteNote className="mb-6" href="/ministries/kids#pre-register" linkLabel="Pre-register your kids instead.">
-            This adds you to our church database so a pastor can follow up. Registering children for Sunday?
+          <FormRouteNote className="mb-6" href="/ministries/kids#pre-register" linkLabel="Start here.">
+            This adds you to our church database so a pastor can follow up. Showing up with kids?
           </FormRouteNote>
           <p className="text-sm text-fg-muted leading-relaxed mb-6">
             Thinking about baptism? It&apos;s simply the next step after being

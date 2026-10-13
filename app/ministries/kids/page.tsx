@@ -578,10 +578,10 @@ export default function KidsPage() {
           <FormRouteNote
             className="text-center max-w-md mx-auto mb-8"
             href="/visit#connect"
-            linkLabel="Introduce yourself instead."
+            linkLabel="Start here."
           >
-            This form is for families registering children for Sunday. No kids to
-            register?
+            This form registers your children for Sunday check-in. Showing up
+            without kids?
           </FormRouteNote>
           <KidsRegistrationForm />
           <p className="text-center text-fg-muted text-sm mt-8">
