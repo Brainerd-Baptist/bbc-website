@@ -109,12 +109,12 @@ export default async function SermonBand() {
 
               {/* Info panel */}
               <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center">
-                <h3
+                <h2
                   className="font-condensed font-800 text-fg text-2xl md:text-3xl leading-tight mb-4"
                   style={{ fontWeight: 800, letterSpacing: "-0.02em" }}
                 >
                   {title}
-                </h3>
+                </h2>
                 <div className="flex flex-wrap gap-x-5 gap-y-2 text-fg-muted text-sm mb-6">
                   <span className="flex items-center gap-1.5">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

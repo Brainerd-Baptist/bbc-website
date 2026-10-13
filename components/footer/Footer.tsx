@@ -146,6 +146,7 @@ export default function Footer() {
           <p>© {year} {SITE.name}. All rights reserved.</p>
           <div className="flex gap-5">
             <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Privacy</a>
+            <Link href="/accessibility" className="hover:text-white/60 transition-colors">Accessibility</Link>
             <Link href="/connect" className="hover:text-white/60 transition-colors">Contact</Link>
             <VisitorNote />
           </div>

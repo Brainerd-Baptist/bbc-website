@@ -173,12 +173,12 @@ function BeliefCard({ icon, title, body, verse }: {
     <Card className="flex gap-6 p-7 rounded-2xl">
       <div className="flex-shrink-0 mt-0.5">{icon}</div>
       <div>
-        <h3
+        <h2
           className="font-condensed font-800 text-fg mb-2"
           style={{ fontSize: "1.4rem", letterSpacing: "-0.01em" }}
         >
           {title}
-        </h3>
+        </h2>
         <p className="text-fg-muted text-sm leading-relaxed mb-3">{body}</p>
         <div className="flex flex-wrap gap-x-3 gap-y-1 items-center">
           {refs.map((ref, i) => (

@@ -758,7 +758,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
                   </p>
                 )}
                 {sermon.passage && <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">{sermon.passage}</p>}
-                <h3 className="text-xl md:text-2xl font-bold text-fg-on-dark mb-3 leading-tight">{sermon.title}</h3>
+                <h2 className="text-xl md:text-2xl font-bold text-fg-on-dark mb-3 leading-tight">{sermon.title}</h2>
                 <p className="text-sm text-fg-on-dark-muted mb-4">{date} · {sermon.speaker || "Curtis Hill"}</p>
                 {sermon.summary && (
                   <p className="text-sm text-fg-on-dark-muted leading-relaxed mb-5 line-clamp-3">
