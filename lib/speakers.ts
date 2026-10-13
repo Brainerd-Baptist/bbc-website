@@ -92,7 +92,6 @@ export const STAFF_ROSTER: string[] = [
   "Barry Wilks",
   "Carlos Betancourt",
   "Abigail Frink",
-  "Ethan Speicher",
   "Michelle Hill",
   "Brittany Kelly",
   "Jo Bobbitt",
