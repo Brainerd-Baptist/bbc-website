@@ -34,7 +34,6 @@ const NAV_GROUPS = [
       { label: "Kids Ministry", href: "/ministries/kids" },
       { label: "Students", href: "/ministries/students" },
       { label: "College & Young Adults", href: "/ministries/college" },
-      { label: "Life Groups", href: "/life-groups" },
       { label: "Missions", href: "/missions" },
       { label: "Wednesday Night", href: "/wednesday" },
     ],
@@ -63,9 +62,8 @@ const NAV_GROUPS = [
       // now reads ?interest= to preselect the right checkbox instead.
       { label: "Baptism", href: "/connect/next-step?interest=baptism" },
       { label: "Membership", href: "/membership" },
-      { label: "Life Groups", href: "/life-groups" },
+      { label: "Join a Life Group", href: "/life-groups" },
       { label: "Serving", href: "/connect/next-step?interest=serving" },
-      { label: "Mission Trips", href: "/missions" },
       // Connect With Us and Prayer Request moved to More (asked 2026-10-05)
       // — see that group below.
     ],
