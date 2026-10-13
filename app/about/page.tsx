@@ -170,8 +170,8 @@ export default function AboutPage() {
               </p>
               <p className="text-fg-muted leading-relaxed">
                 We're simply a church — a multi-generational family of people
-                raising kids, navigating hard seasons, and doing life
-                together in the name of Jesus.
+                at every age and stage, walking through hard seasons and
+                doing life together in the name of Jesus.
               </p>
               <Link
                 href="/about/timeline"
@@ -423,8 +423,8 @@ export default function AboutPage() {
               </p>
               <p className="text-fg-muted leading-relaxed">
                 The goal isn't a great church experience. It's gospel
-                community — raising families, navigating hard seasons, and
-                staying in it for the long haul.
+                community — sharing real life, walking through hard seasons,
+                and staying in it for the long haul.
               </p>
             </div>
 

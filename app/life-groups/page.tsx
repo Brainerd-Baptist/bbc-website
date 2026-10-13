@@ -106,8 +106,8 @@ export default async function LifeGroupsPage() {
                 of discussion on the week&apos;s passage. Groups end with prayer.
               </p>
               <p className="text-fg-muted text-sm leading-relaxed">
-                Groups vary by season of life: young married couples, young families, empty nesters,
-                singles, and mixed groups. There is likely a group near you that fits your stage.
+                Some groups are mixed and some gather people in a similar season of life. Use the
+                filters to find what fits you. There is likely a group near you.
               </p>
             </div>
           </div>
