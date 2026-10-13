@@ -251,10 +251,10 @@ export default function ConnectForm({
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-fg">
+          <label htmlFor="connectfor-1" className="block text-sm font-medium text-fg">
             Last name
           </label>
-          <input
+          <input id="connectfor-1"
             type="text"
             autoComplete="family-name"
             value={lastName}
@@ -267,10 +267,10 @@ export default function ConnectForm({
 
       {/* Email */}
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-fg">
+        <label htmlFor="connectfor-2" className="block text-sm font-medium text-fg">
           Email <span className="text-accent-text">*</span>
         </label>
-        <input
+        <input id="connectfor-2"
           type="email"
           required
           autoComplete="email"
@@ -283,10 +283,10 @@ export default function ConnectForm({
 
       {/* Phone */}
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-fg">
+        <label htmlFor="connectfor-3" className="block text-sm font-medium text-fg">
           Phone
         </label>
-        <input
+        <input id="connectfor-3"
           type="tel"
           autoComplete="tel"
           value={phone}

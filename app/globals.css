@@ -1034,3 +1034,21 @@ select:focus {
     0 0 0 3px rgba(0, 171, 201, 0.25);
 }
 }
+
+/* Skip link — visible only when focused by keyboard */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1000;
+  padding: 0.7rem 1.1rem;
+  border-radius: 9999px;
+  background: var(--accent-solid, #2d8089);
+  color: var(--accent-fg, #fff);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus { transform: translateY(0); }
+#main-content:focus { outline: none; }

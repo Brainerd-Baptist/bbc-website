@@ -621,10 +621,10 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
+          <label htmlFor="liveplayer-1" className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
             Your Name <span className="text-accent">*</span>
           </label>
-          <input
+          <input id="liveplayer-1"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -635,10 +635,10 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
+          <label htmlFor="liveplayer-2" className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
             Prayer Request <span className="text-accent">*</span>
           </label>
-          <textarea
+          <textarea id="liveplayer-2"
             value={request}
             onChange={(e) => setRequest(e.target.value)}
             required
@@ -649,10 +649,10 @@ function PrayerTab({ sermon }: { sermon: SermonData }) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
+          <label htmlFor="liveplayer-3" className="block text-xs font-semibold text-fg-on-dark-muted mb-1.5 uppercase tracking-wide">
             Email <span className="text-fg-on-dark-muted font-normal normal-case">(optional — for follow-up)</span>
           </label>
-          <input
+          <input id="liveplayer-3"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

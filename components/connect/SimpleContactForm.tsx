@@ -104,10 +104,10 @@ export default function SimpleContactForm({
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-fg">
+          <label htmlFor="simplecont-1" className="block text-sm font-medium text-fg">
             Name <span className="text-accent-text">*</span>
           </label>
-          <input
+          <input id="simplecont-1"
             type="text"
             required
             autoComplete="name"
@@ -118,10 +118,10 @@ export default function SimpleContactForm({
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-fg">
+          <label htmlFor="simplecont-2" className="block text-sm font-medium text-fg">
             Email <span className="text-accent-text">*</span>
           </label>
-          <input
+          <input id="simplecont-2"
             type="email"
             required
             autoComplete="email"
@@ -135,8 +135,8 @@ export default function SimpleContactForm({
 
       {showPhone && (
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-fg">Phone</label>
-          <input
+          <label htmlFor="simplecont-3" className="block text-sm font-medium text-fg">Phone</label>
+          <input id="simplecont-3"
             type="tel"
             autoComplete="tel"
             value={phone}
@@ -164,10 +164,10 @@ export default function SimpleContactForm({
       )}
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-fg">
+        <label htmlFor="simplecont-4" className="block text-sm font-medium text-fg">
           {messageLabel} {messageRequired && <span className="text-accent-text">*</span>}
         </label>
-        <textarea
+        <textarea id="simplecont-4"
           required={messageRequired}
           rows={5}
           value={message}

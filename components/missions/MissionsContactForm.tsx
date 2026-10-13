@@ -71,10 +71,10 @@ export default function MissionsContactForm() {
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-fg">
+          <label htmlFor="missionsco-1" className="block text-sm font-medium text-fg">
             Name <span className="text-accent-text">*</span>
           </label>
-          <input
+          <input id="missionsco-1"
             type="text"
             required
             autoComplete="name"
@@ -85,10 +85,10 @@ export default function MissionsContactForm() {
           />
         </div>
         <div className="space-y-1.5">
-          <label className="block text-sm font-medium text-fg">
+          <label htmlFor="missionsco-2" className="block text-sm font-medium text-fg">
             Email <span className="text-accent-text">*</span>
           </label>
-          <input
+          <input id="missionsco-2"
             type="email"
             required
             autoComplete="email"
@@ -101,10 +101,10 @@ export default function MissionsContactForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-fg">
+        <label htmlFor="missionsco-3" className="block text-sm font-medium text-fg">
           I&apos;m interested in <span className="text-accent-text">*</span>
         </label>
-        <select
+        <select id="missionsco-3"
           required
           value={interest}
           onChange={(e) => setInterest(e.target.value)}
@@ -119,10 +119,10 @@ export default function MissionsContactForm() {
       </div>
 
       <div className="space-y-1.5">
-        <label className="block text-sm font-medium text-fg">
+        <label htmlFor="missionsco-4" className="block text-sm font-medium text-fg">
           Message <span className="text-accent-text">*</span>
         </label>
-        <textarea
+        <textarea id="missionsco-4"
           required
           rows={5}
           value={message}

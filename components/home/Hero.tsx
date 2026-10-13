@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Countdown from "./Countdown";
 import LiveBanner from "@/components/live/LiveBanner";
+import VideoPauseButton from "@/components/ui/VideoPauseButton";
 
 // ── Cloudflare Stream (same asset as Visit page) ───────────────────
 const CF_CUSTOMER = "customer-4oim3t3sdsmhrdq9";
@@ -170,6 +171,7 @@ export default function Hero() {
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = CF_HLS; // Safari — native HLS
     }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // stay paused on the poster
     video.play().catch(() => {}); // autoplay blocked — poster still shows
   }, []);
 
@@ -239,6 +241,11 @@ export default function Hero() {
           <source src={CF_MP4} type="video/mp4" />
         </video>
       </div>
+
+      <VideoPauseButton
+        videoRef={videoRef}
+        className="hidden md:flex absolute bottom-6 right-6 z-20"
+      />
 
       {/* ── Gradient overlay ── */}
       <div

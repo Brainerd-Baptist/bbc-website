@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -113,6 +113,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
   // Same Eastern-time clock the live page and homepage banner use — see
   // lib/live-schedule.ts. Drives the pulsing "live" badge on the hamburger
   // trigger itself (not just the drawer row inside it), so it's visible on
@@ -150,6 +153,24 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Menu a11y: Escape closes it, focus moves into the drawer when it opens
+  // and returns to the hamburger button when it closes.
+  useEffect(() => {
+    if (menuOpen) {
+      wasOpenRef.current = true;
+      closeButtonRef.current?.focus();
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setMenuOpen(false);
+      };
+      document.addEventListener("keydown", onKey);
+      return () => document.removeEventListener("keydown", onKey);
+    }
+    if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      menuButtonRef.current?.focus();
+    }
+  }, [menuOpen]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -228,7 +249,10 @@ export default function Navbar() {
             {/* Hamburger button — pulsing dot during the live window so
                 mobile visitors see it's live without opening the menu */}
             <button
+              ref={menuButtonRef}
               onClick={() => setMenuOpen(true)}
+              aria-expanded={menuOpen}
+              aria-haspopup="dialog"
               aria-label={isLiveNow ? "Open navigation menu — live now" : "Open navigation menu"}
               className="nav-ctl relative flex flex-col gap-1.5 p-2 cursor-pointer rounded-lg transition-colors"
             >
@@ -261,7 +285,13 @@ export default function Navbar() {
         className={`nav-drawer fixed top-3 right-3 bottom-3 z-[100] w-80 max-w-[calc(100vw-1.5rem)] flex flex-col rounded-3xl overflow-hidden transition-transform duration-300 ease-out ${
           menuOpen ? "translate-x-0" : "translate-x-[calc(100%+1.5rem)]"
         }`}
+        role="dialog"
+        aria-modal={menuOpen}
         aria-label="Site navigation"
+        style={{
+          visibility: menuOpen ? "visible" : "hidden",
+          transition: `transform 300ms ease-out, visibility 0s linear ${menuOpen ? "0s" : "300ms"}`,
+        }}
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
@@ -274,6 +304,7 @@ export default function Navbar() {
                 />
               </Link>
           <button
+            ref={closeButtonRef}
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
             className="p-2 rounded-lg transition-colors text-fg hover:bg-hover-subtle"

@@ -16,7 +16,7 @@ export default function ErrorPage({
   }, [error]);
 
   return (
-    <main className="min-h-screen px-6 pt-40 pb-24 flex items-start justify-center">
+    <div className="min-h-screen px-6 pt-40 pb-24 flex items-start justify-center">
       <Card className="relative rounded-2xl p-10 max-w-lg w-full text-center">
         <p className="eyebrow mb-3">Something went wrong</p>
         <h1
@@ -44,6 +44,6 @@ export default function ErrorPage({
           </Link>
         </div>
       </Card>
-    </main>
+    </div>
   );
 }

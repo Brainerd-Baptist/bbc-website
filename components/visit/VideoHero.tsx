@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import VideoPauseButton from "@/components/ui/VideoPauseButton";
 
 const CF_STREAM_ID = "c0a6915dae68d8fa78626b273768e44c";
 const CF_CUSTOMER_CODE = "customer-4oim3t3sdsmhrdq9";
@@ -47,6 +48,7 @@ export default function VideoHero({
     }
     // Otherwise the <source> MP4 fallback in the markup handles it
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // stay paused on the poster
     video.play().catch(() => {
       // Autoplay blocked — video stays paused, poster still shows
     });
@@ -84,6 +86,11 @@ export default function VideoHero({
         {/* MP4 direct download as universal fallback */}
         <source src={MP4_URL} type="video/mp4" />
       </video>
+
+      <VideoPauseButton
+        videoRef={videoRef}
+        className="hidden md:flex absolute bottom-6 right-6 z-20"
+      />
 
       {/* ── Gradient overlay — dark at bottom, lighter at top ── */}
       <div
