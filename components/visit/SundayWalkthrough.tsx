@@ -14,14 +14,14 @@ const STEPS = [
     num: "02",
     label: "Parking",
     heading: "Pull into the Red or Orange lot",
-    body: "The Red Lot is off Brookfield Ave, directly south of the Sanctuary — easiest to find, closest to the main entrance. The Orange Lot is on the north side if the Red fills up. All lots are free and open before and after service.",
-    note: "Bringing kids? Pull into the Purple Lot on the west side of the building — it puts you right at the Brainerd Kids entrance.",
+    body: "The Red Lot is across from the front entrance — easiest to find. The Orange Lot is on Mayfair Ave if the Red fills up. All lots are free and open before and after service.",
+    note: "Bringing kids? Pull into the Purple Lot off Albemarle Ave — it puts you right at the Kids entrance.",
   },
   {
     num: "03",
     label: "Kids check-in",
     heading: "Families, use the Purple Lot entrance",
-    body: "Park in the Purple Lot and head to the Brainerd Kids entrance on the west side of the building. Dedicated check-in staff will walk you through everything your first time — you'll each receive a matching security tag, which is how pickup works when service ends. Plan about 10 extra minutes the first week; it goes fast after that.",
+    body: "Park in the Purple Lot and head to the Kids entrance off Albemarle Ave. Dedicated check-in staff will walk you through everything your first time — you'll each receive a matching security tag, which is how pickup works when service ends. Arriving 10–15 minutes early helps your first week; it goes fast after that.",
     note: "Check-in opens 30 minutes before each service. All volunteers are background-checked.",
   },
   {
@@ -67,6 +67,7 @@ export default function SundayWalkthrough() {
 
   return (
     <section
+      id="sunday-walkthrough"
       className="py-24 px-6 select-none"
       /* A branded navy band: dark in both themes, so every foreground below
          comes from the on-dark family rather than --fg. */

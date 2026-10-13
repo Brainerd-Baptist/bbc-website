@@ -17,7 +17,7 @@ export default function ConnectPage() {
             className="font-condensed font-800 text-fg mb-4"
             style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)" }}
           >
-            Connect With Us
+            Contact Us
           </h1>
           <p className="text-fg-muted text-lg leading-relaxed">
             Whether you are visiting for the first time, looking for community, or
@@ -50,7 +50,7 @@ export default function ConnectPage() {
             <div>
               <dt className="text-fg font-semibold">Registering children for Sunday</dt>
               <dd className="text-fg-muted">
-                <Link href="/ministries/kids#pre-register" className="text-accent-text underline underline-offset-2">Kids pre-registration</Link>. Adds your family and each child.
+                <Link href="https://brainerdbaptist.churchcenter.com/people/forms/376960" className="text-accent-text underline underline-offset-2">Kids pre-registration</Link>. Adds your family and each child.
               </dd>
             </div>
             <div>

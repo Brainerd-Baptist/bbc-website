@@ -44,9 +44,9 @@ export async function POST(req: NextRequest) {
 
   const { firstName, lastName, email, phone, howHeard, interests, notes } = body;
 
-  if (!firstName || !lastName || !email || !phone) {
+  if (!firstName?.trim() || !email?.trim()) {
     return NextResponse.json(
-      { error: "First name, last name, email, and phone are required" },
+      { error: "First name and email are required" },
       { status: 400 }
     );
   }
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
   let personId: string;
   try {
-    personId = await findOrCreatePerson(auth, firstName, lastName, email);
+    personId = await findOrCreatePerson(auth, firstName.trim(), (lastName ?? "").trim(), email.trim());
   } catch (err) {
     console.error("PCO person lookup/create failed:", err);
     return NextResponse.json(
@@ -74,7 +74,9 @@ export async function POST(req: NextRequest) {
   const answers: FieldAnswer[] = [];
 
   // Phone — use phone kind for flat number/location attributes
-  answers.push({ kind: "phone", fieldId: FIELD.phone, number: phone, location: "Mobile" });
+  if (phone?.trim()) {
+    answers.push({ kind: "phone", fieldId: FIELD.phone, number: phone.trim(), location: "Mobile" });
+  }
 
   // How heard — one option entry per selected checkbox
   for (const optionId of howHeard) {

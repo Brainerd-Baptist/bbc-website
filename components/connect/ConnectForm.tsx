@@ -231,7 +231,7 @@ export default function ConnectForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
-      <FormRouteNote href="/ministries/kids#pre-register" linkLabel="Pre-register your kids.">
+      <FormRouteNote href="https://brainerdbaptist.churchcenter.com/people/forms/376960" linkLabel="Pre-register your kids.">
         Bringing children with you? Skip the line at check-in.
       </FormRouteNote>
       {/* Name row */}
@@ -252,11 +252,10 @@ export default function ConnectForm({
         </div>
         <div className="space-y-1.5">
           <label className="block text-sm font-medium text-fg">
-            Last name <span className="text-accent-text">*</span>
+            Last name
           </label>
           <input
             type="text"
-            required
             autoComplete="family-name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
@@ -285,11 +284,10 @@ export default function ConnectForm({
       {/* Phone */}
       <div className="space-y-1.5">
         <label className="block text-sm font-medium text-fg">
-          Phone <span className="text-accent-text">*</span>
+          Phone
         </label>
         <input
           type="tel"
-          required
           autoComplete="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}

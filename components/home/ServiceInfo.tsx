@@ -26,7 +26,7 @@ export default function ServiceInfo() {
                 Both services center on the voices and singing of the congregation.
               </p>
               <p className="text-fg-muted text-sm mt-1">
-                Life Groups meet at <strong>9:45 AM</strong> between services.
+                Life Groups (small-group Bible study for all ages) meet at <strong>9:45 AM</strong> between services.
               </p>
             </div>
 

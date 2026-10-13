@@ -45,6 +45,19 @@ export default function GivePage() {
             before us — not a monument to what&apos;s been built, but room for
             what&apos;s next.
           </p>
+          <div className="mt-8">
+            <a
+              href="https://app.securegive.com/brainerdbaptist/auth/login/sms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
+            >
+              Give Online
+            </a>
+            <p className="text-fg-muted text-xs mt-3 max-w-sm mx-auto">
+              You&apos;ll sign in to our secure giving site, then choose a fund and an amount.
+            </p>
+          </div>
         </div>
       </div>
 

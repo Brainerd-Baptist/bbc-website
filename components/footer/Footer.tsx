@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { SITE, FOOTER_LINKS, HISPANIC_MINISTRY } from "@/lib/constants";
-import { getBuildInfo } from "@/lib/version";
-import SuggestChange from "./SuggestChange";
 import VisitorNote from "./VisitorNote";
 
 const SOCIAL = [
@@ -34,7 +32,7 @@ const SOCIAL = [
   },
   {
     label: "Podcast",
-    href: "/podcast",
+    href: "/sermons#listen-anywhere",
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
         <path d="M8.5 12a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0zm3.5-5.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11zm0 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0-6C6.253 2 2 6.253 2 12s4.253 10 10 10 10-4.253 10-10S17.747 2 12 2zm0 1.5c4.694 0 8.5 3.806 8.5 8.5S16.694 20.5 12 20.5 3.5 16.694 3.5 12 7.306 3.5 12 3.5z"/>
@@ -45,7 +43,6 @@ const SOCIAL = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
-  const build = getBuildInfo();
 
   return (
     // The footer is deliberately brand navy in BOTH themes — it is not a page
@@ -121,7 +118,9 @@ export default function Footer() {
               Visit
             </p>
             <p className="font-condensed font-700 text-white text-base mb-0.5">300 Brookfield Ave</p>
-            <p className="text-fg-on-dark-muted text-sm mb-4">Chattanooga, TN 37411</p>
+            <p className="text-fg-on-dark-muted text-sm mb-3">Chattanooga, TN 37411</p>
+            <p className="text-sm mb-1"><a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="text-white/80 hover:text-white">{SITE.phone}</a></p>
+            <p className="text-sm mb-4"><a href={`mailto:${SITE.email}`} className="text-white/80 hover:text-white">{SITE.email}</a></p>
 
             <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-3">
               Sunday Services
@@ -135,6 +134,7 @@ export default function Footer() {
               <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">
                 Ministerio Hispano
               </p>
+              <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.locationName}</p>
               <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.address}</p>
               <p className="text-fg-on-dark-muted text-sm">{HISPANIC_MINISTRY.serviceTime}</p>
             </div>
@@ -148,15 +148,9 @@ export default function Footer() {
             <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Privacy</a>
             <Link href="/connect" className="hover:text-white/60 transition-colors">Contact</Link>
             <VisitorNote />
-            <SuggestChange />
           </div>
         </div>
 
-        {/* Build marker — intentionally near-invisible; this is a QA aid for
-            Josiah while iterating, not something a visitor should notice. */}
-        <p className="mt-3 text-center sm:text-right font-mono text-[10px] leading-none text-white/35 select-none">
-          {build.label}
-        </p>
       </div>
     </footer>
 

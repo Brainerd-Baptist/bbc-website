@@ -60,6 +60,37 @@ export default function VisitExperience() {
         <VideoHero />
       )}
 
+      {/* ── Sunday at a glance ──────────────────────────────── */}
+      <section aria-label="Sunday at a glance" className="px-6 pt-10">
+        <div className="max-w-5xl mx-auto rounded-2xl border border-border bg-surface-raised p-6 md:p-7">
+          <p className="eyebrow mb-4 text-center">Sunday at a glance</p>
+          <dl className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 text-sm">
+            <div>
+              <dt className="text-fg font-semibold">Services</dt>
+              <dd className="text-fg-muted">8:30 AM Choir &amp; Orchestra<br />11:00 AM Band-Led<br />About 75 minutes</dd>
+            </div>
+            <div>
+              <dt className="text-fg font-semibold">Where</dt>
+              <dd className="text-fg-muted">
+                300 Brookfield Ave, Chattanooga<br />
+                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className="text-accent-text underline underline-offset-2">Open in Maps</a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-fg font-semibold">Kids</dt>
+              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave. Arrive 10–15 minutes early.</dd>
+            </div>
+            <div>
+              <dt className="text-fg font-semibold">Parking</dt>
+              <dd className="text-fg-muted">
+                Free. Red lot is across from the front entrance.<br />
+                <a href="#sunday-walkthrough" className="text-accent-text underline underline-offset-2">See the step-by-step</a>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
       {/* ── Visitor type toggle ─────────────────────────────── */}
       <VisitorToggle value={visitorType} onChange={setVisitorType} />
 
@@ -120,7 +151,7 @@ export default function VisitExperience() {
                   11:00 AM
                 </p>
                 <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
-                  Band Led
+                  Band-Led
                 </p>
               </div>
             </div>
@@ -144,7 +175,7 @@ export default function VisitExperience() {
               <p className="text-fg-on-dark-muted text-sm mt-1">Small-group Bible study for all ages — the best way to get connected beyond Sunday.</p>
               <p className="text-fg-on-dark-muted text-xs mt-2">
                 Kids &amp; most adult groups meet in the Main Building. Students, College, and a few
-                adult groups meet at the BX.
+                adult groups meet at the BX, our student and college building.
               </p>
             </div>
           </div>
@@ -252,7 +283,7 @@ export default function VisitExperience() {
             <Card className="rounded-2xl p-8 border-t-4 border-accent">
               <p className="eyebrow mb-3">Ministerio Hispano · Hispanic Ministry</p>
               <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
-              <p className="text-fg-muted text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.address}</p>
+              <p className="text-fg-muted text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.locationName} · {HISPANIC_MINISTRY.address}</p>
               <p className="text-fg-muted text-sm mb-5">{HISPANIC_MINISTRY.serviceTime}</p>
               <p className="text-fg-muted text-sm italic">
                 Bienvenidos a nuestra familia. Un servicio de adoración en español — todos son bienvenidos.

@@ -97,7 +97,7 @@ const CHECKIN_STEPS = [
   {
     num: "01",
     heading: "Find a check-in kiosk",
-    body: "Check-in kiosks are just inside the main entrance. First time? A volunteer will walk you through the whole thing.",
+    body: "Check-in is at the Kids entrance off Albemarle Ave (Purple Lot). First time? A volunteer will walk you through the whole thing.",
   },
   {
     num: "02",
@@ -167,7 +167,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap gap-4">
             <a
-              href="#pre-register"
+              href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
               style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >
@@ -288,7 +288,7 @@ export default function KidsPage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="#pre-register"
+                  href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2 bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent"
                 >
                   Pre-Register Online
@@ -577,7 +577,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="#pre-register"
+              href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
               className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
               style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
             >

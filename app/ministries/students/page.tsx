@@ -32,7 +32,7 @@ const SCHEDULE = [
     day: "Sunday",
     time: "9:45 AM",
     label: "Sunday Morning",
-    body: "Students gather for teaching and small groups during the 9:45 service hour. [Add room / location detail here.]",
+    body: "Students gather for teaching and small groups during the 9:45 hour. Students meet at the BX.",
   },
   {
     day: "Wednesday",

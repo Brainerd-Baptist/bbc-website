@@ -6,8 +6,8 @@ export const SITE = {
   shortName: "BBC",
   tagline: "A church family in Chattanooga, Tennessee.",
   address: "300 Brookfield Ave, Chattanooga, TN 37411",
-  phone: "",
-  email: "",
+  phone: "(423) 624-2606",
+  email: "connect@brainerdbaptist.org",
   social: {
     facebook: "https://facebook.com/brainerdbaptist",
     instagram: "https://instagram.com/brainerdbaptist",
@@ -34,8 +34,9 @@ export const SERVICE_NOTE =
 export const LIFE_GROUP_TIME = "9:45 AM";
 
 export const HISPANIC_MINISTRY = {
+  locationName: "East Ridge location",
   address: "1203 Blocker Lane, Chattanooga, TN",
-  serviceTime: "Sundays · 1:00 PM",
+  serviceTime: "Sundays · 11:00 AM",
 };
 
 export const LEAD_PASTOR = {
@@ -48,8 +49,8 @@ export const LEAD_PASTOR = {
 export const CHILD_CARE = [
   { age: "Nursery & Preschool", times: "8:30, 9:45, and 11:00" },
   {
-    age: "Kindergarten and up",
-    times: "Join families for worship",
+    age: "Kindergarten through 5th grade",
+    times: "Worship with families; class at 9:45",
   },
 ];
 
@@ -58,7 +59,7 @@ export const MINISTRIES = [
     key: "kids",
     name: "Kids",
     description:
-      "Nursery and preschool care at 8:30, 9:45, and 11:00. Kindergarten and up join their families for worship.",
+      "Nursery and preschool care at 8:30, 9:45, and 11:00. Kindergarten through 5th grade join their families in worship, with their own class at 9:45.",
     color: IDENTITY.kids.hue,
     icon: "kids",
   },

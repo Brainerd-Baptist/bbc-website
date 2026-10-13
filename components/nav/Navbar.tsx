@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { getNavTreatment } from "@/lib/nav-treatment";
-import { CHURCH_CENTER_CALENDAR_URL } from "@/lib/constants";
+import { CHURCH_CENTER_CALENDAR_URL, SITE } from "@/lib/constants";
 import { getEasternState, type LiveState } from "@/lib/live-schedule";
 import { useSpecialLiveCheck } from "@/lib/use-special-live";
 
@@ -79,9 +79,9 @@ const NAV_GROUPS = [
       { label: "Our Beliefs", href: "/beliefs" },
       { label: "Our History", href: "/about#founded" },
       { label: "100 Years", href: "/about/timeline" },
-      { label: "Prayer Request", href: "/connect/care" },
+      { label: "Care & Prayer", href: "/connect/care" },
       { label: "Give", href: "/give" },
-      { label: "Connect With Us", href: "/connect" },
+      { label: "Contact Us", href: "/connect" },
     ],
   },
 ];
@@ -213,7 +213,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href="/visit"
-              className="hidden sm:inline-flex font-condensed font-700 tracking-wide uppercase text-sm px-5 py-2.5 rounded-full transition hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
+              className="inline-flex font-condensed font-700 tracking-wide uppercase text-xs sm:text-sm px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
             >
               Plan a Visit
             </Link>
@@ -289,6 +289,38 @@ export default function Navbar() {
 
         {/* Grouped links — scrollable */}
         <nav className="flex-1 overflow-y-auto px-7 py-6 space-y-7">
+          {/* Quick actions — the three things most people came for */}
+          <div className="space-y-2">
+            <Link
+              href="/visit"
+              onClick={() => setMenuOpen(false)}
+              className="w-full font-condensed font-700 tracking-wide uppercase text-sm py-3 rounded-full flex items-center justify-center transition-colors bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
+            >
+              Plan a Visit
+            </Link>
+            <div className="grid grid-cols-2 gap-2">
+              <Link
+                href="/give"
+                onClick={() => setMenuOpen(false)}
+                className="font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full flex items-center justify-center border border-border-strong text-fg hover:bg-hover-subtle transition-colors"
+              >
+                Give
+              </Link>
+              <Link
+                href="/connect"
+                onClick={() => setMenuOpen(false)}
+                className="font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full flex items-center justify-center border border-border-strong text-fg hover:bg-hover-subtle transition-colors"
+              >
+                Contact
+              </Link>
+            </div>
+            <p className="text-xs text-fg-muted text-center pt-1">
+              <a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="hover:text-fg">{SITE.phone}</a>
+              {" · "}
+              <a href={`mailto:${SITE.email}`} className="hover:text-fg">Email us</a>
+            </p>
+          </div>
+
           {NAV_GROUPS.map(({ label, links }) => (
             <div key={label}>
               {/* Group label */}

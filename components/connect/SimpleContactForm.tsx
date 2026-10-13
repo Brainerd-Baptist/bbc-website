@@ -24,6 +24,8 @@ interface Props {
   successBody?: string;
   /** Submit button label. */
   submitLabel?: string;
+  /** Optional "What do you need?" choices; sent as `category`. */
+  categoryOptions?: string[];
 }
 
 export default function SimpleContactForm({
@@ -36,11 +38,13 @@ export default function SimpleContactForm({
   successTitle = "You're all set!",
   successBody = "Thanks for reaching out. Your message went to our team by email and someone will reply.",
   submitLabel = "Send",
+  categoryOptions,
 }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [category, setCategory] = useState(categoryOptions?.[0] ?? "");
 
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -60,6 +64,7 @@ export default function SimpleContactForm({
           name,
           email,
           ...(showPhone ? { phone } : {}),
+          ...(categoryOptions ? { category } : {}),
           message,
           ...(extraFields || {}),
         }),
@@ -139,6 +144,22 @@ export default function SimpleContactForm({
             placeholder="(423) 555-0100"
             className={inputClass}
           />
+        </div>
+      )}
+
+      {categoryOptions && (
+        <div className="space-y-1.5">
+          <label htmlFor="contact-category" className="block text-sm font-medium text-fg">What do you need?</label>
+          <select
+            id="contact-category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className={inputClass}
+          >
+            {categoryOptions.map((o) => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
         </div>
       )}
 

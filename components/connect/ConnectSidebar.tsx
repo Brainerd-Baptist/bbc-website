@@ -23,6 +23,16 @@ export default function ConnectSidebar() {
         </a>
       </div>
 
+      {/* Phone and email */}
+      <div className="glass rounded-2xl p-6">
+        <p className="eyebrow mb-3">Call or Email</p>
+        <p className="text-fg-muted text-sm leading-relaxed mb-1">
+          <a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="text-fg font-semibold hover:text-accent-text">{SITE.phone}</a>
+          <span className="block text-xs">Church office</span>
+        </p>
+        <a href={`mailto:${SITE.email}`} className="text-sm text-accent-text hover:underline">{SITE.email}</a>
+      </div>
+
       {/* Social */}
       <div className="glass rounded-2xl p-6">
         <p className="eyebrow mb-4">Follow Along</p>

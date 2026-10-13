@@ -703,7 +703,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
         <div className="relative z-10 max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 border border-border-on-dark bg-surface-on-dark rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-fg-on-dark-muted mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-fg-on-dark-muted" />
-            Live Sundays 8:30 &amp; 11:00 AM ET
+            Next stream: Sunday 8:30 AM ET
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-fg-on-dark mb-4 leading-tight">
             Watch Brainerd<br className="hidden sm:block" /> Baptist Live
@@ -714,20 +714,20 @@ function OffHours({ sermon }: { sermon: SermonData }) {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="/visit"
-              className="btn-primary inline-flex items-center gap-2"
-            >
-              Plan a Visit
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
-            </a>
-            <a
               href={sermon.watchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors"
+              className="btn-primary inline-flex items-center gap-2"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
               Watch Latest Sermon
+            </a>
+            <a
+              href="/visit"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors"
+            >
+              Plan a Visit
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>
           </div>
         </div>
@@ -780,8 +780,8 @@ function OffHours({ sermon }: { sermon: SermonData }) {
           <p className="text-xs font-semibold tracking-widest uppercase text-fg-on-dark-muted mb-7 text-center">Sunday Services</p>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
-              { time: "8:30 AM", style: "Choir & Orchestra", note: "Traditional format" },
-              { time: "11:00 AM", style: "Band-Led Worship",  note: "Contemporary format" },
+              { time: "8:30 AM", style: "Choir & Orchestra", note: "Hymns, choir, and orchestra" },
+              { time: "11:00 AM", style: "Band-Led Worship",  note: "Led by a band" },
             ].map((svc) => (
               <div key={svc.time} className="rounded-xl border border-border-on-dark bg-surface-on-dark p-6">
                 <span className="text-2xl font-bold text-fg-on-dark block mb-1">{svc.time}</span>
@@ -791,7 +791,7 @@ function OffHours({ sermon }: { sermon: SermonData }) {
             ))}
           </div>
           <div className="mt-7 text-center">
-            <a href="/plan-your-visit" className="text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors inline-flex items-center gap-1.5">
+            <a href="/visit" className="text-sm font-semibold text-accent hover:text-fg-on-dark transition-colors inline-flex items-center gap-1.5">
               Get directions &amp; parking info
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 7h8M8 4l3 3-3 3"/></svg>
             </a>

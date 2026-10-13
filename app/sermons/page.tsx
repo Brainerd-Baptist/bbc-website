@@ -209,6 +209,7 @@ export default async function SermonsPage() {
 
       {/* ── Podcast CTA ───────────────────────────────────────────────── */}
       <section
+        id="listen-anywhere"
         className="py-16 px-6 border-t border-border-on-dark"
         style={{ background: "var(--brand-band)" }}
       >
