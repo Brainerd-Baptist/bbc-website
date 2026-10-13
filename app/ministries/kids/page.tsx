@@ -5,6 +5,7 @@ import KidsRegistrationForm from "@/components/kids/KidsRegistrationForm";
 
 import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
 import Card from "@/components/ui/Card";
+import { CHURCH_CENTER_CALENDAR_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Kids — Brainerd Baptist Church",
   description:
@@ -433,6 +434,42 @@ export default function KidsPage() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── Parents' Day Out ──────────────────────────────── */}
+      {/* Evergreen on purpose: no ages, days, hours, dates, or prices here.
+          Those change every year and live on the Church Center registration
+          page, which the button points to via the events page. */}
+      <section id="parents-day-out" className="py-24 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="eyebrow mb-3">During the week</p>
+          <h2 className="text-fg mb-5 h-subsection">Parents&apos; Day Out.</h2>
+          <p className="text-fg-muted leading-relaxed mb-4">
+            A caring, Christ-centered weekday program for young children, run
+            by our church through the school year. Registration happens once a
+            year, and dates, costs, and open classes change, so the current
+            details are always on our events page.
+          </p>
+          <p className="text-fg-muted leading-relaxed mb-8">
+            Questions? Ask Kristi Smith, our Parents&apos; Day Out coordinator,
+            at{" "}
+            <a
+              href="mailto:ksmith@brainerdbaptist.org"
+              className="text-accent-text underline underline-offset-2"
+            >
+              ksmith@brainerdbaptist.org
+            </a>
+            .
+          </p>
+          <a
+            href={CHURCH_CENTER_CALENDAR_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors inline-flex items-center gap-2 bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent"
+          >
+            See current dates and register
+          </a>
         </div>
       </section>
 
