@@ -21,7 +21,6 @@ const NAV_GROUPS = [
       // involved (asked about 2026-10-04).
       { label: "Who Is Jesus?", href: "/who-is-jesus" },
       { label: "Watch Live", href: "/live" },
-      { label: "Plan a Visit", href: "/visit" },
       { label: "Sermons", href: "/sermons" },
       // Resources (was its own row here) is tucked into the Sermons page
       // itself instead (asked 2026-10-05) — it's recommended-book/article
@@ -369,14 +368,7 @@ export default function Navbar() {
 
         {/* Drawer footer */}
         <div className="px-7 py-6 border-t border-border">
-          <Link
-            href="/visit"
-            onClick={() => setMenuOpen(false)}
-            className="w-full font-condensed font-700 tracking-wide uppercase text-sm py-3 rounded-full flex items-center justify-center transition-colors bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
-          >
-            Plan a Visit
-          </Link>
-          <p className="text-xs text-center mt-4 leading-relaxed text-fg-muted">
+          <p className="text-xs text-center leading-relaxed text-fg-muted">
             300 Brookfield Ave · Chattanooga, TN<br />
             Sundays · 8:30 AM &amp; 11:00 AM
           </p>
