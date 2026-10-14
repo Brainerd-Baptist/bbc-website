@@ -14,7 +14,10 @@ export function GET() {
   const html = readFileSync(join(dir, "public.html"), "utf8");
   const css = readFileSync(join(dir, "phone-text.css"), "utf8");
   const offline = `<script>window.BBC_MAP_OFFLINE=${JSON.stringify({ sw: "/map-sw.js", manifest: "/map.webmanifest", icon: "/map-icon-180.png", scope: "/map" })};</script>`;
-  const body = offline + html.replace("</style>", `</style><style id="bbc-phone-text">${css}</style>`);
+  // "Something wrong here? Tell us" posts anonymous reports to HQ (Campus Maps > Feedback). The map hides the button until it has this address.
+  const hq = (process.env.MAP_FEEDBACK_URL || "https://www.brainerdhq.app/api/campus-maps/feedback").trim();
+  const settings = `<script>window.BBC_MAP_ROOMS=${JSON.stringify({ rooms: [], settings: [{ key: "feedback_url", value: hq }] })};</script>`;
+  const body = offline + settings + html.replace("</style>", `</style><style id="bbc-phone-text">${css}</style>`);
   return new Response(body, {
     headers: {
       "content-type": "text/html; charset=utf-8",
