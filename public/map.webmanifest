@@ -1,0 +1,24 @@
+{
+  "name": "Brainerd Campus Map",
+  "short_name": "Campus Map",
+  "description": "Rooms, parking and walking directions for Brainerd Baptist Church and School.",
+  "start_url": "/map",
+  "scope": "/map",
+  "display": "standalone",
+  "background_color": "#0f161c",
+  "theme_color": "#00205B",
+  "icons": [
+    {
+      "src": "/map-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/map-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

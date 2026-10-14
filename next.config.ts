@@ -22,6 +22,20 @@ const nextConfig: NextConfig = {
   // Public campus map (app/map/route.ts) reads these files at runtime.
   outputFileTracingIncludes: { "/map": ["./lib/campus-map/**"] },
 
+  async headers() {
+    return [
+      {
+        // The map's offline worker lives at the site root but only controls /map.
+        source: "/map-sw.js",
+        headers: [
+          { key: "Service-Worker-Allowed", value: "/map" },
+          { key: "Cache-Control", value: "no-cache" },
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+        ],
+      },
+    ];
+  },
+
   env: {
     BUILD_TIME,
     BUILD_SHA,
