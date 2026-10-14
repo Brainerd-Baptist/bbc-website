@@ -109,7 +109,7 @@ function getHeroContent(): HeroContent {
     return {
       eyebrow: "Sundays in Chattanooga",
       headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
-      sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
+      sub: "",
       primaryLabel: "Plan Your Visit",
       primaryHref: "/visit",
       secondaryLabel: "Learn More about Brainerd",
@@ -121,7 +121,7 @@ function getHeroContent(): HeroContent {
   return {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
-    sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
+    sub: "",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
@@ -187,7 +187,7 @@ export default function Hero() {
   const c = content ?? {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to <span className="text-accent">Brainerd.</span></>,
-    sub: "“Our big prayer is that more and more people would experience and enjoy all the grace that God has for them in Jesus Christ.”",
+    sub: "",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
@@ -278,6 +278,7 @@ export default function Hero() {
           </h1>
 
           {/* Supporting text */}
+          {c.sub && (
           <p
             className="text-white/70 leading-relaxed mb-8 max-w-lg transition duration-700"
             style={{
@@ -290,6 +291,7 @@ export default function Hero() {
           >
             {c.sub}
           </p>
+          )}
 
           {/* Service times — show on non-Sunday-morning */}
           {!isSundayMorning && (

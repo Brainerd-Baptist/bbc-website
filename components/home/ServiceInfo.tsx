@@ -23,7 +23,7 @@ export default function ServiceInfo() {
                 </Card>
               </div>
               <p className="text-fg-subtle text-sm mt-4 italic" style={{ fontFamily: "Georgia, serif" }}>
-                Both services center on the voices and singing of the congregation.
+                Both services center on the gathering of believers, raising our voices and singing to our King, and the teaching of God's Word.
               </p>
               <p className="text-fg-muted text-sm mt-1">
                 Life Groups (small-group Bible study for all ages) meet at <strong>9:45 AM</strong> between services.

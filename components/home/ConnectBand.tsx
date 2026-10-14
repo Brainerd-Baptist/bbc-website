@@ -81,17 +81,17 @@ export default function ConnectBand() {
               {[
                 {
                   label: "I'm New",
-                  desc: "Plan your first visit — we'll make sure you feel at home.",
+                  desc: "Plan your first visit — get the information you need for your first visit.",
                   href: "/visit",
                 },
                 {
-                  label: "Life Groups",
-                  desc: "Find a small group where you can belong and grow.",
-                  href: "/life-groups",
+                  label: "Adults",
+                  desc: "Wherever you are in life, there's a place for you.",
+                  href: "/ministries#adults",
                 },
                 {
                   label: "Serve",
-                  desc: "Use your gifts to make a difference in Chattanooga and beyond.",
+                  desc: "Use your gifts to make a difference at Brainerd, in Chattanooga and beyond.",
                   href: "/connect/next-step?interest=serving",
                 },
                 {
