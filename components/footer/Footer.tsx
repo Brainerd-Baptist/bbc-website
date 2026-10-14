@@ -118,7 +118,7 @@ export default function Footer() {
               Visit
             </p>
             <p className="font-condensed font-700 text-white text-base mb-0.5">300 Brookfield Ave</p>
-            <p className="text-fg-on-dark-muted text-sm mb-3">Chattanooga, TN 37411</p>
+            <p className="text-fg-on-dark-muted text-sm mb-3">Chattanooga, TN 37411 · <a href="/map" className="text-white/80 hover:text-white">Campus map</a></p>
             <p className="text-sm mb-1"><a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="text-white/80 hover:text-white">{SITE.phone}</a></p>
             <p className="text-sm mb-4"><a href={`mailto:${SITE.email}`} className="text-white/80 hover:text-white">{SITE.email}</a></p>
 

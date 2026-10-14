@@ -121,7 +121,8 @@ export default async function LifeGroupsPage() {
             Where on Campus, 9:45 AM?
           </h2>
           <p className="text-fg-muted text-sm mb-8 leading-relaxed">
-            First time at 9:45? Here&apos;s where each age group meets between services.
+            First time at 9:45? Here&apos;s where each age group meets between services.{" "}
+            <a href="/map" className="text-accent-text underline underline-offset-2">Open the campus map</a> to find your room.
           </p>
           <div className="grid sm:grid-cols-2 gap-5">
             <div className="glass rounded-2xl p-7">

@@ -73,18 +73,19 @@ export default function VisitExperience() {
               <dt className="text-fg font-semibold">Where</dt>
               <dd className="text-fg-muted">
                 300 Brookfield Ave, Chattanooga<br />
-                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className="text-accent-text underline underline-offset-2">Open in Maps</a>
+                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className="text-accent-text underline underline-offset-2">Open in Maps</a><br />
+                <a href="/map" className="text-accent-text underline underline-offset-2">See the campus map</a>
               </dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Kids</dt>
-              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave. Arrive 10–15 minutes early.</dd>
+              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave. Arrive 10–15 minutes early.<br /><a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">Show me the way</a></dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Parking</dt>
               <dd className="text-fg-muted">
                 Free. Red lot is across from the front entrance.<br />
-                <a href="#sunday-walkthrough" className="text-accent-text underline underline-offset-2">See the step-by-step</a>
+                <a href="#sunday-walkthrough" className="text-accent-text underline underline-offset-2">See the step-by-step</a> · <a href="/map" className="text-accent-text underline underline-offset-2">Campus map</a>
               </dd>
             </div>
           </dl>
