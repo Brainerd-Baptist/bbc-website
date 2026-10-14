@@ -99,15 +99,12 @@ export default function ConnectBand() {
                   desc: "Support the work of Brainerd Baptist.",
                   href: "/give",
                 },
-              ].map((item, i) => (
+              ].map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
                   className="group flex items-center gap-5 glass-on-dark rounded-xl px-6 py-5 border-l-2 border-l-transparent hover:border-l-accent transition-colors"
                 >
-                  <span className="font-condensed font-700 text-accent/70 text-sm tracking-widest w-6 shrink-0" aria-hidden="true">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                   <div className="flex-1 min-w-0">
                     <p className="font-condensed font-900 text-white text-2xl leading-tight">{item.label}</p>
                     <p className="text-fg-on-dark-muted text-sm leading-snug mt-1">{item.desc}</p>
