@@ -1,9 +1,3 @@
-/* Phone touch targets and small text for the public campus map. Injected by
-   app/map/route.ts so a new map build can be dropped in without losing these. */
-@media (max-width: 859px) {
-  .chip { height: 40px; font-size: 14px; }
-  .seg button, .bldgs button, .floors button { min-height: 44px; }
-  .item .tx span, .lgrow .tx span, .parkbtn span span, .parkcard > div > span, .step .t span,
-  .lotrow .tx span, .evrow span, .doorcard span:last-child, .sharedbar span, .note { font-size: 13.5px; }
-  .item .dist, .item .fl, .gcount, .gfloor, .tag, .fbl, h3 { font-size: 12.5px; }
-}
+/* Phone overrides for the public campus map, injected by app/map/route.ts.
+   Intentionally empty: with the viewport tag the map's own sizes are correct.
+   An earlier round of larger chips and text made the phone layout too big. */
