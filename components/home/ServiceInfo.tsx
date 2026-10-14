@@ -1,4 +1,3 @@
-import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
 import Card from "@/components/ui/Card";
@@ -40,16 +39,18 @@ export default function ServiceInfo() {
 
                   <div className="border-t border-border-on-dark pt-4 mt-4">
                     <p className="text-fg-on-dark-muted text-xs uppercase tracking-widest mb-1">Ministerio Hispano</p>
-                    <p className="text-fg-on-dark-body text-sm">1203 Blocker Lane</p>
-                    <p className="text-fg-on-dark-muted text-sm">Domingos · 1:00 PM</p>
+                    <p className="text-fg-on-dark-body text-sm">1203 Blocker Lane, East Ridge</p>
+                    <p className="text-fg-on-dark-muted text-sm">Domingos · 11:00 AM</p>
                   </div>
                 </div>
-                <Link
-                  href="/visit"
+                <a
+                  href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-accent-solid hover:bg-accent-solid-hover text-white py-3 rounded-full transition"
                 >
-                  Plan Your Visit
-                </Link>
+                  Get Directions
+                </a>
               </div>
             </div>
 

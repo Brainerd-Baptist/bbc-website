@@ -109,7 +109,7 @@ function getHeroContent(): HeroContent {
     return {
       eyebrow: "Sundays in Chattanooga",
       headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
-      sub: "",
+      sub: "Join us for worship on Sunday mornings.",
       primaryLabel: "Plan Your Visit",
       primaryHref: "/visit",
       secondaryLabel: "Learn More about Brainerd",
@@ -121,7 +121,7 @@ function getHeroContent(): HeroContent {
   return {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
-    sub: "",
+    sub: "Join us for worship on Sunday mornings.",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
@@ -187,7 +187,7 @@ export default function Hero() {
   const c = content ?? {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to <span className="text-accent">Brainerd.</span></>,
-    sub: "",
+    sub: "Join us for worship on Sunday mornings.",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
@@ -293,24 +293,6 @@ export default function Hero() {
           </p>
           )}
 
-          {/* Service times — show on non-Sunday-morning */}
-          {!isSundayMorning && (
-            <div className="flex flex-wrap gap-4 mb-8">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-accent" />
-                <span className="text-white/80 text-sm">8:30 AM</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-accent" />
-                <span className="text-white/80 text-sm">9:45 AM Life Groups</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-accent" />
-                <span className="text-white/80 text-sm">11:00 AM</span>
-              </div>
-            </div>
-          )}
-
           {/* Countdown */}
           {c.showCountdown && (
             <>
@@ -338,10 +320,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          {/* Address */}
-          <p className="text-fg-on-dark-muted text-xs mt-8 mb-16 tracking-wide">
-            300 Brookfield Ave · Chattanooga, TN 37411
-          </p>
+          <div className="mb-16" />
         </div>
       </div>
 

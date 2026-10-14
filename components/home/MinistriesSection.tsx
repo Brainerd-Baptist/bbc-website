@@ -144,8 +144,7 @@ export default function MinistriesSection() {
 
         {/* ── Congregation strip ── */}
         <ScrollReveal>
-          <Link
-            href="/visit"
+          <div
             className="group block relative overflow-hidden rounded-2xl mb-4"
             style={{ minHeight: "280px" }}
           >
@@ -154,7 +153,7 @@ export default function MinistriesSection() {
               alt="Brainerd Baptist congregation in worship"
               fill
               sizes="(max-width: 1280px) 100vw, 1200px"
-              className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+              className="object-cover object-center"
               priority
             />
             {/* Subtle vignette — let the photo breathe. Literal for the same
@@ -167,11 +166,6 @@ export default function MinistriesSection() {
                   "var(--scrim-card-soft)",
               }}
             />
-            {/* Hover ring */}
-            <div
-              className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-              style={{ boxShadow: "inset 0 0 0 1.5px var(--accent-border)" }}
-            />
             {/* Caption */}
             <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
               <div>
@@ -179,14 +173,8 @@ export default function MinistriesSection() {
                   The gathering of saints each Sunday. No matter your stage of life, we gather together to worship.
                 </p>
               </div>
-              <div className="flex items-center gap-1.5 text-accent text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">
-                Plan a visit
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M2.5 6h7M6.5 3l3 3-3 3" />
-                </svg>
-              </div>
             </div>
-          </Link>
+          </div>
         </ScrollReveal>
 
         {/* ── Row 1: youngest → teen ── */}
