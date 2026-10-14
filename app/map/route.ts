@@ -13,7 +13,8 @@ const dir = join(process.cwd(), "lib", "campus-map");
 export function GET() {
   const html = readFileSync(join(dir, "public.html"), "utf8");
   const css = readFileSync(join(dir, "phone-text.css"), "utf8");
-  const body = html.replace("</style>", `</style><style id="bbc-phone-text">${css}</style>`);
+  const offline = `<script>window.BBC_MAP_OFFLINE=${JSON.stringify({ sw: "/map-sw.js", manifest: "/map.webmanifest", icon: "/map-icon-180.png", scope: "/map" })};</script>`;
+  const body = offline + html.replace("</style>", `</style><style id="bbc-phone-text">${css}</style>`);
   return new Response(body, {
     headers: {
       "content-type": "text/html; charset=utf-8",
