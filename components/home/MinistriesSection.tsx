@@ -15,8 +15,8 @@ const ROW_ONE = [
   },
   {
     key: "kids",
-    label: "Brainerd Kids",
-    sub: "Bible classes for elementary students",
+    label: "Elementary",
+    sub: "Kindergarten – 5th Grade · Sundays and Midweek",
     href: "/ministries/kids",
     photo: "/ministries/kids.jpg",
   },
@@ -183,7 +183,7 @@ export default function MinistriesSection() {
             <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
               <div>
                 <p className="text-fg-on-dark-body text-sm">
-                  From nursery to seniors, all in the same building on Sunday morning.
+                  The gathering of saints each Sunday. No matter your stage of life, we gather together to worship.
                 </p>
               </div>
               <div className="flex items-center gap-1.5 text-accent text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 shrink-0 ml-6">

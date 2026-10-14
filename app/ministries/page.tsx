@@ -202,7 +202,7 @@ export default function MinistriesPage() {
       <section className="py-20 px-6">
         <div className="relative max-w-5xl mx-auto space-y-6">
           {MINISTRIES.map(({ key, name, ages, color, ink, photo, href, body, detail, extraLink }) => (
-            <div key={key} className="glass-md rounded-2xl overflow-hidden">
+            <div key={key} id={key} className="glass-md rounded-2xl overflow-hidden scroll-mt-24">
 
               {/* Color bar */}
               <div className="h-1" style={{ background: color }} />
