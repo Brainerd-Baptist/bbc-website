@@ -38,18 +38,11 @@ const ROW_TWO = [
     photo: "/ministries/college.jpg",
   },
   {
-    key: "lifegroups",
-    label: "Life Groups",
-    sub: "How most people actually get connected here",
-    href: "/life-groups",
+    key: "adults",
+    label: "Adults",
+    sub: "Wherever you are in life, there's a place for you",
+    href: "/ministries#adults",
     photo: "/ministries/life-groups.jpg",
-  },
-  {
-    key: "missions",
-    label: "Missions",
-    sub: "Local outreach and international partnerships",
-    href: "/missions",
-    photo: "/ministries/missions.jpg",
   },
 ];
 
@@ -203,8 +196,8 @@ export default function MinistriesSection() {
           ))}
         </div>
 
-        {/* ── Row 2: college → missions ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* ── Row 2: college → adults ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {ROW_TWO.map((card, i) => (
             <PhotoCard key={card.key} card={card} delay={260 + i * 60} />
           ))}
