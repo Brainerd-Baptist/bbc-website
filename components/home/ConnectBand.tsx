@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
 import AMarkLight from "./AMarkLight";
 import { LEAD_PASTOR } from "@/lib/constants";
@@ -50,12 +51,14 @@ export default function ConnectBand() {
               </blockquote>
 
               <div className="flex items-center gap-4">
-                {/* Pastor avatar placeholder — replace with <Image> when photo is ready */}
-                <div className="w-12 h-12 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" strokeWidth="1.5" style={{ stroke: "var(--accent)" }}>
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
+                <div className="relative w-16 h-16 rounded-full overflow-hidden border border-white/25 shrink-0">
+                  <Image
+                    src="/staff/hill_curtis_leadpastor.jpg"
+                    alt={LEAD_PASTOR.name}
+                    fill
+                    sizes="64px"
+                    className="object-cover object-top"
+                  />
                 </div>
                 <div>
                   <p className="font-condensed font-700 text-white text-base">{LEAD_PASTOR.name}</p>
@@ -80,61 +83,33 @@ export default function ConnectBand() {
                   label: "I'm New",
                   desc: "Plan your first visit — we'll make sure you feel at home.",
                   href: "/visit",
-                  icon: (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                      <polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                  ),
                 },
                 {
                   label: "Life Groups",
                   desc: "Find a small group where you can belong and grow.",
                   href: "/life-groups",
-                  icon: (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                      <circle cx="9" cy="7" r="4"/>
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                  ),
                 },
                 {
                   label: "Serve",
                   desc: "Use your gifts to make a difference in Chattanooga and beyond.",
                   href: "/connect/next-step?interest=serving",
-                  icon: (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                  ),
                 },
                 {
                   label: "Give",
                   desc: "Support the work of Brainerd Baptist.",
                   href: "/give",
-                  icon: (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                      <line x1="1" y1="10" x2="23" y2="10"/>
-                    </svg>
-                  ),
                 },
               ].map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="group flex items-center gap-4 glass-on-dark rounded-xl px-5 py-4"
+                  className="group flex items-center gap-5 glass-on-dark rounded-xl px-6 py-5 border-l-2 border-l-transparent hover:border-l-accent transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-accent/15 flex items-center justify-center text-accent shrink-0 group-hover:bg-accent-solid group-hover:text-white transition">
-                    {item.icon}
-                  </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-condensed font-700 text-white text-base">{item.label}</p>
-                    <p className="text-fg-on-dark-muted text-sm leading-snug">{item.desc}</p>
+                    <p className="font-condensed font-900 text-white text-2xl leading-tight">{item.label}</p>
+                    <p className="text-fg-on-dark-muted text-sm leading-snug mt-1">{item.desc}</p>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" className="text-fg-on-dark-muted group-hover:text-accent transition-colors shrink-0">
+                  <svg width="18" height="18" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-fg-on-dark-muted group-hover:text-accent group-hover:translate-x-1 transition shrink-0" aria-hidden="true">
                     <path d="M3 7h8M8 4l3 3-3 3"/>
                   </svg>
                 </Link>
