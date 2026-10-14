@@ -19,20 +19,8 @@ const BUILD_TIME = new Date().toISOString();
 const BUILD_SHA = process.env.VERCEL_GIT_COMMIT_SHA ?? "";
 
 const nextConfig: NextConfig = {
-  // Public campus map: a self-contained page served from /public. The query and
-  // hash deep links (?to=, ?at=, #to.) pass through untouched.
-  async rewrites() {
-    return [{ source: "/map", destination: "/campus-map.html" }];
-  },
-  async headers() {
-    return [
-      {
-        // Unlisted during the staff beta. Remove when the map is linked publicly.
-        source: "/campus-map.html",
-        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
-      },
-    ];
-  },
+  // Public campus map (app/map/route.ts) reads these files at runtime.
+  outputFileTracingIncludes: { "/map": ["./lib/campus-map/**"] },
 
   env: {
     BUILD_TIME,
