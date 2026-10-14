@@ -13,8 +13,7 @@ const dir = join(process.cwd(), "lib", "campus-map");
 export function GET() {
   const html = readFileSync(join(dir, "public.html"), "utf8");
   const css = readFileSync(join(dir, "phone-text.css"), "utf8");
-  const viewport = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">';
-  const body = viewport + html.replace("</style>", `</style><style id="bbc-phone-text">${css}</style>`);
+  const body = html.replace("</style>", `</style><style id="bbc-phone-text">${css}</style>`);
   return new Response(body, {
     headers: {
       "content-type": "text/html; charset=utf-8",
