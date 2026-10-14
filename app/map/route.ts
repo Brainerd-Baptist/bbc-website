@@ -18,8 +18,6 @@ export function GET() {
   return new Response(body, {
     headers: {
       "content-type": "text/html; charset=utf-8",
-      // Unlisted during the staff beta. Remove when the map is linked publicly.
-      "x-robots-tag": "noindex, nofollow",
       "cache-control": "public, max-age=0, s-maxage=300, stale-while-revalidate=3600",
     },
   });
