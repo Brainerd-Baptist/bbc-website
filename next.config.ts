@@ -19,6 +19,9 @@ const BUILD_TIME = new Date().toISOString();
 const BUILD_SHA = process.env.VERCEL_GIT_COMMIT_SHA ?? "";
 
 const nextConfig: NextConfig = {
+  // Public campus map (app/map/route.ts) reads these files at runtime.
+  outputFileTracingIncludes: { "/map": ["./lib/campus-map/**"] },
+
   env: {
     BUILD_TIME,
     BUILD_SHA,

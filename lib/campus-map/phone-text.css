@@ -1,0 +1,3 @@
+/* Phone overrides for the public campus map, injected by app/map/route.ts.
+   Intentionally empty: with the viewport tag the map's own sizes are correct.
+   An earlier round of larger chips and text made the phone layout too big. */

@@ -324,6 +324,14 @@ export default function KidsPage() {
                     </h3>
                     <p className="text-fg-muted text-sm leading-relaxed">
                       {body}
+                      {num === "01" && (
+                        <>
+                          {" "}
+                          <a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">
+                            See it on the campus map.
+                          </a>
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
