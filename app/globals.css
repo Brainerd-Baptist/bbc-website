@@ -1117,3 +1117,18 @@ body:has(.home-clean) .bx-backdrop {
   font-family: var(--font-barlow), sans-serif;
   letter-spacing: 0.02em;
 }
+
+/* PREVIEW: serif display type on the home page. Headlines, card titles, times = serif;
+   body, buttons, labels stay Barlow. */
+.home-clean .h-display, .home-clean .h-hero, .home-clean .h-subsection, .home-clean .h-section,
+.home-clean h1, .home-clean h2, .home-clean h3, .home-clean .h-item,
+.home-clean .font-condensed:not(.btn-primary):not(.btn-outline-white):not(.btn-outline-navy) {
+  font-family: var(--font-display, var(--font-source-serif)), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+.home-clean .h-display, .home-clean .h-hero, .home-clean .h-subsection, .home-clean .h-section, .home-clean h1, .home-clean h2 {
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}

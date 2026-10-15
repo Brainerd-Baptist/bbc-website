@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Barlow, Barlow_Condensed, Source_Serif_4 } from "next/font/google";
+import { Inter, Barlow, Barlow_Condensed, Source_Serif_4, Fraunces } from "next/font/google";
 import "./globals.css";
 import { AudioProvider } from "@/lib/audio-context";
 import { VideoProvider } from "@/lib/video-context";
@@ -25,6 +25,13 @@ const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-barlow-condensed",
+  display: "swap",
+});
+
+const display = Fraunces({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -80,7 +87,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} ${sourceSerif.variable} antialiased`}>
+      <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} ${sourceSerif.variable} ${display.variable} antialiased`}>
         <ThemeProvider>
           <AudioProvider>
             <VideoProvider>
