@@ -12,7 +12,6 @@ const PHOTOS = [
   { src: "/carousel/men-devotional.jpg",        w: 1400, h:  931, alt: "A man leading a devotional at a Brainerd Baptist men's ministry gathering" },
   { src: "/carousel/kids-classroom-strip.jpg",  w: 1400, h:  931, alt: "Kids engaged in a Sunday classroom at Brainerd Baptist" },
   { src: "/carousel/women-intergen.jpg",        w: 1400, h:  931, alt: "Women of different generations sharing a laugh at a Brainerd Baptist women's ministry event" },
-  { src: "/carousel/preaching-strip-2.jpg",     w: 1400, h:  931, alt: "Preaching from God's Word at Brainerd Baptist" },
   { src: "/carousel/men-football-catch.jpg",    w: 1400, h:  931, alt: "A man catching a football at a Brainerd Baptist men's ministry event" },
   { src: "/carousel/band-worship-strip.jpg",     w: 1400, h:  931, alt: "The worship band leading the 11:00 AM service at Brainerd Baptist" },
   { src: "/carousel/women-prayer.jpg",          w: 1400, h:  931, alt: "Women praying together at a Brainerd Baptist women's ministry event" },
