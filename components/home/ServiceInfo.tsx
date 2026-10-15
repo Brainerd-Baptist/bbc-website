@@ -21,7 +21,7 @@ export default function ServiceInfo() {
                   <div className="font-semibold text-fg">Band-Led</div>
                 </Card>
               </div>
-              <p className="text-fg-subtle text-sm mt-4 italic" style={{ fontFamily: "Georgia, serif" }}>
+              <p className="text-fg-subtle text-sm mt-4 italic" style={{ fontFamily: "var(--font-source-serif), Georgia, serif" }}>
                 Both services center on the gathering of believers, raising our voices and singing to our King, and the teaching of God's Word.
               </p>
               <p className="text-fg-muted text-sm mt-1">

@@ -1100,3 +1100,20 @@ body:has(.home-clean) .bx-backdrop {
 .home-clean .rounded-2xl { border-radius: 12px; }
 .home-clean .rounded-xl  { border-radius: 8px; }
 .home-clean .rounded-lg  { border-radius: 6px; }
+
+/* PREVIEW: type tune on the home page. Condensed only for headlines; everything
+   else Barlow semibold, sentence case; Inter labels move to Barlow. */
+.home-clean .font-condensed:not(.h-display):not(.h-hero):not(.h-subsection):not(.h-section):not(h1):not(h2),
+.home-clean .h-item {
+  font-family: var(--font-barlow), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.home-clean .eyebrow, .home-clean .eyebrow-white, .home-clean .eyebrow-muted, .home-clean .label-micro {
+  font-family: var(--font-barlow), sans-serif;
+}
+.home-clean .btn-primary, .home-clean .btn-outline-white, .home-clean .btn-outline-navy {
+  font-family: var(--font-barlow), sans-serif;
+  letter-spacing: 0.02em;
+}

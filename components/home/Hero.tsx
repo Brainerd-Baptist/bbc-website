@@ -282,7 +282,7 @@ export default function Hero() {
           <p
             className="text-white/70 leading-relaxed mb-8 max-w-lg transition duration-700"
             style={{
-              fontFamily: isSundayMorning ? "var(--font-barlow), sans-serif" : "Georgia, serif",
+              fontFamily: isSundayMorning ? "var(--font-barlow), sans-serif" : "var(--font-source-serif), Georgia, serif",
               fontSize: "1.1rem",
               fontStyle: isSundayMorning ? "normal" : "italic",
               opacity: content ? 1 : 0,

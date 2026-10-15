@@ -18,7 +18,7 @@ export default function ConnectBand() {
               <blockquote
                 className="text-fg leading-relaxed mb-8"
                 style={{
-                  fontFamily: "Georgia, serif",
+                  fontFamily: "var(--font-source-serif), Georgia, serif",
                   fontStyle: "italic",
                   fontSize: "clamp(1.15rem, 2.2vw, 1.4rem)",
                   lineHeight: 1.65,
