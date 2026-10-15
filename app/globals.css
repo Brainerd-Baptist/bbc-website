@@ -1052,3 +1052,32 @@ select:focus {
 }
 .skip-link:focus { transform: translateY(0); }
 #main-content:focus { outline: none; }
+
+/* ── Clean & bright home (preview, 2026-10-15) ─────────────────────────────
+   Scoped to the home page wrapper. White page, light-gray panels, plain flat
+   cards, one accent. Dark mode keeps its own tokens. Deleting this block and
+   the .home-clean class on app/page.tsx removes the scope. */
+:root:not(.dark) .home-clean {
+  --surface: #ffffff;
+  --surface-sunken: #f3f4f6;
+  --surface-raised: #ffffff;
+  background: var(--surface);
+}
+.home-clean .glass,
+.home-clean .glass-md,
+.home-clean .glass-frost {
+  background: var(--surface-sunken);
+  backdrop-filter: none;
+  border: 0;
+  box-shadow: none;
+}
+.home-clean .eyebrow,
+.home-clean .eyebrow-white {
+  color: var(--fg-muted);
+}
+.home-clean .text-accent-text {
+  color: var(--fg);
+}
+body:has(.home-clean) .bx-backdrop {
+  display: none;
+}

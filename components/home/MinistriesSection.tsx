@@ -49,7 +49,6 @@ const ROW_TWO = [
 function PhotoCard({
   card,
   delay,
-  tall = false,
 }: {
   card: (typeof ROW_ONE)[0];
   delay: number;
@@ -57,57 +56,21 @@ function PhotoCard({
 }) {
   return (
     <ScrollReveal delay={delay}>
-      <Link
-        href={card.href}
-        className="group block relative overflow-hidden rounded-2xl"
-        style={{ minHeight: tall ? "300px" : "240px" }}
-      >
-        <Image
-          src={card.photo}
-          alt={card.label}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 33vw, 400px"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        {/* Gradient overlay. --scrim-card is the named ramp for text sitting
-            at the bottom of a photo card: dark end at the bottom, clear at the
-            top, so the label reads and the photograph stays at full fidelity. */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "var(--scrim-card)",
-          }}
-        />
-        {/* Hover ring */}
-        <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ boxShadow: "inset 0 0 0 1.5px var(--accent-border)" }}
-        />
-        {/* Label */}
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          <p
-            className="font-condensed font-900 text-fg-on-dark mb-0.5 leading-tight"
-            style={{ fontSize: "1.35rem", letterSpacing: "-0.02em" }}
-          >
+      <Link href={card.href} className="group block overflow-hidden rounded-xl bg-surface-sunken">
+        <div className="relative overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
+          <Image
+            src={card.photo}
+            alt={card.label}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 33vw, 400px"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+        </div>
+        <div className="px-5 py-4">
+          <p className="font-condensed font-900 text-fg leading-tight" style={{ fontSize: "1.25rem" }}>
             {card.label}
           </p>
-          <p className="text-fg-on-dark-muted text-sm font-medium tracking-wide mb-3">
-            {card.sub}
-          </p>
-          <div className="flex items-center gap-1.5 text-accent text-xs font-semibold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            Learn more
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="transition-transform duration-200 group-hover:translate-x-0.5"
-            >
-              <path d="M2.5 6h7M6.5 3l3 3-3 3" />
-            </svg>
-          </div>
+          <p className="text-fg-muted text-sm mt-0.5">{card.sub}</p>
         </div>
       </Link>
     </ScrollReveal>
@@ -118,24 +81,19 @@ export default function MinistriesSection() {
   return (
     <section
       className="py-24 px-6"
-      /* A branded navy band, not a page surface: navy in both themes, so every
-         foreground inside it comes from the on-dark family. */
-      style={{ background: "var(--brand-ink)" }}
+      style={{ background: "var(--surface)" }}
     >
       <div className="max-w-7xl mx-auto">
 
         {/* ── Header ── */}
         <ScrollReveal>
           <div className="flex items-center justify-between mb-12">
-            <p
-              className="font-condensed font-700 tracking-widest uppercase text-xs"
-              style={{ color: "var(--accent)" }}
-            >
+            <h2 className="font-condensed font-900 text-fg uppercase" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", letterSpacing: "-0.01em" }}>
               Ministries
-            </p>
+            </h2>
             <Link
               href="/ministries"
-              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-border-on-dark-strong text-fg-on-dark-body hover:border-accent/60 hover:text-accent transition shrink-0"
+              className="font-condensed font-700 tracking-wide uppercase text-xs px-5 py-2.5 rounded-full border border-border-strong text-fg hover:bg-surface-sunken transition shrink-0"
             >
               All Ministries →
             </Link>
@@ -144,36 +102,20 @@ export default function MinistriesSection() {
 
         {/* ── Congregation strip ── */}
         <ScrollReveal>
-          <div
-            className="group block relative overflow-hidden rounded-2xl mb-4"
-            style={{ minHeight: "280px" }}
-          >
-            <Image
-              src="/carousel/congregation-standing.jpg"
-              alt="Brainerd Baptist congregation in worship"
-              fill
-              sizes="(max-width: 1280px) 100vw, 1200px"
-              className="object-cover object-center"
-              priority
-            />
-            {/* Subtle vignette — let the photo breathe. Literal for the same
-                reason as the card scrim above: a multi-stop alpha ramp has no
-                token. */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "var(--scrim-card-soft)",
-              }}
-            />
-            {/* Caption */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
-              <div>
-                <p className="text-fg-on-dark-body text-sm">
-                  The gathering of saints each Sunday. No matter your stage of life, we gather together to worship.
-                </p>
-              </div>
+          <div className="overflow-hidden rounded-xl mb-4 bg-surface-sunken">
+            <div className="relative" style={{ minHeight: "320px" }}>
+              <Image
+                src="/carousel/congregation-standing.jpg"
+                alt="Brainerd Baptist congregation in worship"
+                fill
+                sizes="(max-width: 1280px) 100vw, 1200px"
+                className="object-cover object-center"
+                priority
+              />
             </div>
+            <p className="px-5 py-4 text-fg-muted text-sm">
+              The gathering of saints each Sunday. No matter your stage of life, we gather together to worship.
+            </p>
           </div>
         </ScrollReveal>
 

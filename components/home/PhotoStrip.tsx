@@ -48,7 +48,7 @@ export default function PhotoStrip() {
   return (
     <section
       className="overflow-hidden py-14"
-      style={{ background: "var(--brand-ink)" }}
+      style={{ background: "var(--surface)" }}
       aria-label="Ministry and congregation photo gallery"
     >
       {/* Left/right edge fades */}
@@ -56,12 +56,12 @@ export default function PhotoStrip() {
         <div
           aria-hidden="true"
           className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16"
-          style={{ background: "linear-gradient(to right, var(--brand-ink), transparent)" }}
+          style={{ background: "linear-gradient(to right, var(--surface), transparent)" }}
         />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16"
-          style={{ background: "linear-gradient(to left, var(--brand-ink), transparent)" }}
+          style={{ background: "linear-gradient(to left, var(--surface), transparent)" }}
         />
 
         {/* Scrolling track — two copies for seamless loop */}
