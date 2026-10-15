@@ -113,58 +113,6 @@ const MINISTRIES = [
   },
 ];
 
-// ── Icons ─────────────────────────────────────────────────────
-const ICONS: Record<string, React.ReactNode> = {
-  kids: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 34s-14-8.5-14-18a8 8 0 0 1 14-5.3A8 8 0 0 1 34 16c0 9.5-14 18-14 18z" />
-    </svg>
-  ),
-  students: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 20l16-8 16 8-16 8z" /><path d="M12 24v7c4 3.5 12 3.5 16 0v-7" /><path d="M36 20v7" />
-    </svg>
-  ),
-  lifegroups: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="14" cy="14" r="5" /><circle cx="28" cy="14" r="5" /><path d="M4 34c0-6 4.5-10 10-10h12c5.5 0 10 4 10 10" />
-    </svg>
-  ),
-  missions: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="20" cy="20" r="16" /><line x1="4" y1="20" x2="36" y2="20" />
-      <path d="M20 4a24 24 0 0 1 6 16 24 24 0 0 1-6 16 24 24 0 0 1-6-16 24 24 0 0 1 6-16z" />
-    </svg>
-  ),
-  college: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 32V16l12-6 12 6v16" /><path d="M4 20l16-8 16 8" /><path d="M14 22v8M26 22v8M8 32h24" />
-    </svg>
-  ),
-  youngadults: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="8" y="14" width="24" height="18" rx="2" /><path d="M15 14v-3a5 5 0 0 1 10 0v3" /><path d="M8 22h24" />
-    </svg>
-  ),
-  worship: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 29V9l16-3v20" /><circle cx="11" cy="29" r="4" /><circle cx="27" cy="26" r="4" />
-    </svg>
-  ),
-  hispanic: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 9h20a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H16l-6 5v-5H6a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" /><path d="M32 16h2a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v4l-5-4h-7" />
-    </svg>
-  ),
-  adults: (
-    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 32V10a2 2 0 0 1 2-2h10v24H10a2 2 0 0 1-2-2Z" />
-      <path d="M20 8h10a2 2 0 0 1 2 2v22a2 2 0 0 1-2 2H20V8Z" />
-      <path d="M12 15h4M12 19h4M24 15h4M24 19h4" />
-    </svg>
-  ),
-};
-
 export default function MinistriesPage() {
   return (
     <div className="min-h-screen">
@@ -218,15 +166,7 @@ export default function MinistriesPage() {
                 />
               )}
 
-              <div className="p-8 md:p-10 grid md:grid-cols-[auto_1fr_auto] gap-6 md:gap-10 items-start">
-
-                {/* Icon */}
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 identity-ink"
-                  style={{ ...inkVars(ink), background: `color-mix(in srgb, ${color} 9%, transparent)` }}
-                >
-                  {ICONS[key]}
-                </div>
+              <div className="p-8 md:p-10 grid md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-start">
 
                 {/* Content */}
                 <div>
