@@ -1094,3 +1094,9 @@ select:focus {
 body:has(.home-clean) .bx-backdrop {
   display: none;
 }
+
+/* PREVIEW: tighter radii on the home page only. Pills (buttons) and nav unchanged. */
+.home-clean .rounded-3xl { border-radius: 14px; }
+.home-clean .rounded-2xl { border-radius: 12px; }
+.home-clean .rounded-xl  { border-radius: 8px; }
+.home-clean .rounded-lg  { border-radius: 6px; }
