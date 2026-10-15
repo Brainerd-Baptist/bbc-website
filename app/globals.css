@@ -1052,3 +1052,40 @@ select:focus {
 }
 .skip-link:focus { transform: translateY(0); }
 #main-content:focus { outline: none; }
+
+/* ── Calm surface (preview, 2026-10-14) ────────────────────────────────────
+   Cards are plain: a solid raised surface, one hairline border, one soft
+   shadow. No blur, sheen, inner glow or colour bloom behind the page. The
+   old glass tokens (--glass-*) are left in tokens.css so this is reversible
+   by deleting this block. Specificity matches the originals (.dark .glass is
+   repeated on purpose) and this block comes last. */
+.glass,
+.dark .glass,
+.glass-md,
+.glass-frost {
+  background: var(--surface-raised);
+  backdrop-filter: none;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.glass-frost:hover {
+  box-shadow: var(--shadow-md);
+}
+.glass-frost.glass-static:hover {
+  box-shadow: var(--shadow-sm);
+}
+/* Cards on navy bands and photos: flat translucent white, hairline edge. */
+.glass-on-dark {
+  background: var(--surface-on-dark);
+  backdrop-filter: none;
+  border: 1px solid var(--border-on-dark);
+  box-shadow: none;
+}
+.glass-on-dark:hover {
+  box-shadow: none;
+}
+/* The colour blooms that glass needed to bend are gone. */
+.bx-backdrop,
+.bx-bloom {
+  display: none;
+}
