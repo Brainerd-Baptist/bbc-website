@@ -109,7 +109,7 @@ function getHeroContent(): HeroContent {
     return {
       eyebrow: "Sundays in Chattanooga",
       headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
-      sub: "Join us for worship on Sunday mornings.",
+      sub: "Join us for church on Sunday mornings.",
       primaryLabel: "Plan Your Visit",
       primaryHref: "/visit",
       secondaryLabel: "Learn More about Brainerd",
@@ -121,7 +121,7 @@ function getHeroContent(): HeroContent {
   return {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to<br /><span className="text-accent">Brainerd.</span></>,
-    sub: "Join us for worship on Sunday mornings.",
+    sub: "Join us for church on Sunday mornings.",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
@@ -187,7 +187,7 @@ export default function Hero() {
   const c = content ?? {
     eyebrow: "Sundays in Chattanooga",
     headline: <>Welcome to <span className="text-accent">Brainerd.</span></>,
-    sub: "Join us for worship on Sunday mornings.",
+    sub: "Join us for church on Sunday mornings.",
     primaryLabel: "Plan Your Visit",
     primaryHref: "/visit",
     secondaryLabel: "Sermons",
