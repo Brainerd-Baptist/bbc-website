@@ -111,7 +111,7 @@ export default function ThisWeek() {
     return null;
   }
 
-  const grouped = groupByDay(events);
+  const grouped = groupByDay(events.slice(0, 6));
 
   return (
     // No background of its own: the page's grain and gradient show through, and
@@ -132,7 +132,7 @@ export default function ThisWeek() {
             >
               What&rsquo;s Happening
               <br />
-              <span style={{ color: "var(--accent-text)" }}>This Week</span>
+              <span>This Week</span>
             </h2>
           </div>
 
@@ -196,11 +196,6 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
       className="glass-frost flex items-stretch rounded-2xl overflow-hidden group"
       style={{ textDecoration: "none" }}
     >
-      {/* Teal left accent bar */}
-      <div
-        className="w-1 flex-shrink-0 transition-colors duration-200"
-        style={{ background: "var(--accent)" }}
-      />
 
       {/* Content */}
       <div className="flex-1 px-4 py-4">
@@ -208,14 +203,14 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
         {!ev.all_day_event ? (
           <p
             className="text-xs font-semibold tracking-wide mb-1"
-            style={{ color: "var(--accent-text)" }}
+            style={{ color: "var(--fg-muted)" }}
           >
             {etTime(ev.starts_at)}
           </p>
         ) : (
           <p
             className="text-xs font-semibold tracking-wide mb-1 uppercase"
-            style={{ color: "var(--accent-text)" }}
+            style={{ color: "var(--fg-muted)" }}
           >
             All day
           </p>
@@ -225,13 +220,13 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
         <p
           // Colour comes from classes, not an inline style: an inline colour
           // beats group-hover, which is why this hover never fired before.
-          className="font-condensed font-700 leading-tight text-base text-fg group-hover:text-accent-text transition-colors duration-200"
+          className="font-condensed font-700 leading-tight text-base text-fg group-hover:underline transition-colors duration-200"
         >
           {ev.name}
           {ev.registration_url && (
             <span
               className="label-micro ml-2 align-middle"
-              style={{ color: "var(--accent-text)" }}
+              style={{ color: "var(--fg-muted)" }}
             >
               Register
             </span>
@@ -268,7 +263,7 @@ function EventCard({ event: ev }: { event: CalendarEvent }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
-          style={{ color: "var(--accent-text)" }}
+          style={{ color: "var(--fg-muted)" }}
         >
           <path d="M3 7h8M8 4l3 3-3 3" />
         </svg>

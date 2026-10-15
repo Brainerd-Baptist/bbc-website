@@ -5,7 +5,7 @@ import { LEAD_PASTOR } from "@/lib/constants";
 
 export default function ConnectBand() {
   return (
-    <section className="relative overflow-hidden" style={{ background: "var(--surface-sunken)" }}>
+    <section className="relative overflow-hidden" style={{ background: "var(--tint-band)" }}>
       {/* Subtle top border */}
             <div className="relative max-w-7xl mx-auto section-pad px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -80,7 +80,7 @@ export default function ConnectBand() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="group flex items-center gap-5 bg-surface rounded-xl px-6 py-5 border border-border hover:border-border-strong transition-colors"
+                  className="group flex items-center gap-5 card-lift rounded-2xl px-6 py-5 hover:border-border-strong transition"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="font-condensed font-900 text-fg text-2xl leading-tight">{item.label}</p>

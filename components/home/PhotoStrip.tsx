@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 // Height of each photo in the strip
-const STRIP_H = 300;
+const STRIP_H = 360;
 
 // Curated selection — mix of ministry contexts and life stages.
 // Order is hand-interleaved (not grouped by ministry, not randomized at

@@ -56,7 +56,7 @@ function PhotoCard({
 }) {
   return (
     <ScrollReveal delay={delay}>
-      <Link href={card.href} className="group block overflow-hidden rounded-xl bg-surface-sunken">
+      <Link href={card.href} className="group block overflow-hidden rounded-2xl card-lift">
         <div className="relative overflow-hidden" style={{ aspectRatio: "4 / 3" }}>
           <Image
             src={card.photo}
@@ -102,8 +102,8 @@ export default function MinistriesSection() {
 
         {/* ── Congregation strip ── */}
         <ScrollReveal>
-          <div className="overflow-hidden rounded-xl mb-4 bg-surface-sunken">
-            <div className="relative" style={{ minHeight: "320px" }}>
+          <div className="overflow-hidden rounded-2xl mb-4 card-lift">
+            <div className="relative" style={{ minHeight: "440px" }}>
               <Image
                 src="/carousel/congregation-standing.jpg"
                 alt="Brainerd Baptist congregation in worship"

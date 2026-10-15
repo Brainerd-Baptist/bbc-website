@@ -31,7 +31,7 @@ export default function ServiceInfo() {
 
             {/* Address / Visit CTA */}
             <div className="flex flex-col justify-center">
-              <div className="rounded-2xl bg-surface-sunken text-fg p-7 h-full flex flex-col justify-between">
+              <div className="rounded-2xl card-lift text-fg p-7 h-full flex flex-col justify-between">
                 <div>
                   <p className="eyebrow mb-3">Find Us</p>
                   <p className="font-condensed font-800 text-xl mb-1">300 Brookfield Ave</p>
@@ -47,7 +47,7 @@ export default function ServiceInfo() {
                   href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-fg text-surface hover:opacity-90 py-3 rounded-full transition"
+                  className="mt-6 block text-center font-condensed font-700 text-sm uppercase tracking-wide bg-accent-solid hover:bg-accent-solid-hover text-white py-3 rounded-full transition"
                 >
                   Get Directions
                 </a>

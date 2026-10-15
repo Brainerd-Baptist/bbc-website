@@ -1053,23 +1053,36 @@ select:focus {
 .skip-link:focus { transform: translateY(0); }
 #main-content:focus { outline: none; }
 
-/* ── Clean & bright home (preview, 2026-10-15) ─────────────────────────────
-   Scoped to the home page wrapper. White page, light-gray panels, plain flat
-   cards, one accent. Dark mode keeps its own tokens. Deleting this block and
-   the .home-clean class on app/page.tsx removes the scope. */
+/* ── Clean & bright home, v2 (preview, 2026-10-15) ────────────────────────
+   Scoped to the home page wrapper. White page, white cards that lift with a
+   hairline border and a soft shadow, one accent (teal) reserved for the main
+   button. No gray panels. Dark mode keeps its own tokens. Deleting this block
+   and the .home-clean class on app/page.tsx removes the scope. */
 :root:not(.dark) .home-clean {
   --surface: #ffffff;
-  --surface-sunken: #f3f4f6;
   --surface-raised: #ffffff;
+  --tint-band: #f1f9fc;
   background: var(--surface);
 }
+.dark .home-clean {
+  --tint-band: var(--surface-sunken);
+}
+.home-clean .card-lift,
 .home-clean .glass,
 .home-clean .glass-md,
 .home-clean .glass-frost {
-  background: var(--surface-sunken);
+  background: var(--surface-raised);
   backdrop-filter: none;
-  border: 0;
-  box-shadow: none;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 1px 2px rgba(0, 32, 91, 0.05),
+    0 6px 18px rgba(0, 32, 91, 0.07);
+}
+.dark .home-clean .card-lift,
+.dark .home-clean .glass,
+.dark .home-clean .glass-md,
+.dark .home-clean .glass-frost {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 .home-clean .eyebrow,
 .home-clean .eyebrow-white {
