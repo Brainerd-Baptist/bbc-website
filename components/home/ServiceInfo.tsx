@@ -14,11 +14,11 @@ export default function ServiceInfo() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Card className="rounded-2xl p-6">
                   <div className="text-fg font-condensed font-900 text-3xl mb-1">8:30 AM</div>
-                  <div className="font-semibold text-fg">Choir & Orchestra</div>
+                  <div className="font-display text-fg">Choir & Orchestra</div>
                 </Card>
                 <Card className="rounded-2xl p-6">
                   <div className="text-fg font-condensed font-900 text-3xl mb-1">11:00 AM</div>
-                  <div className="font-semibold text-fg">Band-Led</div>
+                  <div className="font-display text-fg">Band-Led</div>
                 </Card>
               </div>
               <p className="text-fg-subtle text-sm mt-4 italic" style={{ fontFamily: "var(--font-source-serif), Georgia, serif" }}>
