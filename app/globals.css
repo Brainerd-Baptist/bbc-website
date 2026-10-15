@@ -1052,3 +1052,40 @@ select:focus {
 }
 .skip-link:focus { transform: translateY(0); }
 #main-content:focus { outline: none; }
+
+/* ── Soft lift (preview, 2026-10-15) ───────────────────────────────────────
+   Page cards are solid raised surfaces: hairline border, top highlight and a
+   layered shadow that deepens on hover. No blur, sheen or glow. The --glass-*
+   tokens stay in tokens.css, so deleting this block restores the old look. */
+.glass,
+.dark .glass,
+.glass-md,
+.glass-frost {
+  background: var(--surface-raised);
+  backdrop-filter: none;
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 var(--lift-hi), var(--lift-rest);
+}
+.glass-frost:hover {
+  box-shadow: inset 0 1px 0 var(--lift-hi), var(--lift-hover);
+}
+.glass-frost.glass-static:hover {
+  box-shadow: inset 0 1px 0 var(--lift-hi), var(--lift-rest);
+}
+/* The page-level colour layer goes away in both variants. */
+.bx-backdrop {
+  display: none;
+}
+/* Variant 1: cards on navy bands and photos are flat too, and the blooms go. */
+.glass-on-dark {
+  background: var(--surface-on-dark);
+  backdrop-filter: none;
+  border: 1px solid var(--border-on-dark);
+  box-shadow: none;
+}
+.glass-on-dark:hover {
+  box-shadow: none;
+}
+.bx-bloom {
+  display: none;
+}
