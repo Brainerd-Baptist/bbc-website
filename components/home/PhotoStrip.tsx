@@ -22,7 +22,6 @@ const PHOTOS = [
   { src: "/carousel/men-intergen.jpg",          w: 1400, h:  931, alt: "Men of different generations at a Brainerd Baptist men's ministry event" },
   { src: "/carousel/women-laughing.jpg",        w: 1400, h:  931, alt: "Women laughing together at a Brainerd Baptist women's ministry gathering" },
   { src: "/carousel/worship-team-strip.jpg",    w: 1400, h:  931, alt: "The worship team leading Sunday morning at Brainerd Baptist" },
-  { src: "/carousel/kids-toddler-strip.jpg",    w: 1400, h:  931, alt: "Toddlers playing together in the Brainerd Baptist nursery" },
   { src: "/carousel/missions-2.jpg",            w:  960, h:  482, alt: "Brainerd Baptist Ecuador group photo 2026" },
 ];
 
