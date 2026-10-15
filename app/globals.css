@@ -1105,15 +1105,15 @@ body:has(.home-clean) .bx-backdrop {
    else Barlow semibold, sentence case; Inter labels move to Barlow. */
 .home-clean .font-condensed:not(.h-display):not(.h-hero):not(.h-subsection):not(.h-section):not(h1):not(h2),
 .home-clean .h-item {
-  font-family: var(--font-barlow), sans-serif;
+  font-family: var(--font-smooth), sans-serif;
   font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
 }
 .home-clean .eyebrow, .home-clean .eyebrow-white, .home-clean .eyebrow-muted, .home-clean .label-micro {
-  font-family: var(--font-barlow), sans-serif;
+  font-family: var(--font-smooth), sans-serif;
 }
 .home-clean .btn-primary, .home-clean .btn-outline-white, .home-clean .btn-outline-navy {
-  font-family: var(--font-barlow), sans-serif;
+  font-family: var(--font-smooth), sans-serif;
   letter-spacing: 0.02em;
 }
