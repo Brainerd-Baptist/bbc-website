@@ -1084,8 +1084,7 @@ select:focus {
 .dark .home-clean .glass-frost {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
-.home-clean .eyebrow,
-.home-clean .eyebrow-white {
+.home-clean .eyebrow {
   color: var(--fg-muted);
 }
 .home-clean .text-accent-text {
