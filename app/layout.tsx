@@ -80,7 +80,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} ${sourceSerif.variable} antialiased`}>
+      <body className={`${inter.variable} ${barlow.variable} ${barlowCondensed.variable} ${sourceSerif.variable} site-look antialiased`}>
         <ThemeProvider>
           <AudioProvider>
             <VideoProvider>

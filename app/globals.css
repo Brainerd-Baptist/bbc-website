@@ -1057,20 +1057,20 @@ select:focus {
    Scoped to the home page wrapper. White page, white cards that lift with a
    hairline border and a soft shadow, one accent (teal) reserved for the main
    button. No gray panels. Dark mode keeps its own tokens. Deleting this block
-   and the .home-clean class on app/page.tsx removes the scope. */
-:root:not(.dark) .home-clean {
+   and the .site-look class on app/page.tsx removes the scope. */
+:root:not(.dark) .site-look {
   --surface: #ffffff;
   --surface-raised: #ffffff;
   --tint-band: #f1f9fc;
   background: var(--surface);
 }
-.dark .home-clean {
+.dark .site-look {
   --tint-band: var(--surface-sunken);
 }
-.home-clean .card-lift,
-.home-clean .glass,
-.home-clean .glass-md,
-.home-clean .glass-frost {
+.site-look .card-lift,
+.site-look .glass,
+.site-look .glass-md,
+.site-look .glass-frost {
   background: var(--surface-raised);
   backdrop-filter: none;
   border: 1px solid var(--border);
@@ -1078,10 +1078,10 @@ select:focus {
     0 1px 2px rgba(0, 32, 91, 0.05),
     0 6px 18px rgba(0, 32, 91, 0.07);
 }
-.dark .home-clean .card-lift,
-.dark .home-clean .glass,
-.dark .home-clean .glass-md,
-.dark .home-clean .glass-frost {
+.dark .site-look .card-lift,
+.dark .site-look .glass,
+.dark .site-look .glass-md,
+.dark .site-look .glass-frost {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 .home-clean .eyebrow,
@@ -1091,48 +1091,48 @@ select:focus {
 .home-clean .text-accent-text {
   color: var(--fg);
 }
-body:has(.home-clean) .bx-backdrop {
+body.site-look .bx-backdrop {
   display: none;
 }
 
 /* PREVIEW: tighter radii on the home page only. Pills (buttons) and nav unchanged. */
-.home-clean .rounded-3xl { border-radius: 14px; }
-.home-clean .rounded-2xl { border-radius: 12px; }
-.home-clean .rounded-xl  { border-radius: 8px; }
-.home-clean .rounded-lg  { border-radius: 6px; }
+.site-look .rounded-3xl { border-radius: 14px; }
+.site-look .rounded-2xl { border-radius: 12px; }
+.site-look .rounded-xl  { border-radius: 8px; }
+.site-look .rounded-lg  { border-radius: 6px; }
 
 /* PREVIEW: type tune on the home page. Condensed only for headlines; everything
    else Barlow semibold, sentence case; Inter labels move to Barlow. */
-.home-clean .font-condensed:not(.h-display):not(.h-hero):not(.h-subsection):not(.h-section):not(h1):not(h2),
-.home-clean .h-item {
+.site-look .font-condensed:not(.h-display):not(.h-hero):not(.h-subsection):not(.h-section):not(h1):not(h2),
+.site-look .h-item {
   font-family: var(--font-barlow), sans-serif;
   font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
 }
-.home-clean .eyebrow, .home-clean .eyebrow-white, .home-clean .eyebrow-muted, .home-clean .label-micro {
+.site-look .eyebrow, .site-look .eyebrow-white, .site-look .eyebrow-muted, .site-look .label-micro {
   font-family: var(--font-barlow), sans-serif;
 }
-.home-clean .btn-primary, .home-clean .btn-outline-white, .home-clean .btn-outline-navy {
+.site-look .btn-primary, .site-look .btn-outline-white, .site-look .btn-outline-navy {
   font-family: var(--font-barlow), sans-serif;
   letter-spacing: 0.02em;
 }
 
 /* PREVIEW: serif display type on the home page. Headlines, card titles, times = serif;
    body, buttons, labels stay Barlow. */
-.home-clean .h-display, .home-clean .h-hero, .home-clean .h-subsection, .home-clean .h-section,
-.home-clean h1, .home-clean h2, .home-clean h3, .home-clean .h-item,
-.home-clean .font-condensed:not(.btn-primary):not(.btn-outline-white):not(.btn-outline-navy):not(.rounded-full) {
+.site-look .h-display, .site-look .h-hero, .site-look .h-subsection, .site-look .h-section,
+.site-look h1, .site-look h2, .site-look h3, .site-look .h-item,
+.site-look .font-condensed:not(.btn-primary):not(.btn-outline-white):not(.btn-outline-navy):not(.rounded-full) {
   font-family: var(--font-source-serif), Georgia, serif !important;
   font-weight: 700;
   letter-spacing: -0.01em;
   text-transform: none;
 }
-.home-clean .h-display, .home-clean .h-hero, .home-clean .h-subsection, .home-clean .h-section, .home-clean h1, .home-clean h2 {
+.site-look .h-display, .site-look .h-hero, .site-look .h-subsection, .site-look .h-section, .site-look h1, .site-look h2 {
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
-.home-clean .font-display {
+.site-look .font-display {
   font-family: var(--font-source-serif), Georgia, serif !important;
   font-weight: 600;
 }
