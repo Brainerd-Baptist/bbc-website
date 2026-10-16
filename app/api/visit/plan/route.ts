@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
         bringingKids,
         kids,
         summary:
-          `Plan a Visit (website): ${dateLabel}, ${SERVICE_TEXT[service]}. ` +
+          `Plan a Visit (website): ${dateLabel}; service: ${SERVICE_TEXT[service]}. ` +
           `Out of town: ${outOfTown ? "yes" : "no"}.` +
           (notes ? ` Notes: ${notes}` : ""),
       });
