@@ -251,6 +251,19 @@ async function linkHousehold(
   return r.ok;
 }
 
+const GENERAL_NOTES_CATEGORY = "279710"; // "General Notes" in PCO People
+
+async function addProfileNote(auth: string, personId: string, note: string, errors: string[]) {
+  const r = await call(auth, "POST", `/people/${personId}/notes`, {
+    data: {
+      type: "Note",
+      attributes: { note },
+      relationships: { note_category: { data: { type: "NoteCategory", id: GENERAL_NOTES_CATEGORY } } },
+    },
+  });
+  if (!r.ok) errors.push(fail("profile note", r));
+}
+
 async function addWorkflowCard(
   auth: string,
   workflowId: string,
@@ -316,16 +329,47 @@ export async function registerVisitInPco(
 
   if (input.bringingKids && input.kids.length > 0) {
     const ids: string[] = [];
+    const kidRefs: Array<{ id: string; kid: VisitKid }> = [];
     for (const k of input.kids) {
       const id = await findOrCreateChild(auth, k, out.errors);
-      if (id) ids.push(id);
+      if (id) {
+        ids.push(id);
+        kidRefs.push({ id, kid: k });
+      }
     }
+    (out as VisitPcoResult & { _kidRefs?: typeof kidRefs })._kidRefs = kidRefs;
     out.kidsRegistered = ids.length === input.kids.length;
     if (ids.length) out.steps.push(`${ids.length} child${ids.length === 1 ? "" : "ren"}`);
     if (ids.length) {
       out.householdLinked = await linkHousehold(auth, parentId, input.lastName, ids, out.errors);
       if (out.householdLinked) out.steps.push("household");
     }
+  }
+
+  // Profile notes: a trail on each profile showing this came from the website form.
+  const stamp = new Date().toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const kidRefsAll = (out as VisitPcoResult & { _kidRefs?: Array<{ id: string; kid: VisitKid }> })._kidRefs ?? [];
+  delete (out as { _kidRefs?: unknown })._kidRefs;
+  const kidNames = kidRefsAll.map((r) => `${r.kid.firstName} ${r.kid.lastName}`.trim());
+  await addProfileNote(
+    auth,
+    parentId,
+    `Completed the online Plan a Visit form on ${stamp}. ${input.summary}` +
+      (kidNames.length ? ` Kids pre-registered: ${kidNames.join(", ")}.` : ""),
+    out.errors,
+  );
+  for (const r of kidRefsAll) {
+    await addProfileNote(
+      auth,
+      r.id,
+      `Pre-registered online by ${input.firstName} ${input.lastName} (Plan a Visit form) on ${stamp}.`,
+      out.errors,
+    );
   }
 
   const wf = input.bringingKids ? VISIT_WORKFLOWS.kids : VISIT_WORKFLOWS.guests;
