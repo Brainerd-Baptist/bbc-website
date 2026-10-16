@@ -321,10 +321,21 @@ for (const theme of THEMES) {
           content: "*,*::before,*::after{transition:none!important;animation:none!important}",
         });
         await page.waitForTimeout(100);
-        const axe = await new AxeBuilder({ page })
-          .withRules(["color-contrast"])
-          .exclude("[data-decorative]")
+        const runAxe = () =>
+          new AxeBuilder({ page })
+            .withRules(["color-contrast"])
+            .exclude("[data-decorative]")
             .analyze();
+        let axe = await runAxe();
+        if (axe.violations.length) {
+          // Script-driven fades (scroll reveals) are not stopped by the CSS above and
+          // can still be part-way at the first sample, on a slow phone profile most
+          // of all. A genuine contrast defect is still there a second later; a
+          // mid-fade reading is not. Only the second reading counts.
+          await page.evaluate(() => document.getAnimations?.().forEach((a) => { try { a.finish(); } catch {} }));
+          await page.waitForTimeout(1000);
+          axe = await runAxe();
+        }
         const contrastViolations = axe.violations.flatMap((v) =>
           v.nodes.map((n) => ({
             impact: v.impact,
