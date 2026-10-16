@@ -131,7 +131,7 @@ export default function BXReservePage() {
           <p style={{ color: "var(--accent-text)", fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
             Request Submitted — Mockup
           </p>
-          <h1 style={{ color: fg, fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "2rem", marginBottom: "0.75rem" }}>
+          <h1 style={{ color: fg, fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "2rem", marginBottom: "0.75rem" }}>
             Reference #BX-1043
           </h1>
           <p style={{ color: "var(--fg-muted)", lineHeight: 1.6, marginBottom: "1.5rem" }}>
@@ -164,7 +164,7 @@ export default function BXReservePage() {
           <p style={{ color: "var(--accent)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
             Mockup — nothing here submits anywhere
           </p>
-          <h1 style={{ color: "var(--fg-on-dark)", fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "clamp(1.75rem, 4vw, 2.25rem)", letterSpacing: "-0.03em", margin: 0 }}>
+          <h1 style={{ color: "var(--fg-on-dark)", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.75rem, 4vw, 2.25rem)", letterSpacing: "-0.02em", margin: 0 }}>
             Reserve a BX Room
           </h1>
         </div>
@@ -207,7 +207,7 @@ export default function BXReservePage() {
 
             {step === 0 && (
               <div>
-                <h2 style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Your Info</h2>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Your Info</h2>
                 <Field label="Individual or Organization Name">
                   <input value={orgName} onChange={(e) => setOrgName(e.target.value)} placeholder="e.g. Thompson Family, or GCAR" style={inputStyle} />
                 </Field>
@@ -243,7 +243,7 @@ export default function BXReservePage() {
 
             {step === 1 && (
               <div>
-                <h2 style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Event Details</h2>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Event Details</h2>
                 <Field label="Event Name">
                   <input value={eventName} onChange={(e) => setEventName(e.target.value)} style={inputStyle} />
                 </Field>
@@ -279,7 +279,7 @@ export default function BXReservePage() {
 
             {step === 2 && (
               <div>
-                <h2 style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Setup &amp; Extras</h2>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Setup &amp; Extras</h2>
 
                 <p style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--fg-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.75rem" }}>Room Layout</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1.5rem" }}>
@@ -329,7 +329,7 @@ export default function BXReservePage() {
 
             {step === 3 && (
               <div>
-                <h2 style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Policies</h2>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Policies</h2>
                 <div style={{ background: "var(--surface-sunken)", borderRadius: "0.75rem", padding: "1.25rem 1.5rem", marginBottom: "1.25rem" }}>
                   <p style={{ fontSize: "0.85rem", fontWeight: 700, color: fg, marginBottom: "0.5rem" }}>The short version:</p>
                   <ul style={{ fontSize: "0.8rem", color: "var(--fg-muted)", lineHeight: 1.7, paddingLeft: "1.1rem" }}>
@@ -358,7 +358,7 @@ export default function BXReservePage() {
 
             {step === 4 && (
               <div>
-                <h2 style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Review &amp; Submit</h2>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.4rem", color: fg, marginBottom: "1.25rem" }}>Review &amp; Submit</h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.85rem", color: "var(--fg-muted)", marginBottom: "1.5rem" }}>
                   <ReviewRow label="Requested by" value={`${orgName || "—"} (${contactName || "—"})`} />
                   <ReviewRow label="Type" value={isProfit === "profit" ? "Profit / Commercial" : "Non-Profit"} />

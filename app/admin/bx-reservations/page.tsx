@@ -95,7 +95,7 @@ export default function BXReservationsAdmin() {
           <p style={{ color: "var(--accent)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
             Internal · Mockup, not live data
           </p>
-          <h1 style={{ color: "var(--fg-on-dark)", fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800, fontSize: "clamp(1.75rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", lineHeight: 1.05, margin: 0 }}>
+          <h1 style={{ color: "var(--fg-on-dark)", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.75rem, 4vw, 2.5rem)", letterSpacing: "-0.02em", lineHeight: 1.05, margin: 0 }}>
             BX Reservations
           </h1>
           <p style={{ color: "var(--fg-on-dark-muted)", fontSize: "0.8rem", marginTop: "0.5rem" }}>
@@ -116,7 +116,7 @@ export default function BXReservationsAdmin() {
           ].map(({ label, value, accent }) => (
             <div key={label} style={{ background: cardBg, border, borderRadius: "1rem", padding: "1.25rem 1.5rem" }}>
               <p style={{ color: "var(--fg-muted)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.25rem" }}>{label}</p>
-              <p style={{ color: accent ? "var(--accent-text)" : fg, fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1 }}>{value}</p>
+              <p style={{ color: accent ? "var(--accent-text)" : fg, fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1 }}>{value}</p>
             </div>
           ))}
         </div>

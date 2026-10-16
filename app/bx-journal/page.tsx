@@ -77,7 +77,7 @@ export default function BXJournalPage() {
       {/* ── Intro copy — direct, not brochure copy ─────────────────────── */}
       <section className="pt-24 pb-16 px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <p className="text-fg text-xl leading-relaxed" style={{ fontFamily: "var(--font-inter), sans-serif" }}>
+          <p className="text-fg text-xl leading-relaxed" style={{ fontFamily: "var(--font-display)" }}>
             The BX isn&apos;t a gym you go to. It&apos;s a place you show up to —
             for a rally on the courts, a set of reps, or an hour with people who&apos;ll
             notice if you don&apos;t come. Here&apos;s what a real week there looks like.
