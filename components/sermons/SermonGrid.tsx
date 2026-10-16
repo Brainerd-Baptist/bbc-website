@@ -195,7 +195,7 @@ export default function SermonGrid({ sermons, allSeries, allSpeakers, allYears, 
                 <div className="flex justify-center mt-8">
                   <button
                     onClick={() => setShowAllSeries(true)}
-                    className="font-condensed font-700 tracking-wide uppercase text-sm bg-fg text-surface hover:opacity-90 px-8 py-3.5 rounded-full transition"
+                    className="btn-primary"
                   >
                     Load More Series
                   </button>

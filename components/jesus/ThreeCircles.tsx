@@ -642,7 +642,7 @@ export default function ThreeCircles() {
         >
           {idx===0 && (
             <p className="text-center text-xs mb-3 lg:hidden font-condensed tracking-widest"
-              style={{color: "var(--fg-subtle)"}}>SWIPE TO CONTINUE</p>
+              style={{color: "var(--plate-fg)", opacity: 0.7}}>SWIPE TO CONTINUE</p>
           )}
           <svg viewBox={viewBox} className="w-full h-auto" style={{overflow:"visible"}} role="img" aria-label={`Diagram for step ${idx+1}: ${step.title}`}>
             <defs>

@@ -152,7 +152,7 @@ export default function MyNotesList({ sermons }: { sermons: SermonForNotes[] }) 
         </p>
         <Link
           href="/sermons"
-          className="inline-flex items-center gap-2 font-condensed font-700 tracking-wide uppercase text-sm bg-fg text-surface hover:opacity-90 px-7 py-3 rounded-full transition"
+          className="btn-primary"
         >
           Browse Sermons
         </Link>
