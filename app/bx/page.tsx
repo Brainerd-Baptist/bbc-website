@@ -37,7 +37,7 @@ export default function BXPage() {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
+          <p className="eyebrow-white mb-4">
             Brainerd Crossroads
           </p>
           <div className="flex justify-center mb-6">
@@ -406,7 +406,7 @@ export default function BXPage() {
           style={{ objectPosition: "center 40%", opacity: 0.22 }}
         />
         <div className="relative max-w-3xl mx-auto text-center">
-          <p className="eyebrow mb-3" style={{ color: "var(--accent-text)" }}>3rd Wednesday · 10:00 AM – 12:00 PM</p>
+          <p className="eyebrow-white mb-3">3rd Wednesday · 10:00 AM – 12:00 PM</p>
           <h2
             className="text-white mb-4 h-section"
           >

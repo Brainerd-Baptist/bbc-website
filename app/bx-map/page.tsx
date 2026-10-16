@@ -105,7 +105,7 @@ const CSS = `
 .legend{position:absolute;left:12px;bottom:12px;z-index:3;background:var(--surface-raised);border:1px solid var(--border);border-radius:12px;padding:8px 10px;display:grid;grid-template-columns:auto auto;gap:4px 14px;font-size:12px;color:var(--fg-muted)}
 .legend div{display:flex;align-items:center;gap:6px;white-space:nowrap}
 .legend svg{width:16px;height:16px}
-.levelbadge{position:absolute;left:12px;bottom:12px;z-index:3;font-family:"Archivo",sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-subtle);background:var(--surface-raised);border:1px solid var(--border);border-radius:999px;padding:6px 10px;transition:bottom .28s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.levelbadge{position:absolute;left:12px;bottom:12px;z-index:3;font-family:"Archivo",sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-muted);background:var(--surface-raised);border:1px solid var(--border);border-radius:999px;padding:6px 10px;transition:bottom .28s cubic-bezier(.2,.8,.2,1);pointer-events:none}
 /* ---------- svg ---------- */
 .room{stroke:var(--wall-thin);stroke-width:2;transition:fill .18s,stroke .18s,filter .18s;cursor:pointer}
 .room.meeting{fill:var(--c-meeting)} .room.kids{fill:var(--c-kids)} .room.students{fill:var(--c-students)}
