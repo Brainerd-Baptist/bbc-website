@@ -561,12 +561,15 @@ export default function BxMapPage() {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       {/* Container: definite height so .app{height:100%} resolves.
            overflow:hidden prevents page scroll behind the sheet.
-           No site footer beneath this (ConditionalFooter suppresses it). */}
+           The site footer follows (it overlaps the margin below). */}
       <div
         style={{
           height: 'calc(100dvh - 56px)',
           overflow: 'hidden',
           position: 'relative',
+          // The footer's rounded top overlaps the page above it by 24px; this
+          // margin gives it empty space to overlap instead of covering the map.
+          marginBottom: 24,
         }}
         dangerouslySetInnerHTML={{ __html: HTML }}
       />
