@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     allergies: clip(k.allergies, 300),
   }));
   const kidLine = (k: (typeof kids)[number]) =>
-    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""} | ${k.gender === "Female" ? "Girl" : k.gender === "Male" ? "Boy" : "gender ?"} | Allergies: ${k.allergies || "?"}${isChildBirthday(k.birthday) ? "" : " | 18+ (saved as an adult profile)"}`;
+    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""} | ${k.gender === "Female" ? "Girl" : k.gender === "Male" ? "Boy" : "gender ?"}${k.allergies ? ` | Allergies: ${k.allergies}` : ""}${isChildBirthday(k.birthday) ? "" : " | 18+ (saved as an adult profile)"}`;
   const kidsInfo = kids.map(kidLine).join("\n");
   const notes = clip(b.notes, 1000);
   const outOfTown = Boolean(b.outOfTown);
@@ -95,13 +95,13 @@ export async function POST(req: NextRequest) {
     (kids.length === 0 ||
       kids.some(
         (k) =>
-          !k.firstName || !k.lastName || !DATE_RE.test(k.birthday) || !k.gender || !k.allergies,
+          !k.firstName || !k.lastName || !DATE_RE.test(k.birthday) || !k.gender,
       ))
   ) {
     return NextResponse.json(
       {
         error:
-          "Please add a first name, last name, birthday, gender, and allergy answer for each child.",
+          "Please add a first name, last name, birthday, and gender for each child.",
       },
       { status: 400 },
     );

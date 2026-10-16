@@ -77,12 +77,12 @@ export default function PlanVisitForm() {
 
   const kidsIncomplete =
     bringingKids === true &&
-    kids.some((k) => !k.firstName.trim() || !k.lastName.trim() || !k.birthday || !k.gender || !k.allergies.trim());
+    kids.some((k) => !k.firstName.trim() || !k.lastName.trim() || !k.birthday || !k.gender);
   const missing =
     !firstName.trim() || !email.trim() || !phone.trim() || !dateLabel || !service ||
     outOfTown === null || bringingKids === null || kidsIncomplete;
 
-  /** Name exactly what is missing, e.g. "Child 1: gender, allergies (type “None” if there aren't any)." */
+  /** Name exactly what is missing, e.g. "Child 1: gender, birthday." */
   function kidsProblem(): string {
     const parts: string[] = [];
     kids.forEach((k, i) => {
@@ -91,7 +91,6 @@ export default function PlanVisitForm() {
       if (!k.lastName.trim()) miss.push("last name");
       if (!k.birthday) miss.push("birthday");
       if (!k.gender) miss.push("gender");
-      if (!k.allergies.trim()) miss.push("allergies (type “None” if there aren’t any)");
       if (miss.length) parts.push(`${kids.length > 1 ? `Child ${i + 1}` : "Your child"}: ${miss.join(", ")}`);
     });
     return `Almost there. ${parts.join(". ")}.`;
@@ -330,9 +329,9 @@ export default function PlanVisitForm() {
                         </select>
                       </div>
                       <div className="space-y-1 sm:col-span-2">
-                        <label htmlFor={`pv-ka-${i}`} className="block text-xs font-medium text-fg">Allergies or medical needs <span className="text-accent-text">*</span></label>
-                        <input id={`pv-ka-${i}`} type="text" value={k.allergies} maxLength={300} placeholder="Type “None” if there aren’t any"
-                          onChange={(e) => updateKid(i, { allergies: e.target.value })} className={`${inputClass} ${touched && !k.allergies.trim() ? "!border-red-500" : ""}`} />
+                        <label htmlFor={`pv-ka-${i}`} className="block text-xs font-medium text-fg">Allergies or medical needs <span className="text-fg-muted font-normal">(leave blank if none)</span></label>
+                        <input id={`pv-ka-${i}`} type="text" value={k.allergies} maxLength={300} placeholder="Only if your child has any"
+                          onChange={(e) => updateKid(i, { allergies: e.target.value })} className={`${inputClass}`} />
                       </div>
                     </div>
                   </div>
