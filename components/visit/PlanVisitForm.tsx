@@ -82,6 +82,21 @@ export default function PlanVisitForm() {
     !firstName.trim() || !email.trim() || !phone.trim() || !dateLabel || !service ||
     outOfTown === null || bringingKids === null || kidsIncomplete;
 
+  /** Name exactly what is missing, e.g. "Child 1: gender, allergies (type “None” if there aren't any)." */
+  function kidsProblem(): string {
+    const parts: string[] = [];
+    kids.forEach((k, i) => {
+      const miss: string[] = [];
+      if (!k.firstName.trim()) miss.push("first name");
+      if (!k.lastName.trim()) miss.push("last name");
+      if (!k.birthday) miss.push("birthday");
+      if (!k.gender) miss.push("gender");
+      if (!k.allergies.trim()) miss.push("allergies (type “None” if there aren’t any)");
+      if (miss.length) parts.push(`${kids.length > 1 ? `Child ${i + 1}` : "Your child"}: ${miss.join(", ")}`);
+    });
+    return `Almost there. ${parts.join(". ")}.`;
+  }
+
   function updateKid(i: number, patch: Partial<Kid>) {
     setKids((prev) => prev.map((k, idx) => (idx === i ? { ...k, ...patch } : k)));
   }
@@ -90,7 +105,7 @@ export default function PlanVisitForm() {
     e.preventDefault();
     setTouched(true);
     if (missing) {
-      setError(kidsIncomplete ? "Please add a first name, last name, birthday, gender, and allergy answer for each child." : "Please answer the starred questions so we can be ready for you.");
+      setError(kidsIncomplete ? kidsProblem() : "Please answer the starred questions so we can be ready for you.");
       return;
     }
     setSubmitting(true);
@@ -297,7 +312,7 @@ export default function PlanVisitForm() {
                       <div className="space-y-1">
                         <label htmlFor={`pv-kb-${i}`} className="block text-xs font-medium text-fg">Birthday <span className="text-accent-text">*</span></label>
                         <input id={`pv-kb-${i}`} type="date" value={k.birthday} max={new Date().toISOString().slice(0, 10)}
-                          onChange={(e) => updateKid(i, { birthday: e.target.value })} className={inputClass} />
+                          onChange={(e) => updateKid(i, { birthday: e.target.value })} className={`${inputClass} min-w-0 max-w-full appearance-none ${touched && !k.birthday ? "!border-red-500" : ""}`} />
                       </div>
                       <div className="space-y-1">
                         <label htmlFor={`pv-kg-${i}`} className="block text-xs font-medium text-fg">Grade</label>
@@ -308,7 +323,7 @@ export default function PlanVisitForm() {
                       </div>
                       <div className="space-y-1">
                         <label htmlFor={`pv-kx-${i}`} className="block text-xs font-medium text-fg">Gender <span className="text-accent-text">*</span></label>
-                        <select id={`pv-kx-${i}`} value={k.gender} onChange={(e) => updateKid(i, { gender: e.target.value })} className={inputClass}>
+                        <select id={`pv-kx-${i}`} value={k.gender} onChange={(e) => updateKid(i, { gender: e.target.value })} className={`${inputClass} ${touched && !k.gender ? "!border-red-500" : ""}`}>
                           <option value="">Select…</option>
                           <option value="Male">Boy</option>
                           <option value="Female">Girl</option>
@@ -317,7 +332,7 @@ export default function PlanVisitForm() {
                       <div className="space-y-1 sm:col-span-2">
                         <label htmlFor={`pv-ka-${i}`} className="block text-xs font-medium text-fg">Allergies or medical needs <span className="text-accent-text">*</span></label>
                         <input id={`pv-ka-${i}`} type="text" value={k.allergies} maxLength={300} placeholder="Type “None” if there aren’t any"
-                          onChange={(e) => updateKid(i, { allergies: e.target.value })} className={inputClass} />
+                          onChange={(e) => updateKid(i, { allergies: e.target.value })} className={`${inputClass} ${touched && !k.allergies.trim() ? "!border-red-500" : ""}`} />
                       </div>
                     </div>
                   </div>
