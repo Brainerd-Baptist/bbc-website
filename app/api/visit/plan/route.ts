@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
-import { buildVisitConfirmationHtml, buildContactNotificationHtml } from "@/lib/email-templates";
+import {
+  buildVisitConfirmationHtml,
+  buildContactNotificationHtml,
+} from "@/lib/email-templates";
 import { registerVisitInPco, type VisitPcoResult } from "@/lib/pco-visit";
-import { VISIT_NOTIFY_EMAIL, KIDS_PREREG_URL } from "@/lib/visit-form";
+import {
+  VISIT_NOTIFY_EMAIL,
+  VISIT_KIDS_EMAIL,
+  KIDS_PREREG_URL,
+} from "@/lib/visit-form";
 
 const MAP_URL = `${(process.env.NEXT_PUBLIC_SITE_URL || "https://home.brainerdhq.app").replace(/\/$/, "")}/map`;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -16,7 +23,12 @@ interface Body {
   service?: string; // "830" | "1100" | "unsure"
   outOfTown?: boolean;
   bringingKids?: boolean;
-  kids?: { firstName?: string; lastName?: string; birthday?: string; grade?: string }[];
+  kids?: {
+    firstName?: string;
+    lastName?: string;
+    birthday?: string;
+    grade?: string;
+  }[];
   notes?: string;
   website?: string; // honeypot
 }
@@ -27,7 +39,10 @@ const SERVICE_TEXT: Record<string, string> = {
   unsure: "Not sure yet",
 };
 
-const clip = (s: unknown, n: number) => String(s ?? "").trim().slice(0, n);
+const clip = (s: unknown, n: number) =>
+  String(s ?? "")
+    .trim()
+    .slice(0, n);
 
 export async function POST(req: NextRequest) {
   let b: Body;
@@ -45,7 +60,8 @@ export async function POST(req: NextRequest) {
   const email = clip(b.email, 200);
   const phone = clip(b.phone, 40);
   const dateLabel = clip(b.dateLabel, 60);
-  const service = clip(b.service, 10) in SERVICE_TEXT ? clip(b.service, 10) : "unsure";
+  const service =
+    clip(b.service, 10) in SERVICE_TEXT ? clip(b.service, 10) : "unsure";
   const bringingKids = Boolean(b.bringingKids);
   const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
   const kids = (Array.isArray(b.kids) ? b.kids : []).slice(0, 8).map((k) => ({
@@ -62,14 +78,26 @@ export async function POST(req: NextRequest) {
 
   if (!firstName || !EMAIL_RE.test(email) || !phone || !dateLabel) {
     return NextResponse.json(
-      { error: "Please add your name, email, mobile number, and the day you plan to visit." },
+      {
+        error:
+          "Please add your name, email, mobile number, and the day you plan to visit.",
+      },
       { status: 400 },
     );
   }
 
-  if (bringingKids && (kids.length === 0 || kids.some((k) => !k.firstName || !k.lastName || !DATE_RE.test(k.birthday)))) {
+  if (
+    bringingKids &&
+    (kids.length === 0 ||
+      kids.some(
+        (k) => !k.firstName || !k.lastName || !DATE_RE.test(k.birthday),
+      ))
+  ) {
     return NextResponse.json(
-      { error: "Please add a first name, last name, and birthday for each child." },
+      {
+        error:
+          "Please add a first name, last name, and birthday for each child.",
+      },
       { status: 400 },
     );
   }
@@ -94,7 +122,8 @@ export async function POST(req: NextRequest) {
           `Out of town: ${outOfTown ? "yes" : "no"}.` +
           (notes ? ` Notes: ${notes}` : ""),
       });
-      if (pco.errors.length) console.error("[visit/plan] PCO partial failure:", pco.errors);
+      if (pco.errors.length)
+        console.error("[visit/plan] PCO partial failure:", pco.errors);
     } catch (err) {
       console.error("[visit/plan] PCO registration crashed:", err);
     }
@@ -116,39 +145,56 @@ export async function POST(req: NextRequest) {
     `Service: ${SERVICE_TEXT[service]}`,
     `Visiting from out of town: ${outOfTown ? "Yes" : "No"}`,
     `Bringing kids: ${bringingKids ? "Yes" : "No"}`,
-    ...(bringingKids ? [`Kids (${kids.length}):`, ...kids.map((k) => `  - ${kidLine(k)}`)] : []),
+    ...(bringingKids
+      ? [`Kids (${kids.length}):`, ...kids.map((k) => `  - ${kidLine(k)}`)]
+      : []),
     ...(notes ? [`Notes: ${notes}`] : []),
     ``,
     `Planning Center: ${pcoStatus}`,
-    ...(pco?.errors.length ? [``, `Details:`, ...pco.errors.map((e) => `  - ${e}`)] : []),
+    ...(pco?.errors.length
+      ? [``, `Details:`, ...pco.errors.map((e) => `  - ${e}`)]
+      : []),
   ];
-  await sendMail({
-    to: VISIT_NOTIFY_EMAIL,
-    replyTo: email,
-    subject: `Visitor coming ${dateLabel}: ${fullName}${bringingKids ? " (with kids)" : ""}`,
-    text: lines.join("\n"),
-    html: buildContactNotificationHtml({
-      heading: `Visitor coming ${dateLabel}`,
-      fromName: fullName,
-      fromEmail: email,
-      meta: [
-        { label: "Mobile", value: phone },
-        { label: "Service", value: SERVICE_TEXT[service] },
-        { label: "Out of town", value: outOfTown ? "Yes" : "No" },
-        { label: "Kids", value: bringingKids ? `Yes (${kids.length})` : "No" },
-        {
-          label: "Planning Center",
-          value: pcoStatus,
-        },
-      ],
-      message: [bringingKids ? kids.map(kidLine).join("\n") : "", notes ? `Notes: ${notes}` : ""]
-        .filter(Boolean)
-        .join("\n\n") || "(No kids or notes.)",
-    }),
-  }).catch((e) => console.error("[visit/plan] notify failed:", e));
+  const recipients = Array.from(
+    new Set([VISIT_NOTIFY_EMAIL, ...(bringingKids ? [VISIT_KIDS_EMAIL] : [])]),
+  );
+  for (const to of recipients) {
+    await sendMail({
+      to,
+      replyTo: email,
+      subject: `Visitor coming ${dateLabel}: ${fullName}${bringingKids ? " (with kids)" : ""}`,
+      text: lines.join("\n"),
+      html: buildContactNotificationHtml({
+        heading: `Visitor coming ${dateLabel}`,
+        fromName: fullName,
+        fromEmail: email,
+        meta: [
+          { label: "Mobile", value: phone },
+          { label: "Service", value: SERVICE_TEXT[service] },
+          { label: "Out of town", value: outOfTown ? "Yes" : "No" },
+          {
+            label: "Kids",
+            value: bringingKids ? `Yes (${kids.length})` : "No",
+          },
+          {
+            label: "Planning Center",
+            value: pcoStatus,
+          },
+        ],
+        message:
+          [
+            bringingKids ? kids.map(kidLine).join("\n") : "",
+            notes ? `Notes: ${notes}` : "",
+          ]
+            .filter(Boolean)
+            .join("\n\n") || "(No kids or notes.)",
+      }),
+    }).catch((e) => console.error("[visit/plan] notify failed:", e));
+  }
 
   // 3) Confirmation to the guest (best effort).
-  const svc = service === "unsure" ? "" : ` at ${SERVICE_TEXT[service].split(" (")[0]}`;
+  const svc =
+    service === "unsure" ? "" : ` at ${SERVICE_TEXT[service].split(" (")[0]}`;
   const kidsRegistered = Boolean(pco?.kidsRegistered);
   const kidsText = bringingKids
     ? `\n\nBringing kids? Plan to arrive 15–20 minutes early and use the Albemarle Ave entrance (Purple Lot). ` +
@@ -173,7 +219,8 @@ export async function POST(req: NextRequest) {
     html: buildVisitConfirmationHtml({
       firstName,
       dateLabel,
-      serviceLabel: service === "unsure" ? "" : SERVICE_TEXT[service].split(" (")[0],
+      serviceLabel:
+        service === "unsure" ? "" : SERVICE_TEXT[service].split(" (")[0],
       bringingKids,
       kidsPreRegUrl: KIDS_PREREG_URL,
       kidsRegistered,

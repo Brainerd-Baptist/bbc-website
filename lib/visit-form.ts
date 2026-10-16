@@ -9,6 +9,13 @@
 /** Who gets the heads-up email for every submission ("only me for now"). */
 export const VISIT_NOTIFY_EMAIL = "jking@brainerdbaptist.org";
 
+/**
+ * Who also gets the heads-up when a visitor is bringing kids.
+ * Josiah for now; switch to "kids@brainerdbaptist.org" once the kids team is ready.
+ * (Same address as above = one email, no duplicates.)
+ */
+export const VISIT_KIDS_EMAIL = "jking@brainerdbaptist.org";
+
 export const KIDS_PREREG_URL = "https://brainerdbaptist.churchcenter.com/people/forms/376960";
 
 export const VISIT_SERVICES = [
