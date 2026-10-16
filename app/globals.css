@@ -1068,9 +1068,9 @@ select:focus {
   --tint-band: var(--surface-sunken);
 }
 .site-look .card-lift,
-.site-look .glass,
-.site-look .glass-md,
-.site-look .glass-frost {
+.home-clean .glass,
+.home-clean .glass-md,
+.home-clean .glass-frost {
   background: var(--surface-raised);
   backdrop-filter: none;
   border: 1px solid var(--border);
@@ -1079,9 +1079,9 @@ select:focus {
     0 6px 18px rgba(0, 32, 91, 0.07);
 }
 .dark .site-look .card-lift,
-.dark .site-look .glass,
-.dark .site-look .glass-md,
-.dark .site-look .glass-frost {
+.dark .home-clean .glass,
+.dark .home-clean .glass-md,
+.dark .home-clean .glass-frost {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 .home-clean .eyebrow,
