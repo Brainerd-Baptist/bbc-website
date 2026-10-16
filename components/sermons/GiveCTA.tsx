@@ -8,7 +8,7 @@ export default function GiveCTA() {
         <div className="mb-5 md:mb-0">
           <p
             className="text-white font-bold text-lg md:text-xl mb-1.5"
-            style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-inter), sans-serif" }}
+            style={{ letterSpacing: "-0.025em", fontFamily: "var(--font-display)" }}
           >
             Support the Work
           </p>

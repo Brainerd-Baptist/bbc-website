@@ -129,8 +129,8 @@ export default async function SermonsPage() {
                     </div>
 
                     <h2 className="text-fg-on-dark mb-2"
-                      style={{ fontFamily: "var(--font-inter), sans-serif", fontWeight: 800,
-                        fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+                      style={{ fontFamily: "var(--font-display)", fontWeight: 700,
+                        fontSize: "clamp(1.5rem, 3.5vw, 2.25rem)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                       {hero.title}
                     </h2>
 

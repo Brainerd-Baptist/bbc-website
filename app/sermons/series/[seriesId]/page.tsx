@@ -95,11 +95,11 @@ export default async function SeriesPage({
           <h1
             className="text-fg-on-dark mb-4"
             style={{
-              fontFamily: "var(--font-barlow-condensed), sans-serif",
-              fontWeight: 800,
+              fontFamily: "var(--font-display)",
+              fontWeight: 700,
               fontSize: "clamp(2rem, 5vw, 3.5rem)",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.0,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.1,
             }}
           >
             {series.name}

@@ -182,7 +182,7 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
   };
 
   const headingStyle: React.CSSProperties = {
-    fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800,
+    fontFamily: "var(--font-display)", fontWeight: 700,
     fontSize: "1.1rem", letterSpacing: "-0.01em", color: "var(--fg)",
     marginBottom: "0.875rem", display: "flex", alignItems: "baseline", gap: "0.5rem",
   };
@@ -207,7 +207,7 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
       <section>
         <h2 style={headingStyle}>
           {title}
-          <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--fg-subtle)" }}>{hint}</span>
+          <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--fg-muted)" }}>{hint}</span>
         </h2>
         {grid(list, captions)}
       </section>
@@ -264,7 +264,7 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
           </select>
         )}
         {isFiltering && (
-          <button type="button" onClick={clearAll} style={{ ...selectStyle, cursor: "pointer", color: "var(--accent)" }}>
+          <button type="button" onClick={clearAll} style={{ ...selectStyle, cursor: "pointer", color: "var(--accent-text)" }}>
             Clear filters
           </button>
         )}
@@ -295,7 +295,7 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
       )}
 
       {filtered.length === 0 ? (
-        <p style={{ fontSize: "0.9rem", color: "var(--fg-subtle)" }}>Nothing matches that search yet.</p>
+        <p style={{ fontSize: "0.9rem", color: "var(--fg-muted)" }}>Nothing matches that search yet.</p>
       ) : view === "az" ? (
         grid(filtered)
       ) : view === "type" ? (
@@ -307,7 +307,7 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
               <section key={t}>
                 <h2 style={headingStyle}>
                   {TYPE_LABEL[t]}
-                  <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--fg-subtle)" }}>{group.length}</span>
+                  <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--fg-muted)" }}>{group.length}</span>
                 </h2>
                 {grid(group)}
               </section>
@@ -330,14 +330,14 @@ export default function ResourceCatalog({ resources }: { resources: SanityResour
                   {shelf.slug ? (
                     <a href={`/series/${shelf.slug}`} style={{ color: "inherit", textDecoration: "none" }}>{shelf.title}</a>
                   ) : shelf.title}
-                  <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--fg-subtle)" }}>{shelf.items.length}</span>
+                  <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--fg-muted)" }}>{shelf.items.length}</span>
                 </h2>
                 {grid(list)}
                 {!open && (
                   <button
                     type="button"
                     onClick={() => setExpanded((e) => ({ ...e, [key]: true }))}
-                    style={{ marginTop: "0.75rem", fontSize: "0.8rem", fontWeight: 600, color: "var(--accent)", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                    style={{ marginTop: "0.75rem", fontSize: "0.8rem", fontWeight: 600, color: "var(--accent-text)", background: "none", border: "none", cursor: "pointer", padding: 0 }}
                   >
                     Show all {shelf.items.length}
                   </button>
@@ -367,7 +367,7 @@ function ResourceCard({
   const r = item.r;
   const description = r.blurb || r.autoSummary;
   const chip: React.CSSProperties = {
-    fontSize: "0.65rem", fontWeight: 600, color: "var(--fg-subtle)",
+    fontSize: "0.65rem", fontWeight: 600, color: "var(--fg-muted)",
     background: "var(--hover-subtle)", borderRadius: "9999px", padding: "0.2rem 0.55rem",
     textDecoration: "none", border: "none", cursor: "pointer",
   };
@@ -388,9 +388,9 @@ function ResourceCard({
         rel="noopener noreferrer"
         style={{ display: "flex", flexDirection: "column", gap: "0.375rem", textDecoration: "none" }}
       >
-        <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent)" }}>
+        <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--accent-text)" }}>
           {TYPE_LABEL[r.type] ?? "Resource"}
-          {caption && <span style={{ color: "var(--fg-subtle)", letterSpacing: "0.02em", textTransform: "none", fontWeight: 600 }}> · {caption}</span>}
+          {caption && <span style={{ color: "var(--fg-muted)", letterSpacing: "0.02em", textTransform: "none", fontWeight: 600 }}> · {caption}</span>}
         </span>
         <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--fg)", lineHeight: 1.3 }}>{r.title}</span>
         {r.creator && <span style={{ fontSize: "0.8rem", color: "var(--fg-muted)" }}>{r.creator}</span>}
@@ -408,7 +408,7 @@ function ResourceCard({
       {(item.topics.length > 0 || item.books.length > 0) && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem", marginTop: "0.25rem" }}>
           {item.topics.slice(0, 3).map((t) => (
-            <button key={t} type="button" onClick={() => onTopic(activeTopic === t ? "all" : t)} style={{ ...chip, color: "var(--accent)" }}>
+            <button key={t} type="button" onClick={() => onTopic(activeTopic === t ? "all" : t)} style={{ ...chip, color: "var(--accent-text)" }}>
               {t}
             </button>
           ))}

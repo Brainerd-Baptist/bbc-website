@@ -158,11 +158,11 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               <h1
                 className="text-white mb-1"
                 style={{
-                  fontFamily: "var(--font-barlow-condensed), sans-serif",
-                  fontWeight: 800,
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
                   fontSize: "clamp(2rem, 5vw, 3.5rem)",
                   letterSpacing: "-0.02em",
-                  lineHeight: 1.0,
+                  lineHeight: 1.1,
                 }}
               >
                 {name}

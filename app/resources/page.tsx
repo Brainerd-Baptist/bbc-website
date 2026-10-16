@@ -17,8 +17,8 @@ export default async function ResourcesPage() {
       <div className="max-w-5xl mx-auto">
         <h1
           style={{
-            fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800,
-            fontSize: "clamp(1.75rem, 4vw, 2.75rem)", letterSpacing: "-0.03em",
+            fontFamily: "var(--font-display)", fontWeight: 700,
+            fontSize: "clamp(1.75rem, 4vw, 2.75rem)", letterSpacing: "-0.02em",
             color: "var(--fg)", marginBottom: "0.5rem",
           }}
         >

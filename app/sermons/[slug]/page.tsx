@@ -371,8 +371,8 @@ export default async function SermonPage({ params }: { params: Promise<{ slug: s
           </div>
 
           <h1 className="text-fg-on-dark mb-4"
-            style={{ fontFamily: "var(--font-barlow-condensed), sans-serif", fontWeight: 800,
-              fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.03em", lineHeight: 1.05 }}>
+            style={{ fontFamily: "var(--font-display)", fontWeight: 700,
+              fontSize: "clamp(1.75rem, 4vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.05 }}>
             {s.title}
           </h1>
 
