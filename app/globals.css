@@ -1006,14 +1006,6 @@ select:focus {
 .skip-link:focus { transform: translateY(0); }
 #main-content:focus { outline: none; }
 
-/* ── Home only ─────────────────────────────────────────────────────────────
-   On the home page the accent colour is reserved for the main button, so
-   accent-coloured text is navy there. Links on other pages stay teal so they
-   still look like links. (The home wrapper is app/page.tsx.) */
-.home-clean .text-accent-text {
-  color: var(--fg);
-}
-
 /* ── Frosted menu (light mode) ─────────────────────────────────────────────
    The page behind the open menu gets a pale veil instead of a dark scrim, so
    the glass stays bright and shows the page through it. Dark mode keeps its

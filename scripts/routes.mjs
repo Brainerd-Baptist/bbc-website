@@ -36,6 +36,19 @@ export const ROUTES = [
   { path: "/visit", navChrome: "transparent" },
   { path: "/wednesday", navChrome: "transparent" },
   { path: "/who-is-jesus", navChrome: "transparent" },
+  // Added with the theme rollout. navChrome follows lib/nav-treatment.ts
+  // ("overlay" = transparent, "solid" = glass); confirm on the first run.
+  { path: "/about/timeline", navChrome: "glass" },
+  { path: "/accessibility", navChrome: "glass" },
+  { path: "/bx/reserve", navChrome: "glass" },
+  { path: "/bx-journal", navChrome: "glass" },
+  { path: "/bx-map", navChrome: "glass" },
+  { path: "/membership", navChrome: "glass" },
+  { path: "/ministries/college", navChrome: "transparent" },
+  { path: "/ministries/hispanic", navChrome: "transparent" },
+  { path: "/missions", navChrome: "glass" },
+  { path: "/my-notes", navChrome: "glass" },
+  { path: "/resources", navChrome: "glass" },
 ];
 
 /** Routes deliberately excluded, with the reason, so the list stays honest. */

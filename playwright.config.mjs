@@ -45,5 +45,9 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // Phone profile (Chromium emulating a Pixel 7: 412px wide, touch, 2.6x).
+    // Catches layout and contrast regressions at phone width. First run writes
+    // its own baselines under the "phone" name.
+    { name: "phone", use: { ...devices["Pixel 7"], deviceScaleFactor: 1 } },
   ],
 });

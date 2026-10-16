@@ -8,7 +8,7 @@ import ConnectBand from "@/components/home/ConnectBand";
 
 export default function Home() {
   return (
-    <div className="home-clean">
+    <>
       <Hero />
       <ServiceInfo />
       <SermonBand />
@@ -16,6 +16,6 @@ export default function Home() {
       <PhotoStrip />
       <MinistriesSection />
       <ConnectBand />
-    </div>
+    </>
   );
 }

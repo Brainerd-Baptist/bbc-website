@@ -330,9 +330,8 @@
   --elev-2xl: 0 12px 28px rgba(0, 32, 91, 0.12), 0 32px 80px rgba(0, 32, 91, 0.24);
 
   /* ── Glass (frost tier) ───────────────────────────────────────────────
-     Used by .glass-frost, .glass-md and .bx-bloom in globals.css.
-       --glass-fill-frost  half-clear card surface (the showcase tier)
-       --glass-fill-md     lighter, more opaque tier for dense content
+     Used by .glass-on-dark and the dark nav/menu surfaces in globals.css.
+     (.glass-frost, .glass, .glass-md use the --frost-* tokens above.)
        --glass-edge        bright rim that catches light
        --glass-hi          top-edge highlight (inset)
        --glass-ring        1px hairline so the card edge shows on a pale page
@@ -340,11 +339,8 @@
        --bloom-a/b/c       soft colour layers placed BEHIND glass so the blur
                            has something to bend. Without them glass over a
                            flat page just looks like a solid card. */
-  --glass-fill-frost: rgba(255, 255, 255, 0.62);
-  --glass-fill-frost-end: rgba(255, 255, 255, 0.28);
   --glass-sheen:      rgba(255, 255, 255, 0.50);
   --glass-edge-low:   rgba(255, 255, 255, 0.45);
-  --glass-glow:       rgba(255, 255, 255, 0.30);
   /* On-dark glass: for cards on a navy band or photo. Defined once on :root and
      NOT redefined in .dark, because the surface beneath is dark in both themes. */
   --glass-dk-fill:     rgba(255, 255, 255, 0.13);
@@ -354,7 +350,6 @@
   --glass-dk-edge-low: rgba(255, 255, 255, 0.07);
   --glass-dk-shadow:       0 8px 24px rgba(0, 8, 30, 0.35);
   --glass-dk-shadow-hover: 0 14px 32px rgba(0, 8, 30, 0.45);
-  --glass-fill-md:    rgba(255, 255, 255, 0.66);
   --glass-edge:       rgba(255, 255, 255, 0.85);
   --glass-hi:         rgba(255, 255, 255, 0.90);
   --glass-ring:       rgba(0, 32, 91, 0.06);
@@ -743,13 +738,8 @@
   --elev-lg:  0 8px 20px rgba(0, 0, 0, 0.35), 0 24px 56px rgba(0, 0, 0, 0.45);
   --elev-xl:  0 12px 28px rgba(0, 0, 0, 0.40), 0 32px 72px rgba(0, 0, 0, 0.50);
   --elev-2xl: 0 16px 36px rgba(0, 0, 0, 0.45), 0 40px 90px rgba(0, 0, 0, 0.55);
-
-  --glass-fill-frost: rgba(44, 62, 98, 0.50);
-  --glass-fill-frost-end: rgba(20, 30, 54, 0.32);
   --glass-sheen:      rgba(190, 220, 255, 0.14);
   --glass-edge-low:   rgba(150, 190, 255, 0.10);
-  --glass-glow:       rgba(120, 170, 255, 0.07);
-  --glass-fill-md:    rgba(22, 32, 48, 0.66);
   --glass-edge:       rgba(150, 190, 255, 0.22);
   --glass-hi:         rgba(180, 210, 255, 0.30);
   --glass-ring:       rgba(255, 255, 255, 0.04);
