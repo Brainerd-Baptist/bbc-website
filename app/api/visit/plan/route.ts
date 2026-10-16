@@ -4,7 +4,7 @@ import {
   buildVisitConfirmationHtml,
   buildContactNotificationHtml,
 } from "@/lib/email-templates";
-import { registerVisitInPco, type VisitPcoResult } from "@/lib/pco-visit";
+import { registerVisitInPco, isChildBirthday, type VisitPcoResult } from "@/lib/pco-visit";
 import {
   VISIT_NOTIFY_EMAIL,
   VISIT_KIDS_EMAIL,
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     allergies: clip(k.allergies, 300),
   }));
   const kidLine = (k: (typeof kids)[number]) =>
-    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""} | ${k.gender === "Female" ? "Girl" : k.gender === "Male" ? "Boy" : "gender ?"} | Allergies: ${k.allergies || "?"}`;
+    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""} | ${k.gender === "Female" ? "Girl" : k.gender === "Male" ? "Boy" : "gender ?"} | Allergies: ${k.allergies || "?"}${isChildBirthday(k.birthday) ? "" : " | 18+ (saved as an adult profile)"}`;
   const kidsInfo = kids.map(kidLine).join("\n");
   const notes = clip(b.notes, 1000);
   const outOfTown = Boolean(b.outOfTown);

@@ -87,11 +87,21 @@ async function findOrCreateAdult(
     "GET",
     `/people?where[search_name_or_email]=${encodeURIComponent(email)}&per_page=1`,
   );
-  const existing = found.json?.data?.[0]?.id;
-  if (existing) return String(existing);
+  const hit = found.json?.data?.[0];
+  if (hit?.id) {
+    // The adult filling this out is an adult. If their profile is wrongly flagged child (and
+    // their birthday doesn't say otherwise) fix it, or they'd be locked out of adult check-in.
+    const a = hit.attributes ?? {};
+    if (a.child === true && (!a.birthdate || !isChildBirthday(a.birthdate))) {
+      await call(auth, "PATCH", `/people/${hit.id}`, {
+        data: { type: "Person", id: String(hit.id), attributes: { child: false } },
+      });
+    }
+    return String(hit.id);
+  }
 
   const r = await call(auth, "POST", "/people", {
-    data: { type: "Person", attributes: { first_name: first, last_name: last } },
+    data: { type: "Person", attributes: { first_name: first, last_name: last, child: false } },
   });
   if (!r.ok) throw new Error(fail("create person", r));
   const id = String(r.json.data.id);
@@ -104,6 +114,15 @@ async function findOrCreateAdult(
 
 function fail(what: string, r: Call) {
   return `${what}: ${r.status} ${r.text.slice(0, 300)}`;
+}
+
+/** Check-Ins only lets people flagged `child` into kids rooms; PCO's rule here: under 18 = child, 18+ = adult. */
+export function isChildBirthday(birthday: string, today = new Date()): boolean {
+  const [y, m, d] = birthday.split("-").map(Number);
+  if (!y || !m || !d) return true;
+  let age = today.getUTCFullYear() - y;
+  if (today.getUTCMonth() + 1 < m || (today.getUTCMonth() + 1 === m && today.getUTCDate() < d)) age--;
+  return age < 18;
 }
 
 /** Form label -> PCO grade integer (-1 = Pre-K, 0 = K, 1-12). undefined = leave blank. */
@@ -136,8 +155,17 @@ async function findOrCreateChild(auth: string, k: VisitKid, errors: string[]): P
     `&where[last_name]=${encodeURIComponent(k.lastName)}` +
     `&where[birthdate]=${encodeURIComponent(k.birthday)}&per_page=1`;
   const found = await call(auth, "GET", `/people?${q}`);
-  const existing = found.json?.data?.[0]?.id;
-  if (existing) return String(existing);
+  const hit = found.json?.data?.[0];
+  const isChild = isChildBirthday(k.birthday);
+  if (hit?.id) {
+    if ((hit.attributes?.child ?? false) !== isChild) {
+      const f = await call(auth, "PATCH", `/people/${hit.id}`, {
+        data: { type: "Person", id: String(hit.id), attributes: { child: isChild } },
+      });
+      if (!f.ok) errors.push(fail(`set child flag on ${k.firstName}`, f));
+    }
+    return String(hit.id);
+  }
 
   const grade = gradeToPco(k.grade);
   const allergies = k.allergies.trim();
@@ -146,7 +174,7 @@ async function findOrCreateChild(auth: string, k: VisitKid, errors: string[]): P
     first_name: k.firstName,
     last_name: k.lastName,
     birthdate: k.birthday,
-    child: true,
+    child: isChild, // under 18 = child profile (kids rooms); 18+ = adult
   };
   if (grade !== undefined) base.grade = grade;
   // Check-Ins shows medical_notes on the child's label. Only set it when there is something to say.
