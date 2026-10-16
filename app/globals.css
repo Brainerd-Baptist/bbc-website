@@ -1122,7 +1122,7 @@ body:has(.home-clean) .bx-backdrop {
    body, buttons, labels stay Barlow. */
 .home-clean .h-display, .home-clean .h-hero, .home-clean .h-subsection, .home-clean .h-section,
 .home-clean h1, .home-clean h2, .home-clean h3, .home-clean .h-item,
-.home-clean .font-condensed:not(.btn-primary):not(.btn-outline-white):not(.btn-outline-navy) {
+.home-clean .font-condensed:not(.btn-primary):not(.btn-outline-white):not(.btn-outline-navy):not(.rounded-full) {
   font-family: var(--font-display, var(--font-source-serif)), Georgia, serif !important;
   font-weight: 700;
   letter-spacing: -0.01em;
