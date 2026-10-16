@@ -313,6 +313,14 @@ for (const theme of THEMES) {
             `at most 3 characters - it exempts an ornament, not content`,
         ).toEqual([]);
 
+        // Freeze colour transitions before axe samples. Buttons ease between their
+        // resting and hover colours; sampling mid-ease reported contrast ratios
+        // like 4.22 for a button whose settled colour is 4.5:1 (flaky, and a
+        // different route each run). Settled colours are what a visitor reads.
+        await page.addStyleTag({
+          content: "*,*::before,*::after{transition:none!important;animation:none!important}",
+        });
+        await page.waitForTimeout(100);
         const axe = await new AxeBuilder({ page })
           .withRules(["color-contrast"])
           .exclude("[data-decorative]")
