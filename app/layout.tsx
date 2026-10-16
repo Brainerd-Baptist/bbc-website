@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Barlow, Barlow_Condensed, Source_Serif_4 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { AudioProvider } from "@/lib/audio-context";
 import { VideoProvider } from "@/lib/video-context";
@@ -82,6 +83,7 @@ export default function RootLayout({
             </VideoProvider>
           </AudioProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

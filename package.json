@@ -33,6 +33,7 @@
     "@tiptap/pm": "^3.31.3",
     "@tiptap/react": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^13.4.0",
     "google-auth-library": "^11.1.0",
     "mammoth": "^1.12.3",
