@@ -16,7 +16,7 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
   },
   {
     q: "Is there coffee?",
-    a: "Yes. Coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building. Grab a cup and take it into the service with you.",
+    a: "Yes, and it's free. Coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building. Grab a cup and take it into the service with you.",
   },
   {
     q: "What do I do with my kids?",

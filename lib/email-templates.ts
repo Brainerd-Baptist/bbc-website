@@ -280,7 +280,7 @@ export function buildVisitConfirmationHtml({
       ${row("When to arrive", `Services run about 60 minutes. Arriving 10&ndash;15 minutes early is plenty.`)}
       ${row("What to wear", `Whatever you&rsquo;re comfortable in. Come as you are.`)}
       ${row("Who will greet you", `Our Welcome Team is at the front doors, with a Guest Services desk just inside.`)}
-      ${row("Coffee", `Coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building.`)}
+      ${row("Coffee", `Free coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building.`)}
       ${kidsBlock}
     </table>
     <p style="margin:0;">Not sure where to park or how to find your way around? Our campus map shows the lots, the doors, and walking directions.</p>

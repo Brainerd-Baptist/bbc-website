@@ -28,7 +28,7 @@ const STEPS = [
     num: "04",
     label: "Walking in",
     heading: "Someone will find you",
-    body: "Greeters are at every door. Fair warning: Brainerd Baptist is a genuinely relational crowd — people will say hi, introduce themselves, maybe offer to show you around. Nobody is going to ask you to stand up in front of the room. But if you walk in looking a little uncertain, someone will notice. Coffee is available just inside the sanctuary doors and at the coffee station by the elevator.",
+    body: "Greeters are at every door. Fair warning: Brainerd Baptist is a genuinely relational crowd — people will say hi, introduce themselves, maybe offer to show you around. Nobody is going to ask you to stand up in front of the room. But if you walk in looking a little uncertain, someone will notice. Free coffee is available just inside the sanctuary doors and at the coffee station by the elevator.",
     note: null,
   },
   {
