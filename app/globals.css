@@ -58,6 +58,8 @@
    animates layout properties too.) */
 .identity-ink          { color: var(--identity-light); }
 .dark .identity-ink    { color: var(--identity-dark); }
+/* For labels on a band that is dark in both themes (sermon hero): always the dark-theme ink. */
+.identity-ink-on-dark  { color: var(--identity-dark); }
 .identity-border       { border-color: var(--identity-light); }
 .dark .identity-border { border-color: var(--identity-dark); }
 

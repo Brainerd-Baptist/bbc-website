@@ -21,7 +21,7 @@ export default function CommunityPage() {
         }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
+          <p className="eyebrow-white mb-4">
             Serving Chattanooga
           </p>
           <div className="flex justify-center mb-6">
@@ -31,7 +31,7 @@ export default function CommunityPage() {
             className="text-white mb-5 h-display"
           >
             Brainerd Baptist in the{" "}
-            <span style={{ color: "var(--accent-text)" }}>Community.</span>
+            <span style={{ color: "var(--accent)" }}>Community.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto">
             We believe the church exists for the neighborhood. Here&apos;s how
