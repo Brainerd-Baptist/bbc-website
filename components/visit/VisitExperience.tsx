@@ -7,6 +7,8 @@ import { CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
 import SundayWalkthrough from "@/components/visit/SundayWalkthrough";
 import SundayPlanner from "@/components/visit/SundayPlanner";
+import PlanVisitForm from "@/components/visit/PlanVisitForm";
+import VisitFAQ from "@/components/visit/VisitFAQ";
 import ConnectForm from "@/components/connect/ConnectForm";
 import VisitorToggle, { type VisitorType } from "@/components/visit/VisitorToggle";
 import ReturningVisitorPanel from "@/components/visit/ReturningVisitorPanel";
@@ -208,6 +210,9 @@ export default function VisitExperience() {
           {/* ── Sunday walkthrough ─────────────────────────────── */}
           <SundayWalkthrough />
 
+          {/* ── Plan a visit form ──────────────────────────────── */}
+          <PlanVisitForm />
+
           {/* ── What to expect ─────────────────────────────────── */}
           <Section className="py-24 px-6">
             <div className="max-w-5xl mx-auto">
@@ -257,6 +262,8 @@ export default function VisitExperience() {
               </p>
             </div>
           </Section>
+          {/* ── FAQ ────────────────────────────────────────────── */}
+          <VisitFAQ />
         </>
       )}
 

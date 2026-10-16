@@ -1,0 +1,144 @@
+import { NextRequest, NextResponse } from "next/server";
+import { sendMail } from "@/lib/mail";
+import { pcoAuth, findOrCreatePerson, submitForm, type FieldAnswer } from "@/lib/pco-forms";
+import {
+  VISIT_NOTIFY_EMAIL,
+  VISIT_PCO,
+  KIDS_PREREG_URL,
+  visitPcoReady,
+} from "@/lib/visit-form";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface Body {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  dateLabel?: string;
+  service?: string; // "830" | "1100" | "unsure"
+  outOfTown?: boolean;
+  bringingKids?: boolean;
+  kidsInfo?: string;
+  notes?: string;
+  website?: string; // honeypot
+}
+
+const SERVICE_TEXT: Record<string, string> = {
+  "830": "8:30 AM (Choir & Orchestra)",
+  "1100": "11:00 AM (Band-Led)",
+  unsure: "Not sure yet",
+};
+
+const clip = (s: unknown, n: number) => String(s ?? "").trim().slice(0, n);
+
+export async function POST(req: NextRequest) {
+  let b: Body;
+  try {
+    b = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  // Honeypot: bots fill the hidden field. Pretend success, do nothing.
+  if (b.website) return NextResponse.json({ ok: true });
+
+  const firstName = clip(b.firstName, 80);
+  const lastName = clip(b.lastName, 80);
+  const email = clip(b.email, 200);
+  const phone = clip(b.phone, 40);
+  const dateLabel = clip(b.dateLabel, 60);
+  const service = clip(b.service, 10) in SERVICE_TEXT ? clip(b.service, 10) : "unsure";
+  const bringingKids = Boolean(b.bringingKids);
+  const kidsInfo = clip(b.kidsInfo, 500);
+  const notes = clip(b.notes, 1000);
+  const outOfTown = Boolean(b.outOfTown);
+
+  if (!firstName || !EMAIL_RE.test(email) || !phone || !dateLabel) {
+    return NextResponse.json(
+      { error: "Please add your name, email, mobile number, and the day you plan to visit." },
+      { status: 400 },
+    );
+  }
+
+  const fullName = `${firstName} ${lastName}`.trim();
+
+  // 1) Planning Center (only once the form is configured) — never blocks the rest.
+  let pco: "submitted" | "skipped" | "failed" = "skipped";
+  const appId = process.env.PCO_APP_ID;
+  const secret = process.env.PCO_SECRET;
+  if (visitPcoReady() && appId && secret) {
+    try {
+      const auth = pcoAuth(appId, secret);
+      const personId = await findOrCreatePerson(auth, firstName, lastName, email);
+      const F = VISIT_PCO.fields;
+      const O = VISIT_PCO.options;
+      const answers: FieldAnswer[] = [
+        { kind: "phone", fieldId: F.phone, number: phone, location: "Mobile" },
+        { kind: "text", fieldId: F.date, value: dateLabel },
+      ];
+      const svcOpt = O.service[service];
+      if (svcOpt) answers.push({ kind: "option", fieldId: F.service, optionId: svcOpt });
+      const oot = O.outOfTown[outOfTown ? "yes" : "no"];
+      if (F.outOfTown && oot) answers.push({ kind: "option", fieldId: F.outOfTown, optionId: oot });
+      answers.push({ kind: "option", fieldId: F.kids, optionId: O.kids[bringingKids ? "yes" : "no"] });
+      if (bringingKids && kidsInfo && F.kidsInfo) answers.push({ kind: "text", fieldId: F.kidsInfo, value: kidsInfo });
+      if (notes && F.notes) answers.push({ kind: "text", fieldId: F.notes, value: notes });
+      await submitForm(auth, VISIT_PCO.formId, personId, answers);
+      pco = "submitted";
+    } catch (err) {
+      console.error("[visit/plan] PCO submission failed:", err);
+      pco = "failed";
+    }
+  }
+
+  // 2) Heads-up to guest services (also the safety net if PCO is off or fails).
+  const lines = [
+    `New "Plan a Visit" submission`,
+    ``,
+    `Name: ${fullName}`,
+    `Email: ${email}`,
+    `Mobile: ${phone}`,
+    `Planning to visit: ${dateLabel}`,
+    `Service: ${SERVICE_TEXT[service]}`,
+    `Visiting from out of town: ${outOfTown ? "Yes" : "No"}`,
+    `Bringing kids: ${bringingKids ? "Yes" : "No"}`,
+    ...(bringingKids ? [`Kids (names / ages): ${kidsInfo || "(not provided)"}`] : []),
+    ...(notes ? [`Notes: ${notes}`] : []),
+    ``,
+    pco === "submitted"
+      ? "Also added in Planning Center."
+      : pco === "failed"
+        ? "Planning Center submission FAILED — add this person manually."
+        : "Planning Center form not connected yet — add this person manually.",
+  ];
+  await sendMail({
+    to: VISIT_NOTIFY_EMAIL,
+    replyTo: email,
+    subject: `Visitor coming ${dateLabel}: ${fullName}${bringingKids ? " (with kids)" : ""}`,
+    text: lines.join("\n"),
+  }).catch((e) => console.error("[visit/plan] notify failed:", e));
+
+  // 3) Confirmation to the guest (best effort).
+  const svc = service === "unsure" ? "" : ` at ${SERVICE_TEXT[service].split(" (")[0]}`;
+  const kidsText = bringingKids
+    ? `\n\nBringing kids? Plan to arrive 15–20 minutes early and use the Albemarle Ave entrance (Purple Lot). To skip the line at check-in, pre-register your family: ${KIDS_PREREG_URL}`
+    : "";
+  const text =
+    `Hi ${firstName} — we're glad you're coming${dateLabel ? ` on ${dateLabel}` : ""}${svc}!\n\n` +
+    `A few things that might help:\n` +
+    `• Address: 300 Brookfield Ave, Chattanooga, TN 37411. Park in the Red lot on Brookfield Ave (across from the front doors) — volunteers will help.\n` +
+    `• Services run about 60 minutes. Arriving 10–15 minutes early is plenty.\n` +
+    `• Wear whatever you're comfortable in. Come as you are.\n` +
+    `• Our Welcome Team is at the front doors, with a Guest Services desk just inside.` +
+    kidsText +
+    `\n\nIf you have any questions before Sunday, just reply to this email.\n\nBrainerd Baptist Church\nbrainerdbaptist.org`;
+  await sendMail({
+    to: email,
+    replyTo: VISIT_NOTIFY_EMAIL,
+    subject: "We can't wait to meet you — Brainerd Baptist Church",
+    text,
+  }).catch((e) => console.error("[visit/plan] confirmation failed:", e));
+
+  return NextResponse.json({ ok: true, bringingKids });
+}
