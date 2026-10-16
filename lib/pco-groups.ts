@@ -400,7 +400,7 @@ export async function getPublicLifeGroups(): Promise<LifeGroup[]> {
       return {
         id: g.id,
         name: g.attributes.name,
-        schedule: g.attributes.schedule?.trim() || "Contact us for meeting details",
+        schedule: (g.attributes.schedule?.trim() || "Contact us for meeting details").replace(/Sanctuary Building/gi, "Main building"),
         memberCount: g.attributes.memberships_count ?? 0,
         churchCenterUrl: g.attributes.public_church_center_web_url,
         dayOfWeek: dayByGroupId.get(g.id),

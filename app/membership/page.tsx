@@ -107,7 +107,7 @@ export default function MembershipPage() {
         </h1>
         <p className="text-fg-on-dark-muted mt-6 max-w-xl mx-auto text-base md:text-lg leading-relaxed">
           Membership at Brainerd isn&apos;t a formality or a club — it&apos;s a partnership.
-          Here&apos;s what that means, and how to take the next step.
+          You don&apos;t have to be a member to attend or to serve — there are many ways to get plugged in. But our hope is that everyone who calls Brainerd home will take the next step and commit to membership. Here&apos;s what that means, and how to take it.
         </p>
       </section>
 

@@ -60,7 +60,7 @@ const PROGRAMS: Program[] = [
     ages: "Adults",
     color: "var(--fg)",
     ink: { light: "var(--fg)", dark: "var(--fg)" },
-    location: "Main Worship Center",
+    location: "Sanctuary, main building",
     href: null,
     photo: "/carousel/adults-study-wide.jpg",
     body:
@@ -99,7 +99,7 @@ const PROGRAMS: Program[] = [
     ages: "All ages welcome",
     color: IDENTITY.plum.hue,
     ink: IDENTITY.plum,
-    location: "Choir Room / Worship Center",
+    location: "Choir Room, main building",
     href: null,
     photo: "/carousel/choir-orchestra.jpg",
     body:

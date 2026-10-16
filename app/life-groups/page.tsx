@@ -103,7 +103,7 @@ export default async function LifeGroupsPage() {
               <h2 className="font-condensed font-800 text-fg text-2xl mb-4">What Happens?</h2>
               <p className="text-fg-muted text-sm leading-relaxed mb-3">
                 Most groups open with some time to catch up, then move into the text — usually 30–40 minutes
-                of discussion on the week&apos;s passage. Groups end with prayer.
+                of discussion on the week&apos;s passage. Groups end with prayer. If you grew up with Sunday school, think of this as the same Sunday-morning hour, built around conversation instead of a lecture.
               </p>
               <p className="text-fg-muted text-sm leading-relaxed">
                 Some groups are mixed and some gather people in a similar season of life. Use the

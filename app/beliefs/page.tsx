@@ -121,14 +121,14 @@ const BELIEFS = [
     icon: <IconCross />,
     title: "Salvation",
     // BF&M Article IV — John 3:16; Romans 3:23; Romans 5:8; Ephesians 2:8–9
-    body: "Every person is made in God's image and fallen by sin, in need of rescue. Jesus Christ — fully God, fully man — lived without sin, died in our place, and rose from the dead. Salvation is by grace through faith in him alone. Nothing we do earns it.",
+    body: "Every person is made in God's image and fallen by sin, in need of rescue. Jesus Christ — fully God, fully man — lived without sin, died in our place, and rose from the dead. Salvation is by grace through faith in him alone. Nothing we do earns it. In plain words: we all fall short of how God made us to live, and Jesus took our place so that forgiveness can be a gift rather than something we earn.",
     verse: "John 3:16 · Romans 3:23 · Ephesians 2:8–9",
   },
   {
     icon: <IconWorship />,
     title: "Sunday Worship",
     // BF&M Article VI (The Church) + Article VIII (The Lord's Day) — Hebrews 10:24–25; Acts 20:7
-    body: "Sunday is when the church gathers — not to watch a performance, but to be the body of Christ together. We sing, we pray for one another, and we sit under the teaching of God's Word. The whole congregation worships, not just the stage.",
+    body: "Sunday is when the church gathers — not to watch a performance, but to be the body of Christ together. We sing, we pray for one another, and we listen to a sermon — about 35 minutes of teaching that works through a passage of the Bible. The whole congregation worships, not just the stage.",
     verse: "Hebrews 10:24–25 · Acts 20:7",
   },
   {
@@ -142,14 +142,14 @@ const BELIEFS = [
     icon: <IconCup />,
     title: "The Lord's Supper",
     // BF&M Article VII — 1 Corinthians 11:23–29; Matthew 26:26–30
-    body: "Communion is a regular part of our worship. We take it together as a church, remembering what Jesus did on the cross. It's open to anyone in the room who has committed their life to him.",
+    body: "Communion is a regular part of our worship. We take it together as a church, remembering what Jesus did on the cross. A small piece of bread and a cup are passed through the rows. Communion is for adults who have repented of their sin, confessed Christ as Lord, and been baptized. If that's not you yet, you're welcome to simply let the tray pass — and we'd love to talk with you about what that step looks like.",
     verse: "1 Corinthians 11:23–29 · Matthew 26:26–30",
   },
   {
     icon: <IconPeople />,
     title: "Life Together",
     // BF&M Article VI (The Church) — Acts 2:41–47; Ephesians 4:11–16
-    body: "Following Jesus is meant to be done together, not alone. Life Groups are how we do that — small circles of people who study Scripture, pray for one another, and show up for each other's lives.",
+    body: "Following Jesus is meant to be done together, not alone. Life Groups are how we do that — small groups that meet weekly, where people study Scripture, pray for one another, and show up for each other's lives.",
     verse: "Acts 2:41–47 · Ephesians 4:11–16",
   },
   {
@@ -242,7 +242,7 @@ export default function BeliefsPage() {
           >
             Baptist Faith &amp; Message 2000
           </a>{" "}
-          as our shared confession of faith.
+          as our shared statement of beliefs — the confession used by Southern Baptist churches.
         </p>
       </section>
 
