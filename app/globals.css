@@ -471,8 +471,8 @@ body {
 .gold-divider {
   width: 40px;
   height: 3px;
-  /* warm amber — distinct from .blue-divider's cyan */
-  background: linear-gradient(90deg, var(--gold-a), var(--gold-b));
+  /* flat teal — the single accent (class name kept to avoid touching every page) */
+  background: var(--accent);
   border-radius: 2px;
 }
 
