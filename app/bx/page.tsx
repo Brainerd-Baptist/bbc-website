@@ -47,7 +47,7 @@ export default function BXPage() {
             className="text-white mb-5 h-display"
           >
             The{" "}
-            <span style={{ color: "var(--accent-text)" }}>BX.</span>
+            <span style={{ color: "var(--accent)" }}>BX.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
             A 54,000 square foot fitness, recreation, and meeting facility in the
@@ -59,8 +59,7 @@ export default function BXPage() {
               href="https://guru.gyminsight.com/join/IBvAw4AA1c71Ojt"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition-colors"
-              style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
+              className="btn-primary"
             >
               Become a Member
             </a>
@@ -376,8 +375,7 @@ export default function BXPage() {
               href="https://docs.google.com/forms/d/e/1FAIpQLSeFrVGqjuNxP0mwbFfGOmXmwGsFPziNnNu985bRY5iXd6rVyg/viewform"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3.5 rounded-full transition-colors"
-              style={{ background: "var(--accent-solid)", color: "var(--fg-on-accent)" }}
+              className="btn-primary"
             >
               Room Reservation Request
             </a>
