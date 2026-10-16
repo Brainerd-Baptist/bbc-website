@@ -245,7 +245,7 @@ export default function PlanVisitForm() {
 
             <div className="space-y-1.5">
               <label htmlFor="pv-notes" className="block text-sm font-medium text-fg">
-                Anything else we should know? (optional)
+                Anything else we should know, like accessibility needs? (optional)
               </label>
               <textarea id="pv-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} className={inputClass} />
             </div>

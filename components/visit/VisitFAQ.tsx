@@ -41,6 +41,10 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     a: "Communion is a regular part of our worship. A small piece of bread and a cup are passed through the rows. It's for adults who have repented of their sin, confessed Christ as Lord, and been baptized. If that's not you yet, you're welcome to simply let the tray pass, and we'd love to talk with you about what that step means.",
   },
   {
+    q: "Is your campus wheelchair accessible?",
+    a: "Yes. The Red Lot, across from the front doors on Brookfield Ave, has 14 accessible spaces, and the Purple Lot on Albemarle Ave has 4 plus a covered drop-off at the Kids entrance. The Sanctuary's front doors have one step up. The step-free way in is the small ramp at the left (west) end of the front porch, or the ramp down to the lobby's side door from the courtyard. The BX has accessible spaces at its front doors and an elevator. If you'd like someone to meet you, tell us on the form above, or ask any greeter.",
+  },
+  {
     q: "How do I find my way around?",
     a: "Our Welcome Team is at the front doors, under the steeple on Brookfield Ave, and there is a Guest Services desk just inside. Ask anyone. We'll walk you to your room.",
   },
