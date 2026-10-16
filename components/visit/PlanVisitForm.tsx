@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Section from "@/components/ui/Section";
-import useScrollToSuccess from "@/components/connect/useScrollToSuccess";
 import { VISIT_SERVICES, KIDS_PREREG_URL } from "@/lib/visit-form";
 
 const inputClass =
@@ -54,7 +53,20 @@ export default function PlanVisitForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
-  const successRef = useScrollToSuccess(success);
+  const [kidsRegistered, setKidsRegistered] = useState(false);
+
+  // After submitting, the form swaps for a short card. Bring the reader to the top
+  // of this section (heading + card) rather than centering the card mid-section.
+  useEffect(() => {
+    if (!success) return;
+    const id = window.setTimeout(() => {
+      const el = document.getElementById("plan-your-visit");
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 88; // clear the sticky header
+      window.scrollTo({ top, behavior: "auto" });
+    }, 120);
+    return () => window.clearTimeout(id);
+  }, [success]);
 
   useEffect(() => {
     const s = nextSundays();
@@ -93,7 +105,10 @@ export default function PlanVisitForm() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) setError(data.error ?? "Something went wrong. Please try again.");
-      else setSuccess(true);
+      else {
+        setKidsRegistered(Boolean(data.kidsRegistered));
+        setSuccess(true);
+      }
     } catch {
       setError("Unable to submit. Please check your connection and try again.");
     } finally {
@@ -144,7 +159,7 @@ export default function PlanVisitForm() {
           We&apos;d love to make your first visit easy and welcoming. Tell us a little about
           you before you come, so we can be ready for you.
         </p>
-        <ul className="mb-10 space-y-2 max-w-md mx-auto">
+        <ul className={`mb-10 space-y-2 max-w-md mx-auto ${success ? "hidden" : ""}`}>
           {REASSURANCES.map((r) => (
             <li key={r} className="flex gap-3 text-sm text-fg-muted">
               <span aria-hidden="true" className="text-accent-text font-bold">✓</span>
@@ -154,7 +169,7 @@ export default function PlanVisitForm() {
         </ul>
 
         {success ? (
-          <div ref={successRef} className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
+          <div className="rounded-2xl bg-accent/10 border border-accent/30 px-8 py-10 text-center space-y-3">
             <p className="text-fg font-semibold text-lg">We&apos;ll see you {dateLabel}!</p>
             <p className="text-fg-muted text-sm leading-relaxed max-w-sm mx-auto">
               Check your email for parking and arrival details. If you have questions before
@@ -162,11 +177,17 @@ export default function PlanVisitForm() {
             </p>
             {bringingKids && (
               <p className="text-fg-muted text-sm leading-relaxed max-w-sm mx-auto">
-                Bringing kids? Pre-register your family so check-in is quick.{" "}
-                <a href={KIDS_PREREG_URL} className="text-accent-text font-semibold underline underline-offset-2">
-                  Pre-register your kids
-                </a>
-                .
+                {kidsRegistered ? (
+                  "Your kids are pre-registered. When you arrive, use the Albemarle Ave entrance and check them in as usual."
+                ) : (
+                  <>
+                    Bringing kids? Pre-register your family so check-in is quick.{" "}
+                    <a href={KIDS_PREREG_URL} className="text-accent-text font-semibold underline underline-offset-2">
+                      Pre-register your kids
+                    </a>
+                    .
+                  </>
+                )}
               </p>
             )}
           </div>

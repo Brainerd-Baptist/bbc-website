@@ -248,6 +248,7 @@ export function buildVisitConfirmationHtml({
   serviceLabel,
   bringingKids,
   kidsPreRegUrl,
+  kidsRegistered,
 }: {
   firstName: string;
   dateLabel: string;
@@ -255,6 +256,8 @@ export function buildVisitConfirmationHtml({
   serviceLabel: string;
   bringingKids: boolean;
   kidsPreRegUrl: string;
+  /** Kids were already added to our system — say so instead of linking pre-registration. */
+  kidsRegistered?: boolean;
 }): string {
   const when = serviceLabel ? `${escStr(dateLabel)} at ${escStr(serviceLabel)}` : escStr(dateLabel);
   const row = (title: string, text: string) =>
@@ -266,7 +269,7 @@ export function buildVisitConfirmationHtml({
   const kidsBlock = bringingKids
     ? row(
         "Bringing kids",
-        `Plan to arrive 15&ndash;20 minutes early and use the Albemarle Ave entrance (Purple Lot). To skip the line at check-in, <a href="${escStr(kidsPreRegUrl)}" style="color:${NAVY};font-weight:700;">pre-register your family</a>.`,
+        `Plan to arrive 15&ndash;20 minutes early and use the Albemarle Ave entrance (Purple Lot). ${kidsRegistered ? "Your kids are already pre-registered, so check-in will be quick." : `To skip the line at check-in, <a href="${escStr(kidsPreRegUrl)}" style="color:${NAVY};font-weight:700;">pre-register your family</a>.`}`,
       )
     : "";
 

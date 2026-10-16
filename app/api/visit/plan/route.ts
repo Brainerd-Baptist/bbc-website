@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
 import { buildVisitConfirmationHtml, buildContactNotificationHtml } from "@/lib/email-templates";
-import { pcoAuth, findOrCreatePerson, submitForm, type FieldAnswer } from "@/lib/pco-forms";
-import {
-  VISIT_NOTIFY_EMAIL,
-  VISIT_PCO,
-  KIDS_PREREG_URL,
-  visitPcoReady,
-} from "@/lib/visit-form";
+import { registerVisitInPco, type VisitPcoResult } from "@/lib/pco-visit";
+import { VISIT_NOTIFY_EMAIL, KIDS_PREREG_URL } from "@/lib/visit-form";
 
 const MAP_URL = `${(process.env.NEXT_PUBLIC_SITE_URL || "https://home.brainerdhq.app").replace(/\/$/, "")}/map`;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,34 +76,34 @@ export async function POST(req: NextRequest) {
 
   const fullName = `${firstName} ${lastName}`.trim();
 
-  // 1) Planning Center (only once the form is configured) — never blocks the rest.
-  let pco: "submitted" | "skipped" | "failed" = "skipped";
+  // 1) Planning Center People — never blocks the emails below.
+  let pco: VisitPcoResult | null = null;
   const appId = process.env.PCO_APP_ID;
   const secret = process.env.PCO_SECRET;
-  if (visitPcoReady() && appId && secret) {
+  if (appId && secret) {
     try {
-      const auth = pcoAuth(appId, secret);
-      const personId = await findOrCreatePerson(auth, firstName, lastName, email);
-      const F = VISIT_PCO.fields;
-      const O = VISIT_PCO.options;
-      const answers: FieldAnswer[] = [
-        { kind: "phone", fieldId: F.phone, number: phone, location: "Mobile" },
-        { kind: "text", fieldId: F.date, value: dateLabel },
-      ];
-      const svcOpt = O.service[service];
-      if (svcOpt) answers.push({ kind: "option", fieldId: F.service, optionId: svcOpt });
-      const oot = O.outOfTown[outOfTown ? "yes" : "no"];
-      if (F.outOfTown && oot) answers.push({ kind: "option", fieldId: F.outOfTown, optionId: oot });
-      answers.push({ kind: "option", fieldId: F.kids, optionId: O.kids[bringingKids ? "yes" : "no"] });
-      if (bringingKids && kidsInfo && F.kidsInfo) answers.push({ kind: "text", fieldId: F.kidsInfo, value: kidsInfo });
-      if (notes && F.notes) answers.push({ kind: "text", fieldId: F.notes, value: notes });
-      await submitForm(auth, VISIT_PCO.formId, personId, answers);
-      pco = "submitted";
+      pco = await registerVisitInPco(appId, secret, {
+        firstName,
+        lastName,
+        email,
+        phone,
+        bringingKids,
+        kids,
+        summary:
+          `Plan a Visit (website): ${dateLabel}, ${SERVICE_TEXT[service]}. ` +
+          `Out of town: ${outOfTown ? "yes" : "no"}.` +
+          (notes ? ` Notes: ${notes}` : ""),
+      });
+      if (pco.errors.length) console.error("[visit/plan] PCO partial failure:", pco.errors);
     } catch (err) {
-      console.error("[visit/plan] PCO submission failed:", err);
-      pco = "failed";
+      console.error("[visit/plan] PCO registration crashed:", err);
     }
   }
+  const pcoStatus = !pco
+    ? "Not connected — add manually"
+    : pco.errors.length === 0
+      ? `Added (${pco.steps.join(", ")})`
+      : `PARTIAL — ${pco.steps.join(", ") || "nothing"} added; check: ${pco.errors.map((e) => e.split(":")[0]).join(", ")}`;
 
   // 2) Heads-up to guest services (also the safety net if PCO is off or fails).
   const lines = [
@@ -124,11 +119,8 @@ export async function POST(req: NextRequest) {
     ...(bringingKids ? [`Kids (${kids.length}):`, ...kids.map((k) => `  - ${kidLine(k)}`)] : []),
     ...(notes ? [`Notes: ${notes}`] : []),
     ``,
-    pco === "submitted"
-      ? "Also added in Planning Center."
-      : pco === "failed"
-        ? "Planning Center submission FAILED — add this person manually."
-        : "Planning Center form not connected yet — add this person manually.",
+    `Planning Center: ${pcoStatus}`,
+    ...(pco?.errors.length ? [``, `Details:`, ...pco.errors.map((e) => `  - ${e}`)] : []),
   ];
   await sendMail({
     to: VISIT_NOTIFY_EMAIL,
@@ -146,8 +138,7 @@ export async function POST(req: NextRequest) {
         { label: "Kids", value: bringingKids ? `Yes (${kids.length})` : "No" },
         {
           label: "Planning Center",
-          value:
-            pco === "submitted" ? "Added" : pco === "failed" ? "FAILED — add manually" : "Not connected — add manually",
+          value: pcoStatus,
         },
       ],
       message: [bringingKids ? kids.map(kidLine).join("\n") : "", notes ? `Notes: ${notes}` : ""]
@@ -158,8 +149,12 @@ export async function POST(req: NextRequest) {
 
   // 3) Confirmation to the guest (best effort).
   const svc = service === "unsure" ? "" : ` at ${SERVICE_TEXT[service].split(" (")[0]}`;
+  const kidsRegistered = Boolean(pco?.kidsRegistered);
   const kidsText = bringingKids
-    ? `\n\nBringing kids? Plan to arrive 15–20 minutes early and use the Albemarle Ave entrance (Purple Lot). To skip the line at check-in, pre-register your family: ${KIDS_PREREG_URL}`
+    ? `\n\nBringing kids? Plan to arrive 15–20 minutes early and use the Albemarle Ave entrance (Purple Lot). ` +
+      (kidsRegistered
+        ? "Your kids are already pre-registered, so check-in will be quick."
+        : `To skip the line at check-in, pre-register your family: ${KIDS_PREREG_URL}`)
     : "";
   const text =
     `Hi ${firstName} — we're glad you're coming${dateLabel ? ` on ${dateLabel}` : ""}${svc}!\n\n` +
@@ -181,8 +176,13 @@ export async function POST(req: NextRequest) {
       serviceLabel: service === "unsure" ? "" : SERVICE_TEXT[service].split(" (")[0],
       bringingKids,
       kidsPreRegUrl: KIDS_PREREG_URL,
+      kidsRegistered,
     }),
   }).catch((e) => console.error("[visit/plan] confirmation failed:", e));
 
-  return NextResponse.json({ ok: true, bringingKids });
+  return NextResponse.json({
+    ok: true,
+    bringingKids,
+    kidsRegistered: Boolean(pco?.kidsRegistered),
+  });
 }

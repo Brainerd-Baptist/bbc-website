@@ -1,15 +1,9 @@
 /**
  * "Plan a Visit" form — shared config (server + client safe: no secrets).
  *
- * The form on /visit always (1) emails the guest-services contact and
- * (2) sends the guest a confirmation. If the Planning Center "Plan a Visit"
- * form has been created and its IDs filled in below, it ALSO submits there so
- * PCO workflows route the card ("bringing kids: yes" -> BrainerdKids Visitor,
- * "no" -> First Time Guests). Leave `formId` empty until that form exists;
- * the route skips PCO cleanly and nothing breaks.
- *
- * See the project doc "website-plan-a-visit-form-spec" for the exact PCO
- * form fields to create.
+ * Every submission (1) writes the visitor into Planning Center People
+ * (adult, children, household, workflow card — see lib/pco-visit.ts),
+ * (2) emails the guest-services contact, and (3) sends the guest a confirmation.
  */
 
 /** Who gets the heads-up email for every submission ("only me for now"). */
@@ -24,31 +18,8 @@ export const VISIT_SERVICES = [
 
 export type VisitServiceId = (typeof VISIT_SERVICES)[number]["id"];
 
-export const VISIT_PCO = {
-  /** PCO People form ID for "Plan a Visit". Empty = PCO submission off. */
-  formId: "",
-  fields: {
-    phone: "",      // phone_number
-    date: "",       // string — we send e.g. "Sunday, Oct 18"
-    service: "",    // workflow_dropdown or dropdown (options below)
-    outOfTown: "",  // workflow_dropdown/dropdown (yes/no options below)
-    kids: "",       // workflow_dropdown: THIS is what routes to the kids workflow
-    kidsInfo: "",   // string — "Ava 4, Sam 7"
-    notes: "",      // string
-  },
-  options: {
-    service: { "830": "", "1100": "", unsure: "" } as Record<string, string>,
-    outOfTown: { yes: "", no: "" } as Record<string, string>,
-    kids: { yes: "", no: "" } as Record<string, string>,
-  },
-};
-
-export function visitPcoReady(): boolean {
-  const f = VISIT_PCO;
-  return Boolean(
-    f.formId &&
-      f.fields.phone && f.fields.date && f.fields.service &&
-      f.fields.kids && f.options.kids.yes && f.options.kids.no &&
-      f.options.service["830"] && f.options.service["1100"],
-  );
-}
+/** Planning Center workflows a visit lands in (card goes on the adult). */
+export const VISIT_WORKFLOWS = {
+  kids: { id: "354738", name: "BrainerdKids Visitor" },
+  guests: { id: "321059", name: "First Time Guests" },
+} as const;
