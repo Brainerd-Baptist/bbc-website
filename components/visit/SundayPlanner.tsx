@@ -143,7 +143,7 @@ export default function SundayPlanner() {
     const body = encodeURIComponent(
       `Hi!\n\nHere's your Sunday plan for visiting Brainerd Baptist Church:\n\n• ${planText}\n\n${result.greeting}\n\n${
         result.hasKidsCheckIn
-          ? "Pre-register your kids to skip the check-in line:\nhttps://brainerdbaptist.churchcenter.com/people/forms/376960\n\n"
+          ? "Add your kids ahead of time so check-in is quick:\n${window.location.origin}/visit#plan-your-visit\n\n"
           : ""
       }We're at 300 Brookfield Ave, Chattanooga, TN 37411.\n\nSee you Sunday!`
     );
@@ -196,15 +196,13 @@ export default function SundayPlanner() {
                   Skip the check-in line
                 </p>
                 <p className="text-fg-muted text-sm mb-3">
-                  Pre-register your kids before Sunday and you'll be in and out of check-in in seconds.
+                  Add your kids to your visit plan before Sunday and you'll be in and out of check-in in seconds.
                 </p>
                 <a
-                  href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/visit#plan-your-visit"
                   className="btn-primary"
                 >
-                  Pre-Register Your Family →
+                  Plan Your Visit with Kids →
                 </a>
               </div>
             )}

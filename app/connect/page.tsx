@@ -42,15 +42,9 @@ export default function ConnectPage() {
           </p>
           <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
             <div>
-              <dt className="text-fg font-semibold">Visiting or just saying hello</dt>
+              <dt className="text-fg font-semibold">Visiting, or bringing kids on a Sunday</dt>
               <dd className="text-fg-muted">
-                <Link href="/visit#connect" className="text-accent-text underline underline-offset-2">Introduce yourself</Link>. Adds you to our database.
-              </dd>
-            </div>
-            <div>
-              <dt className="text-fg font-semibold">Registering children for Sunday</dt>
-              <dd className="text-fg-muted">
-                <Link href="https://brainerdbaptist.churchcenter.com/people/forms/376960" className="text-accent-text underline underline-offset-2">Kids pre-registration</Link>. Adds your family and each child.
+                <Link href="/visit#plan-your-visit" className="text-accent-text underline underline-offset-2">Plan a visit</Link>. Adds you and your kids to our system so check-in is quick.
               </dd>
             </div>
             <div>

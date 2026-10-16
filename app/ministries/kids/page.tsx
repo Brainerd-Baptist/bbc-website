@@ -1,7 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import FormRouteNote from "@/components/connect/FormRouteNote";
-import KidsRegistrationForm from "@/components/kids/KidsRegistrationForm";
 
 import MinistryQuickMessage from "@/components/connect/MinistryQuickMessage";
 import Card from "@/components/ui/Card";
@@ -168,7 +166,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap gap-4">
             <a
-              href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
+              href="/visit#plan-your-visit"
               className="btn-primary"
             >
               Pre-Register Your Family
@@ -288,7 +286,7 @@ export default function KidsPage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
+                  href="/visit#plan-your-visit"
                   className="font-condensed font-700 tracking-wide uppercase text-sm px-6 py-3 rounded-full transition-colors inline-flex items-center gap-2 bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent"
                 >
                   Pre-Register Online
@@ -578,19 +576,18 @@ export default function KidsPage() {
               Skip the line on Sunday.
             </h2>
             <p className="text-fg-muted leading-relaxed max-w-md mx-auto">
-              Fill this out once — we&apos;ll have your family in our system before
+              Tell us about your visit once — we&apos;ll have your family in our system before
               you arrive. First-time check-in takes about 60 seconds.
             </p>
           </div>
-          <FormRouteNote
-            className="text-center max-w-md mx-auto mb-8"
-            href="/visit#connect"
-            linkLabel="Introduce yourself instead."
-          >
-            This form is for families registering children for Sunday. No kids to
-            register?
-          </FormRouteNote>
-          <KidsRegistrationForm />
+          <div className="text-center">
+            <a href="/visit#plan-your-visit" className="btn-primary">
+              Plan Your Visit
+            </a>
+            <p className="text-fg-muted text-sm mt-4 max-w-md mx-auto">
+              Tell us when you&apos;re coming and add each child. They&apos;ll be in our system before you arrive.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -621,7 +618,7 @@ export default function KidsPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
+              href="/visit#plan-your-visit"
               className="btn-primary"
             >
               Pre-Register Your Family

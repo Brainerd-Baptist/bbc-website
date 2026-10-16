@@ -18,12 +18,12 @@ export default function StayConnectedPage() {
           <p className="text-sm text-fg-muted leading-relaxed mb-6">
             This is only for church newsletter texts and emails. It doesn&apos;t add you to our
             church database or register your kids. Visiting?{" "}
-            <Link href="/visit#connect" className="text-accent-text font-semibold underline underline-offset-2">
-              Introduce yourself
+            <Link href="/visit#plan-your-visit" className="text-accent-text font-semibold underline underline-offset-2">
+              Plan a visit
             </Link>
             . Bringing children?{" "}
-            <Link href="https://brainerdbaptist.churchcenter.com/people/forms/376960" className="text-accent-text font-semibold underline underline-offset-2">
-              Pre-register them
+            <Link href="/visit#plan-your-visit" className="text-accent-text font-semibold underline underline-offset-2">
+              Plan your visit with them
             </Link>
             .
           </p>

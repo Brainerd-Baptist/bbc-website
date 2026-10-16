@@ -301,17 +301,36 @@ export default function VisitExperience() {
         </div>
       </Section>
 
-      {/* ── Connect form ───────────────────────────────────── */}
+      {/* ── Connect ────────────────────────────────────────────
+          First-timers use the Plan a Visit form above (it adds them and their kids
+          to Planning Center). Returning visitors still get the next-step form. */}
       <section id="connect" className="py-24 px-6">
         <div className="max-w-5xl mx-auto text-center mb-12">
           <p className="eyebrow mb-4">Questions? Reach Out.</p>
           <h2 className="text-fg mb-4 h-hero">We&apos;d love to hear from you.</h2>
           <p className="text-fg-muted max-w-md mx-auto">
-            First-time visitor, longtime member, or somewhere in between — our team wants to connect with you.
+            {returning
+              ? "Longtime member or somewhere in between — our team wants to connect with you."
+              : "Have a question before you come? Send us a note and a real person will answer."}
           </p>
         </div>
         <div className="max-w-2xl mx-auto">
-          <ConnectForm showMembershipOption />
+          {returning ? (
+            <ConnectForm showMembershipOption />
+          ) : (
+            <div className="text-center">
+              <Link href="/connect/general" className="btn-primary">
+                Send Us a Message
+              </Link>
+              <p className="text-fg-muted text-sm mt-4">
+                Planning to visit? Use the{" "}
+                <a href="#plan-your-visit" className="text-accent-text font-semibold underline underline-offset-2">
+                  Plan a Visit form
+                </a>{" "}
+                so we can have a greeter and your kids&apos; check-in ready.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
