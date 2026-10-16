@@ -82,7 +82,7 @@ export default function ConnectSidebar() {
         </p>
         <a
           href="/give"
-          className="block text-center font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy py-2.5 rounded-full transition-colors"
+          className="btn-primary w-full justify-center"
         >
           Give Now
         </a>

@@ -106,6 +106,8 @@
   --radius-xl:  8px;
   --radius-2xl: 12px;
   --radius-3xl: 14px;
+  /* Top edge of the footer sheet (rounded-t-sheet). */
+  --radius-sheet: 24px;
 
   /* font-700 / font-800 / font-900. 211 call sites write these numeric
      weights, but Tailwind v4 only knows named weights (font-bold...) unless a

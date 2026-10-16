@@ -47,12 +47,14 @@ export default function Footer() {
   return (
     // The footer is deliberately brand navy in BOTH themes — it is not a page
     // surface, so it uses the brand primitive rather than --surface, and its
-    // white text stays white. Converting it to --surface/--fg would make it
-    // light in light mode, which is not what it is for.
-    <footer className="bg-brand-navy text-white">
-      {/* Top divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-
+    // text stays light. Converting it to --surface/--fg would make it light in
+    // light mode, which is not what it is for.
+    //
+    // The soft rounded top edge overlaps the bottom 24px of the section above
+    // (-mt-6), so the corners show THAT section's colour: a navy call-to-action
+    // band joins seamlessly, a light page shows the rounded sheet. Every page
+    // section ends with at least 40px of bottom padding, so nothing is covered.
+    <footer className="relative -mt-6 rounded-t-sheet bg-brand-navy text-fg-on-dark">
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-8">
         {/* Main grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
@@ -71,6 +73,16 @@ export default function Footer() {
             <p className="text-fg-on-dark-muted text-sm leading-relaxed mb-6 max-w-[220px]">
               A church in Chattanooga, TN, praying that every person would experience the grace of Jesus Christ.
             </p>
+            {/* The one teal link in the footer: the main thing we want a guest to do. */}
+            <Link
+              href="/visit"
+              className="inline-flex items-center gap-1.5 text-accent hover:text-fg-on-dark font-semibold text-sm mb-6 transition-colors"
+            >
+              Plan a visit
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <path d="M2.5 6h7M6.5 3l3 3-3 3" />
+              </svg>
+            </Link>
             {/* Socials */}
             <div className="flex gap-3">
               {SOCIAL.map((s) => (
@@ -80,7 +92,7 @@ export default function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-white/8 hover:bg-accent text-white/60 hover:text-white flex items-center justify-center transition duration-200"
+                  className="w-9 h-9 rounded-lg bg-surface-on-dark hover:bg-hover-on-dark-strong text-fg-on-dark-muted hover:text-fg-on-dark flex items-center justify-center transition duration-200"
                 >
                   {s.icon}
                 </a>
@@ -99,7 +111,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-white/60 hover:text-white text-sm transition-colors"
+                      className="text-fg-on-dark-muted hover:text-fg-on-dark text-sm transition-colors"
                       {...(link.href.startsWith("http")
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
@@ -117,37 +129,37 @@ export default function Footer() {
             <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-4">
               Visit
             </p>
-            <p className="font-condensed font-700 text-white text-base mb-0.5">300 Brookfield Ave</p>
-            <p className="text-fg-on-dark-muted text-sm mb-3">Chattanooga, TN 37411 · <a href="/map" className="text-white/80 hover:text-white">Campus map</a></p>
-            <p className="text-sm mb-1"><a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="text-white/80 hover:text-white">{SITE.phone}</a></p>
-            <p className="text-sm mb-4"><a href={`mailto:${SITE.email}`} className="text-white/80 hover:text-white">{SITE.email}</a></p>
+            <p className="font-condensed text-fg-on-dark text-base mb-0.5">300 Brookfield Ave</p>
+            <p className="text-fg-on-dark-muted text-sm mb-3">Chattanooga, TN 37411 · <a href="/map" className="text-fg-on-dark-body hover:text-fg-on-dark">Campus map</a></p>
+            <p className="text-sm mb-1"><a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="text-fg-on-dark-body hover:text-fg-on-dark">{SITE.phone}</a></p>
+            <p className="text-sm mb-4"><a href={`mailto:${SITE.email}`} className="text-fg-on-dark-body hover:text-fg-on-dark">{SITE.email}</a></p>
 
             <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-3">
               Sunday Services
             </p>
-            <p className="text-white/70 text-sm">8:30 AM · Choir & Orchestra</p>
-            <p className="text-white/70 text-sm mb-5">11:00 AM · Band-Led</p>
+            <p className="text-fg-on-dark-body text-sm">8:30 AM · Choir & Orchestra</p>
+            <p className="text-fg-on-dark-body text-sm mb-5">11:00 AM · Band-Led</p>
             <p className="text-fg-on-dark-muted text-xs">Life Groups · 9:45 AM</p>
 
             {/* Hispanic Ministry */}
-            <div className="mt-6 border-t border-white/10 pt-5">
-              <p className="text-accent text-xs font-semibold tracking-widest uppercase mb-2">
+            <div className="mt-6 border-t border-border-on-dark pt-5">
+              <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-2">
                 Ministerio Hispano
               </p>
-              <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.locationName}</p>
-              <p className="text-white/60 text-sm">{HISPANIC_MINISTRY.address}</p>
+              <p className="text-fg-on-dark-muted text-sm">{HISPANIC_MINISTRY.locationName}</p>
+              <p className="text-fg-on-dark-muted text-sm">{HISPANIC_MINISTRY.address}</p>
               <p className="text-fg-on-dark-muted text-sm">{HISPANIC_MINISTRY.serviceTime}</p>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-fg-on-dark-muted text-xs">
+        <div className="border-t border-border-on-dark pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-fg-on-dark-muted text-xs">
           <p>© {year} {SITE.name}. All rights reserved.</p>
           <div className="flex gap-5">
-            <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-white/60 transition-colors">Privacy</a>
-            <Link href="/accessibility" className="hover:text-white/60 transition-colors">Accessibility</Link>
-            <Link href="/connect" className="hover:text-white/60 transition-colors">Contact</Link>
+            <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-fg-on-dark transition-colors">Privacy</a>
+            <Link href="/accessibility" className="hover:text-fg-on-dark transition-colors">Accessibility</Link>
+            <Link href="/connect" className="hover:text-fg-on-dark transition-colors">Contact</Link>
             <VisitorNote />
           </div>
         </div>
