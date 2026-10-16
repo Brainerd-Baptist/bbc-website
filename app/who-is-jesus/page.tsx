@@ -36,8 +36,7 @@ export default function WhoIsJesusPage() {
           </p>
           <a
             href="#three-circles"
-            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full transition-colors"
-            style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
+            className="btn-primary"
           >
             Start the Story ↓
           </a>
@@ -139,8 +138,7 @@ export default function WhoIsJesusPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/connect"
-                className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-3.5 rounded-full transition-colors inline-block"
-                style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
+                className="btn-primary"
               >
                 Ask a Question
               </Link>

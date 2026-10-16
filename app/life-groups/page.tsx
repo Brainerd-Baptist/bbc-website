@@ -167,7 +167,7 @@ export default async function LifeGroupsPage() {
                 href={CHURCH_CENTER_GROUPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-6 py-3 rounded-full transition-colors inline-block"
+                className="btn-primary"
               >
                 Browse Groups on Church Center
               </a>
@@ -200,7 +200,7 @@ export default async function LifeGroupsPage() {
             <div className="flex flex-col gap-2 w-full sm:w-auto">
               <Link
                 href="/connect/staff?staff=Benjamin+Hovies"
-                className="font-condensed font-700 tracking-wide uppercase text-sm bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy px-6 py-3 rounded-full transition-colors text-center whitespace-nowrap"
+                className="btn-primary justify-center whitespace-nowrap"
               >
                 Message Ben
               </Link>

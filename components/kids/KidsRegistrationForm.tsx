@@ -553,8 +553,7 @@ export default function KidsRegistrationForm() {
               setError("");
               setStep((s) => s + 1);
             }}
-            className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-            style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
+            className="btn-primary"
           >
             Next
           </button>

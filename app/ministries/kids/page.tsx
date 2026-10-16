@@ -169,8 +169,7 @@ export default function KidsPage() {
           <div className="flex flex-wrap gap-4">
             <a
               href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
+              className="btn-primary"
             >
               Pre-Register Your Family
             </a>
@@ -623,8 +622,7 @@ export default function KidsPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="https://brainerdbaptist.churchcenter.com/people/forms/376960" target="_blank" rel="noopener noreferrer"
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-8 py-4 rounded-full transition-colors"
-              style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
+              className="btn-primary"
             >
               Pre-Register Your Family
             </a>

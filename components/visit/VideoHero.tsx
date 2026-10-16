@@ -125,8 +125,7 @@ export default function VideoHero({
           <div className="flex flex-wrap gap-4">
             <a
               href={primaryCta.href}
-              className="font-condensed font-700 tracking-wide uppercase text-sm px-7 py-3 rounded-full transition-colors"
-              style={{ background: "var(--accent)", color: "var(--accent-fg)" }}
+              className="btn-primary"
             >
               {primaryCta.label}
             </a>

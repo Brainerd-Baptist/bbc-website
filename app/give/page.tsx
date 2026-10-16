@@ -82,7 +82,7 @@ export default function GivePage() {
                   rel="noopener noreferrer"
                   className={`block text-center font-condensed font-700 tracking-wide uppercase text-sm py-2.5 rounded-full transition-colors ${
                     f.primary
-                      ? "bg-brand-cyan hover:bg-brand-cyan-light text-brand-navy"
+                      ? "btn-primary justify-center"
                       : "border border-border hover:border-accent text-fg glass"
                   }`}
                 >
