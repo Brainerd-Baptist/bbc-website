@@ -233,7 +233,9 @@ async function linkHousehold(
       data: {
         type: "Household",
         id: String(existing.id),
-        relationships: { people: { data: [...current, ...missing].map(person) } },
+        // Additive: listing someone already in the household is rejected ("already been taken"),
+        // so send only the new members.
+        relationships: { people: { data: missing.map(person) } },
       },
     });
     if (!r.ok) errors.push(fail("household update", r));
