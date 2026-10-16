@@ -177,8 +177,7 @@ export default function SundayPlanner() {
               {result.plan.map((step, i) => (
                 <li key={i} className="flex gap-4">
                   <span
-                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold mt-0.5"
-                    style={{ background: "var(--accent)" }}
+                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center bg-accent-solid text-fg-on-accent text-xs font-bold mt-0.5"
                   >
                     {i + 1}
                   </span>
@@ -203,7 +202,7 @@ export default function SundayPlanner() {
                   href="https://brainerdbaptist.churchcenter.com/people/forms/376960"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-white px-5 py-2.5 rounded-full transition-colors"
+                  className="btn-primary"
                 >
                   Pre-Register Your Family →
                 </a>
@@ -232,8 +231,7 @@ export default function SundayPlanner() {
                   <button
                     onClick={handleEmailSend}
                     disabled={!email}
-                    className="px-4 py-2.5 rounded-lg text-sm font-semibold text-white transition-colors disabled:opacity-40"
-                    style={{ background: "var(--color-brand-navy)" }}
+                    className="btn-primary disabled:opacity-40"
                   >
                     Send
                   </button>
