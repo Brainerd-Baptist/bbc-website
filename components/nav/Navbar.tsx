@@ -231,7 +231,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <Link
               href="/visit"
-              className="inline-flex font-condensed font-700 tracking-wide uppercase text-xs sm:text-sm px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
+              className="nav-hit inline-flex font-condensed font-700 tracking-wide uppercase text-xs sm:text-sm px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition hover:-translate-y-0.5 bg-accent-solid text-fg-on-accent hover:bg-accent-solid-hover"
             >
               Plan a Visit
             </Link>
@@ -241,7 +241,7 @@ export default function Navbar() {
             <button
               onClick={toggleTheme}
               aria-label={mounted && isDark ? "Switch to light mode" : "Switch to dark mode"}
-              className="nav-ctl p-2 rounded-lg transition-colors"
+              className="nav-ctl relative p-2 rounded-lg transition-colors"
             >
               {!mounted ? <span className="w-5 h-5 block" /> : isDark ? <SunIcon /> : <MoonIcon />}
             </button>

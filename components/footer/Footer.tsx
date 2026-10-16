@@ -92,7 +92,7 @@ export default function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-surface-on-dark hover:bg-hover-on-dark-strong text-fg-on-dark-muted hover:text-fg-on-dark flex items-center justify-center transition duration-200"
+                  className="w-10 h-10 rounded-lg bg-surface-on-dark hover:bg-hover-on-dark-strong text-fg-on-dark-muted hover:text-fg-on-dark flex items-center justify-center transition duration-200"
                 >
                   {s.icon}
                 </a>
@@ -106,12 +106,12 @@ export default function Footer() {
               <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-4">
                 {groupLabel}
               </p>
-              <ul className="space-y-2.5">
+              <ul>
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-fg-on-dark-muted hover:text-fg-on-dark text-sm transition-colors"
+                      className="inline-block py-[7px] text-fg-on-dark-muted hover:text-fg-on-dark text-sm transition-colors"
                       {...(link.href.startsWith("http")
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
@@ -131,8 +131,8 @@ export default function Footer() {
             </p>
             <p className="font-condensed text-fg-on-dark text-base mb-0.5">300 Brookfield Ave</p>
             <p className="text-fg-on-dark-muted text-sm mb-3">Chattanooga, TN 37411 · <a href="/map" className="text-fg-on-dark-body hover:text-fg-on-dark">Campus map</a></p>
-            <p className="text-sm mb-1"><a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="text-fg-on-dark-body hover:text-fg-on-dark">{SITE.phone}</a></p>
-            <p className="text-sm mb-4"><a href={`mailto:${SITE.email}`} className="text-fg-on-dark-body hover:text-fg-on-dark">{SITE.email}</a></p>
+            <p className="text-sm"><a href={`tel:${SITE.phone.replace(/[^0-9]/g, "")}`} className="inline-block py-1.5 text-fg-on-dark-body hover:text-fg-on-dark">{SITE.phone}</a></p>
+            <p className="text-sm mb-3"><a href={`mailto:${SITE.email}`} className="inline-block py-1.5 text-fg-on-dark-body hover:text-fg-on-dark">{SITE.email}</a></p>
 
             <p className="text-fg-on-dark-muted text-xs font-semibold tracking-widest uppercase mb-3">
               Sunday Services
@@ -156,10 +156,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border-on-dark pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-fg-on-dark-muted text-xs">
           <p>© {year} {SITE.name}. All rights reserved.</p>
-          <div className="flex gap-5">
-            <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-fg-on-dark transition-colors">Privacy</a>
-            <Link href="/accessibility" className="hover:text-fg-on-dark transition-colors">Accessibility</Link>
-            <Link href="/connect" className="hover:text-fg-on-dark transition-colors">Contact</Link>
+          <div className="flex gap-3">
+            <a href="https://brainerdhq.app/privacy" target="_blank" rel="noopener noreferrer" className="px-2 py-2 hover:text-fg-on-dark transition-colors">Privacy</a>
+            <Link href="/accessibility" className="px-2 py-2 hover:text-fg-on-dark transition-colors">Accessibility</Link>
+            <Link href="/connect" className="px-2 py-2 hover:text-fg-on-dark transition-colors">Contact</Link>
             <VisitorNote />
           </div>
         </div>

@@ -1054,3 +1054,27 @@ select:focus {
     background: rgba(0, 32, 91, 0.55);
   }
 }
+
+/* Phones: many frosted cards are on screen at once and every one is a live
+   GPU blur. A smaller radius and no saturation pass is visually near-identical
+   on a small card and noticeably cheaper on older phones. The navbar and
+   drawer keep their own, larger blur. Placed after the base rules so it wins. */
+@media (max-width: 767px) {
+  .glass,
+  .glass-md,
+  .glass-frost,
+  .card-lift,
+  .glass-on-dark {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Invisible tap-area growth for the navbar controls (visible size is unchanged):
+   32-34px controls get a ~44px hit area on phones. */
+.nav-hit { position: relative; }
+.nav-hit::after,
+.nav-ctl::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
