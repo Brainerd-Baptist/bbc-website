@@ -25,11 +25,11 @@ export default function BXJournalPage() {
       {/* ── Opening: two photos pinned together, not one hero banner ──── */}
       <div className="pt-28 pb-16 px-6" style={{ background: "var(--brand-band)" }}>
         <div className="max-w-5xl mx-auto">
-          <p className="eyebrow mb-4" style={{ color: "var(--accent-text)" }}>
+          <p className="eyebrow-white mb-4">
             Brainerd Crossroads
           </p>
           <h1 className="text-white mb-8 h-display">
-            A week at the <span style={{ color: "var(--accent-text)" }}>BX.</span>
+            A week at the <span style={{ color: "var(--accent)" }}>BX.</span>
           </h1>
 
           {/* Two photos, offset, like they're pinned to a board rather than
