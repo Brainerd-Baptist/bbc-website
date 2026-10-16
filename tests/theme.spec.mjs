@@ -29,11 +29,15 @@ import { ROUTES } from "../scripts/routes.mjs";
 
 const THEMES = ["light", "dark"];
 
-/** Force a theme before any script runs, the way next-themes reads it. */
+/**
+ * Force a theme before any script runs, the way next-themes reads it.
+ * The key must match `storageKey` in components/ThemeProvider.tsx ("bbc-theme");
+ * with the old "theme" key every dark test silently stays light and times out.
+ */
 async function presetTheme(page, theme) {
   await page.addInitScript((t) => {
     try {
-      window.localStorage.setItem("theme", t);
+      window.localStorage.setItem("bbc-theme", t);
     } catch {
       /* private mode — the class assertion below will catch a miss */
     }
@@ -274,7 +278,9 @@ for (const theme of THEMES) {
           if (!info) break;
           if (seenKeys.has(info.key)) break; // focus order wrapped
           seenKeys.add(info.key);
-          if (!info.ok && !info.optedOut) unringed.push({ tag: info.tag, label: info.label });
+          // A third-party embed (the BX calendar iframe) draws its own focus UI
+          // inside the frame; we cannot ring it from the page.
+          if (!info.ok && !info.optedOut && info.tag !== "iframe") unringed.push({ tag: info.tag, label: info.label });
         }
         expect(
           unringed,

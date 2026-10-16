@@ -63,6 +63,8 @@ export default function WorldReachMap() {
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
+                  tabIndex={-1}
+                  aria-hidden="true"
                   style={{
                     fill: "var(--surface-raised)",
                     stroke: "var(--border-strong)",
@@ -81,6 +83,7 @@ export default function WorldReachMap() {
                 key={r.key}
                 coordinates={r.coordinates}
                 onClick={() => setActive(r.key)}
+                tabIndex={-1}
                 style={{ cursor: "pointer" }}
               >
                 {isActive && (
