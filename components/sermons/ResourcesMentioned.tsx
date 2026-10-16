@@ -40,7 +40,7 @@ export default function ResourcesMentioned({
       <span
         style={{
           fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.1em",
-          textTransform: "uppercase", color: "var(--fg-subtle)",
+          textTransform: "uppercase", color: "var(--fg-muted)",
         }}
       >
         Resources Mentioned
@@ -63,7 +63,7 @@ export default function ResourcesMentioned({
           >
             <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", flexWrap: "wrap" }}>
               <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--fg)" }}>{r.title}</span>
-              <span style={{ fontSize: "0.65rem", fontWeight: 600, color: accentColor, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              <span style={{ fontSize: "0.65rem", fontWeight: 600, color: `color-mix(in srgb, ${accentColor} 55%, var(--fg))`, textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 {TYPE_LABEL[r.type] ?? "Resource"}
               </span>
             </div>
