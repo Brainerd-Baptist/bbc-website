@@ -22,6 +22,14 @@ function nextSundays(count = 5): string[] {
   return out;
 }
 
+interface Kid { firstName: string; lastName: string; birthday: string; grade: string }
+const emptyKid = (lastName = ""): Kid => ({ firstName: "", lastName, birthday: "", grade: "" });
+const MAX_KIDS = 8;
+const GRADES = [
+  "Not in school yet", "Pre-K", "Kindergarten", "1st grade", "2nd grade", "3rd grade", "4th grade",
+  "5th grade", "6th grade", "7th grade", "8th grade", "9th grade", "10th grade", "11th grade", "12th grade",
+];
+
 const REASSURANCES = [
   "We'll send you parking and arrival details.",
   "Our Welcome Team will know you're coming.",
@@ -38,7 +46,7 @@ export default function PlanVisitForm() {
   const [service, setService] = useState<string>("");
   const [outOfTown, setOutOfTown] = useState<boolean | null>(null);
   const [bringingKids, setBringingKids] = useState<boolean | null>(null);
-  const [kidsInfo, setKidsInfo] = useState("");
+  const [kids, setKids] = useState<Kid[]>([emptyKid()]);
   const [notes, setNotes] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
 
@@ -54,15 +62,22 @@ export default function PlanVisitForm() {
     setDateLabel(s[0]);
   }, []);
 
+  const kidsIncomplete =
+    bringingKids === true &&
+    kids.some((k) => !k.firstName.trim() || !k.lastName.trim() || !k.birthday);
   const missing =
     !firstName.trim() || !email.trim() || !phone.trim() || !dateLabel || !service ||
-    outOfTown === null || bringingKids === null;
+    outOfTown === null || bringingKids === null || kidsIncomplete;
+
+  function updateKid(i: number, patch: Partial<Kid>) {
+    setKids((prev) => prev.map((k, idx) => (idx === i ? { ...k, ...patch } : k)));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(true);
     if (missing) {
-      setError("Please answer the starred questions so we can be ready for you.");
+      setError(kidsIncomplete ? "Please add a first name, last name, and birthday for each child." : "Please answer the starred questions so we can be ready for you.");
       return;
     }
     setSubmitting(true);
@@ -73,7 +88,7 @@ export default function PlanVisitForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           firstName, lastName, email, phone, dateLabel, service,
-          outOfTown, bringingKids, kidsInfo, notes, website,
+          outOfTown, bringingKids, kids: bringingKids ? kids : [], notes, website,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -224,18 +239,60 @@ export default function PlanVisitForm() {
             {yesNo(
               "Are you bringing kids?",
               bringingKids,
-              setBringingKids,
+              (v: boolean) => {
+                setBringingKids(v);
+                if (v) setKids((prev) => prev.map((k) => (k.lastName ? k : { ...k, lastName: lastName.trim() })));
+              },
               "If you're checking in children, plan to arrive 15–20 minutes before the service.",
               "pv-kids",
             )}
 
             {bringingKids && (
-              <div className="space-y-1.5">
-                <label htmlFor="pv-kidsinfo" className="block text-sm font-medium text-fg">
-                  Their names and ages
-                </label>
-                <textarea id="pv-kidsinfo" rows={2} value={kidsInfo} onChange={(e) => setKidsInfo(e.target.value)}
-                  placeholder="Ava, 4 · Sam, 7" className={inputClass} />
+              <div className="space-y-4">
+                <p className="text-sm font-medium text-fg">Tell us about your kids</p>
+                {kids.map((k, i) => (
+                  <div key={i} className="rounded-xl border border-border p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold text-fg-muted uppercase tracking-wide">Child {i + 1}</p>
+                      {kids.length > 1 && (
+                        <button type="button" onClick={() => setKids((prev) => prev.filter((_, idx) => idx !== i))}
+                          className="text-xs text-accent-text underline underline-offset-2">
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label htmlFor={`pv-kf-${i}`} className="block text-xs font-medium text-fg">First name <span className="text-accent-text">*</span></label>
+                        <input id={`pv-kf-${i}`} value={k.firstName} autoComplete="off"
+                          onChange={(e) => updateKid(i, { firstName: e.target.value })} className={inputClass} />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`pv-kl-${i}`} className="block text-xs font-medium text-fg">Last name <span className="text-accent-text">*</span></label>
+                        <input id={`pv-kl-${i}`} value={k.lastName} autoComplete="off"
+                          onChange={(e) => updateKid(i, { lastName: e.target.value })} className={inputClass} />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`pv-kb-${i}`} className="block text-xs font-medium text-fg">Birthday <span className="text-accent-text">*</span></label>
+                        <input id={`pv-kb-${i}`} type="date" value={k.birthday} max={new Date().toISOString().slice(0, 10)}
+                          onChange={(e) => updateKid(i, { birthday: e.target.value })} className={inputClass} />
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`pv-kg-${i}`} className="block text-xs font-medium text-fg">Grade</label>
+                        <select id={`pv-kg-${i}`} value={k.grade} onChange={(e) => updateKid(i, { grade: e.target.value })} className={inputClass}>
+                          <option value="">Select…</option>
+                          {GRADES.map((g) => (<option key={g} value={g}>{g}</option>))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {kids.length < MAX_KIDS && (
+                  <button type="button" onClick={() => setKids((prev) => [...prev, emptyKid(lastName.trim())])}
+                    className="w-full py-3 rounded-xl border border-dashed border-border-strong text-sm font-semibold text-accent-text">
+                    + Add another child
+                  </button>
+                )}
                 <p className="text-fg-muted text-xs">
                   Our kids team will use this to be ready for them. You&apos;ll be able to pre-register
                   for faster check-in after you submit.

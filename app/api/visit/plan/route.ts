@@ -19,7 +19,7 @@ interface Body {
   service?: string; // "830" | "1100" | "unsure"
   outOfTown?: boolean;
   bringingKids?: boolean;
-  kidsInfo?: string;
+  kids?: { firstName?: string; lastName?: string; birthday?: string; grade?: string }[];
   notes?: string;
   website?: string; // honeypot
 }
@@ -50,13 +50,29 @@ export async function POST(req: NextRequest) {
   const dateLabel = clip(b.dateLabel, 60);
   const service = clip(b.service, 10) in SERVICE_TEXT ? clip(b.service, 10) : "unsure";
   const bringingKids = Boolean(b.bringingKids);
-  const kidsInfo = clip(b.kidsInfo, 500);
+  const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+  const kids = (Array.isArray(b.kids) ? b.kids : []).slice(0, 8).map((k) => ({
+    firstName: clip(k.firstName, 60),
+    lastName: clip(k.lastName, 60),
+    birthday: clip(k.birthday, 10),
+    grade: clip(k.grade, 30),
+  }));
+  const kidLine = (k: (typeof kids)[number]) =>
+    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""}`;
+  const kidsInfo = kids.map(kidLine).join("\n");
   const notes = clip(b.notes, 1000);
   const outOfTown = Boolean(b.outOfTown);
 
   if (!firstName || !EMAIL_RE.test(email) || !phone || !dateLabel) {
     return NextResponse.json(
       { error: "Please add your name, email, mobile number, and the day you plan to visit." },
+      { status: 400 },
+    );
+  }
+
+  if (bringingKids && (kids.length === 0 || kids.some((k) => !k.firstName || !k.lastName || !DATE_RE.test(k.birthday)))) {
+    return NextResponse.json(
+      { error: "Please add a first name, last name, and birthday for each child." },
       { status: 400 },
     );
   }
@@ -103,7 +119,7 @@ export async function POST(req: NextRequest) {
     `Service: ${SERVICE_TEXT[service]}`,
     `Visiting from out of town: ${outOfTown ? "Yes" : "No"}`,
     `Bringing kids: ${bringingKids ? "Yes" : "No"}`,
-    ...(bringingKids ? [`Kids (names / ages): ${kidsInfo || "(not provided)"}`] : []),
+    ...(bringingKids ? [`Kids (${kids.length}):`, ...kids.map((k) => `  - ${kidLine(k)}`)] : []),
     ...(notes ? [`Notes: ${notes}`] : []),
     ``,
     pco === "submitted"
