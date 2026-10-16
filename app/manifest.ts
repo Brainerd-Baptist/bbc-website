@@ -19,17 +19,11 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#0d1525",
     theme_color: "#0d1525",
     icons: [
-      {
-        src: "/icon.png",
-        sizes: "1667x1667",
-        type: "image/png",
-      },
-      {
-        src: "/apple-icon.png",
-        sizes: "1667x1667",
-        type: "image/png",
-        purpose: "maskable",
-      },
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      // Separate maskable icon: the mark sits inside the central safe zone so
+      // Android's circle/squircle masks don't clip its corners.
+      { src: "/icons/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
