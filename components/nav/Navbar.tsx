@@ -277,7 +277,7 @@ export default function Navbar() {
         className={`fixed inset-0 z-[99] transition duration-300 ${
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        style={{ background: "var(--scrim)", backdropFilter: "blur(6px)" }}
+        style={{ background: "var(--nav-menu-scrim, var(--scrim))", backdropFilter: "blur(10px)" }}
       />
 
       {/* ── Drawer ─────────────────────────────────────────────── */}
