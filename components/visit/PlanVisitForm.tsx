@@ -21,8 +21,8 @@ function nextSundays(count = 5): string[] {
   return out;
 }
 
-interface Kid { firstName: string; lastName: string; birthday: string; grade: string }
-const emptyKid = (lastName = ""): Kid => ({ firstName: "", lastName, birthday: "", grade: "" });
+interface Kid { firstName: string; lastName: string; birthday: string; grade: string; gender: string; allergies: string }
+const emptyKid = (lastName = ""): Kid => ({ firstName: "", lastName, birthday: "", grade: "", gender: "", allergies: "" });
 const MAX_KIDS = 8;
 const GRADES = [
   "Not in school yet", "Pre-K", "Kindergarten", "1st grade", "2nd grade", "3rd grade", "4th grade",
@@ -77,7 +77,7 @@ export default function PlanVisitForm() {
 
   const kidsIncomplete =
     bringingKids === true &&
-    kids.some((k) => !k.firstName.trim() || !k.lastName.trim() || !k.birthday);
+    kids.some((k) => !k.firstName.trim() || !k.lastName.trim() || !k.birthday || !k.gender || !k.allergies.trim());
   const missing =
     !firstName.trim() || !email.trim() || !phone.trim() || !dateLabel || !service ||
     outOfTown === null || bringingKids === null || kidsIncomplete;
@@ -90,7 +90,7 @@ export default function PlanVisitForm() {
     e.preventDefault();
     setTouched(true);
     if (missing) {
-      setError(kidsIncomplete ? "Please add a first name, last name, and birthday for each child." : "Please answer the starred questions so we can be ready for you.");
+      setError(kidsIncomplete ? "Please add a first name, last name, birthday, gender, and allergy answer for each child." : "Please answer the starred questions so we can be ready for you.");
       return;
     }
     setSubmitting(true);
@@ -305,6 +305,19 @@ export default function PlanVisitForm() {
                           <option value="">Select…</option>
                           {GRADES.map((g) => (<option key={g} value={g}>{g}</option>))}
                         </select>
+                      </div>
+                      <div className="space-y-1">
+                        <label htmlFor={`pv-kx-${i}`} className="block text-xs font-medium text-fg">Gender <span className="text-accent-text">*</span></label>
+                        <select id={`pv-kx-${i}`} value={k.gender} onChange={(e) => updateKid(i, { gender: e.target.value })} className={inputClass}>
+                          <option value="">Select…</option>
+                          <option value="Male">Boy</option>
+                          <option value="Female">Girl</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1 sm:col-span-2">
+                        <label htmlFor={`pv-ka-${i}`} className="block text-xs font-medium text-fg">Allergies or medical needs <span className="text-accent-text">*</span></label>
+                        <input id={`pv-ka-${i}`} type="text" value={k.allergies} maxLength={300} placeholder="Type “None” if there aren’t any"
+                          onChange={(e) => updateKid(i, { allergies: e.target.value })} className={inputClass} />
                       </div>
                     </div>
                   </div>

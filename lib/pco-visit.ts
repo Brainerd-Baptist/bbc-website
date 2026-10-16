@@ -24,6 +24,8 @@ export interface VisitKid {
   lastName: string;
   birthday: string; // YYYY-MM-DD
   grade: string; // label from the form, may be ""
+  gender: string; // "Male" | "Female"
+  allergies: string; // free text, "None" when none
 }
 
 export interface VisitPcoInput {
@@ -138,18 +140,44 @@ async function findOrCreateChild(auth: string, k: VisitKid, errors: string[]): P
   if (existing) return String(existing);
 
   const grade = gradeToPco(k.grade);
-  const attrs: Record<string, unknown> = {
+  const allergies = k.allergies.trim();
+  const hasMedical = allergies !== "" && !/^(none|no|n\/a|na|nope|nothing)\.?$/i.test(allergies);
+  const base: Record<string, unknown> = {
     first_name: k.firstName,
     last_name: k.lastName,
     birthdate: k.birthday,
     child: true,
   };
-  let r = await call(auth, "POST", "/people", {
-    data: { type: "Person", attributes: grade === undefined ? attrs : { ...attrs, grade } },
-  });
-  if (!r.ok && grade !== undefined) {
-    // Grade is a nicety — never lose the child over it.
-    r = await call(auth, "POST", "/people", { data: { type: "Person", attributes: attrs } });
+  if (grade !== undefined) base.grade = grade;
+  // Check-Ins shows medical_notes on the child's label. Only set it when there is something to say.
+  if (hasMedical) base.medical_notes = `Allergies/medical: ${allergies}`;
+  const genderId = k.gender === "Female" ? "6707882" : k.gender === "Male" ? "6707858" : "";
+
+  // Try the full record first; drop optional extras one at a time rather than lose the child.
+  const attempts: Array<() => Promise<Call>> = [];
+  if (genderId) {
+    attempts.push(() =>
+      call(auth, "POST", "/people", {
+        data: {
+          type: "Person",
+          attributes: base,
+          relationships: { gender: { data: { type: "Gender", id: genderId } } },
+        },
+      }),
+    );
+    attempts.push(() =>
+      call(auth, "POST", "/people", {
+        data: { type: "Person", attributes: { ...base, gender: k.gender === "Female" ? "F" : "M" } },
+      }),
+    );
+  }
+  attempts.push(() => call(auth, "POST", "/people", { data: { type: "Person", attributes: base } }));
+
+  let r: Call = { ok: false, status: 0, json: null, text: "" };
+  for (let n = 0; n < attempts.length; n++) {
+    r = await attempts[n]();
+    if (r.ok) break;
+    if (n < attempts.length - 1) errors.push(fail(`create ${k.firstName} (attempt ${n + 1}; retrying simpler)`, r));
   }
   if (!r.ok) {
     errors.push(fail(`create ${k.firstName}`, r));

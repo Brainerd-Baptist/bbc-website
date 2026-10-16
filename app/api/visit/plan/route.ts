@@ -28,6 +28,8 @@ interface Body {
     lastName?: string;
     birthday?: string;
     grade?: string;
+    gender?: string;
+    allergies?: string;
   }[];
   notes?: string;
   website?: string; // honeypot
@@ -69,9 +71,11 @@ export async function POST(req: NextRequest) {
     lastName: clip(k.lastName, 60),
     birthday: clip(k.birthday, 10),
     grade: clip(k.grade, 30),
+    gender: k.gender === "Female" ? "Female" : k.gender === "Male" ? "Male" : "",
+    allergies: clip(k.allergies, 300),
   }));
   const kidLine = (k: (typeof kids)[number]) =>
-    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""}`;
+    `${k.firstName} ${k.lastName} | born ${k.birthday}${k.grade ? ` | ${k.grade}` : ""} | ${k.gender === "Female" ? "Girl" : k.gender === "Male" ? "Boy" : "gender ?"} | Allergies: ${k.allergies || "?"}`;
   const kidsInfo = kids.map(kidLine).join("\n");
   const notes = clip(b.notes, 1000);
   const outOfTown = Boolean(b.outOfTown);
@@ -90,13 +94,14 @@ export async function POST(req: NextRequest) {
     bringingKids &&
     (kids.length === 0 ||
       kids.some(
-        (k) => !k.firstName || !k.lastName || !DATE_RE.test(k.birthday),
+        (k) =>
+          !k.firstName || !k.lastName || !DATE_RE.test(k.birthday) || !k.gender || !k.allergies,
       ))
   ) {
     return NextResponse.json(
       {
         error:
-          "Please add a first name, last name, and birthday for each child.",
+          "Please add a first name, last name, birthday, gender, and allergy answer for each child.",
       },
       { status: 400 },
     );
