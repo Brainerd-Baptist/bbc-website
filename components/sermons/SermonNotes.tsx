@@ -581,7 +581,7 @@ export default function SermonNotes({
         .bbc-notes-editor {
           outline: none; min-height: 130px;
           font-size: 0.9rem; line-height: 1.8; color: var(--fg);
-          font-family: var(--font-inter), system-ui, sans-serif;
+          font-family: var(--font-barlow), system-ui, sans-serif;
           caret-color: ${accentColor}; word-break: break-word;
         }
         .bbc-notes-editor p { margin: 0 0 0.2rem 0; }
