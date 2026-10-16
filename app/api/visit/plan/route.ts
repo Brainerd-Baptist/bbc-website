@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
+import { buildVisitConfirmationHtml, buildContactNotificationHtml } from "@/lib/email-templates";
 import { pcoAuth, findOrCreatePerson, submitForm, type FieldAnswer } from "@/lib/pco-forms";
 import {
   VISIT_NOTIFY_EMAIL,
@@ -8,6 +9,7 @@ import {
   visitPcoReady,
 } from "@/lib/visit-form";
 
+const MAP_URL = `${(process.env.NEXT_PUBLIC_SITE_URL || "https://home.brainerdhq.app").replace(/\/$/, "")}/map`;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface Body {
@@ -133,6 +135,25 @@ export async function POST(req: NextRequest) {
     replyTo: email,
     subject: `Visitor coming ${dateLabel}: ${fullName}${bringingKids ? " (with kids)" : ""}`,
     text: lines.join("\n"),
+    html: buildContactNotificationHtml({
+      heading: `Visitor coming ${dateLabel}`,
+      fromName: fullName,
+      fromEmail: email,
+      meta: [
+        { label: "Mobile", value: phone },
+        { label: "Service", value: SERVICE_TEXT[service] },
+        { label: "Out of town", value: outOfTown ? "Yes" : "No" },
+        { label: "Kids", value: bringingKids ? `Yes (${kids.length})` : "No" },
+        {
+          label: "Planning Center",
+          value:
+            pco === "submitted" ? "Added" : pco === "failed" ? "FAILED — add manually" : "Not connected — add manually",
+        },
+      ],
+      message: [bringingKids ? kids.map(kidLine).join("\n") : "", notes ? `Notes: ${notes}` : ""]
+        .filter(Boolean)
+        .join("\n\n") || "(No kids or notes.)",
+    }),
   }).catch((e) => console.error("[visit/plan] notify failed:", e));
 
   // 3) Confirmation to the guest (best effort).
@@ -148,12 +169,19 @@ export async function POST(req: NextRequest) {
     `• Wear whatever you're comfortable in. Come as you are.\n` +
     `• Our Welcome Team is at the front doors, with a Guest Services desk just inside.` +
     kidsText +
-    `\n\nIf you have any questions before Sunday, just reply to this email.\n\nBrainerd Baptist Church\nbrainerdbaptist.org`;
+    `\n\nCampus map (lots, doors, walking directions): ${MAP_URL}\n\nIf you have any questions before Sunday, just reply to this email.\n\nBrainerd Baptist Church\nbrainerdbaptist.org`;
   await sendMail({
     to: email,
     replyTo: VISIT_NOTIFY_EMAIL,
     subject: "We can't wait to meet you — Brainerd Baptist Church",
     text,
+    html: buildVisitConfirmationHtml({
+      firstName,
+      dateLabel,
+      serviceLabel: service === "unsure" ? "" : SERVICE_TEXT[service].split(" (")[0],
+      bringingKids,
+      kidsPreRegUrl: KIDS_PREREG_URL,
+    }),
   }).catch((e) => console.error("[visit/plan] confirmation failed:", e));
 
   return NextResponse.json({ ok: true, bringingKids });

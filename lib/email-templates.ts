@@ -28,6 +28,10 @@ const BORDER = "rgba(0,32,91,0.1)";
 
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 const SITE = "https://brainerdbaptist.org";
+/** Where the live website (logo image, campus map) is served today. The
+ * website domain will change from the current test address, so set
+ * NEXT_PUBLIC_SITE_URL in Vercel when it does and nothing here needs editing. */
+const LIVE_SITE = (process.env.NEXT_PUBLIC_SITE_URL || "https://home.brainerdhq.app").replace(/\/$/, "");
 
 /** Bulletproof centered button — background + radius on the <td>, a minimal
  * standards-only <a> (no MSO-only or duplicated properties: Gmail's mobile
@@ -83,7 +87,7 @@ export function wrapEmailHtml({
           <tr>
             <td style="background:${NAVY};padding:20px 32px;">
               <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-                <td style="padding-right:12px;vertical-align:middle;"><img src="${SITE}/email-logo.png" width="34" height="34" alt="" style="display:block;border:0;"/></td>
+                <td style="padding-right:12px;vertical-align:middle;"><img src="${LIVE_SITE}/email-logo.png" width="34" height="34" alt="" style="display:block;border:0;"/></td>
                 <td style="vertical-align:middle;font-family:${FONT};font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#ffffff;">Brainerd Baptist Church</td>
               </tr></table>
             </td>
@@ -230,5 +234,59 @@ export function buildNotesEmailHtml({
     heading: "Your notes are ready",
     bodyHtml,
     accentColor,
+  });
+}
+
+/**
+ * "We can't wait to meet you" confirmation sent to someone who used the
+ * Plan a Visit form on /visit. Fixed text plus the guest's own first name,
+ * date and service — nothing else from the form is echoed back.
+ */
+export function buildVisitConfirmationHtml({
+  firstName,
+  dateLabel,
+  serviceLabel,
+  bringingKids,
+  kidsPreRegUrl,
+}: {
+  firstName: string;
+  dateLabel: string;
+  /** e.g. "8:30 AM", or empty when the guest wasn't sure. */
+  serviceLabel: string;
+  bringingKids: boolean;
+  kidsPreRegUrl: string;
+}): string {
+  const when = serviceLabel ? `${escStr(dateLabel)} at ${escStr(serviceLabel)}` : escStr(dateLabel);
+  const row = (title: string, text: string) =>
+    `<tr><td style="padding:0 0 14px;vertical-align:top;">
+       <p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${INK_MUTED};">${title}</p>
+       <p style="margin:2px 0 0;font-size:15px;line-height:1.55;color:#374151;">${text}</p>
+     </td></tr>`;
+
+  const kidsBlock = bringingKids
+    ? row(
+        "Bringing kids",
+        `Plan to arrive 15&ndash;20 minutes early and use the Albemarle Ave entrance (Purple Lot). To skip the line at check-in, <a href="${escStr(kidsPreRegUrl)}" style="color:${NAVY};font-weight:700;">pre-register your family</a>.`,
+      )
+    : "";
+
+  const bodyHtml = `
+    <p style="margin:0 0 18px;">Hi ${escStr(firstName)} &mdash; we&rsquo;re glad you&rsquo;re coming on <strong>${when}</strong>. A few things that might help:</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 6px;">
+      ${row("Where", `300 Brookfield Ave, Chattanooga, TN 37411. Park in the Red Lot on Brookfield Ave, across from the front doors. Volunteers will help.`)}
+      ${row("When to arrive", `Services run about 60 minutes. Arriving 10&ndash;15 minutes early is plenty.`)}
+      ${row("What to wear", `Whatever you&rsquo;re comfortable in. Come as you are.`)}
+      ${row("Who will greet you", `Our Welcome Team is at the front doors, with a Guest Services desk just inside.`)}
+      ${kidsBlock}
+    </table>
+    <p style="margin:0;">Not sure where to park or how to find your way around? Our campus map shows the lots, the doors, and walking directions.</p>
+  `;
+
+  return wrapEmailHtml({
+    preheader: `We're glad you're coming ${dateLabel}. Here's parking, timing, and a map.`,
+    heading: "We can't wait to meet you",
+    bodyHtml,
+    cta: { label: "Open the campus map", url: `${LIVE_SITE}/map` },
+    footnoteHtml: `Questions before Sunday? Just reply to this email.`,
   });
 }
