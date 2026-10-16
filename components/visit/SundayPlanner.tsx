@@ -318,11 +318,8 @@ export default function SundayPlanner() {
             <button
               onClick={handleSubmit}
               disabled={!canSubmit || loading}
-              className="w-full font-condensed font-700 tracking-wide uppercase text-white py-4 rounded-full transition disabled:opacity-40"
-              style={{
-                background: canSubmit && !loading ? "var(--accent)" : "var(--accent)",
-                fontSize: "1rem",
-              }}
+              className="btn-primary w-full justify-center transition disabled:opacity-40"
+              style={{ fontSize: "1rem", padding: "1rem 1.75rem" }}
             >
               {loading ? "Building your plan…" : "Get My Sunday Plan"}
             </button>
