@@ -124,7 +124,7 @@ export default function GroupBrowser({ groups }: { groups: LifeGroup[] }) {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((g) => (
-            <div key={g.id} className="glass rounded-2xl p-5 flex flex-col">
+            <div key={g.id} className="glass-frost glass-static glass-lite rounded-2xl p-5 flex flex-col">
               <div className="flex items-start justify-between gap-2 mb-1.5">
                 <h3 className="font-condensed font-800 text-fg text-lg leading-tight">
                   {g.name}
