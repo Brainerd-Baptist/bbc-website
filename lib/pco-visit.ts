@@ -14,7 +14,7 @@
  * Every step is best-effort and reported, so one failure never loses the rest
  * and the notification email can say exactly what landed in PCO.
  */
-import { pcoAuth, findOrCreatePerson } from "@/lib/pco-forms";
+import { pcoAuth } from "@/lib/pco-forms";
 import { VISIT_WORKFLOWS } from "@/lib/visit-form";
 
 const BASE = "https://api.planningcenteronline.com/people/v2";
@@ -51,22 +51,58 @@ export interface VisitPcoResult {
 type Call = { ok: boolean; status: number; json: any; text: string };
 
 async function call(auth: string, method: string, path: string, body?: unknown): Promise<Call> {
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers: { Authorization: auth, "Content-Type": "application/json" },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  const text = await res.text();
-  let json: any = null;
-  try {
-    json = text ? JSON.parse(text) : null;
-  } catch {
-    /* non-JSON error body */
+  // PCO allows 100 requests / 20 s per org. On a 429, wait out the window (Retry-After) and retry.
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(`${BASE}${path}`, {
+      method,
+      headers: { Authorization: auth, "Content-Type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    if (res.status === 429 && attempt < 3) {
+      const wait = Math.min(Math.max(Number(res.headers.get("retry-after")) || 4, 1), 12);
+      await new Promise((r) => setTimeout(r, wait * 1000));
+      continue;
+    }
+    const text = await res.text();
+    let json: any = null;
+    try {
+      json = text ? JSON.parse(text) : null;
+    } catch {
+      /* non-JSON error body */
+    }
+    return { ok: res.ok, status: res.status, json, text };
   }
-  return { ok: res.ok, status: res.status, json, text };
 }
 
-const fail = (what: string, r: Call) => `${what}: ${r.status} ${r.text.slice(0, 300)}`;
+async function findOrCreateAdult(
+  auth: string,
+  first: string,
+  last: string,
+  email: string,
+): Promise<string> {
+  const found = await call(
+    auth,
+    "GET",
+    `/people?where[search_name_or_email]=${encodeURIComponent(email)}&per_page=1`,
+  );
+  const existing = found.json?.data?.[0]?.id;
+  if (existing) return String(existing);
+
+  const r = await call(auth, "POST", "/people", {
+    data: { type: "Person", attributes: { first_name: first, last_name: last } },
+  });
+  if (!r.ok) throw new Error(fail("create person", r));
+  const id = String(r.json.data.id);
+  const e = await call(auth, "POST", `/people/${id}/emails`, {
+    data: { type: "Email", attributes: { address: email, location: "Home", primary: true } },
+  });
+  if (!e.ok) throw new Error(fail("add email", e));
+  return id;
+}
+
+function fail(what: string, r: Call) {
+  return `${what}: ${r.status} ${r.text.slice(0, 300)}`;
+}
 
 /** Form label -> PCO grade integer (-1 = Pre-K, 0 = K, 1-12). undefined = leave blank. */
 export function gradeToPco(label: string): number | undefined {
@@ -212,7 +248,7 @@ export async function registerVisitInPco(
 
   let parentId: string;
   try {
-    parentId = await findOrCreatePerson(auth, input.firstName, input.lastName, input.email);
+    parentId = await findOrCreateAdult(auth, input.firstName, input.lastName, input.email);
     out.parent = true;
     out.steps.push("adult");
   } catch (e) {

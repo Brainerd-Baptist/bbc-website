@@ -33,6 +33,7 @@ const REASSURANCES = [
   "We'll send you parking and arrival details.",
   "Our Welcome Team will know you're coming.",
   "Services run about an hour, and you can wear whatever you'd like.",
+  "Coffee is waiting just inside the sanctuary doors.",
 ];
 
 export default function PlanVisitForm() {

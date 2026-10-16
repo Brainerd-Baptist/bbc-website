@@ -208,7 +208,8 @@ export async function POST(req: NextRequest) {
     `• Address: 300 Brookfield Ave, Chattanooga, TN 37411. Park in the Red lot on Brookfield Ave (across from the front doors) — volunteers will help.\n` +
     `• Services run about 60 minutes. Arriving 10–15 minutes early is plenty.\n` +
     `• Wear whatever you're comfortable in. Come as you are.\n` +
-    `• Our Welcome Team is at the front doors, with a Guest Services desk just inside.` +
+    `• Our Welcome Team is at the front doors, with a Guest Services desk just inside.\n` +
+    `• Coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building.` +
     kidsText +
     `\n\nCampus map (lots, doors, walking directions): ${MAP_URL}\n\nIf you have any questions before Sunday, just reply to this email.\n\nBrainerd Baptist Church\nbrainerdbaptist.org`;
   await sendMail({

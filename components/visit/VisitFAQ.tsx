@@ -15,6 +15,10 @@ const FAQS: { q: string; a: React.ReactNode }[] = [
     a: "We have two services, at 8:30 and 11:00, and they run about 60 minutes. The 8:30 is led by our choir and orchestra and the 11:00 is led by a band. The church sings together, we pray, and we hear a sermon (a talk of about 35 minutes that works through a passage of the Bible). It's the same sermon at both.",
   },
   {
+    q: "Is there coffee?",
+    a: "Yes. Coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building. Grab a cup and take it into the service with you.",
+  },
+  {
     q: "What do I do with my kids?",
     a: "From the nursery through 5th grade, your kids are cared for and taught while you worship. Check-in is at the Albemarle Ave entrance (Purple lot) and opens 30 minutes before each service. Every volunteer is background-checked and trained.",
   },
