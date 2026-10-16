@@ -555,6 +555,14 @@ body {
 
 /* ── Typography ─────────────────────────────────────────── */
 /* IMPORTANT: uses Barlow Condensed loaded via next/font/google */
+/* Display face for headlines, card titles and service times. Declared on body,
+   NOT :root: next/font puts --font-source-serif on <body>, so a :root
+   declaration would resolve the var() before the font variable exists and the
+   whole token would silently fall back to the body face. */
+body {
+  --font-display: var(--font-source-serif), Georgia, serif;
+}
+
 /* .font-condensed is the historical name for the display face. It is now the
    serif (--font-display) at weight 700, sentence case. Pills and buttons that
    carry the class keep the body face. */
@@ -569,7 +577,7 @@ body {
 .font-condensed.btn-outline-white,
 .font-condensed.btn-outline-navy {
   font-family: var(--font-barlow), sans-serif;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
 }
 .font-display {
   font-family: var(--font-display);

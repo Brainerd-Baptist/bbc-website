@@ -107,9 +107,6 @@
   --radius-2xl: 12px;
   --radius-3xl: 14px;
 
-  /* Display face for headlines, card titles and service times. */
-  --font-display: var(--font-source-serif), Georgia, serif;
-
   /* font-700 / font-800 / font-900. 211 call sites write these numeric
      weights, but Tailwind v4 only knows named weights (font-bold...) unless a
      --font-weight-<name> token exists. Without these three lines every one of
