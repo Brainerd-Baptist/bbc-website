@@ -143,11 +143,6 @@ html {
    background-color: var(--surface) — the solid base beneath both layers.     */
 body {
   background-color: var(--surface);
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse 140% 45% at 50% 0%, rgba(14, 30, 80, 0.07) 0%, transparent 65%);
-  background-repeat: repeat, no-repeat;
-  background-size: 200px 200px, 100% auto;
   color: var(--fg);
   font-family: var(--font-barlow), sans-serif;
   overflow-x: clip;
@@ -224,102 +219,40 @@ body {
   }
 }
 
-/* ── Card / glass utility (light-mode) ───────────────────
-   backdrop-filter is written UNPREFIXED only, on purpose. The build minifier
-   (lightningcss) adds -webkit-backdrop-filter itself for Safari. Writing both
-   by hand made it keep ONLY the prefixed one, which Chrome and Edge ignore, so
-   every glass surface on the site had no blur in those browsers (found
-   2026-10-02 by reading the built CSS). Do not add a manual -webkit- twin. */
-.glass {
-  /* Real glass: semi-transparent + blur so content beneath bleeds through.
-     Phase 1b of the BBC theme upgrade (2026-10-01).
-     Previously this was fully opaque --surface-raised with a single shadow —
-     that is why light-mode cards felt flat and dark-mode felt disconnected.
-
-     Light: 78% white with a 16px blur and a double-layer shadow + inner glow.
-     Dark:  72% navy (#1a2336) with a deeper 20px blur. The darker alpha
-            means less of the near-black background leaks through, giving the
-            glass a tighter, more defined look in dark mode (mirrors BX). */
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(16px) saturate(1.15);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.60),
-    0 1px 3px rgba(0, 32, 91, 0.06),
-    0 4px 16px rgba(0, 32, 91, 0.08);
+/* ── Frosted surface ───────────────────────────────────────────────────────
+   .glass, .glass-md, .glass-frost and .card-lift are one recipe under four
+   historical names: translucent fill, blur, bright rim, soft lift. The values
+   are tokens (--frost-*, tokens.css), so dark mode is a token swap, not a
+   second rule. backdrop-filter is written UNPREFIXED only, on purpose: the
+   build minifier (lightningcss) adds -webkit-backdrop-filter itself. Writing
+   both by hand made it keep ONLY the prefixed one, which Chrome and Edge
+   ignore, so the blur vanished (found 2026-10-02). Do not add a -webkit- twin. */
+.glass,
+.glass-md,
+.glass-frost,
+.card-lift {
+  background: var(--frost-fill);
+  backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid var(--frost-edge);
+  box-shadow: var(--frost-shadow);
 }
-.dark .glass {
-  background: rgba(26, 35, 54, 0.72);
-  backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.30);
-}
-.glass-md {
-  /* Glass phase A (2026-10-02): was an opaque --surface-sunken fill, which is
-     a solid card by definition. Now a lighter glass tier: more opaque than
-     .glass-frost so dense text stays readable, still translucent enough that
-     a bloom or photo behind it shows through. */
-  background: var(--glass-fill-md);
-  backdrop-filter: blur(12px) saturate(1.2);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-md);
-}
-
-/* ── Frost tier ────────────────────────────────────────────────────────────
-   The showcase surface. Home event cards and the featured sermon card already
-   carry this class in their markup, but no rule existed, so they rendered with
-   no fill, edge or shadow at all. Half-clear fill, bright rim, a hairline ring
-   so the edge shows on a pale page, and a two-layer shadow that lifts on hover.
-   Tokens: --glass-* in tokens.css (light and dark values). */
 .glass-frost {
-  /* Two background layers: a diagonal sheen (light catching the top-left) over
-     a fill that fades from frosted to nearly clear, so the colour behind the
-     card shows through the lower right. No pseudo-element, so nothing paints
-     over the text. */
-  background:
-    linear-gradient(115deg, var(--glass-sheen) 0%, transparent 42%),
-    linear-gradient(135deg, var(--glass-fill-frost), var(--glass-fill-frost-end));
-  backdrop-filter: blur(18px) saturate(1.8);
-  border: 1px solid var(--glass-edge);
-  box-shadow:
-    inset 0 1px 0 var(--glass-hi),
-    inset 0 -1px 0 var(--glass-edge-low),
-    inset 0 0 28px var(--glass-glow),
-    0 0 0 1px var(--glass-ring),
-    var(--glass-shadow-rest);
-  transition:
-    transform var(--duration-base) var(--ease-out),
-    box-shadow var(--duration-base) var(--ease-out);
+  transition: transform var(--duration-base) var(--ease-out);
 }
 @media (hover: hover) {
   .glass-frost:hover {
     transform: translateY(-4px);
-    box-shadow:
-      inset 0 1px 0 var(--glass-hi),
-      inset 0 -1px 0 var(--glass-edge-low),
-      inset 0 0 28px var(--glass-glow),
-      0 0 0 1px var(--glass-ring),
-      var(--glass-shadow-hover);
   }
-  /* Non-interactive frost cards (info panels) keep the surface but do not
-     lift, so only things you can click look clickable. */
+  /* Non-interactive frost cards (info panels) do not lift, so only things you
+     can click look clickable. */
   .glass-frost.glass-static:hover {
     transform: none;
-    box-shadow:
-      inset 0 1px 0 var(--glass-hi),
-      inset 0 -1px 0 var(--glass-edge-low),
-      inset 0 0 28px var(--glass-glow),
-      0 0 0 1px var(--glass-ring),
-      var(--glass-shadow-rest);
   }
 }
 
-/* Long lists (a series can have 30+ rows): keep the frosted look (sheen, rim,
-   translucent fill) but skip the blur, because dozens of stacked backdrop
-   filters make scrolling stutter on older phones. */
+/* Long lists (a series can have 30+ rows): keep the frosted look but skip the
+   blur, because dozens of stacked backdrop filters make scrolling stutter on
+   older phones. */
 .glass-frost.glass-lite {
   backdrop-filter: none;
 }
@@ -399,54 +332,21 @@ body {
 
 /* ── Page backdrop ─────────────────────────────────────────────────────────
    ONE fixed colour layer behind the whole site (rendered in ConditionalLayout).
-   It does not scroll, so cards and sections slide over it and the glass blurs
-   whatever colour is under them at that moment, instead of each card being
-   tied to its own glow. Three large soft blobs spread across the viewport; the
-   two pseudo-elements drift slowly (transform only). z-index -1 keeps it above
-   the body background and below all page content. Opaque bands (navy, photos)
-   simply cover it. */
+   It does not scroll, so cards slide over it and the frosted glass blurs
+   whatever colour is under them at that moment. Three large, very faint
+   teal/navy blobs (--wash-*). It is a fixed element, not a fixed background:
+   iOS Safari mishandles background-attachment: fixed. z-index -1 keeps it
+   above the body background and below all page content; opaque bands (navy,
+   photos) simply cover it. */
 .bx-backdrop {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  overflow: hidden;
-  background:
-    radial-gradient(closest-side at 82% 18%, var(--bloom-c), transparent),
-    radial-gradient(closest-side at 12% 82%, var(--bloom-c), transparent);
-  background-size: 70vmax 70vmax, 60vmax 60vmax;
-  background-repeat: no-repeat;
-  background-position: 82% 18%, 12% 82%;
-}
-.bx-backdrop::before,
-.bx-backdrop::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  will-change: transform;
-  animation: bx-bloom-drift 22s var(--ease-out) infinite alternate;
-}
-.bx-backdrop::before {
-  width: 80vmax;
-  height: 80vmax;
-  left: -25vmax;
-  top: -15vmax;
-  background: radial-gradient(closest-side, var(--bloom-a), transparent);
-}
-.bx-backdrop::after {
-  width: 90vmax;
-  height: 90vmax;
-  right: -30vmax;
-  top: 25vh;
-  background: radial-gradient(closest-side, var(--bloom-b), transparent);
-  animation-duration: 28s;
-  animation-delay: -9s;
-}
-@media (prefers-reduced-motion: reduce) {
-  .bx-backdrop::before,
-  .bx-backdrop::after {
-    animation: none;
-  }
+  background-image:
+    radial-gradient(ellipse 60% 40% at 90% 12%, var(--wash-a), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 5% 55%, var(--wash-b), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 90%, var(--wash-c), transparent 70%);
 }
 
 /* ── Bloom ─────────────────────────────────────────────────────────────────
@@ -529,7 +429,7 @@ body {
 
 /* ── Eyebrow ───────────────────────────────────────────── */
 .eyebrow {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -538,10 +438,10 @@ body {
      light surface is 2.74:1 and fails AA. This is the single most-used
      instance of that failure on the site (52 occurrences). In dark mode
      --accent-text resolves back to full brand cyan. */
-  color: var(--accent-text);
+  color: var(--fg-muted);
 }
 .eyebrow-muted {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -551,7 +451,7 @@ body {
   color: var(--fg-muted);
 }
 .eyebrow-white {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -576,10 +476,10 @@ body {
 
 /* ── Button styles ─────────────────────────────────────── */
 .btn-primary {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
   /* --accent-solid, not --accent: white on brand cyan is 2.74:1 and fails
      AA, and this is the primary CTA on every page. The darkened fill clears
      4.5:1 with white. Brand cyan is retained everywhere it works — as a
@@ -592,32 +492,39 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 60, 80, 0.22);
+}
+.bg-accent-solid {
+  box-shadow: 0 1px 2px rgba(0, 60, 80, 0.22);
 }
 .btn-primary:hover {
   background: var(--accent-solid-hover);
   transform: translateY(-1px);
 }
 .btn-outline-white {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
-  letter-spacing: -0.01em;
-  background: transparent;
+  letter-spacing: 0.02em;
+  /* Frosted pane for photos and dark bands; the teal primary stays flat. */
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px) saturate(1.5);
   color: var(--fg-on-dark);
-  border: 1.5px solid var(--border-on-dark-strong);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 14px rgba(0, 0, 0, 0.18);
   padding: 0.75rem 1.75rem;
   border-radius: 9999px;
   transition: border-color 0.2s, background 0.2s;
 }
 .btn-outline-white:hover {
-  border-color: var(--border-on-dark-hover);
-  background: var(--hover-on-dark);
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.26);
 }
 .btn-outline-navy {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
   background: transparent;
   color: var(--fg);
   border: 1.5px solid var(--border-strong);
@@ -648,7 +555,36 @@ body {
 
 /* ── Typography ─────────────────────────────────────────── */
 /* IMPORTANT: uses Barlow Condensed loaded via next/font/google */
-.font-condensed { font-family: var(--font-barlow-condensed), sans-serif; }
+/* .font-condensed is the historical name for the display face. It is now the
+   serif (--font-display) at weight 700, sentence case. Pills and buttons that
+   carry the class keep the body face. */
+.font-condensed {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+.font-condensed.rounded-full,
+.font-condensed.btn-primary,
+.font-condensed.btn-outline-white,
+.font-condensed.btn-outline-navy {
+  font-family: var(--font-barlow), sans-serif;
+  letter-spacing: 0.02em;
+}
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+h1, h2 {
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
 .font-serif { font-family: Georgia, 'Times New Roman', serif; }
 
 /* Headline sizes -- four tiers, each revised to the clamp() value the
@@ -665,37 +601,36 @@ body {
    so weight tracks what the cluster actually uses, not what the single
    pre-existing, unused .h-section definition happened to say. */
 .h-display {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(2.8rem, 8vw, 5.5rem);
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 .h-hero {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(2.8rem, 7vw, 4.5rem);
-  line-height: 1.0;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 /* homepage Hero headline — larger floor than .h-hero so small screens
    still read as hero-scale; used only in components/home/Hero.tsx */
 .h-home-hero {
   font-size: clamp(3.2rem, 8vw, 5.5rem);
-  letter-spacing: -0.01em;
 }
 .h-subsection {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 900;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 .h-section {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 /* Card and list-item heading -- the font-condensed font-800 text-xl/text-2xl
@@ -703,8 +638,8 @@ body {
    Spans the same range those hand-typed sizes actually used, rather than
    forcing every site onto one fixed number. */
 .h-item {
-  font-family: var(--font-barlow-condensed), sans-serif;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   line-height: 1.15;
   letter-spacing: -0.01em;
@@ -716,7 +651,7 @@ body {
    text-[8px]/[9px]/[10px]/[11px] paired with inconsistent weight/tracking
    choices that were all doing this same job. */
 .label-micro {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-barlow), sans-serif;
   font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -1053,155 +988,18 @@ select:focus {
 .skip-link:focus { transform: translateY(0); }
 #main-content:focus { outline: none; }
 
-/* ── Clean & bright home, v2 (preview, 2026-10-15) ────────────────────────
-   Scoped to the home page wrapper. White page, white cards that lift with a
-   hairline border and a soft shadow, one accent (teal) reserved for the main
-   button. No gray panels. Dark mode keeps its own tokens. Deleting this block
-   and the .site-look class on app/page.tsx removes the scope. */
-:root:not(.dark) .site-look {
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
-  --tint-band: #f1f9fc;
-  background: var(--surface);
-}
-.dark .site-look {
-  --tint-band: var(--surface-sunken);
-}
-.site-look .card-lift,
-.home-clean .glass,
-.home-clean .glass-md,
-.home-clean .glass-frost {
-  background: var(--surface-raised);
-  backdrop-filter: none;
-  border: 1px solid var(--border);
-  box-shadow:
-    0 1px 2px rgba(0, 32, 91, 0.05),
-    0 6px 18px rgba(0, 32, 91, 0.07);
-}
-.dark .site-look .card-lift,
-.dark .home-clean .glass,
-.dark .home-clean .glass-md,
-.dark .home-clean .glass-frost {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-}
-.home-clean .eyebrow {
-  color: var(--fg-muted);
-}
+/* ── Home only ─────────────────────────────────────────────────────────────
+   On the home page the accent colour is reserved for the main button, so
+   accent-coloured text is navy there. Links on other pages stay teal so they
+   still look like links. (The home wrapper is app/page.tsx.) */
 .home-clean .text-accent-text {
   color: var(--fg);
 }
-body.site-look .bx-backdrop {
-  display: none;
-}
 
-/* PREVIEW: tighter radii on the home page only. Pills (buttons) and nav unchanged. */
-.site-look .rounded-3xl { border-radius: 14px; }
-.site-look .rounded-2xl { border-radius: 12px; }
-.site-look .rounded-xl  { border-radius: 8px; }
-.site-look .rounded-lg  { border-radius: 6px; }
-
-/* PREVIEW: type tune on the home page. Condensed only for headlines; everything
-   else Barlow semibold, sentence case; Inter labels move to Barlow. */
-.site-look .font-condensed:not(.h-display):not(.h-hero):not(.h-subsection):not(.h-section):not(h1):not(h2),
-.site-look .h-item {
-  font-family: var(--font-barlow), sans-serif;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-transform: none;
-}
-.site-look .eyebrow, .site-look .eyebrow-white, .site-look .eyebrow-muted, .site-look .label-micro {
-  font-family: var(--font-barlow), sans-serif;
-}
-.site-look .btn-primary, .site-look .btn-outline-white, .site-look .btn-outline-navy {
-  font-family: var(--font-barlow), sans-serif;
-  letter-spacing: 0.02em;
-}
-
-/* PREVIEW: serif display type on the home page. Headlines, card titles, times = serif;
-   body, buttons, labels stay Barlow. */
-.site-look .h-display, .site-look .h-hero, .site-look .h-subsection, .site-look .h-section,
-.site-look h1, .site-look h2, .site-look h3, .site-look .h-item,
-.site-look .font-condensed:not(.btn-primary):not(.btn-outline-white):not(.btn-outline-navy):not(.rounded-full) {
-  font-family: var(--font-source-serif), Georgia, serif !important;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  text-transform: none;
-}
-.site-look .h-display, .site-look .h-hero, .site-look .h-subsection, .site-look .h-section, .site-look h1, .site-look h2 {
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-.site-look .font-display {
-  font-family: var(--font-source-serif), Georgia, serif !important;
-  font-weight: 600;
-}
-
-/* PREVIEW: flat, confident buttons; glass lives on the big surfaces.
-   Buttons: solid teal, no gradient, one hairline shadow. Cards and panels:
-   frosted white (translucent + blur + light edge) over a very faint colour wash
-   so the blur has something to catch. Nav keeps its existing frosted bar. */
-.site-look .bg-accent-solid,
-.site-look .btn-primary {
-  box-shadow: 0 1px 2px rgba(0, 60, 80, 0.22);
-}
-
-/* Colour wash lives on a fixed pseudo-element (iOS Safari mishandles
-   background-attachment: fixed on body). */
-body.site-look::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 90% 12%, rgba(0, 150, 175, 0.10), transparent 70%),
-    radial-gradient(ellipse 55% 40% at 5% 55%, rgba(0, 45, 120, 0.07), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(0, 150, 175, 0.08), transparent 70%);
-}
-.dark body.site-look::before {
-  background-image:
-    radial-gradient(ellipse 60% 40% at 90% 12%, rgba(0, 170, 195, 0.12), transparent 70%),
-    radial-gradient(ellipse 55% 40% at 5% 55%, rgba(40, 90, 200, 0.10), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(0, 170, 195, 0.09), transparent 70%);
-}
-
-/* PREVIEW: frosted secondary button over photos/dark bands; primary stays flat. */
-.site-look .btn-outline-white {
-  background: rgba(255, 255, 255, 0.16);
-  -webkit-backdrop-filter: blur(14px) saturate(1.5);
-  backdrop-filter: blur(14px) saturate(1.5);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 14px rgba(0, 0, 0, 0.18);
-}
-.site-look .btn-outline-white:hover {
-  background: rgba(255, 255, 255, 0.26);
-  border-color: rgba(255, 255, 255, 0.75);
-}
-
-.site-look .card-lift,
-.home-clean .glass,
-.home-clean .glass-md,
-.home-clean .glass-frost {
-  background: rgba(255, 255, 255, 0.62);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  box-shadow:
-    0 0 0 1px rgba(0, 32, 91, 0.05),
-    0 8px 24px rgba(0, 32, 91, 0.08);
-}
-.dark .site-look .card-lift,
-.dark .home-clean .glass,
-.dark .home-clean .glass-md,
-.dark .home-clean .glass-frost {
-  background: rgba(24, 38, 74, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-/* PREVIEW: lighter, brighter frosted menu panel (light mode). The page behind
-   gets a pale veil instead of a dark scrim, so the glass stays bright and
-   shows the page through it; dark mode keeps its own scrim. */
+/* ── Frosted menu (light mode) ─────────────────────────────────────────────
+   The page behind the open menu gets a pale veil instead of a dark scrim, so
+   the glass stays bright and shows the page through it. Dark mode keeps its
+   own scrim. */
 :root:not(.dark) {
   --nav-menu-scrim: rgba(238, 246, 252, 0.38);
 }
@@ -1209,7 +1007,6 @@ body.site-look::before {
   background:
     linear-gradient(115deg, rgba(255, 255, 255, 0.55) 0%, transparent 45%),
     rgba(255, 255, 255, 0.50);
-  -webkit-backdrop-filter: blur(30px) saturate(1.9);
   backdrop-filter: blur(30px) saturate(1.9);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow:
@@ -1224,27 +1021,17 @@ body.site-look::before {
   color: rgba(0, 32, 91, 0.82);
 }
 
-/* Dark mode: inner highlight so glass reads on navy. */
-.dark .site-look .card-lift,
-.dark .home-clean .glass,
-.dark .home-clean .glass-md,
-.dark .home-clean .glass-frost {
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
 /* Accessibility: solid surfaces when the visitor asks for less transparency. */
 @media (prefers-reduced-transparency: reduce) {
-  .site-look .card-lift,
-  .home-clean .glass,
-  .home-clean .glass-md,
-  .home-clean .glass-frost,
+  .glass,
+  .glass-md,
+  .glass-frost,
+  .card-lift,
   .nav-drawer {
-    -webkit-backdrop-filter: none;
     backdrop-filter: none;
     background: var(--surface-raised);
   }
-  .site-look .btn-outline-white {
-    -webkit-backdrop-filter: none;
+  .btn-outline-white {
     backdrop-filter: none;
     background: rgba(0, 32, 91, 0.55);
   }

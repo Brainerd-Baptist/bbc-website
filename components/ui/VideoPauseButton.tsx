@@ -43,7 +43,7 @@ export default function VideoPauseButton({
       }}
       aria-label={paused ? "Play background video" : "Pause background video"}
       className={`items-center justify-center w-10 h-10 rounded-full border border-border-on-dark-strong text-fg-on-dark hover:border-border-on-dark-hover transition-colors ${className}`}
-      style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(4px)" }}
+      style={{ background: "var(--scrim-control)", backdropFilter: "blur(4px)" }}
     >
       {paused ? (
         <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" /></svg>

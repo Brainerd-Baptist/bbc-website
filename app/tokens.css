@@ -98,7 +98,17 @@
    docs/spacing-radius-type-plan.md. */
 @theme {
   /* rounded-card: cards, panels, sheets (rounded-2xl). */
-  --radius-card:     1rem;    /* cards, panels, sheets -- rounded-2xl, 79 sites */
+  --radius-card:     12px;    /* cards, panels, sheets -- same as rounded-2xl */
+
+  /* Corner scale (tighter than Tailwind's defaults). Pills (rounded-full) are
+     unchanged. Every rounded-lg/xl/2xl/3xl on the site follows these. */
+  --radius-lg:  6px;
+  --radius-xl:  8px;
+  --radius-2xl: 12px;
+  --radius-3xl: 14px;
+
+  /* Display face for headlines, card titles and service times. */
+  --font-display: var(--font-source-serif), Georgia, serif;
 
   /* font-700 / font-800 / font-900. 211 call sites write these numeric
      weights, but Tailwind v4 only knows named weights (font-bold...) unless a
@@ -139,9 +149,23 @@
 
   /* Surfaces, recessed → floating */
   --surface-sunken:  #f4f6f9;
-  --surface:         #f7f8fb;
+  --surface:         #ffffff;
   --surface-raised:  #ffffff;
   --surface-overlay: rgba(255, 255, 255, 0.92);
+  /* Very pale teal section band (home Connect band) */
+  --tint-band:       #f1f9fc;
+
+  /* Frosted surface: ONE recipe for .glass, .glass-md, .glass-frost and
+     .card-lift. Translucent white, bright rim, hairline ring + soft lift. */
+  --frost-fill:   rgba(255, 255, 255, 0.62);
+  --frost-edge:   rgba(255, 255, 255, 0.75);
+  --frost-shadow: 0 0 0 1px rgba(0, 32, 91, 0.05), 0 8px 24px rgba(0, 32, 91, 0.08);
+
+  /* Faint colour wash on the fixed page backdrop, so frosted cards have
+     something to blur. Three soft teal/navy blobs. */
+  --wash-a: rgba(0, 150, 175, 0.10);
+  --wash-b: rgba(0, 45, 120, 0.07);
+  --wash-c: rgba(0, 150, 175, 0.08);
   /* Frosted nav bar and drawer: lighter than --surface-overlay so the page shows through. */
   --nav-glass-fill:   rgba(255, 255, 255, 0.58);
   --nav-drawer-fill:  rgba(255, 255, 255, 0.78);
@@ -267,6 +291,8 @@
      images containing text most. --media-bg stops letterbox bars rendering
      pure black against a not-pure-black page. */
   --scrim:    rgba(0, 12, 28, 0.55);
+  /* Small control sitting on a photo or video (e.g. the background-video pause button). */
+  --scrim-control: rgba(0, 0, 0, 0.35);
   --media-bg: #f4f6f9;
 
   /* Shadows. Tokenised because they are one of the three things that must
@@ -644,6 +670,13 @@
   --surface:         #0d1525;
   --surface-raised:  #162030;
   --surface-overlay: #1b2738;
+  --tint-band:       var(--surface-sunken);
+  --frost-fill:   rgba(24, 38, 74, 0.55);
+  --frost-edge:   rgba(255, 255, 255, 0.12);
+  --frost-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --wash-a: rgba(0, 170, 195, 0.12);
+  --wash-b: rgba(40, 90, 200, 0.10);
+  --wash-c: rgba(0, 170, 195, 0.09);
   --nav-glass-fill:   rgba(22, 32, 48, 0.55);
   --nav-drawer-fill:  rgba(22, 32, 48, 0.78);
   --nav-drawer-pill:  rgba(0, 171, 201, 0.24);
