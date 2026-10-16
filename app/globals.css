@@ -1136,26 +1136,40 @@ body.site-look .bx-backdrop {
   font-weight: 600;
 }
 
-/* PREVIEW: glass-lifted primary buttons. One style for every teal button:
-   a near-opaque teal gradient (keeps white-text contrast >= 4.5:1), a light
-   edge, a soft top highlight and a teal-tinted shadow. The backdrop blur makes
-   it read as glass over photos and navy bands, and as a lifted solid on white. */
+/* PREVIEW: flat, confident buttons; glass lives on the big surfaces.
+   Buttons: solid teal, no gradient, one hairline shadow. Cards and panels:
+   frosted white (translucent + blur + light edge) over a very faint colour wash
+   so the blur has something to catch. Nav keeps its existing frosted bar. */
 .site-look .bg-accent-solid,
 .site-look .btn-primary {
-  background-image: linear-gradient(180deg, rgba(0, 138, 160, 0.96) 0%, rgba(0, 104, 124, 0.96) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.38);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 6px 16px rgba(0, 96, 116, 0.28);
-  -webkit-backdrop-filter: blur(10px) saturate(1.4);
-  backdrop-filter: blur(10px) saturate(1.4);
-  transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 60, 80, 0.22);
 }
-.site-look .bg-accent-solid:hover,
-.site-look .btn-primary:hover {
-  filter: brightness(1.08);
-  transform: translateY(-1px);
+
+body.site-look {
+  background-image:
+    radial-gradient(ellipse 60% 40% at 90% 12%, rgba(0, 150, 175, 0.10), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 5% 55%, rgba(0, 45, 120, 0.07), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 90%, rgba(0, 150, 175, 0.08), transparent 70%);
+  background-attachment: fixed;
+}
+
+.site-look .card-lift,
+.home-clean .glass,
+.home-clean .glass-md,
+.home-clean .glass-frost {
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 10px 22px rgba(0, 96, 116, 0.34);
+    0 0 0 1px rgba(0, 32, 91, 0.05),
+    0 8px 24px rgba(0, 32, 91, 0.08);
+}
+.dark .site-look .card-lift,
+.dark .home-clean .glass,
+.dark .home-clean .glass-md,
+.dark .home-clean .glass-frost {
+  background: rgba(24, 38, 74, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
