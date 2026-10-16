@@ -569,8 +569,15 @@ body {
 .font-condensed {
   font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   text-transform: none;
+}
+h1.font-condensed,
+h2.font-condensed {
+  letter-spacing: -0.02em;
+}
+h3.font-condensed {
+  letter-spacing: -0.01em;
 }
 .font-condensed.rounded-full,
 .font-condensed.btn-primary,
