@@ -16,7 +16,7 @@ import Section from "@/components/ui/Section";
 const EXPECT_ITEMS = [
   {
     num: "01",
-    title: "About 75 Minutes",
+    title: "About 60 Minutes",
     desc: "Time in God's Word, prayer, and congregational worship. Never rushed — never dragged out.",
   },
   {
@@ -67,7 +67,7 @@ export default function VisitExperience() {
           <dl className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 text-sm">
             <div>
               <dt className="text-fg font-semibold">Services</dt>
-              <dd className="text-fg-muted">8:30 AM Choir &amp; Orchestra<br />11:00 AM Band-Led<br />About 75 minutes</dd>
+              <dd className="text-fg-muted">8:30 AM Choir &amp; Orchestra<br />11:00 AM Band-Led<br />About 60 minutes</dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Where</dt>

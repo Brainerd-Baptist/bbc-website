@@ -34,7 +34,7 @@ const STEPS = [
   {
     num: "05",
     label: "The service",
-    heading: "About 75 minutes",
+    heading: "About 60 minutes",
     body: "Music leads — congregational singing, not just a band performing at you. Then an expository sermon: we work through a book of the Bible verse by verse, week after week. Bring a Bible or use the pew Bibles already in the seats. Wear what you'd wear on a Saturday. There's no script for how to act — just show up.",
     note: null,
   },
