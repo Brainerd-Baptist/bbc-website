@@ -6,7 +6,6 @@ import Image from "next/image";
 import { CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
 import SundayWalkthrough from "@/components/visit/SundayWalkthrough";
-import SundayPlanner from "@/components/visit/SundayPlanner";
 import PlanVisitForm from "@/components/visit/PlanVisitForm";
 import VisitFAQ from "@/components/visit/VisitFAQ";
 import ConnectForm from "@/components/connect/ConnectForm";
@@ -15,28 +14,6 @@ import ReturningVisitorPanel from "@/components/visit/ReturningVisitorPanel";
 
 import Card from "@/components/ui/Card";
 import Section from "@/components/ui/Section";
-const EXPECT_ITEMS = [
-  {
-    num: "01",
-    title: "About 60 Minutes",
-    desc: "Time in God's Word, prayer, and congregational worship. Never rushed — never dragged out.",
-  },
-  {
-    num: "02",
-    title: "Congregational Worship",
-    desc: "You will hear the church sing — not just a band perform. We prioritize the voices of the room.",
-  },
-  {
-    num: "03",
-    title: "Expository Preaching",
-    desc: "Every sermon works through a book of the Bible verse by verse. Bring your Bible, or use the pew Bibles.",
-  },
-  {
-    num: "04",
-    title: "Come as You Are",
-    desc: "We're not thinking about what you're wearing — we're eager to learn your name and hear your story.",
-  },
-];
 
 export default function VisitExperience() {
   const [visitorType, setVisitorType] = useState<VisitorType>("first");
@@ -102,6 +79,9 @@ export default function VisitExperience() {
           <ReturningVisitorPanel />
         </div>
       )}
+
+      {/* ── Plan a visit form: the main thing a first-timer can do ── */}
+      {!returning && <PlanVisitForm />}
 
       {/* ── Service times ──────────────────────────────────── */}
       <section id="service-times" className="py-24 px-6">
@@ -204,42 +184,8 @@ export default function VisitExperience() {
       {/* ── First-timer orientation content — collapsed for returning visitors ── */}
       {!returning && (
         <>
-          {/* ── Sunday Planner ─────────────────────────────────── */}
-          <SundayPlanner />
-
           {/* ── Sunday walkthrough ─────────────────────────────── */}
           <SundayWalkthrough />
-
-          {/* ── Plan a visit form ──────────────────────────────── */}
-          <PlanVisitForm />
-
-          {/* ── What to expect ─────────────────────────────────── */}
-          <Section className="py-24 px-6">
-            <div className="max-w-5xl mx-auto">
-              <p className="eyebrow text-center mb-4">Before You Arrive</p>
-              <h2 className="text-fg text-center mb-16 h-hero">What to Expect</h2>
-              <div className="grid sm:grid-cols-2 gap-6">
-                {EXPECT_ITEMS.map((item) => (
-                  <Card key={item.title} className="flex gap-5 p-6 rounded-2xl">
-                    <span
-                      className="font-condensed font-900 leading-none flex-shrink-0 mt-0.5"
-                      aria-hidden="true"
-                      data-decorative="true"
-                      style={{ fontSize: "2.5rem", color: "var(--accent-text)", opacity: 0.35, letterSpacing: "-0.03em" }}
-                    >
-                      {item.num}
-                    </span>
-                    <div>
-                      <h3 className="font-condensed font-800 text-fg mb-2" style={{ fontSize: "1.35rem", letterSpacing: "-0.01em" }}>
-                        {item.title}
-                      </h3>
-                      <p className="text-fg-muted text-sm leading-relaxed">{item.desc}</p>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </Section>
 
           {/* ── Worship Care of Kids ───────────────────────────── */}
           <Section className="py-24 px-6">
@@ -301,38 +247,21 @@ export default function VisitExperience() {
         </div>
       </Section>
 
-      {/* ── Connect ────────────────────────────────────────────
-          First-timers use the Plan a Visit form above (it adds them and their kids
-          to Planning Center). Returning visitors still get the next-step form. */}
-      <section id="connect" className="py-24 px-6">
-        <div className="max-w-5xl mx-auto text-center mb-12">
-          <p className="eyebrow mb-4">Questions? Reach Out.</p>
-          <h2 className="text-fg mb-4 h-hero">We&apos;d love to hear from you.</h2>
-          <p className="text-fg-muted max-w-md mx-auto">
-            {returning
-              ? "Longtime member or somewhere in between — our team wants to connect with you."
-              : "Have a question before you come? Send us a note and a real person will answer."}
-          </p>
-        </div>
-        <div className="max-w-2xl mx-auto">
-          {returning ? (
+      {/* ── Connect: returning visitors only. First-timers use Plan a Visit above. ── */}
+      {returning && (
+        <section id="connect" className="py-24 px-6">
+          <div className="max-w-5xl mx-auto text-center mb-12">
+            <p className="eyebrow mb-4">Take a Next Step</p>
+            <h2 className="text-fg mb-4 h-hero">We&apos;d love to hear from you.</h2>
+            <p className="text-fg-muted max-w-md mx-auto">
+              Longtime member or somewhere in between — our team wants to connect with you.
+            </p>
+          </div>
+          <div className="max-w-2xl mx-auto">
             <ConnectForm showMembershipOption />
-          ) : (
-            <div className="text-center">
-              <Link href="/connect/general" className="btn-primary">
-                Send Us a Message
-              </Link>
-              <p className="text-fg-muted text-sm mt-4">
-                Planning to visit? Use the{" "}
-                <a href="#plan-your-visit" className="text-accent-text font-semibold underline underline-offset-2">
-                  Plan a Visit form
-                </a>{" "}
-                so we can have a greeter and your kids&apos; check-in ready.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* ── CTA — navy close ───────────────────────────────── */}
       <section className="py-24 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
@@ -345,12 +274,30 @@ export default function VisitExperience() {
               ? "Let's get you plugged in — a group, a serving spot, or just a conversation."
               : "Let us know you're coming — we'd love to welcome you personally."}
           </p>
-          <Link
-            href={returning ? "/connect/next-step" : "/connect"}
-            className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
-          >
-            {returning ? "Take a Next Step" : "Send Us a Note"}
-          </Link>
+          {returning ? (
+            <Link
+              href="/connect/next-step"
+              className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
+            >
+              Take a Next Step
+            </Link>
+          ) : (
+            <>
+              <a
+                href="#plan-your-visit"
+                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
+              >
+                Plan Your Visit
+              </a>
+              <p className="text-fg-on-dark-muted text-sm mt-6">
+                Have a question first?{" "}
+                <Link href="/connect/general" className="underline underline-offset-2 text-fg-on-dark">
+                  Send us a message
+                </Link>
+                .
+              </p>
+            </>
+          )}
         </div>
       </section>
     </div>

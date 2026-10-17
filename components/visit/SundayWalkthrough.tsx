@@ -15,14 +15,14 @@ const STEPS = [
     label: "Parking",
     heading: "Pull into the Red or Orange lot",
     body: "The Red Lot is across from the front entrance — easiest to find. The Orange Lot is on Mayfair Ave if the Red fills up. All lots are free and open before and after service.",
-    note: "Bringing kids? Pull into the Purple Lot off Albemarle Ave — it puts you right at the Kids entrance.",
+    note: null,
   },
   {
     num: "03",
     label: "Kids check-in",
     heading: "Families, use the Purple Lot entrance",
     body: "Park in the Purple Lot and head to the Kids entrance off Albemarle Ave. Dedicated check-in staff will walk you through everything your first time — you'll each receive a matching security tag, which is how pickup works when service ends. Arriving 10–15 minutes early helps your first week; it goes fast after that.",
-    note: "Check-in opens 30 minutes before each service. All volunteers are background-checked.",
+    note: null,
   },
   {
     num: "04",
@@ -35,7 +35,7 @@ const STEPS = [
     num: "05",
     label: "The service",
     heading: "About 60 minutes",
-    body: "Music leads — congregational singing, not just a band performing at you. Then an expository sermon: we work through a book of the Bible verse by verse, week after week. Bring a Bible or use the pew Bibles already in the seats. Wear what you'd wear on a Saturday. There's no script for how to act — just show up.",
+    body: "Music leads — congregational singing, not just a band performing at you. Then an expository sermon: we work through a book of the Bible verse by verse, week after week. Bring a Bible or use the pew Bibles already in the seats. There's no script for how to act — just show up.",
     note: null,
   },
   {
