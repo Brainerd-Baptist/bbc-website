@@ -7,6 +7,8 @@
  */
 
 /** Who gets the heads-up email for every submission ("only me for now"). */
+/** Who hears about "Take a Next Step" requests. Route by interest later. */
+export const NEXT_STEP_NOTIFY_EMAIL = "jking@brainerdbaptist.org";
 export const VISIT_NOTIFY_EMAIL = "jking@brainerdbaptist.org";
 
 /**

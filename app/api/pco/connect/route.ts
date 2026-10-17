@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  pcoAuth,
-  findOrCreatePerson,
-  submitForm,
-  type FieldAnswer,
-} from "@/lib/pco-forms";
+import { registerNextStepInPco } from "@/lib/pco-next-step";
+import { sendMail } from "@/lib/mail";
+import { sendContactConfirmation } from "@/lib/contact-mail";
+import { buildContactNotificationHtml } from "@/lib/email-templates";
+import { NEXT_STEP_NOTIFY_EMAIL } from "@/lib/visit-form";
 
 interface ConnectBody {
   firstName: string;
@@ -13,27 +12,13 @@ interface ConnectBody {
   phone: string;
   howHeard: string[]; // array of option IDs (required, at least one)
   interests: string[]; // array of option IDs (optional)
+  wantsMembership?: boolean;
   notes?: string;
 }
-
-// PCO form 1326026 field IDs
-const FIELD = {
-  phone:     "10599346",
-  howHeard:  "10599355",
-  interests: "10599352",
-  notes:     "10599358",
-} as const;
 
 export async function POST(req: NextRequest) {
   const appId = process.env.PCO_APP_ID;
   const secret = process.env.PCO_SECRET;
-
-  if (!appId || !secret) {
-    return NextResponse.json(
-      { error: "PCO credentials not configured" },
-      { status: 500 }
-    );
-  }
 
   let body: ConnectBody;
   try {
@@ -42,68 +27,93 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { firstName, lastName, email, phone, howHeard, interests, notes } = body;
+  const { firstName, lastName, email, phone, howHeard, interests, wantsMembership, notes } = body;
 
   if (!firstName?.trim() || !email?.trim()) {
-    return NextResponse.json(
-      { error: "First name and email are required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "First name and email are required" }, { status: 400 });
   }
-
   if (!howHeard || howHeard.length === 0) {
     return NextResponse.json(
       { error: "Please select at least one option for how you heard about Brainerd" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  const auth = pcoAuth(appId, secret);
+  const name = `${firstName.trim()} ${(lastName ?? "").trim()}`.trim();
 
-  let personId: string;
+  let result;
+  if (appId && secret) {
+    result = await registerNextStepInPco(appId, secret, {
+      firstName: firstName.trim(),
+      lastName: (lastName ?? "").trim(),
+      email: email.trim(),
+      phone: phone?.trim() ?? "",
+      interestIds: interests ?? [],
+      wantsMembership: !!wantsMembership,
+      howHeardIds: howHeard,
+      notes: notes?.trim() ?? "",
+    });
+  }
+
+  const interestText = result?.interestLabels.length
+    ? result.interestLabels.join(", ")
+    : "No specific interest checked";
+  const pcoStatus = !result
+    ? "Not connected"
+    : result.errors.length
+      ? `PARTIAL — check Planning Center: ${result.errors[0].slice(0, 120)}`
+      : `Added (${result.cards.join("; ") || "person only"})`;
+
+  // Staff heads-up. Goes to one address for now; split by interest later.
+  const meta = [
+    { label: "Interested in", value: interestText },
+    { label: "Heard about us", value: result?.howHeard.join(", ") || "—" },
+    { label: "Planning Center", value: pcoStatus },
+    ...(phone?.trim() ? [{ label: "Phone", value: phone.trim() }] : []),
+  ];
+  const text = [
+    `Next Step: ${name} <${email.trim()}>`,
+    phone?.trim() ? `Phone: ${phone.trim()}` : null,
+    `Interested in: ${interestText}`,
+    `Heard about us: ${result?.howHeard.join(", ") || "—"}`,
+    notes?.trim() ? `Note: ${notes.trim()}` : null,
+    `Planning Center: ${pcoStatus}`,
+    result?.errors.length ? `\nDetails:\n${result.errors.join("\n")}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
   try {
-    personId = await findOrCreatePerson(auth, firstName.trim(), (lastName ?? "").trim(), email.trim());
+    await sendMail({
+      to: NEXT_STEP_NOTIFY_EMAIL,
+      subject: `Next step: ${name} — ${interestText}`,
+      replyTo: email.trim(),
+      text,
+      html: buildContactNotificationHtml({
+        heading: "Next step request",
+        fromName: name,
+        fromEmail: email.trim(),
+        message: notes?.trim() || `Interested in: ${interestText}`,
+        meta,
+      }),
+    });
+    await sendContactConfirmation({
+      to: email.trim(),
+      name,
+      teamLabel: "our connect team",
+      replyTo: NEXT_STEP_NOTIFY_EMAIL,
+    });
   } catch (err) {
-    console.error("PCO person lookup/create failed:", err);
-    return NextResponse.json(
-      { error: "Failed to identify submitter in Planning Center" },
-      { status: 502 }
-    );
+    console.error("next-step email failed:", err);
   }
 
-  const answers: FieldAnswer[] = [];
-
-  // Phone — use phone kind for flat number/location attributes
-  if (phone?.trim()) {
-    answers.push({ kind: "phone", fieldId: FIELD.phone, number: phone.trim(), location: "Mobile" });
+  if (!result) {
+    // No Planning Center credentials: staff still got the email, so don't fail the visitor.
+    return NextResponse.json({ success: true });
   }
-
-  // How heard — one option entry per selected checkbox
-  for (const optionId of howHeard) {
-    answers.push({ kind: "option", fieldId: FIELD.howHeard, optionId });
+  if (!result.person) {
+    console.error("next-step PCO failed:", result.errors);
+    // Person never reached PCO, but the staff email has everything. Still a success for them.
   }
-
-  // Interests — one option entry per selected checkbox
-  if (interests && interests.length > 0) {
-    for (const optionId of interests) {
-      answers.push({ kind: "option", fieldId: FIELD.interests, optionId });
-    }
-  }
-
-  // Notes (optional free text)
-  if (notes && notes.trim()) {
-    answers.push({ kind: "text", fieldId: FIELD.notes, value: notes.trim() });
-  }
-
-  try {
-    await submitForm(auth, "1326026", personId, answers);
-  } catch (err) {
-    console.error("PCO form submission error:", err);
-    return NextResponse.json(
-      { error: "Failed to submit to Planning Center" },
-      { status: 502 }
-    );
-  }
-
   return NextResponse.json({ success: true });
 }

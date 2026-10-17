@@ -52,7 +52,7 @@ export interface VisitPcoResult {
 
 type Call = { ok: boolean; status: number; json: any; text: string };
 
-async function call(auth: string, method: string, path: string, body?: unknown): Promise<Call> {
+export async function call(auth: string, method: string, path: string, body?: unknown): Promise<Call> {
   // PCO allows 100 requests / 20 s per org. On a 429, wait out the window (Retry-After) and retry.
   for (let attempt = 0; ; attempt++) {
     const res = await fetch(`${BASE}${path}`, {
@@ -76,7 +76,7 @@ async function call(auth: string, method: string, path: string, body?: unknown):
   }
 }
 
-async function findOrCreateAdult(
+export async function findOrCreateAdult(
   auth: string,
   first: string,
   last: string,
@@ -135,7 +135,7 @@ export function gradeToPco(label: string): number | undefined {
   return Number.isFinite(n) && n >= 1 && n <= 12 ? n : undefined;
 }
 
-async function ensurePhone(auth: string, personId: string, phone: string, errors: string[]) {
+export async function ensurePhone(auth: string, personId: string, phone: string, errors: string[]) {
   const digits = phone.replace(/\D/g, "");
   if (!digits) return;
   const list = await call(auth, "GET", `/people/${personId}/phone_numbers?per_page=25`);
@@ -255,7 +255,7 @@ async function linkHousehold(
 
 const GENERAL_NOTES_CATEGORY = "279710"; // "General Notes" in PCO People
 
-async function addProfileNote(auth: string, personId: string, note: string, errors: string[]) {
+export async function addProfileNote(auth: string, personId: string, note: string, errors: string[]) {
   const r = await call(auth, "POST", `/people/${personId}/notes`, {
     data: {
       type: "Note",
@@ -266,7 +266,7 @@ async function addProfileNote(auth: string, personId: string, note: string, erro
   if (!r.ok) errors.push(fail("profile note", r));
 }
 
-async function addWorkflowCard(
+export async function addWorkflowCard(
   auth: string,
   workflowId: string,
   personId: string,

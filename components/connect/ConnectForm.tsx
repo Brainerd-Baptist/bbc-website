@@ -154,6 +154,7 @@ export default function ConnectForm({
           phone,
           howHeard,
           interests,
+          wantsMembership: showMembershipOption && wantsMembership,
           notes: notes || undefined,
         }),
       });
@@ -163,21 +164,6 @@ export default function ConnectForm({
       if (!res.ok || data.error) {
         setError(data.error || "Something went wrong. Please try again.");
       } else {
-        // Membership isn't a PCO Connect form option (yet) — routed as its
-        // own email separately. Fire-and-forget: a hiccup here shouldn't
-        // block the main connect submission from showing success.
-        if (showMembershipOption && wantsMembership) {
-          fetch("/api/contact/membership", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: `${firstName} ${lastName}`.trim(),
-              email,
-              phone,
-              message: "Checked \"I'm interested in membership\" on the Connect form.",
-            }),
-          }).catch(() => {});
-        }
         setSuccess(true);
       }
     } catch {
