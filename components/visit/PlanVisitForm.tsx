@@ -368,7 +368,7 @@ export default function PlanVisitForm() {
               </label>
             </div>
 
-            {error && touched && <p role="alert" className="text-sm text-fg" style={{ color: "var(--danger, #b3261e)" }}>{error}</p>}
+            {error && touched && <p role="alert" className="text-sm text-fg" style={{ color: "var(--danger-text)" }}>{error}</p>}
 
             <button
               type="submit"

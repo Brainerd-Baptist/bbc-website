@@ -41,9 +41,9 @@ const TILES: Tile[] = [
     ),
   },
   {
-    href: "/connect/ask",
-    title: "Ask a Quick Question",
-    description: "Instant answers on service times, beliefs, and what to expect.",
+    href: "/search",
+    title: "Search the Site",
+    description: "Ask in your own words and we'll point you to the right place.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
         <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.9.4-1.5 1-1.5 1.9v.3" />

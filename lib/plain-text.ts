@@ -2,7 +2,7 @@
  * Strips the handful of markdown characters a model might slip into an
  * answer (bold/italic asterisks or underscores, `#` headers, `` ` `` code
  * spans) before it's rendered as plain text. The AI-answer widgets
- * (belief-question, site-question) display their answer in a plain <p>,
+ * (belief-question) display their answer in a plain <p>,
  * so any literal markdown characters show up in the UI instead of being
  * formatted — this is a defensive cleanup in addition to instructing the
  * model not to use markdown in the first place.
