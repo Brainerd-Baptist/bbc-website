@@ -9,18 +9,6 @@ import BibleAppLink from "@/components/visit/BibleAppLink";
 const STEPS: { num: string; label: string; heading: string; body: React.ReactNode }[] = [
   {
     num: "01",
-    label: "Choose a service",
-    heading: "8:30 or 11:00",
-    body: (
-      <>
-        Both meet in the sanctuary of the main building, the one with the steeple, and the message is the
-        same at both (about 35 minutes). Both center on congregational singing. The difference is who
-        leads up front: a choir and orchestra at 8:30, a band at 11:00.
-      </>
-    ),
-  },
-  {
-    num: "02",
     label: "Park",
     heading: "Red or Orange lot",
     body: (
@@ -32,13 +20,13 @@ const STEPS: { num: string; label: string; heading: string; body: React.ReactNod
     ),
   },
   {
-    num: "03",
+    num: "02",
     label: "Come in",
     heading: "Coffee's on us",
     body: "Grab a free coffee just inside the sanctuary doors, or at the coffee station by the elevator.",
   },
   {
-    num: "04",
+    num: "03",
     label: "The service",
     heading: "About 60 minutes",
     body: (
@@ -56,7 +44,7 @@ export default function SundayWalkthrough() {
       <div className="max-w-5xl mx-auto">
         <p className="eyebrow text-center mb-4">Your First Sunday</p>
         <h2 className="text-fg text-center mb-14 h-hero">What Sunday Is Like</h2>
-        <div className="grid sm:grid-cols-2 gap-5">
+        <div className="grid sm:grid-cols-3 gap-5">
           {STEPS.map((s) => (
             <Card key={s.num} className="rounded-2xl p-7">
               <p className="eyebrow mb-2">
