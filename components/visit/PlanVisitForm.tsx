@@ -376,9 +376,6 @@ export default function PlanVisitForm() {
             >
               {submitting ? "Sending…" : "Let us know I'm coming"}
             </button>
-            <p className="text-fg-muted text-xs text-center">
-              No pressure, no confusion, no need to figure it out alone.
-            </p>
           </form>
         )}
       </div>
