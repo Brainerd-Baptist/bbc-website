@@ -91,7 +91,7 @@ export default function VisitExperience() {
             Sunday Services
           </h2>
           <p className="text-fg-muted text-center mb-14 max-w-sm mx-auto">
-            Both at 300 Brookfield Ave.
+            Both meet in the sanctuary of the main building, the one with the steeple. The message is the same at both (about 35 minutes), and both center on congregational singing.
           </p>
 
           {/* Photo service cards */}

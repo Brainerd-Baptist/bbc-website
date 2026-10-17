@@ -28,9 +28,9 @@ export default function VideoHero({
       <span style={{ color: "var(--accent)" }}>have you.</span>
     </>
   ),
-  subtitle = "Here is everything you need to know before you join us Sunday.",
+  subtitle = "Here is what you need to know before you join us Sunday.",
   primaryCta = { label: "Plan Your Visit", href: "#plan-your-visit" },
-  secondaryCta = { label: "Service Times", href: "#service-times" },
+  secondaryCta,
 }: VideoHeroProps = {}) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -129,12 +129,14 @@ export default function VideoHero({
             >
               {primaryCta.label}
             </a>
-            <Link
-              href={secondaryCta.href}
-              className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/40 text-white px-7 py-3 rounded-full hover:border-white/70 transition-colors"
-            >
-              {secondaryCta.label}
-            </Link>
+            {secondaryCta && (
+              <Link
+                href={secondaryCta.href}
+                className="font-condensed font-700 tracking-wide uppercase text-sm border border-white/40 text-white px-7 py-3 rounded-full hover:border-white/70 transition-colors"
+              >
+                {secondaryCta.label}
+              </Link>
+            )}
           </div>
         </div>
       </div>
