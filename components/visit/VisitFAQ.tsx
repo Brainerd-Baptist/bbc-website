@@ -45,8 +45,9 @@ const DETAILS: { q: string; a: React.ReactNode }[] = [
     q: "Giving",
     a: (
       <>
-        Giving is for people who call Brainerd home. If you&apos;d like to give, there are blue giving
-        boxes in the lobby, or you can{" "}
+        While there may be a time to give during the service, we don&apos;t expect first-time guests to
+        participate. Receive the gift of the service without feeling obligated to give. If you&apos;d like
+        to, there are blue giving boxes in the lobby, or you can{" "}
         <Link href="/give" className="text-accent-text font-semibold underline underline-offset-2">
           give online
         </Link>

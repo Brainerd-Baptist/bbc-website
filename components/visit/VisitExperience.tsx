@@ -74,7 +74,7 @@ export default function VisitExperience() {
             </div>
             <div>
               <dt className="text-fg font-semibold">Kids</dt>
-              <dd className="text-fg-muted">Park in the Purple lot and check in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className={LINK}>Show me the way</a></dd>
+              <dd className="text-fg-muted">Park in the Purple lot and check in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className={LINK}>Campus map</a></dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Life Groups</dt>
@@ -124,9 +124,10 @@ export default function VisitExperience() {
                 ))}
               </div>
               <p className="text-fg-muted text-sm text-center max-w-xl mx-auto leading-relaxed">
-                Check-in opens 30 minutes before each service. Plan to arrive 15–20 minutes early to
-                allow for check-in, finding the room, and grabbing coffee and a seat. Each of you gets a
-                matching tag for pickup. All volunteers are background-checked and trained.
+                <a href="#plan-your-visit" className="text-accent-text font-semibold underline underline-offset-2">Register your kids ahead of time</a>{" "}
+                to make check-in quick. Check-in opens 30 minutes before each service. Plan to arrive 15–20
+                minutes early to allow for check-in, finding the room, and grabbing coffee and a seat. Each
+                of you gets a matching tag for pickup. All volunteers are background-checked and trained.
               </p>
             </div>
           </Section>
