@@ -31,10 +31,9 @@ const GRADES = [
 ];
 
 const REASSURANCES = [
-  "We'll send you parking and arrival details.",
+  "We'll email you parking and arrival details.",
+  "Bringing kids? Pre-register them here so check-in is quick.",
   "Our Welcome Team will know you're coming.",
-  "Services run about an hour, and you can wear whatever you'd like.",
-  "Free coffee is waiting just inside the sanctuary doors.",
 ];
 
 export default function PlanVisitForm() {

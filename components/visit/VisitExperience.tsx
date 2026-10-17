@@ -40,7 +40,7 @@ export default function VisitExperience() {
       )}
 
       {/* ── Sunday at a glance ──────────────────────────────── */}
-      <section aria-label="Sunday at a glance" className="px-6 pt-10">
+      <section id="sunday-at-a-glance" aria-label="Sunday at a glance" className="px-6 pt-10">
         <div className="max-w-5xl mx-auto rounded-2xl border border-border bg-surface-raised p-6 md:p-7">
           <p className="eyebrow mb-4 text-center">Sunday at a glance</p>
           <dl className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 text-sm">
@@ -58,7 +58,7 @@ export default function VisitExperience() {
             </div>
             <div>
               <dt className="text-fg font-semibold">Kids</dt>
-              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave. Arrive 10–15 minutes early.<br /><a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">Show me the way</a></dd>
+              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">Show me the way</a></dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Parking</dt>
@@ -80,9 +80,6 @@ export default function VisitExperience() {
         </div>
       )}
 
-      {/* ── Plan a visit form: the main thing a first-timer can do ── */}
-      {!returning && <PlanVisitForm />}
-
       {/* ── Service times ──────────────────────────────────── */}
       <section id="service-times" className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
@@ -94,7 +91,7 @@ export default function VisitExperience() {
             Sunday Services
           </h2>
           <p className="text-fg-muted text-center mb-14 max-w-sm mx-auto">
-            Both at 300 Brookfield Ave — Life Groups meet between services at 9:45.
+            Both at 300 Brookfield Ave.
           </p>
 
           {/* Photo service cards */}
@@ -155,31 +152,26 @@ export default function VisitExperience() {
                 9:45 AM · Between Services
               </p>
               <p className="text-fg-on-dark font-condensed font-800 text-2xl">Life Groups</p>
-              <p className="text-fg-on-dark-muted text-sm mt-1">Small-group Bible study for all ages — the best way to get connected beyond Sunday.</p>
-              <p className="text-fg-on-dark-muted text-xs mt-2">
-                Kids &amp; most adult groups meet in the Main Building. Students, College, and a few
-                adult groups meet at the BX, our student and college building.
+              <p className="text-fg-on-dark-muted text-sm mt-1">
+                Small-group Bible study for all ages.{" "}
+                <Link href="/life-groups" className="underline underline-offset-2 text-fg-on-dark">See how Life Groups work</Link>.
               </p>
             </div>
           </div>
+
+          {/* Spanish-language service: it's a service, so it sits with the others */}
+          <Card className="rounded-2xl p-7 mt-6 border-t-4 border-accent">
+            <p className="eyebrow mb-2">Ministerio Hispano · Hispanic Ministry</p>
+            <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
+            <p className="text-fg-muted text-sm leading-relaxed">
+              {HISPANIC_MINISTRY.serviceTime} · {HISPANIC_MINISTRY.locationName} · {HISPANIC_MINISTRY.address}
+            </p>
+            <p className="text-fg-muted text-sm italic mt-3">
+              Bienvenidos a nuestra familia. Un servicio de adoración en español — todos son bienvenidos.
+            </p>
+          </Card>
         </div>
       </section>
-
-      {/* ── Photo collage ──────────────────────────────────── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-1" style={{ height: "clamp(260px, 36vw, 440px)" }}>
-        <div className="relative overflow-hidden">
-          <Image src="/ministries/sunday.jpg" alt="Congregation on Sunday morning" fill className="object-cover object-center" sizes="25vw" />
-        </div>
-        <div className="relative overflow-hidden">
-          <Image src="/visit/students-bible.jpg" alt="Student ministry worship" fill className="object-cover object-center" sizes="25vw" />
-        </div>
-        <div className="relative overflow-hidden">
-          <Image src="/visit/kids-toddler.jpg" alt="Nursery at Brainerd Baptist" fill className="object-cover object-center" sizes="25vw" />
-        </div>
-        <div className="relative overflow-hidden">
-          <Image src="/visit/life-groups-2.jpg" alt="Community at Brainerd Baptist" fill className="object-cover object-top" sizes="25vw" />
-        </div>
-      </div>
 
       {/* ── First-timer orientation content — collapsed for returning visitors ── */}
       {!returning && (
@@ -187,11 +179,11 @@ export default function VisitExperience() {
           {/* ── Sunday walkthrough ─────────────────────────────── */}
           <SundayWalkthrough />
 
-          {/* ── Worship Care of Kids ───────────────────────────── */}
-          <Section className="py-24 px-6">
+          {/* ── Kids: the one place for check-in details ───────── */}
+          <Section className="py-24 px-6" id="kids">
             <div className="max-w-5xl mx-auto">
               <p className="eyebrow text-center mb-4">Your Kids Matter Here</p>
-              <h2 className="text-fg text-center mb-4 h-hero">Worship Care for Kids</h2>
+              <h2 className="text-fg text-center mb-4 h-hero">Care for Kids</h2>
               <p className="text-fg-muted text-center mb-14 max-w-md mx-auto">
                 Safe, age-appropriate care so you can worship fully and your kids love coming.
               </p>
@@ -203,49 +195,24 @@ export default function VisitExperience() {
                   </Card>
                 ))}
               </div>
-              <p className="text-fg-muted text-sm text-center">
-                All volunteers are background-checked and trained. Check-in opens 30 minutes before each service.
+              <p className="text-fg-muted text-sm text-center max-w-xl mx-auto leading-relaxed">
+                Park in the Purple Lot and use the Kids entrance off Albemarle Ave. Check-in opens 30
+                minutes before each service, and your first time, plan to arrive 10–15 minutes early. Each
+                of you gets a matching tag for pickup. All volunteers are background-checked and trained.{" "}
+                <a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">
+                  Show me on the map
+                </a>
+                .
               </p>
             </div>
           </Section>
           {/* ── FAQ ────────────────────────────────────────────── */}
           <VisitFAQ />
+
+          {/* ── Plan a Visit: after the page has shown what Sunday is like ── */}
+          <PlanVisitForm />
         </>
       )}
-
-      {/* ── Find Us ────────────────────────────────────────── */}
-      <Section className="py-24 px-6">
-        <div className="max-w-5xl mx-auto">
-          <p className="eyebrow text-center mb-4">Getting Here</p>
-          <h2 className="text-fg text-center mb-16 h-hero">Find Us</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="rounded-2xl p-8">
-              <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Brainerd Baptist Church</p>
-              <p className="text-fg-muted text-sm leading-relaxed mb-6">
-                300 Brookfield Ave<br />Chattanooga, TN 37411
-              </p>
-              <a
-                href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-6 py-3 rounded-full transition-colors"
-              >
-                Get Directions
-              </a>
-            </Card>
-
-            <Card className="rounded-2xl p-8 border-t-4 border-accent">
-              <p className="eyebrow mb-3">Ministerio Hispano · Hispanic Ministry</p>
-              <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
-              <p className="text-fg-muted text-sm leading-relaxed mb-1">{HISPANIC_MINISTRY.locationName} · {HISPANIC_MINISTRY.address}</p>
-              <p className="text-fg-muted text-sm mb-5">{HISPANIC_MINISTRY.serviceTime}</p>
-              <p className="text-fg-muted text-sm italic">
-                Bienvenidos a nuestra familia. Un servicio de adoración en español — todos son bienvenidos.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </Section>
 
       {/* ── Connect: returning visitors only. First-timers use Plan a Visit above. ── */}
       {returning && (
@@ -263,43 +230,23 @@ export default function VisitExperience() {
         </section>
       )}
 
-      {/* ── CTA — navy close ───────────────────────────────── */}
-      <section className="py-24 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
-        <div className="max-w-xl mx-auto">
-          <h2 className="text-fg-on-dark mb-4 h-hero">
-            {returning ? "Ready for a Next Step?" : "Ready to Visit?"}
-          </h2>
-          <p className="text-fg-on-dark-muted mb-10 max-w-sm mx-auto">
-            {returning
-              ? "Let's get you plugged in — a group, a serving spot, or just a conversation."
-              : "Let us know you're coming — we'd love to welcome you personally."}
-          </p>
-          {returning ? (
+      {/* ── CTA — returning visitors only; first-timers end on the Plan a Visit form ── */}
+      {returning && (
+        <section className="py-24 px-6 text-center" style={{ background: "var(--color-brand-navy)" }}>
+          <div className="max-w-xl mx-auto">
+            <h2 className="text-fg-on-dark mb-4 h-hero">Ready for a Next Step?</h2>
+            <p className="text-fg-on-dark-muted mb-10 max-w-sm mx-auto">
+              Let&apos;s get you plugged in — a group, a serving spot, or just a conversation.
+            </p>
             <Link
               href="/connect/next-step"
               className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
             >
               Take a Next Step
             </Link>
-          ) : (
-            <>
-              <a
-                href="#plan-your-visit"
-                className="inline-block font-condensed font-700 tracking-wide uppercase text-sm bg-accent-solid hover:bg-accent-solid-hover text-fg-on-accent px-10 py-4 rounded-full transition-colors"
-              >
-                Plan Your Visit
-              </a>
-              <p className="text-fg-on-dark-muted text-sm mt-6">
-                Have a question first?{" "}
-                <Link href="/connect/general" className="underline underline-offset-2 text-fg-on-dark">
-                  Send us a message
-                </Link>
-                .
-              </p>
-            </>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
