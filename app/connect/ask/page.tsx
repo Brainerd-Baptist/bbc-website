@@ -1,22 +1,7 @@
-import ConnectSubpageHeader from "@/components/connect/ConnectSubpageHeader";
-import AskConnectQuestion from "@/components/connect/AskConnectQuestion";
+import { redirect } from "next/navigation";
 
-import Section from "@/components/ui/Section";
-export const metadata = { title: "Ask a Question — Brainerd Baptist Church" };
-
+// "Ask a Quick Question" now lives in the site search, which routes people to
+// the right page (or a person) instead of writing an answer.
 export default function AskPage() {
-  return (
-    <div className="min-h-screen">
-      <ConnectSubpageHeader
-        eyebrow="Ask a Quick Question"
-        title="What Do You Want to Know?"
-        description="Ask about service times, what to expect, our beliefs, or anything else. Answers are automatic and aren't sent to our team. If a person should really answer, we'll point you the right way."
-      />
-      <Section className="pb-24 px-6">
-        <div className="max-w-2xl mx-auto">
-          <AskConnectQuestion />
-        </div>
-      </Section>
-    </div>
-  );
+  redirect("/search");
 }

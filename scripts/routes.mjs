@@ -16,7 +16,7 @@ export const ROUTES = [
   { path: "/bx", navChrome: "transparent" },
   { path: "/community", navChrome: "transparent" },
   { path: "/connect", navChrome: "glass" },
-  { path: "/connect/ask", navChrome: "glass" },
+  { path: "/search", navChrome: "glass" },
   { path: "/connect/care", navChrome: "glass" },
   { path: "/connect/general", navChrome: "glass" },
   { path: "/connect/next-step", navChrome: "glass" },

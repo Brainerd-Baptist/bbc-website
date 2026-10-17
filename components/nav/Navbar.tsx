@@ -8,6 +8,7 @@ import { getNavTreatment } from "@/lib/nav-treatment";
 import { CHURCH_CENTER_CALENDAR_URL, SITE } from "@/lib/constants";
 import { getEasternState, type LiveState } from "@/lib/live-schedule";
 import { useSpecialLiveCheck } from "@/lib/use-special-live";
+import SearchDialog from "@/components/search/SearchDialog";
 
 // ── Nav groups shown in the drawer ─────────────────────────────
 const NAV_GROUPS = [
@@ -113,6 +114,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const wasOpenRef = useRef(false);
@@ -125,6 +127,19 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const { theme, resolvedTheme, setTheme } = useTheme();
+
+  // Site search: Cmd/Ctrl-K from anywhere (results close the dialog themselves).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setMenuOpen(false);
+        setSearchOpen((o) => !o);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Avoid hydration mismatch — only render theme-aware icons after mount
   useEffect(() => { setMounted(true); }, []);
@@ -236,6 +251,19 @@ export default function Navbar() {
               Plan a Visit
             </Link>
 
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search the site"
+              aria-haspopup="dialog"
+              className="nav-ctl relative p-2 rounded-lg transition-colors"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+            </button>
+
             {/* Theme toggle — always in DOM; only the icon is gated on mount.
                 Colour comes from --nav-ink in CSS, not from isDark. */}
             <button
@@ -319,6 +347,17 @@ export default function Navbar() {
         <nav className="flex-1 overflow-y-auto px-7 py-6 space-y-7">
           {/* Quick actions — the three things most people came for */}
           <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => { setMenuOpen(false); setSearchOpen(true); }}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-full border border-border-strong text-fg-muted hover:bg-hover-subtle transition-colors text-sm"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              Search the site
+            </button>
             <Link
               href="/visit"
               onClick={() => setMenuOpen(false)}
@@ -403,6 +442,8 @@ export default function Navbar() {
           </p>
         </div>
       </aside>
+
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }
