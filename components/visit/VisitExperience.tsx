@@ -14,6 +14,9 @@ import ReturningVisitorPanel from "@/components/visit/ReturningVisitorPanel";
 import Card from "@/components/ui/Card";
 import Section from "@/components/ui/Section";
 
+// Stand-alone links get vertical padding so they are a comfortable tap target on a phone.
+const LINK = "inline-block py-2 text-accent-text underline underline-offset-2";
+
 export default function VisitExperience() {
   const [visitorType, setVisitorType] = useState<VisitorType>("first");
   const returning = visitorType === "returning";
@@ -35,20 +38,24 @@ export default function VisitExperience() {
           secondaryCta={{ label: "Find a Life Group", href: "/life-groups" }}
         />
       ) : (
-        <VideoHero />
+        <VideoHero
+          height="72svh"
+          detail="Sundays at 8:30 and 11:00 · 300 Brookfield Ave"
+        />
       )}
 
       {/* ── Sunday at a glance ──────────────────────────────── */}
-      <section id="sunday-at-a-glance" aria-label="Sunday at a glance" className="px-6 pt-10">
+      <section id="sunday-at-a-glance" aria-labelledby="glance-heading" className="px-6 pt-10">
         <div className="max-w-5xl mx-auto rounded-2xl border border-border bg-surface-raised p-6 md:p-7">
-          <p className="eyebrow mb-4 text-center">Sunday at a glance</p>
+          <h2 id="glance-heading" className="eyebrow mb-4 text-center">Sunday at a glance</h2>
           <dl className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 text-sm">
             <div id="service-times">
               <dt className="text-fg font-semibold">Services</dt>
               <dd className="text-fg-muted">
                 8:30 AM Choir &amp; Orchestra<br />
                 11:00 AM Band-Led<br />
-                About 60 minutes, with the same message at both (about 35 minutes)
+                About 60 minutes, with the same message at both.<br />
+                <Link href="/ministries/hispanic" className={LINK}>Servicio en español</Link>
               </dd>
             </div>
             <div>
@@ -56,7 +63,7 @@ export default function VisitExperience() {
               <dd className="text-fg-muted">
                 The sanctuary of the main building, the one with the steeple.<br />
                 300 Brookfield Ave, Chattanooga<br />
-                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className="text-accent-text underline underline-offset-2">Open in Maps</a> · <a href="/map" className="text-accent-text underline underline-offset-2">Campus map</a>
+                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className={LINK}>Open in Maps</a> · <a href="/map" className={LINK}>Campus map</a>
               </dd>
             </div>
             <div>
@@ -67,13 +74,15 @@ export default function VisitExperience() {
             </div>
             <div>
               <dt className="text-fg font-semibold">Kids</dt>
-              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">Show me the way</a></dd>
+              <dd className="text-fg-muted">Park in the Purple lot and check in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className={LINK}>Show me the way</a></dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Life Groups</dt>
               <dd className="text-fg-muted">
-                9:45 AM, between services. Small-group Bible study for all ages.<br />
-                <Link href="/life-groups" className="text-accent-text underline underline-offset-2">See how Life Groups work</Link>
+                9:45 AM, between services. Small-group Bible study for all ages.
+                {" "}<Link href="/ministries/students" className="text-accent-text underline underline-offset-2">Students</Link> and{" "}
+                <Link href="/ministries/college" className="text-accent-text underline underline-offset-2">College &amp; Young Adults</Link> gather at 9:45 too.<br />
+                <Link href="/life-groups" className={LINK}>See how Life Groups work</Link>
               </dd>
             </div>
             <div id="sunday-walkthrough">
@@ -115,13 +124,9 @@ export default function VisitExperience() {
                 ))}
               </div>
               <p className="text-fg-muted text-sm text-center max-w-xl mx-auto leading-relaxed">
-                Park in the Purple Lot and use the Kids entrance off Albemarle Ave. Check-in opens 30
-                minutes before each service, and your first time, plan to arrive 10–15 minutes early. Each
-                of you gets a matching tag for pickup. All volunteers are background-checked and trained.{" "}
-                <a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">
-                  Show me on the map
-                </a>
-                .
+                Check-in opens 30 minutes before each service. Plan to arrive 15–20 minutes early to
+                allow for check-in, finding the room, and grabbing coffee and a seat. Each of you gets a
+                matching tag for pickup. All volunteers are background-checked and trained.
               </p>
             </div>
           </Section>

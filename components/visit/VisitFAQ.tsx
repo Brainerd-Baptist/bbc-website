@@ -26,24 +26,7 @@ const NOTES: { title: string; body: React.ReactNode }[] = [
 
 const DETAILS: { q: string; a: React.ReactNode }[] = [
   {
-    q: "How giving works",
-    a: (
-      <>
-        Giving is for people who call Brainerd home. If you&apos;d like to give, there are blue giving
-        boxes in the lobby, or you can{" "}
-        <Link href="/give" className="text-accent-text font-semibold underline underline-offset-2">
-          give online
-        </Link>
-        .
-      </>
-    ),
-  },
-  {
-    q: "Communion",
-    a: "Communion is a regular part of our worship. A small piece of bread and a cup are passed through the rows. It's for adults who have repented of their sin, confessed Christ as Lord, and been baptized. If that's not you yet, you're welcome to simply let the tray pass, and we'd love to talk with you about what that step means.",
-  },
-  {
-    q: "Getting around",
+    q: "Accessibility and getting around",
     a: (
       <>
         Accessible parking, step-free entrances, and elevators are marked on the{" "}
@@ -55,6 +38,19 @@ const DETAILS: { q: string; a: React.ReactNode }[] = [
         into the sanctuary is the small ramp at the left (west) end of the front porch, or the ramp down to
         the lobby&apos;s side door from the courtyard. The BX has accessible spaces at its front doors and an
         elevator. If you&apos;d like someone to meet you, tell us on the form below or call (423) 624-2606.
+      </>
+    ),
+  },
+  {
+    q: "Giving",
+    a: (
+      <>
+        Giving is for people who call Brainerd home. If you&apos;d like to give, there are blue giving
+        boxes in the lobby, or you can{" "}
+        <Link href="/give" className="text-accent-text font-semibold underline underline-offset-2">
+          give online
+        </Link>
+        .
       </>
     ),
   },

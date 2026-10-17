@@ -238,8 +238,11 @@ export default function PlanVisitForm() {
               <label htmlFor="pv-phone" className="block text-sm font-medium text-fg">
                 Mobile phone <span className="text-accent-text">*</span>
               </label>
-              <input id="pv-phone" type="tel" required autoComplete="tel" value={phone}
+              <input id="pv-phone" type="tel" required autoComplete="tel" aria-describedby="pv-phone-note" value={phone}
                 onChange={(e) => setPhone(e.target.value)} className={inputClass} />
+              <p id="pv-phone-note" className="text-xs text-fg-muted">
+                Helps us keep our records straight. Our team may text you about your visit.
+              </p>
             </div>
 
             <div className="space-y-1.5">
