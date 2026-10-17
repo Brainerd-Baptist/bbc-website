@@ -55,17 +55,17 @@ export const CATALOG: CatalogEntry[] = [
   {
     id: "address",
     title: "Address & directions",
-    url: "/visit#sunday-walkthrough",
+    url: "/visit#sunday-at-a-glance",
     kind: "page",
     summary: "Where we are, where to park, and how to find the right door.",
     keywords: ["address", "where are you", "location", "directions", "how to get there", "gps", "map", "find you", "find the church", "where is the church", "300 brookfield", "driveway", "entrance", "which door", "which entrance", "where to enter", "parking lot", "parking"],
   },
   {
     id: "faq",
-    title: "Common questions before visiting",
+    title: "Good to know before you come",
     url: "/visit#faq",
     kind: "page",
-    summary: "Quick answers to what most first-time guests wonder.",
+    summary: "What to wear, giving, communion, and getting around.",
     keywords: ["faq", "questions", "frequently asked", "what to wear", "dress", "dress code", "attire", "casual", "jeans", "suit", "tie", "do i have to", "will i be asked", "will they make me", "stand up", "introduce myself", "put on the spot", "visitor", "awkward", "nervous", "anxious about visiting", "how long is church", "coffee", "bring my bible", "offering", "communion"],
   },
   {

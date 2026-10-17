@@ -29,8 +29,8 @@ export default function VideoHero({
     </>
   ),
   subtitle = "Here is everything you need to know before you join us Sunday.",
-  primaryCta = { label: "Service Times", href: "#service-times" },
-  secondaryCta = { label: "Let Us Know You're Coming", href: "/connect" },
+  primaryCta = { label: "Plan Your Visit", href: "#plan-your-visit" },
+  secondaryCta = { label: "Service Times", href: "#service-times" },
 }: VideoHeroProps = {}) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
