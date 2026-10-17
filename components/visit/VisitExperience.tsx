@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CHILD_CARE, HISPANIC_MINISTRY } from "@/lib/constants";
+import { CHILD_CARE } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
-import SundayWalkthrough from "@/components/visit/SundayWalkthrough";
+import BibleAppLink from "@/components/visit/BibleAppLink";
 import PlanVisitForm from "@/components/visit/PlanVisitForm";
 import VisitFAQ from "@/components/visit/VisitFAQ";
 import ConnectForm from "@/components/connect/ConnectForm";
@@ -63,8 +63,8 @@ export default function VisitExperience() {
             <div>
               <dt className="text-fg font-semibold">Parking</dt>
               <dd className="text-fg-muted">
-                Free. Red lot is across from the front entrance.<br />
-                <a href="#sunday-walkthrough" className="text-accent-text underline underline-offset-2">See the step-by-step</a> · <a href="/map" className="text-accent-text underline underline-offset-2">Campus map</a>
+                Free. The Red lot is across from the front entrance, and the Orange lot on Mayfair Ave is there if the Red fills up.<br />
+                <a href="/map" className="text-accent-text underline underline-offset-2">Campus map</a>
               </dd>
             </div>
           </dl>
@@ -91,7 +91,7 @@ export default function VisitExperience() {
             Sunday Services
           </h2>
           <p className="text-fg-muted text-center mb-14 max-w-sm mx-auto">
-            Both meet in the sanctuary of the main building, the one with the steeple. The message is the same at both (about 35 minutes), and both center on congregational singing.
+            Both meet in the sanctuary of the main building, the one with the steeple, and the message is the same at both (about 35 minutes).
           </p>
 
           {/* Photo service cards */}
@@ -159,26 +159,18 @@ export default function VisitExperience() {
             </div>
           </div>
 
-          {/* Spanish-language service: it's a service, so it sits with the others */}
-          <Card className="rounded-2xl p-7 mt-6 border-t-4 border-accent">
-            <p className="eyebrow mb-2">Ministerio Hispano · Hispanic Ministry</p>
-            <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.35rem" }}>Servicio en Español</p>
-            <p className="text-fg-muted text-sm leading-relaxed">
-              {HISPANIC_MINISTRY.serviceTime} · {HISPANIC_MINISTRY.locationName} · {HISPANIC_MINISTRY.address}
-            </p>
-            <p className="text-fg-muted text-sm italic mt-3">
-              Bienvenidos a nuestra familia. Un servicio de adoración en español — todos son bienvenidos.
-            </p>
-          </Card>
+          {/* One short paragraph: what the hour holds, the Bible, and coffee */}
+          <p id="sunday-walkthrough" className="text-fg-muted text-center max-w-xl mx-auto mt-10 leading-relaxed">
+            We sing together, then hear a message that works through a book of the Bible verse by verse.
+            Bring a Bible, or use one from the pew or the free <BibleAppLink>Bible app</BibleAppLink>.
+            Free coffee is just inside the sanctuary doors and at the coffee station by the elevator.
+          </p>
         </div>
       </section>
 
       {/* ── First-timer orientation content — collapsed for returning visitors ── */}
       {!returning && (
         <>
-          {/* ── Sunday walkthrough ─────────────────────────────── */}
-          <SundayWalkthrough />
-
           {/* ── Kids: the one place for check-in details ───────── */}
           <Section className="py-24 px-6" id="kids">
             <div className="max-w-5xl mx-auto">
