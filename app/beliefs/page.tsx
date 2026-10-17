@@ -128,7 +128,7 @@ const BELIEFS = [
     icon: <IconWorship />,
     title: "Sunday Worship",
     // BF&M Article VI (The Church) + Article VIII (The Lord's Day) — Hebrews 10:24–25; Acts 20:7
-    body: "Sunday is when the church gathers — not to watch a performance, but to be the body of Christ together. We sing, we pray for one another, and we listen to a sermon — about 35 minutes of teaching that works through a passage of the Bible. The whole congregation worships, not just the stage.",
+    body: "Sunday is when the church gathers — not to watch a performance, but to be the body of Christ together. We sing, we pray for one another, and we listen to a sermon that works through a passage of the Bible. The whole congregation worships, not just the stage.",
     verse: "Hebrews 10:24–25 · Acts 20:7",
   },
   {
