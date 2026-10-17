@@ -3,51 +3,21 @@
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 
-interface GuestCardQRProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-}
-
-// Escapes characters that are structurally significant in vCard field values
-// per RFC 6350 — commas, semicolons, and backslashes.
-function escapeVCardValue(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/,/g, "\\,").replace(/;/g, "\\;");
-}
-
-function buildVCard({ firstName, lastName, email, phone }: GuestCardQRProps): string {
-  const fn = escapeVCardValue(`${firstName} ${lastName}`.trim());
-  const n = `${escapeVCardValue(lastName)};${escapeVCardValue(firstName)};;;`;
-  const lines = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    `N:${n}`,
-    `FN:${fn}`,
-    phone ? `TEL;TYPE=CELL:${escapeVCardValue(phone)}` : null,
-    email ? `EMAIL:${escapeVCardValue(email)}` : null,
-    "NOTE:Connected via brainerdbaptist.org",
-    "END:VCARD",
-  ].filter(Boolean);
-  return lines.join("\n");
-}
-
 /**
- * Guest card QR — shown on the Connect form success screen.
+ * Guest card QR: shown on the Plan a Visit confirmation.
  *
- * Encodes the submitter's info as a vCard so a greeter can scan it with
- * their phone's camera and get an "Add Contact" prompt on the spot — no
- * login, no lookup, no new backend. Submission itself already reached PCO
- * via the Connect form's own API call; this is purely the in-person handoff.
+ * Encodes a vCard (built on the server, see lib/guest-card.ts) so the Welcome Team or kids
+ * check-in team can scan it with a phone camera and see the visit details on screen.
  */
-export default function GuestCardQR(props: GuestCardQRProps) {
+export default function GuestCardQR({ vcard }: { vcard: string }) {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    QRCode.toDataURL(buildVCard(props), {
-      width: 240,
+    QRCode.toDataURL(vcard, {
+      width: 360,
       margin: 1,
+      errorCorrectionLevel: "M",
       color: { dark: "#0a2540", light: "#ffffff" },
     })
       .then((url) => {
@@ -60,14 +30,14 @@ export default function GuestCardQR(props: GuestCardQRProps) {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.firstName, props.lastName, props.email, props.phone]);
+  }, [vcard]);
 
   if (!dataUrl) return null;
 
   return (
     <div className="mt-6 pt-6 border-t border-border flex flex-col items-center">
       <p className="text-xs font-semibold text-fg-muted uppercase tracking-widest mb-4">
-        Show This to a Greeter
+        Show This at the Welcome Desk
       </p>
       {/* eslint-disable @next/next/no-img-element, bbc/no-raw-color --
           data: URL, not an optimizable asset; and the QR itself is rendered
@@ -83,8 +53,8 @@ export default function GuestCardQR(props: GuestCardQRProps) {
       />
       {/* eslint-enable @next/next/no-img-element, bbc/no-raw-color */}
       <p className="text-fg-subtle text-xs mt-4 max-w-xs text-center leading-relaxed">
-        A greeter can scan this to save your contact info instantly — no
-        forms, no typing.
+        Our team can scan this to see your visit details and walk your kids
+        through check-in. It&apos;s also in your confirmation email.
       </p>
     </div>
   );

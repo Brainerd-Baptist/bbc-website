@@ -249,6 +249,7 @@ export function buildVisitConfirmationHtml({
   bringingKids,
   kidsPreRegUrl,
   kidsRegistered,
+  qrCid,
 }: {
   firstName: string;
   dateLabel: string;
@@ -258,6 +259,8 @@ export function buildVisitConfirmationHtml({
   kidsPreRegUrl: string;
   /** Kids were already added to our system — say so instead of linking pre-registration. */
   kidsRegistered?: boolean;
+  /** Content-ID of an inline QR image (the guest card). Omit to leave the block out. */
+  qrCid?: string;
 }): string {
   const when = serviceLabel ? `${escStr(dateLabel)} at ${escStr(serviceLabel)}` : escStr(dateLabel);
   const row = (title: string, text: string) =>
@@ -283,6 +286,15 @@ export function buildVisitConfirmationHtml({
       ${row("Coffee", `Free coffee is available just inside the sanctuary doors and at the coffee station by the elevator in the main building.`)}
       ${kidsBlock}
     </table>
+    ${
+      qrCid
+        ? `<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 22px;"><tr><td align="center" style="padding:20px;background:#f3f6f9;border-radius:12px;">
+        <p style="margin:0 0 4px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${INK_MUTED};">Show this at the Welcome desk</p>
+        <p style="margin:0 0 12px;font-size:14px;line-height:1.5;color:#374151;">Our team can scan it to see your visit details${bringingKids ? " and walk your kids through check-in" : ""}.</p>
+        <img src="cid:${escStr(qrCid)}" width="180" height="180" alt="Your Brainerd guest card (QR code)" style="display:block;margin:0 auto;border:0;border-radius:8px;background:#ffffff;"/>
+      </td></tr></table>`
+        : ""
+    }
     <p style="margin:0;">Not sure where to park or how to find your way around? Our campus map shows the lots, the doors, and walking directions.</p>
   `;
 

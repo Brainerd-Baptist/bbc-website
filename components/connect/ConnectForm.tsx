@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import GuestCardQR from "@/components/connect/GuestCardQR";
 import FormRouteNote from "@/components/connect/FormRouteNote";
 import useScrollToSuccess from "@/components/connect/useScrollToSuccess";
 
@@ -205,12 +204,6 @@ export default function ConnectForm({
           </a>
           . This is separate from the form you just sent.
         </p>
-        <GuestCardQR
-          firstName={firstName}
-          lastName={lastName}
-          email={email}
-          phone={phone}
-        />
       </div>
     );
   }

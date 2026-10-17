@@ -19,6 +19,8 @@ export interface SendMailAttachment {
   filename: string;
   /** Raw file bytes. */
   content: Buffer;
+  /** Set to embed the file inline: reference it in the HTML as <img src="cid:THE-ID">. */
+  contentId?: string;
 }
 
 export interface SendMailArgs {
@@ -64,7 +66,11 @@ export async function sendMail({ to, subject, text, html, replyTo, attachments }
       ...(html ? { html } : {}),
       ...(replyTo ? { replyTo } : {}),
       ...(attachments?.length
-        ? { attachments: attachments.map((a) => ({ filename: a.filename, content: a.content })) }
+        ? { attachments: attachments.map((a) => ({
+              filename: a.filename,
+              content: a.content,
+              ...(a.contentId ? { contentId: a.contentId } : {}),
+            })) }
         : {}),
     });
     if (error) {

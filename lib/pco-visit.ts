@@ -41,6 +41,8 @@ export interface VisitPcoInput {
 
 export interface VisitPcoResult {
   parent: boolean;
+  /** Planning Center id of the adult (for the guest card's profile link). */
+  parentId?: string;
   /** Every child is a PCO person (found or created). */
   kidsRegistered: boolean;
   /** Kids share a household with the adult. */
@@ -321,6 +323,7 @@ export async function registerVisitInPco(
   try {
     parentId = await findOrCreateAdult(auth, input.firstName, input.lastName, input.email);
     out.parent = true;
+    out.parentId = parentId;
     out.steps.push("adult");
   } catch (e) {
     out.errors.push(`adult: ${e instanceof Error ? e.message : String(e)}`);

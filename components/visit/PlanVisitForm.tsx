@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Section from "@/components/ui/Section";
+import GuestCardQR from "@/components/connect/GuestCardQR";
 import { VISIT_SERVICES, KIDS_PREREG_URL } from "@/lib/visit-form";
 
 const inputClass =
@@ -55,6 +56,7 @@ export default function PlanVisitForm() {
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
   const [kidsRegistered, setKidsRegistered] = useState(false);
+  const [guestVcard, setGuestVcard] = useState("");
 
   // After submitting, the form swaps for a short card. Bring the reader to the top
   // of this section (heading + card) rather than centering the card mid-section.
@@ -122,6 +124,7 @@ export default function PlanVisitForm() {
       if (!res.ok) setError(data.error ?? "Something went wrong. Please try again.");
       else {
         setKidsRegistered(Boolean(data.kidsRegistered));
+        setGuestVcard(typeof data.vcard === "string" ? data.vcard : "");
         setSuccess(true);
       }
     } catch {
@@ -205,6 +208,7 @@ export default function PlanVisitForm() {
                 )}
               </p>
             )}
+            {guestVcard && <GuestCardQR vcard={guestVcard} />}
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="space-y-6 rounded-2xl border border-border p-6 sm:p-8">

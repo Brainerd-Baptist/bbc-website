@@ -1,3 +1,5 @@
+import QRCode from "qrcode";
+import { buildGuestVCard } from "@/lib/guest-card";
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
 import {
@@ -197,7 +199,34 @@ export async function POST(req: NextRequest) {
     }).catch((e) => console.error("[visit/plan] notify failed:", e));
   }
 
-  // 3) Confirmation to the guest (best effort).
+  // 3) Guest card: a vCard QR for the on-screen confirmation and the email.
+  const serviceLabel = service === "unsure" ? "" : SERVICE_TEXT[service].split(" (")[0];
+  const vcard = buildGuestVCard({
+    firstName,
+    lastName,
+    email,
+    phone,
+    dateLabel,
+    serviceLabel,
+    outOfTown,
+    notes,
+    kids: bringingKids ? kids : [],
+    kidsRegistered: Boolean(pco?.kidsRegistered),
+    pcoPersonId: pco?.parentId,
+  });
+  let qrPng: Buffer | null = null;
+  try {
+    qrPng = await QRCode.toBuffer(vcard, {
+      width: 420,
+      margin: 2,
+      errorCorrectionLevel: "M",
+      color: { dark: "#0a2540", light: "#ffffff" },
+    });
+  } catch (err) {
+    console.error("[visit/plan] QR failed:", err);
+  }
+
+  // 4) Confirmation to the guest (best effort).
   const svc =
     service === "unsure" ? "" : ` at ${SERVICE_TEXT[service].split(" (")[0]}`;
   const kidsRegistered = Boolean(pco?.kidsRegistered);
@@ -230,12 +259,17 @@ export async function POST(req: NextRequest) {
       bringingKids,
       kidsPreRegUrl: KIDS_PREREG_URL,
       kidsRegistered,
+      qrCid: qrPng ? "guest-card" : undefined,
     }),
+    attachments: qrPng
+      ? [{ filename: "guest-card.png", content: qrPng, contentId: "guest-card" }]
+      : undefined,
   }).catch((e) => console.error("[visit/plan] confirmation failed:", e));
 
   return NextResponse.json({
     ok: true,
     bringingKids,
     kidsRegistered: Boolean(pco?.kidsRegistered),
+    vcard,
   });
 }
