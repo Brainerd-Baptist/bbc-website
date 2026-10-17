@@ -16,6 +16,10 @@ interface VideoHeroProps {
   eyebrow?: string;
   title?: React.ReactNode;
   subtitle?: string;
+  /** One short factual line (times, address) shown above the subtitle. */
+  detail?: string;
+  /** CSS height of the hero. Defaults to a full screen. */
+  height?: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
 }
@@ -29,6 +33,8 @@ export default function VideoHero({
     </>
   ),
   subtitle = "Here is what you need to know before you join us Sunday.",
+  detail,
+  height = "100svh",
   primaryCta = { label: "Plan Your Visit", href: "#plan-your-visit" },
   secondaryCta,
 }: VideoHeroProps = {}) {
@@ -61,7 +67,7 @@ export default function VideoHero({
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{ height: "100svh", background: "var(--scrim-solid)" }}
+      style={{ height, background: "var(--scrim-solid)" }}
     >
       {/* ── Mobile: still photo — landscape video crops badly on portrait screens ── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -114,6 +120,12 @@ export default function VideoHero({
           >
             {title}
           </h1>
+
+          {detail && (
+            <p className="text-white font-semibold mb-2" style={{ fontSize: "1.05rem" }}>
+              {detail}
+            </p>
+          )}
 
           <p
             className="text-white/70 leading-relaxed mb-8 max-w-lg"

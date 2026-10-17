@@ -65,8 +65,8 @@ export const CATALOG: CatalogEntry[] = [
     title: "Good to know before you come",
     url: "/visit#faq",
     kind: "page",
-    summary: "What to wear, giving, communion, and getting around.",
-    keywords: ["faq", "questions", "frequently asked", "what to wear", "dress", "dress code", "attire", "casual", "jeans", "suit", "tie", "do i have to", "will i be asked", "will they make me", "stand up", "introduce myself", "put on the spot", "visitor", "awkward", "nervous", "anxious about visiting", "how long is church", "coffee", "bring my bible", "offering", "communion"],
+    summary: "What to wear, giving, and accessibility.",
+    keywords: ["faq", "questions", "frequently asked", "what to wear", "dress", "dress code", "attire", "casual", "jeans", "suit", "tie", "do i have to", "will i be asked", "will they make me", "stand up", "introduce myself", "put on the spot", "visitor", "awkward", "nervous", "anxious about visiting", "how long is church", "coffee", "bring my bible", "offering"],
   },
   {
     id: "map",

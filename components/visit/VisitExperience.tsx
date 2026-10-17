@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { CHILD_CARE } from "@/lib/constants";
 import VideoHero from "@/components/visit/VideoHero";
 import BibleAppLink from "@/components/visit/BibleAppLink";
@@ -14,6 +13,9 @@ import ReturningVisitorPanel from "@/components/visit/ReturningVisitorPanel";
 
 import Card from "@/components/ui/Card";
 import Section from "@/components/ui/Section";
+
+// Stand-alone links get vertical padding so they are a comfortable tap target on a phone.
+const LINK = "inline-block py-2 text-accent-text underline underline-offset-2";
 
 export default function VisitExperience() {
   const [visitorType, setVisitorType] = useState<VisitorType>("first");
@@ -36,35 +38,57 @@ export default function VisitExperience() {
           secondaryCta={{ label: "Find a Life Group", href: "/life-groups" }}
         />
       ) : (
-        <VideoHero />
+        <VideoHero
+          height="72svh"
+          detail="Sundays at 8:30 and 11:00 · 300 Brookfield Ave"
+        />
       )}
 
       {/* ── Sunday at a glance ──────────────────────────────── */}
-      <section id="sunday-at-a-glance" aria-label="Sunday at a glance" className="px-6 pt-10">
+      <section id="sunday-at-a-glance" aria-labelledby="glance-heading" className="px-6 pt-10">
         <div className="max-w-5xl mx-auto rounded-2xl border border-border bg-surface-raised p-6 md:p-7">
-          <p className="eyebrow mb-4 text-center">Sunday at a glance</p>
-          <dl className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 text-sm">
-            <div>
+          <h2 id="glance-heading" className="eyebrow mb-4 text-center">Sunday at a glance</h2>
+          <dl className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 text-sm">
+            <div id="service-times">
               <dt className="text-fg font-semibold">Services</dt>
-              <dd className="text-fg-muted">8:30 AM Choir &amp; Orchestra<br />11:00 AM Band-Led<br />About 60 minutes</dd>
+              <dd className="text-fg-muted">
+                8:30 AM Choir &amp; Orchestra<br />
+                11:00 AM Band-Led<br />
+                About 60 minutes, with the same message at both.<br />
+                <Link href="/ministries/hispanic" className={LINK}>Servicio en español</Link>
+              </dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Where</dt>
               <dd className="text-fg-muted">
+                The sanctuary of the main building, the one with the steeple.<br />
                 300 Brookfield Ave, Chattanooga<br />
-                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className="text-accent-text underline underline-offset-2">Open in Maps</a><br />
-                <a href="/map" className="text-accent-text underline underline-offset-2">See the campus map</a>
+                <a href="https://maps.google.com/?q=300+Brookfield+Ave+Chattanooga+TN+37411" target="_blank" rel="noopener noreferrer" className={LINK}>Open in Maps</a> · <a href="/map" className={LINK}>Campus map</a>
               </dd>
-            </div>
-            <div>
-              <dt className="text-fg font-semibold">Kids</dt>
-              <dd className="text-fg-muted">Check-in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">Show me the way</a></dd>
             </div>
             <div>
               <dt className="text-fg font-semibold">Parking</dt>
               <dd className="text-fg-muted">
-                Free. The Red lot is across from the front entrance, and the Orange lot on Mayfair Ave is there if the Red fills up.<br />
-                <a href="/map" className="text-accent-text underline underline-offset-2">Campus map</a>
+                Free. The Red lot is across from the front entrance, and the Orange lot on Mayfair Ave is there if the Red fills up.
+              </dd>
+            </div>
+            <div>
+              <dt className="text-fg font-semibold">Kids</dt>
+              <dd className="text-fg-muted">Park in the Purple lot and check in at the Kids entrance off Albemarle Ave.<br /><a href="/map?to=f-kids-checkin" className={LINK}>Campus map</a></dd>
+            </div>
+            <div>
+              <dt className="text-fg font-semibold">Life Groups</dt>
+              <dd className="text-fg-muted">
+                9:45 AM, between services. Small-group Bible study for all ages.
+                {" "}<Link href="/ministries/students" className="text-accent-text underline underline-offset-2">Students</Link> and{" "}
+                <Link href="/ministries/college" className="text-accent-text underline underline-offset-2">College &amp; Young Adults</Link> gather at 9:45 too.<br />
+                <Link href="/life-groups" className={LINK}>See how Life Groups work</Link>
+              </dd>
+            </div>
+            <div id="sunday-walkthrough">
+              <dt className="text-fg font-semibold">In the service</dt>
+              <dd className="text-fg-muted">
+                We sing together, then hear a message that works through a book of the Bible. Bring a Bible, or use one from the pew or the free <BibleAppLink>Bible app</BibleAppLink>. Free coffee is just inside the sanctuary doors and by the elevator.
               </dd>
             </div>
           </dl>
@@ -79,94 +103,6 @@ export default function VisitExperience() {
           <ReturningVisitorPanel />
         </div>
       )}
-
-      {/* ── Service times ──────────────────────────────────── */}
-      <section id="service-times" className="py-24 px-6">
-        <div className="max-w-5xl mx-auto">
-          <p className="eyebrow text-center mb-4">Sunday Mornings</p>
-          <h2
-            className="font-condensed font-900 text-fg text-center mb-4"
-            style={{ fontSize: "clamp(3rem, 8vw, 5rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
-          >
-            Sunday Services
-          </h2>
-          <p className="text-fg-muted text-center mb-14 max-w-sm mx-auto">
-            Both meet in the sanctuary of the main building, the one with the steeple, and the message is the same at both (about 35 minutes).
-          </p>
-
-          {/* Photo service cards */}
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* 8:30 AM */}
-            <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: 340 }}>
-              <Image
-                src="/visit/service-830am.jpg"
-                alt="8:30 AM service — congregation in the sanctuary"
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0" style={{ background: "var(--scrim-card)" }} />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <p className="font-condensed font-900 text-fg-on-dark leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
-                  8:30 AM
-                </p>
-                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
-                  Choir &amp; Orchestra
-                </p>
-              </div>
-            </div>
-
-            {/* 11:00 AM */}
-            <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: 340 }}>
-              <Image
-                src="/visit/service-11am.jpg"
-                alt="Band-led worship at the 11:00 AM service"
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0" style={{ background: "var(--scrim-card)" }} />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <p className="font-condensed font-900 text-fg-on-dark leading-none" style={{ fontSize: "clamp(2.5rem, 6vw, 3.5rem)" }}>
-                  11:00 AM
-                </p>
-                <p className="font-condensed font-700 mt-2" style={{ color: "var(--accent)", fontSize: "1.1rem", letterSpacing: "0.02em" }}>
-                  Band-Led
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 9:45 Life Groups — photo banner */}
-          <div className="relative rounded-xl overflow-hidden" style={{ minHeight: 150 }}>
-            <Image
-              src="/visit/life-groups.jpg"
-              alt="Life Groups — people gathered in a circle for Bible study"
-              fill
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 1024px"
-            />
-            <div className="absolute inset-0" style={{ background: "var(--scrim-side)" }} />
-            <div className="absolute inset-0 flex flex-col justify-center px-8">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent)" }}>
-                9:45 AM · Between Services
-              </p>
-              <p className="text-fg-on-dark font-condensed font-800 text-2xl">Life Groups</p>
-              <p className="text-fg-on-dark-muted text-sm mt-1">
-                Small-group Bible study for all ages.{" "}
-                <Link href="/life-groups" className="underline underline-offset-2 text-fg-on-dark">See how Life Groups work</Link>.
-              </p>
-            </div>
-          </div>
-
-          {/* One short paragraph: what the hour holds, the Bible, and coffee */}
-          <p id="sunday-walkthrough" className="text-fg-muted text-center max-w-xl mx-auto mt-10 leading-relaxed">
-            We sing together, then hear a message that works through a book of the Bible verse by verse.
-            Bring a Bible, or use one from the pew or the free <BibleAppLink>Bible app</BibleAppLink>.
-            Free coffee is just inside the sanctuary doors and at the coffee station by the elevator.
-          </p>
-        </div>
-      </section>
 
       {/* ── First-timer orientation content — collapsed for returning visitors ── */}
       {!returning && (
@@ -188,13 +124,10 @@ export default function VisitExperience() {
                 ))}
               </div>
               <p className="text-fg-muted text-sm text-center max-w-xl mx-auto leading-relaxed">
-                Park in the Purple Lot and use the Kids entrance off Albemarle Ave. Check-in opens 30
-                minutes before each service, and your first time, plan to arrive 10–15 minutes early. Each
-                of you gets a matching tag for pickup. All volunteers are background-checked and trained.{" "}
-                <a href="/map?to=f-kids-checkin" className="text-accent-text underline underline-offset-2">
-                  Show me on the map
-                </a>
-                .
+                <a href="#plan-your-visit" className="text-accent-text font-semibold underline underline-offset-2">Register your kids ahead of time</a>{" "}
+                to make check-in quick. Check-in opens 30 minutes before each service. Plan to arrive 15–20
+                minutes early to allow for check-in, finding the room, and grabbing coffee and a seat. Each
+                of you gets a matching tag for pickup. All volunteers are background-checked and trained.
               </p>
             </div>
           </Section>
