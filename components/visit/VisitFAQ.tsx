@@ -7,6 +7,10 @@ const NOTES: { title: string; body: React.ReactNode }[] = [
     body: "You'll see everything from jeans to Sunday best.",
   },
   {
+    title: "Take a Bible home",
+    body: "Pew Bibles are yours to keep, and there are free copies at the guest services table.",
+  },
+  {
     title: "Want a peek first?",
     body: (
       <>
@@ -62,7 +66,7 @@ export default function VisitFAQ() {
       <div className="max-w-3xl mx-auto">
         <p className="eyebrow text-center mb-4">Before You Come</p>
         <h2 className="text-fg text-center mb-12 h-hero">Good to Know</h2>
-        <div className="grid sm:grid-cols-2 gap-4 mb-6">
+        <div className="grid sm:grid-cols-3 gap-4 mb-6">
           {NOTES.map((n) => (
             <div key={n.title} className="rounded-2xl border border-border p-5">
               <p className="font-condensed font-800 text-fg mb-1" style={{ fontSize: "1.2rem" }}>{n.title}</p>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Section from "@/components/ui/Section";
 import Card from "@/components/ui/Card";
+import BibleAppLink from "@/components/visit/BibleAppLink";
 
 // What a Sunday looks like, as facts a visitor can plan around. The welcome
 // itself isn't described here: people experience it rather than being told.
@@ -40,7 +41,12 @@ const STEPS: { num: string; label: string; heading: string; body: React.ReactNod
     num: "04",
     label: "The service",
     heading: "About 60 minutes",
-    body: "We sing together, then hear a message that works through a book of the Bible verse by verse. There are Bibles in the seats if you didn't bring one.",
+    body: (
+      <>
+        We sing together, then hear a message that works through a book of the Bible verse by verse. Bring
+        a Bible, or use one from the pew or the free <BibleAppLink>Bible app</BibleAppLink>.
+      </>
+    ),
   },
 ];
 
