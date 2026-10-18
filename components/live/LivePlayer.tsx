@@ -340,8 +340,12 @@ function ActiveView({
     // floating picture-in-picture window over the notes), and the footer slid
     // into view. Fixed + visible-viewport height means exactly one scroller
     // (the notes box) and nothing else moves.
+    <>
+    {/* Full-screen backdrop so nothing of the page (the footer) can show
+        around the shell if the visible viewport and the shell ever differ. */}
+    <div aria-hidden="true" className="fixed inset-0 z-40 bg-theater-bg" />
     <div
-      className="fixed left-0 right-0 top-0 z-40 bg-theater-bg text-fg-on-dark flex flex-col"
+      className="fixed left-0 right-0 top-0 z-[41] bg-theater-bg text-fg-on-dark flex flex-col"
       style={{
         height: "var(--live-vvh, 100dvh)",
         transform: "translateY(var(--live-vvt, 0px))",
@@ -499,6 +503,7 @@ function ActiveView({
         </div>
       </div>
     </div>
+    </>
   );
 }
 
