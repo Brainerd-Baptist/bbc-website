@@ -234,6 +234,61 @@ export default function LivePlayer({ sermon, isStaleFallback = false }: Props) {
   return <OffHours sermon={sermon} />;
 }
 
+// ── Visible-viewport tracking ────────────────────────────────────────────────
+
+/** Publishes the *visible* viewport (what's left above the iOS keyboard) as
+ * --live-vvh / --live-vvt on <html>, locks page scroll while /live is
+ * showing, and reports whether the on-screen keyboard looks open (so the
+ * video can shrink to a corner thumbnail and give the notes the room). */
+function useLiveViewport(): boolean {
+  const [kbOpen, setKbOpen] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const vv = window.visualViewport;
+    const prevOverflow = root.style.overflow;
+    const prevOverscroll = root.style.overscrollBehavior;
+    root.style.overflow = "hidden";
+    root.style.overscrollBehavior = "none";
+
+    const sync = () => {
+      const h = vv ? vv.height : window.innerHeight;
+      const top = vv ? vv.offsetTop : 0;
+      root.style.setProperty("--live-vvh", `${Math.round(h)}px`);
+      root.style.setProperty("--live-vvt", `${Math.round(top)}px`);
+      // Keyboard ≈ visible area noticeably shorter than the window, on a phone.
+      const open = window.innerWidth < 1024 && (!vv || vv.scale <= 1.05) && window.innerHeight - h > 120;
+      setKbOpen(open);
+      if (open) root.setAttribute("data-live-kb", "1");
+      else root.removeAttribute("data-live-kb");
+    };
+    sync();
+    // No pinch-zoom while the player is up: a zoomed page breaks the fixed
+    // layout and iOS never zooms back out on its own.
+    const noGesture = (e: Event) => e.preventDefault();
+    document.addEventListener("gesturestart", noGesture);
+    document.addEventListener("gesturechange", noGesture);
+    vv?.addEventListener("resize", sync);
+    vv?.addEventListener("scroll", sync);
+    window.addEventListener("resize", sync);
+
+    return () => {
+      document.removeEventListener("gesturestart", noGesture);
+      document.removeEventListener("gesturechange", noGesture);
+      vv?.removeEventListener("resize", sync);
+      vv?.removeEventListener("scroll", sync);
+      window.removeEventListener("resize", sync);
+      root.style.overflow = prevOverflow;
+      root.style.overscrollBehavior = prevOverscroll;
+      root.style.removeProperty("--live-vvh");
+      root.style.removeProperty("--live-vvt");
+      root.removeAttribute("data-live-kb");
+    };
+  }, []);
+
+  return kbOpen;
+}
+
 // ── Active view (live / pre / post) ──────────────────────────────────────────
 
 function ActiveView({
@@ -250,6 +305,7 @@ function ActiveView({
   isStaleFallback: boolean;
 }) {
   const [tab, setTab] = useState<Tab>("watch");
+  const kbOpen = useLiveViewport();
 
   // ── Second-by-second countdown for pre-service ───────────────────────────
   const [secsUntil, setSecsUntil] = useState(minutesUntil * 60);
@@ -284,10 +340,29 @@ function ActiveView({
     // flex item's default min-height is `auto`, i.e. "at least as tall as my
     // content", which silently overrides `overflow-y-auto` until you
     // override it back to 0) is what actually makes overflow-y-auto clip.
-    <div className="h-screen bg-theater-bg text-fg-on-dark flex flex-col pt-16">
+    // Now a fixed shell that follows the *visible* viewport (visualViewport),
+    // not 100vh: on iPhone the keyboard doesn't shrink the layout viewport, so
+    // h-screen stayed taller than what you could see, the whole page scrolled
+    // to chase the cursor, the player scrolled away (and iOS popped it into a
+    // floating picture-in-picture window over the notes), and the footer slid
+    // into view. Fixed + visible-viewport height means exactly one scroller
+    // (the notes box) and nothing else moves.
+    <>
+    {/* Full-screen backdrop so nothing of the page (the footer) can show
+        around the shell if the visible viewport and the shell ever differ. */}
+    <div aria-hidden="true" className="fixed inset-0 z-40 bg-theater-bg" />
+    <div
+      className="fixed left-0 right-0 top-0 z-[41] bg-theater-bg text-fg-on-dark flex flex-col"
+      style={{
+        height: "var(--live-vvh, 100dvh)",
+        transform: "translateY(var(--live-vvt, 0px))",
+        touchAction: "pan-x pan-y",
+        paddingTop: kbOpen ? 0 : 64,
+      }}
+    >
 
       {/* ── Status bar ───────────────────────────────────────────────── */}
-      <div className={`flex items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
+      <div className={`${kbOpen ? "hidden" : "flex"} items-center justify-center gap-2.5 py-2.5 text-xs font-semibold tracking-widest uppercase ${
         state === "live" ? "bg-accent text-accent-fg" : state === "post" ? "bg-theater-raised" : "bg-brand-navy"
       }`}>
         {state === "live" && (
@@ -308,7 +383,7 @@ function ActiveView({
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
 
         {/* Stream column */}
-        <div className="lg:flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* YouTube embed */}
           {/* The embed well. Was bg-black, which reads as a hole punched in a
                  #0d1525 page while the iframe loads; --theater-sunken is a well,
@@ -316,7 +391,9 @@ function ActiveView({
                  look intentional rather than like a rendering fault — YouTube will
                  not theme, so the seam is permanent and should be owned. */}
             <div
-              className="relative w-full bg-theater-sunken border-y border-border-on-dark"
+              className={`relative bg-theater-sunken border-y border-border-on-dark ${
+                kbOpen ? "w-32 self-end" : "w-full"
+              }`}
               style={{ aspectRatio: "16/9" }}
             >
             {state === "post" ? (
@@ -336,7 +413,7 @@ function ActiveView({
               <iframe
                 src={embedUrl}
                 className="absolute inset-0 w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture 'none'"
                 allowFullScreen
                 title="Brainerd Baptist Live Stream"
               />
@@ -434,6 +511,7 @@ function ActiveView({
         </div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -565,8 +643,9 @@ function LiveNotesTab({ sermon }: { sermon: SermonData }) {
   const todayKey = draftNoteKey(getEasternDateString(new Date()));
 
   return (
-    <div className="px-5 py-6 max-w-xl mx-auto">
+    <div className="h-full flex flex-col px-4 py-3 max-w-xl mx-auto">
       <SermonNotes
+        fill
         slug={todayKey}
         noteKey={todayKey}
         accentColor={DEFAULT_ACCENT}
