@@ -11,11 +11,14 @@
  *   off   — all other times (latest sermon + service times)
  */
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { getLatestSermon } from "@/lib/sermon";
 import { getEasternState, getEasternDateString } from "@/lib/live-schedule";
 import { getTodayLiveOverlay } from "@/lib/live-today";
 import LivePlayer from "@/components/live/LivePlayer";
+
+// No pinch-zoom on the player page (it is a fixed, app-like layout).
+export const viewport: Viewport = { maximumScale: 1, userScalable: false };
 
 export const metadata: Metadata = {
   title: "Watch Live — Brainerd Baptist Church",

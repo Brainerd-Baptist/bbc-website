@@ -584,7 +584,7 @@ export default function SermonNotes({
         }
         .bbc-notes-editor {
           outline: none; min-height: 130px;
-          font-size: 0.9rem; line-height: 1.8; color: var(--fg);
+          font-size: 1rem; /* 16px: iOS zooms the page on focus below this */ line-height: 1.7; color: var(--fg);
           font-family: var(--font-barlow), system-ui, sans-serif;
           caret-color: ${accentColor}; word-break: break-word;
         }
@@ -722,7 +722,7 @@ export default function SermonNotes({
                             onKeyDown={(e) => { if (e.key === "Enter") sendEmail(); }}
                             placeholder="you@example.com"
                             style={{
-                              flex: 1, fontSize: "0.78rem", padding: "0.4rem 0.6rem",
+                              flex: 1, fontSize: "1rem", padding: "0.4rem 0.6rem",
                               borderRadius: "0.5rem", border: "1px solid var(--border)",
                               background: "var(--surface)", color: "var(--fg)",
                             }}
@@ -838,7 +838,7 @@ export default function SermonNotes({
           {!hasContent && (
             <div style={{
               position: "absolute", top: "1rem", left: "1.125rem",
-              pointerEvents: "none", fontSize: "0.9rem", lineHeight: 1.8,
+              pointerEvents: "none", fontSize: "1rem", lineHeight: 1.7,
               color: "var(--fg-subtle)", fontStyle: "italic", userSelect: "none",
             }}>
               Take notes as you listen…

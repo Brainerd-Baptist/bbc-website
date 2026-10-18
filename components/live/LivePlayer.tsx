@@ -257,17 +257,24 @@ function useLiveViewport(): boolean {
       root.style.setProperty("--live-vvh", `${Math.round(h)}px`);
       root.style.setProperty("--live-vvt", `${Math.round(top)}px`);
       // Keyboard ≈ visible area noticeably shorter than the window, on a phone.
-      const open = window.innerWidth < 1024 && window.innerHeight - h > 120;
+      const open = window.innerWidth < 1024 && (!vv || vv.scale <= 1.05) && window.innerHeight - h > 120;
       setKbOpen(open);
       if (open) root.setAttribute("data-live-kb", "1");
       else root.removeAttribute("data-live-kb");
     };
     sync();
+    // No pinch-zoom while the player is up: a zoomed page breaks the fixed
+    // layout and iOS never zooms back out on its own.
+    const noGesture = (e: Event) => e.preventDefault();
+    document.addEventListener("gesturestart", noGesture);
+    document.addEventListener("gesturechange", noGesture);
     vv?.addEventListener("resize", sync);
     vv?.addEventListener("scroll", sync);
     window.addEventListener("resize", sync);
 
     return () => {
+      document.removeEventListener("gesturestart", noGesture);
+      document.removeEventListener("gesturechange", noGesture);
       vv?.removeEventListener("resize", sync);
       vv?.removeEventListener("scroll", sync);
       window.removeEventListener("resize", sync);
@@ -349,6 +356,7 @@ function ActiveView({
       style={{
         height: "var(--live-vvh, 100dvh)",
         transform: "translateY(var(--live-vvt, 0px))",
+        touchAction: "pan-x pan-y",
         paddingTop: kbOpen ? 0 : 64,
       }}
     >
