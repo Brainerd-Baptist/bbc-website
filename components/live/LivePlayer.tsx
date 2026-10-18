@@ -371,7 +371,7 @@ function ActiveView({
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
 
         {/* Stream column */}
-        <div className="lg:flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* YouTube embed */}
           {/* The embed well. Was bg-black, which reads as a hole punched in a
                  #0d1525 page while the iframe loads; --theater-sunken is a well,
