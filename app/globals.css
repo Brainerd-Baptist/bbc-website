@@ -1070,3 +1070,7 @@ select:focus {
   position: absolute;
   inset: -6px;
 }
+
+/* /live on a phone with the keyboard open: the nav steps aside so the notes
+   get the room (set by useLiveViewport in components/live/LivePlayer.tsx). */
+html[data-live-kb] .bbc-nav { display: none; }

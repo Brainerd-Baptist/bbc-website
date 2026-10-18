@@ -26,6 +26,10 @@ interface Props {
   series?: string;
   date?: string;
   passage?: string;
+  /** Fill the height its parent gives it (the editor grows to the leftover
+   * space and scrolls inside itself) instead of capping at 420px. Used by
+   * /live, where the notes pane is a bounded box beside the video. */
+  fill?: boolean;
 }
 
 function formatTime(secs: number): string {
@@ -319,7 +323,7 @@ const popItemStyle: React.CSSProperties = {
 
 export default function SermonNotes({
   slug, noteKey, youtubeId, accentColor, sermonTitle,
-  speaker = "", series = "", date = "", passage = "",
+  speaker = "", series = "", date = "", passage = "", fill = false,
 }: Props) {
   const storageKey = noteKey ?? `bbc-notes-${slug}`;
   const videoKey   = youtubeId ? `bbc-sermon-pos-${youtubeId}` : null;
@@ -625,7 +629,7 @@ export default function SermonNotes({
         }
       `}</style>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem", ...(fill ? { flex: "1 1 auto", minHeight: 0 } : null) }}>
 
         {/* ── Header ────────────────────────────────────────────────── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -822,7 +826,8 @@ export default function SermonNotes({
             background: "var(--surface-raised)",
             border: `1.5px solid ${editorFocused ? `${accentColor}50` : "var(--border)"}`,
             borderRadius: "0.875rem", padding: "1rem 1.125rem",
-            cursor: "text", minHeight: "140px", maxHeight: "420px",
+            cursor: "text", minHeight: "140px", maxHeight: fill ? "none" : "420px",
+            ...(fill ? { flex: "1 1 auto" } : null),
             overflowY: "auto", overscrollBehavior: "contain",
             transition: "border-color 0.15s, box-shadow 0.15s",
             boxShadow: editorFocused ? `0 0 0 3px ${accentColor}10` : "none",
