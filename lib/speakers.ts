@@ -10,6 +10,18 @@ export interface SpeakerInfo {
   familyPhotoAlt?: string
   /** Staff email — rendered client-side only to avoid static-HTML scraping */
   email?: string
+  /**
+   * Name of a server-side environment variable that holds this person's email,
+   * for staff whose address must not appear in the repo or the client bundle
+   * (it would reveal a name we keep off the public site).
+   */
+  emailEnv?: string
+}
+
+/** Server-side lookup of a staff member's email (direct value or via emailEnv). */
+export function staffEmail(info: SpeakerInfo | undefined): string | undefined {
+  if (!info) return undefined
+  return info.email ?? (info.emailEnv ? process.env[info.emailEnv] : undefined)
 }
 
 /** Convert a speaker's display name to a URL slug */
@@ -64,7 +76,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Abigail Frink":     { title: "Ministry Director for Worship",         photo: "frink_abigail_worshipdirector",        email: "afrink@brainerdbaptist.org" },
   "Bryan Skinner":     { title: "Associate Pastor for Worship", photo: "skinner_bryan_worshippastor",          email: "bskinner@brainerdbaptist.org" },
   "Ethan Speicher":    { title: "Ministry Director for Member Care",     photo: "speicher_ethan_membercaredirector",    email: "espeicher@brainerdbaptist.org" },
-  "Barry Wilks":       { title: "Associate Pastor for Missions",         photo: "wilks_barry_missionspastor",           email: "bwilks@brainerdbaptist.org" },
+  "David":            { title: "Associate Pastor for Missions",         photo: "david_missionspastor",                 emailEnv: "STAFF_EMAIL_DAVID" },
   "Carlos Betancourt": { title: "Assistant Pastor for Hispanic Ministry", photo: "betancourt_carlos_hispanicpastor",     email: "cbetancourt@brainerdbaptist.org" },
   "Chris Williams":    { title: "Ministry Director for Facilities",      photo: "williams_chris_facilitiesdirector",    email: "cwilliams@brainerdbaptist.org" },
   "Michelle Hill":     { title: "Ministry Director for Stewardship",     photo: "hill_michelle_stewardshipdirector",    email: "mhill@brainerdbaptist.org" },
@@ -83,9 +95,11 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
       "At Brainerd, Benjamin supports adult disciplemaking, especially Life Groups, men's and women's ministries, midweek ministries, and other efforts to engage, equip, and encourage the body of Christ. He is committed to servant leadership, equipping believers to make disciples, and building strong, supportive faith communities here and around the world.",
     ],
   },
+  "Erin Owne":         { title: "Ministry Director for Communications",  photo: "owne_erin_communicationsdirector" },
+  "Barb Fleming":      { title: "Ministry Coordinator for the BX",       photo: "fleming_barb_bxcoordinator" },
   "Caroline Bell":     { title: "Girls Student Ministry Coordinator" },
   "Abbie Bateman":     { title: "Ministry Coordinator for Kids" },
-  "Jackson Bowman":    { title: "Associate Pastor for Member Care" },
+  "Jackson Bowman":    { title: "Associate Pastor for Member Care",      photo: "bowman_jackson_membercarepastor" },
 }
 
 /** Returns speaker info or a sensible default */
@@ -100,13 +114,15 @@ export const STAFF_ROSTER: string[] = [
   "Paul Christensen",
   "Micah Frink",
   "Bryan Skinner",
-  "Barry Wilks",
+  "David",
   "Carlos Betancourt",
   "Abigail Frink",
   "Jackson Bowman",
   "Michelle Hill",
+  "Erin Owne",
   "Brittany Kelly",
   "Jo Bobbitt",
+  "Barb Fleming",
   "Kristi Smith",
   "Chris Williams",
   "Benjamin Hovies",
