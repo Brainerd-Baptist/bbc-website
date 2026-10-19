@@ -254,6 +254,20 @@
           overlay 3.75      navy band 3.85   deep navy hero 4.61            */
   --focus-ring:    #008ba3;
 
+  /* ── Missions map (data colours) ──────────────────────────────────────
+     The live missions map colours a country by Brainerd's engagement level.
+     These are the same three colours the missions team sees in Brainerd Mail
+     and in emails, so a country looks the same everywhere. They are FILLS,
+     never text. Mid-tone fills cannot all clear 3:1 against one land colour,
+     so the map does not rely on fill contrast alone: every engaged shape is
+     outlined in --fg, level 3 also carries a stripe pattern, and every level
+     is named in words in the key and in the details. */
+  --viz-level-1:   #00abc9;
+  --viz-level-2:   #33bc53;
+  --viz-level-3:   #ff4a53;
+  --viz-land:      #c5cddb;
+  --viz-land-edge: #8d98ae;
+
   /* ── Feedback ─────────────────────────────────────────────────────────
      Status colours were scattered literals (#ef4444, #22c55e, #f59e0b,
      #e5484d …) that could not respond to the theme, so an error message went
@@ -696,6 +710,10 @@
   --border-input:  rgba(255, 255, 255, 0.34);
   --hover-subtle:  rgba(255, 255, 255, 0.08);
   --focus-ring:    #33c1d9;
+
+  /* Missions map: same level fills; land and its edge step down for the dark canvas. */
+  --viz-land:      #34415c;
+  --viz-land-edge: #55658a;
 
 
   /* Feedback inverts: the -text variants lighten so they clear 4.5:1 against
