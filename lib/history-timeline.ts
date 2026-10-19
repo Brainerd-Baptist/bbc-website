@@ -305,10 +305,10 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     "year": 2005,
     "date": "May 12, 2005",
     "pillar": "mission",
-    "title": "The Wilks family to Uganda",
-    "summary": "The church commissioned staff member Barry Wilks and his family as missionaries to Uganda.",
+    "title": "David and his family to Uganda",
+    "summary": "The church commissioned staff member David and his family as missionaries to Uganda.",
     "more": [
-      "A Brainerd team went to serve alongside Barry and Scarlet Wilks in February 2007. The family returned to Brainerd that year."
+      "A Brainerd team went to serve alongside David and his wife in February 2007. The family returned to Brainerd that year."
     ],
     "source": "80th Anniversary history (2008); 85th Anniversary history (2013)"
   },
@@ -477,7 +477,7 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
     "figure": "$1,000",
     "figureLabel": "per well",
     "title": "Students dig wells in Kenya",
-    "summary": "Barry Wilks challenged Brainerd Baptist School students to raise money to dig wells in Homa Bay, Kenya, at $1,000 a well. Brainerd men went to Homa Bay to work that year.",
+    "summary": "David challenged Brainerd Baptist School students to raise money to dig wells in Homa Bay, Kenya, at $1,000 a well. Brainerd men went to Homa Bay to work that year.",
     "more": [],
     "source": "80th Anniversary history (2008)"
   },
@@ -735,8 +735,8 @@ export const STORY: StoryChapter[] = [
         "text": "School students raised money to dig wells in Kenya, a thousand dollars a well."
       },
       {
-        "ref": "The Wilks family to Uganda",
-        "text": "The church sent Barry Wilks and his family to Uganda."
+        "ref": "David and his family to Uganda",
+        "text": "The church sent David and his family to Uganda."
       },
       {
         "ref": "Brainerd Crossroads (BX)",

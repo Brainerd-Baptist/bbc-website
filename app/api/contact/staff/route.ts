@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail } from "@/lib/mail";
 import { sendContactConfirmation } from "@/lib/contact-mail";
-import { SPEAKERS } from "@/lib/speakers";
+import { SPEAKERS, staffEmail } from "@/lib/speakers";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 export async function POST(req: NextRequest) {
@@ -15,12 +15,13 @@ export async function POST(req: NextRequest) {
   // never trust a client-supplied email address here, or this endpoint
   // becomes an open relay to send mail anywhere.
   const info = SPEAKERS[staffName];
-  if (!info?.email) {
+  const staffTo = staffEmail(info);
+  if (!staffTo) {
     return NextResponse.json({ error: "Unknown staff member." }, { status: 400 });
   }
 
   const result = await sendMail({
-    to: info.email,
+    to: staffTo,
     subject: `Message from ${name.trim()} via brainerdbaptist.org`,
     replyTo: email.trim(),
     text: `From: ${name.trim()} <${email.trim()}>\n\n${message.trim()}`,
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
     to: email,
     name,
     teamLabel: staffName,
-    replyTo: info.email,
+    replyTo: staffTo,
   });
 
   return NextResponse.json({ ok: true, ...result });

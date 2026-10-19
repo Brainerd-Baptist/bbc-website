@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import ExpandablePhoto from "@/components/ui/ExpandablePhoto";
-import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug } from "@/lib/speakers";
+import { SPEAKERS, speakerFromSlug, getSpeaker, speakerSlug, staffEmail } from "@/lib/speakers";
 import { SERMONS } from "@/lib/sermons";
 import { getAllSermons } from "@/lib/sanity";
 
@@ -180,7 +180,7 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
 
             {/* Bio column */}
             <div className="md:col-span-2 space-y-6">
-              {info.email && (
+              {staffEmail(info) && (
                 <div>
                   {/* Routes through the same /connect/staff form every other
                       staff-contact path on the site uses — the visitor's
