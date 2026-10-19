@@ -2,7 +2,7 @@ import ClientEmailButton from "@/components/ui/ClientEmailButton";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { IDENTITY } from "@/lib/identity-colors";
-import WorldReachMap from "@/components/missions/WorldReachMap";
+import LiveMissionsMap from "@/components/missions/LiveMissionsMap";
 import MissionsContactForm from "@/components/missions/MissionsContactForm";
 import MissionsStory from "@/components/missions/MissionsStory";
 
@@ -67,7 +67,7 @@ export default function MissionsPage() {
             <p className="eyebrow mb-3">Where We Serve</p>
             <h2 className="text-fg h-subsection">Partners around the world.</h2>
           </div>
-          <WorldReachMap />
+          <LiveMissionsMap />
         </div>
       </section>
 
