@@ -5,6 +5,29 @@ import SearchPanel from "./SearchPanel";
 
 export default function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const returnRef = useRef<HTMLElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  // iOS Safari keeps the layout viewport full-height when the keyboard opens
+  // and instead scrolls the *visual* viewport, which pushed the top of this
+  // fixed dialog (header + input) off-screen and left a gap above the keyboard.
+  // Track the visual viewport and pin the dialog to exactly what's visible.
+  useEffect(() => {
+    if (!open) return;
+    const vv = window.visualViewport;
+    const root = rootRef.current;
+    if (!vv || !root) return;
+    const sync = () => {
+      root.style.setProperty("--sd-vvh", `${vv.height}px`);
+      root.style.setProperty("--sd-vvt", `${vv.offsetTop}px`);
+    };
+    sync();
+    vv.addEventListener("resize", sync);
+    vv.addEventListener("scroll", sync);
+    return () => {
+      vv.removeEventListener("resize", sync);
+      vv.removeEventListener("scroll", sync);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -25,14 +48,21 @@ export default function SearchDialog({ open, onClose }: { open: boolean; onClose
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[120]" role="dialog" aria-modal="true" aria-label="Search">
+    <div
+      ref={rootRef}
+      className="fixed inset-x-0 top-0 z-[120]"
+      style={{ height: "var(--sd-vvh, 100dvh)", transform: "translateY(var(--sd-vvt, 0px))" }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search"
+    >
       <div
         aria-hidden="true"
         onClick={onClose}
         className="absolute inset-0"
         style={{ background: "var(--nav-menu-scrim, var(--scrim))", backdropFilter: "blur(10px)" }}
       />
-      <div className="relative mx-auto mt-3 sm:mt-24 w-[calc(100%-1.5rem)] max-w-2xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[80dvh] overflow-y-auto rounded-3xl border border-border bg-surface-raised p-5 sm:p-7 shadow-xl">
+      <div className="relative mx-auto mt-3 sm:mt-24 w-[calc(100%-1.5rem)] max-w-2xl max-h-[calc(var(--sd-vvh,100dvh)-1.5rem)] sm:max-h-[80dvh] overflow-y-auto overscroll-contain rounded-3xl border border-border bg-surface-raised p-5 sm:p-7 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <p className="text-xs font-semibold tracking-widest uppercase text-accent-text">Search</p>
           <button
