@@ -419,6 +419,10 @@ export default function SermonNotes({
   }, [storageKey]);
 
   const editor = useEditor({
+    // Redraw the toolbar on every selection/format change so the Bold, Italic and
+    // other buttons always reflect the text under the cursor (TipTap 3 does not
+    // do this by default, which left the B stuck on).
+    shouldRerenderOnTransaction: true,
     extensions: [
       StarterKit.configure({
         bulletList: { keepMarks: true, keepAttributes: false, HTMLAttributes: { class: "bbc-bullets" } },

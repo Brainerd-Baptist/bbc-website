@@ -53,7 +53,9 @@ export function passageToId(passage: string): string | null {
   const m = s.match(/^(.+?)\s+(\d+)(?::(\d+)(?:[–\-](\d+))?)?$/);
   if (!m) return null;
   const [, bookRaw, ch, vs, ve] = m;
-  const bookId = BOOK_MAP[bookRaw.trim()];
+  // Abbreviations are often typed with a period ("Ps. 23", "1 Cor. 13"), and the
+  // reference finder keeps it, so drop periods and extra spaces before the lookup.
+  const bookId = BOOK_MAP[bookRaw.replace(/\./g, "").replace(/\s+/g, " ").trim()];
   if (!bookId) return null;
   if (vs) return ve ? `${bookId}.${ch}.${vs}-${bookId}.${ch}.${ve}` : `${bookId}.${ch}.${vs}`;
   return `${bookId}.${ch}`;
