@@ -251,18 +251,43 @@ function useLiveViewport(): boolean {
     root.style.overflow = "hidden";
     root.style.overscrollBehavior = "none";
 
+    // Tallest visible height seen so far = "no keyboard". Used instead of
+    // window.innerHeight alone, because iOS sometimes shrinks innerHeight too
+    // while the keyboard is up, which made the keyboard look closed (status bar
+    // and video came back, the notes pane vanished and the page looked stuck).
+    let fullHeight = 0;
     const sync = () => {
+      const scale = vv ? vv.scale : 1;
       const h = vv ? vv.height : window.innerHeight;
       const top = vv ? vv.offsetTop : 0;
+      // Height as it would be unzoomed, so an accidental zoom can't hide the keyboard.
+      const unzoomed = h * (scale > 1.05 ? scale : 1);
+      fullHeight = Math.max(fullHeight, window.innerHeight, unzoomed);
       root.style.setProperty("--live-vvh", `${Math.round(h)}px`);
       root.style.setProperty("--live-vvt", `${Math.round(top)}px`);
-      // Keyboard ≈ visible area noticeably shorter than the window, on a phone.
-      const open = window.innerWidth < 1024 && (!vv || vv.scale <= 1.05) && window.innerHeight - h > 120;
+      // Keyboard ≈ visible area noticeably shorter than the full screen, on a phone.
+      const open = window.innerWidth < 1024 && fullHeight - unzoomed > 120;
       setKbOpen(open);
       if (open) root.setAttribute("data-live-kb", "1");
       else root.removeAttribute("data-live-kb");
     };
     sync();
+    // iOS is slow and inconsistent about telling pages the keyboard moved (it can
+    // skip the resize event entirely when the keyboard is swapped or dismissed from
+    // a popup). While a text field has focus, or the page is offset from the top,
+    // check every half second so the layout always catches up on its own.
+    const catchUp = window.setInterval(() => {
+      const el = document.activeElement as HTMLElement | null;
+      const typing = !!el && (el.isContentEditable || el.tagName === "INPUT" || el.tagName === "TEXTAREA");
+      if (typing || (vv && Math.abs(vv.offsetTop) > 1) || root.hasAttribute("data-live-kb")) sync();
+    }, 500);
+    const afterFocusChange = () => {
+      [60, 250, 600, 1200].forEach((ms) => window.setTimeout(sync, ms));
+    };
+    document.addEventListener("focusin", afterFocusChange);
+    document.addEventListener("focusout", afterFocusChange);
+    window.addEventListener("pageshow", sync);
+    document.addEventListener("visibilitychange", sync);
     // No pinch-zoom while the player is up: a zoomed page breaks the fixed
     // layout and iOS never zooms back out on its own.
     const noGesture = (e: Event) => e.preventDefault();
@@ -273,6 +298,11 @@ function useLiveViewport(): boolean {
     window.addEventListener("resize", sync);
 
     return () => {
+      window.clearInterval(catchUp);
+      document.removeEventListener("focusin", afterFocusChange);
+      document.removeEventListener("focusout", afterFocusChange);
+      window.removeEventListener("pageshow", sync);
+      document.removeEventListener("visibilitychange", sync);
       document.removeEventListener("gesturestart", noGesture);
       document.removeEventListener("gesturechange", noGesture);
       vv?.removeEventListener("resize", sync);
@@ -355,7 +385,8 @@ function ActiveView({
       className="fixed left-0 right-0 top-0 z-[41] bg-theater-bg text-fg-on-dark flex flex-col"
       style={{
         height: "var(--live-vvh, 100dvh)",
-        transform: "translateY(var(--live-vvt, 0px))",
+        // translate3d keeps the shell on its own layer so iOS repaints it when the keyboard moves
+        transform: "translate3d(0, var(--live-vvt, 0px), 0)",
         touchAction: "pan-x pan-y",
         paddingTop: kbOpen ? 0 : 64,
       }}
