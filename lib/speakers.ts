@@ -81,7 +81,17 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Chris Williams":    { title: "Ministry Director for Facilities",      photo: "williams_chris_facilitiesdirector",    email: "cwilliams@brainerdbaptist.org" },
   "Michelle Hill":     { title: "Ministry Director for Stewardship",     photo: "hill_michelle_stewardshipdirector",    email: "mhill@brainerdbaptist.org" },
   "Jo Bobbitt":        { title: "Ministry Director for the BX",          photo: "bobbitt_jo_bxdirector",               email: "jbobbitt@brainerdbaptist.org" },
-  "Brittany Kelly":    { title: "Ministry Director for Kids",            photo: "kelly_brittany_kidsdirector",          email: "bkelly@brainerdbaptist.org" },
+  "Brittany Kelly": {
+    title: "Ministry Director for Kids",
+    photo: "kelly_brittany_kidsdirector",
+    email: "bkelly@brainerdbaptist.org",
+    bio: [
+      "Brittany grew up in Trion, Georgia, not far from Chattanooga, so coming to Brainerd felt like coming home. She first started serving in children's ministry during college, teaching second and third graders on Wednesday nights. She was a new Christian and loved how much she was learning about the Bible as she prepared to teach each week.",
+      "Right after graduating from Boyce College at Southern Seminary, she got a phone call from a church in Elizabethtown, Kentucky. She joined their staff as the Preschool Director and later served as the Kids Ministry Director before coming to Brainerd.",
+      "Brittany loves connecting with families and getting to know both the kids and their parents. One of her favorite parts of ministry is building those relationships and helping kids learn more about Jesus.",
+      "Outside of church, Brittany and her husband, Bryan, love spending time with their son, Nate. You can often find them at the park, throwing a ball, or having a picnic. They love having time together, and it doesn't have to be anything fancy.",
+    ],
+  },
   "Kristi Smith":      { title: "Parent's Day Out Coordinator",          photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org" },
   "Benjamin Hovies": {
     title: "Ministry Director for Adult Discipleship",

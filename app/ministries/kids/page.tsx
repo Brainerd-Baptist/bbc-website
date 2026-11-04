@@ -499,7 +499,7 @@ export default function KidsPage() {
               {
                 name: "Abbie Bateman",
                 title: "Coordinator",
-                photo: null,
+                photo: "/staff/bateman_abbie_kidscoordinator.jpg",
               },
             ].map(({ name, title, photo }) => (
               <div key={name} className="text-center" style={{ width: "180px" }}>
