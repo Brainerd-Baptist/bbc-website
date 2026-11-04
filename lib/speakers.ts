@@ -96,8 +96,8 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
     ],
   },
   "Erin Owne":         { title: "Ministry Director for Communications",  photo: "owne_erin_communicationsdirector" },
-  "Caroline Bell":     { title: "Girls Student Ministry Coordinator" },
-  "Abbie Bateman":     { title: "Ministry Coordinator for Kids" },
+  "Caroline Bell":     { title: "Girls Student Ministry Coordinator", photo: "bell_caroline_studentscoordinator" },
+  "Abbie Bateman":     { title: "Ministry Coordinator for Kids", photo: "bateman_abbie_kidscoordinator" },
   "Jackson Bowman":    { title: "Associate Pastor for Member Care",      photo: "bowman_jackson_membercarepastor" },
 }
 
