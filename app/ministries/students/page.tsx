@@ -204,7 +204,7 @@ export default function StudentsPage() {
               {
                 name: "Caroline Bell",
                 title: "Coordinator",
-                photo: null,
+                photo: "/staff/bell_caroline_studentscoordinator.jpg",
               },
             ].map(({ name, title, photo }) => (
               <div key={name} className="text-center" style={{ width: "180px" }}>
