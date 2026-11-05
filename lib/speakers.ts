@@ -16,6 +16,8 @@ export interface SpeakerInfo {
    * (it would reveal a name we keep off the public site).
    */
   emailEnv?: string
+  /** Keep off the main /staff grid; still listed on /connect/staff and reachable at /speakers/<slug> */
+  hideFromStaffPage?: boolean
 }
 
 /** Server-side lookup of a staff member's email (direct value or via emailEnv). */
@@ -77,7 +79,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
   "Bryan Skinner":     { title: "Associate Pastor for Worship", photo: "skinner_bryan_worshippastor",          email: "bskinner@brainerdbaptist.org" },
   "Ethan Speicher":    { title: "Ministry Director for Member Care",     photo: "speicher_ethan_membercaredirector",    email: "espeicher@brainerdbaptist.org" },
   "David":            { title: "Associate Pastor for Missions",         photo: "david_missionspastor",                 emailEnv: "STAFF_EMAIL_DAVID" },
-  "Carlos Betancourt": { title: "Assistant Pastor for Hispanic Ministry", photo: "betancourt_carlos_hispanicpastor",     email: "cbetancourt@brainerdbaptist.org" },
+  "Carlos Betancourt": { title: "Assistant Pastor for Hispanic Ministry", photo: "betancourt_carlos_hispanicpastor",     email: "cbetancourt@brainerdbaptist.org", hideFromStaffPage: true },
   "Chris Williams":    { title: "Ministry Director for Facilities",      photo: "williams_chris_facilitiesdirector",    email: "cwilliams@brainerdbaptist.org" },
   "Michelle Hill":     { title: "Ministry Director for Stewardship",     photo: "hill_michelle_stewardshipdirector",    email: "mhill@brainerdbaptist.org" },
   "Jo Bobbitt":        { title: "Ministry Director for the BX",          photo: "bobbitt_jo_bxdirector",               email: "jbobbitt@brainerdbaptist.org" },
@@ -92,7 +94,7 @@ export const SPEAKERS: Record<string, SpeakerInfo> = {
       "Outside of church, Brittany and her husband, Bryan, love spending time with their son, Nate. You can often find them at the park, throwing a ball, or having a picnic. They love having time together, and it doesn't have to be anything fancy.",
     ],
   },
-  "Kristi Smith":      { title: "Parent's Day Out Coordinator",          photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org" },
+  "Kristi Smith":      { title: "Parent's Day Out Coordinator",          photo: "smith_kristi_pdodirector",             email: "ksmith@brainerdbaptist.org", hideFromStaffPage: true },
   "Benjamin Hovies": {
     title: "Ministry Director for Adult Discipleship",
     photo: "hovies_benjamin_adultdiscipleship",

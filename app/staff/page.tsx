@@ -27,7 +27,7 @@ export default function StaffPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
             {STAFF_ROSTER.map((name) => {
               const info = SPEAKERS[name];
-              if (!info) return null;
+              if (!info || info.hideFromStaffPage) return null;
               return (
                 <a key={name} href={`/speakers/${speakerSlug(name)}`} className="group">
                   {/* Photo */}
