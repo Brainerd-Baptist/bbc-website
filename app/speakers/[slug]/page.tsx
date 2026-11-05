@@ -130,20 +130,20 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               <ExpandablePhoto
                 src={`/staff/${info.photo}.jpg`}
                 alt={name}
-                triggerClassName="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden flex-shrink-0 shadow-2xl ring-2 ring-white/10"
+                triggerClassName="w-28 sm:w-36 aspect-[4/5] rounded-2xl overflow-hidden flex-shrink-0 shadow-2xl ring-2 ring-white/10"
               >
                 <Image
                   src={`/staff/${info.photo}.jpg`}
                   alt={name}
                   width={144}
-                  height={144}
+                  height={180}
                   className="w-full h-full object-cover object-top"
                   priority
                 />
               </ExpandablePhoto>
             ) : (
               <div
-                className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl font-bold"
+                className="w-28 sm:w-36 aspect-[4/5] rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl font-bold"
                 style={{ background: "var(--accent-bg)", color: "var(--accent-text)" }}
               >
                 {name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
