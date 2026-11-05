@@ -456,6 +456,29 @@ export default function KidsPage() {
             year, and dates, costs, and open classes change, so the current
             details are always on our events page.
           </p>
+          <Link
+            href="/speakers/kristi-smith"
+            className="group inline-block mb-5"
+            aria-label="Meet Kristi Smith, our Parents' Day Out coordinator"
+          >
+            <div
+              className="w-28 h-28 rounded-full mx-auto overflow-hidden"
+              style={{ background: "var(--surface-sunken)" }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/staff/smith_kristi_pdodirector.jpg"
+                alt="Kristi Smith"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <span className="block mt-3 font-condensed font-800 text-fg group-hover:text-accent-text transition-colors" style={{ fontSize: "1.1rem" }}>
+              Kristi Smith
+            </span>
+            <span className="block text-accent-text text-xs font-semibold tracking-widest uppercase mt-1">
+              Parents&apos; Day Out Coordinator
+            </span>
+          </Link>
           <p className="text-fg-muted leading-relaxed mb-8">
             Questions? Ask Kristi Smith, our Parents&apos; Day Out coordinator,
             at{" "}
