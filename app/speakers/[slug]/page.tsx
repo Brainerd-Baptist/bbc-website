@@ -226,33 +226,24 @@ export default async function SpeakerPage({ params }: { params: Promise<{ slug: 
               )}
             </div>
 
-            {/* Family photo sidebar — once a bio exists, always show this
-                slot: the real photo if we have one, otherwise a visible
-                placeholder so it's obvious a photo still needs uploading. */}
-            {info.bio && info.bio.length > 0 && (
+            {/* Family photo sidebar — only when we actually have a photo.
+                No placeholder: a "coming soon" box looks unfinished to the
+                public. The bio column keeps its width either way. */}
+            {info.familyPhoto && (
               <div>
                 <p className="eyebrow-muted mb-3">Family</p>
-                {info.familyPhoto ? (
-                  <ExpandablePhoto
+                <ExpandablePhoto
+                  src={info.familyPhoto}
+                  alt={info.familyPhotoAlt ?? `${name}'s family`}
+                  triggerClassName="w-full rounded-2xl overflow-hidden shadow-lg border border-border"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={info.familyPhoto}
                     alt={info.familyPhotoAlt ?? `${name}'s family`}
-                    triggerClassName="w-full rounded-2xl overflow-hidden shadow-lg border border-border"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={info.familyPhoto}
-                      alt={info.familyPhotoAlt ?? `${name}'s family`}
-                      className="w-full object-cover object-center"
-                    />
-                  </ExpandablePhoto>
-                ) : (
-                  <div
-                    className="rounded-2xl flex items-center justify-center text-center px-6 border border-dashed border-border"
-                    style={{ aspectRatio: "4/3", background: "var(--surface-sunken)" }}
-                  >
-                    <p className="text-fg-subtle text-sm">Family photo coming soon</p>
-                  </div>
-                )}
+                    className="w-full object-cover object-center"
+                  />
+                </ExpandablePhoto>
               </div>
             )}
           </div>
