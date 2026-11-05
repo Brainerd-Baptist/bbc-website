@@ -67,6 +67,32 @@ export default function HispanicMinistryPage() {
           </div>
         </div>
 
+        <div className="max-w-3xl mx-auto mt-12 text-center">
+          <Link
+            href="/speakers/carlos-betancourt"
+            className="group inline-block"
+            aria-label="Pastor Carlos Betancourt, Assistant Pastor for Hispanic Ministry"
+          >
+            <div
+              className="w-28 h-28 rounded-full mx-auto overflow-hidden"
+              style={{ background: "var(--surface-sunken)" }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/staff/betancourt_carlos_hispanicpastor.jpg"
+                alt="Pastor Carlos Betancourt"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <span className="block mt-3 font-condensed font-800 text-fg group-hover:text-accent-text transition-colors" style={{ fontSize: "1.1rem" }}>
+              Carlos Betancourt
+            </span>
+            <span className="block text-accent-text text-xs font-semibold tracking-widest uppercase mt-1">
+              Pastor Asistente · Assistant Pastor
+            </span>
+          </Link>
+        </div>
+
         <div className="max-w-3xl mx-auto mt-12 flex flex-wrap justify-center gap-3">
           <a
             href={MAPS_URL}
