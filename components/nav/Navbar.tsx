@@ -32,7 +32,7 @@ const NAV_GROUPS = [
     label: "Ministries",
     links: [
       { label: "All Ministries", href: "/ministries" },
-      { label: "Kids Ministry", href: "/ministries/kids" },
+      { label: "Kids", href: "/ministries/kids" },
       { label: "Students", href: "/ministries/students" },
       { label: "College & Young Adults", href: "/ministries/college" },
       { label: "Missions", href: "/missions" },

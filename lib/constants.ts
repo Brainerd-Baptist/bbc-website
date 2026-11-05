@@ -158,7 +158,7 @@ export const FOOTER_LINKS = {
     { label: "Connect", href: "/connect" },
   ],
   Ministries: [
-    { label: "Children's Ministry", href: "/ministries/kids" },
+    { label: "Kids", href: "/ministries/kids" },
     { label: "Students", href: "/ministries/students" },
     { label: "Life Groups", href: "/life-groups" },
     { label: "Missions", href: "/missions" },
