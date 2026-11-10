@@ -62,6 +62,7 @@ import { resolveResourceIds, promoteSeriesResources } from "@/lib/sermon-resourc
 import { slugify } from "@/lib/slugify";
 import { wrapEmailHtml } from "@/lib/email-templates";
 import { sendMail } from "@/lib/mail";
+import { bearerOk } from "@/lib/guard";
 import backfillReference from "@/lib/data/sermon-backfill-reference.json";
 
 /**
@@ -197,7 +198,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
   }
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${secret}`) return unauthorized();
+  if (!bearerOk(authHeader, secret)) return unauthorized();
 
   if (!hasSanityWriteToken()) {
     console.error("[sync-sermons] SANITY_API_TOKEN is not set — nothing to do");
@@ -479,7 +480,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
   }
   const authHeader = req.headers.get("authorization");
-  if (authHeader !== `Bearer ${secret}`) return unauthorized();
+  if (!bearerOk(authHeader, secret)) return unauthorized();
 
   if (!hasSanityWriteToken()) {
     return NextResponse.json({ error: "SANITY_API_TOKEN not configured" }, { status: 500 });

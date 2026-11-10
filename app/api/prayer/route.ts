@@ -13,6 +13,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { parseForm } from "@/lib/guard";
 
 const PCO_BASE = "https://api.planningcenteronline.com";
 
@@ -50,7 +51,9 @@ async function findPersonByEmail(email: string): Promise<string | null> {
         e.address.toLowerCase() === email.toLowerCase(),
       ),
     );
-    return match?.id ?? json.data?.[0]?.id ?? null;
+    // Exact email match only. Falling back to the first search hit could attach
+    // a private prayer request to an unrelated person's profile.
+    return match?.id ?? null;
   } catch {
     return null;
   }
@@ -166,12 +169,9 @@ async function createNote(
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
-  let body: { name?: string; request?: string; email?: string; isPrivate?: boolean };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+  const p = await parseForm(req, "prayer", 5, { longFields: { request: 4000 } });
+  if (p.res) return p.res;
+  const body = p.body as { name?: string; request?: string; email?: string; isPrivate?: boolean };
 
   const { name, request, email, isPrivate = false } = body;
 

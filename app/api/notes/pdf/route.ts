@@ -13,10 +13,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { NotesPDFDocument } from "@/lib/notes-pdf";
+import { clientIp, overLimit } from "@/lib/guard";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  if (overLimit(`pdf:${clientIp(req)}`, 20, 10 * 60_000)) {
+    return NextResponse.json({ error: "Too many requests. Please try again in a few minutes." }, { status: 429 });
+  }
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -24,8 +28,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const title = typeof body.title === "string" ? body.title : "";
-  const notesHtml = typeof body.notesHtml === "string" ? body.notesHtml : "";
+  const title = typeof body.title === "string" ? body.title.slice(0, 200) : "";
+  const notesHtml = typeof body.notesHtml === "string" ? body.notesHtml.slice(0, 200_000) : "";
   if (!title.trim()) {
     return NextResponse.json({ error: "title is required" }, { status: 400 });
   }

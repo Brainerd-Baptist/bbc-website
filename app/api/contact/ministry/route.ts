@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseForm } from "@/lib/guard";
 import { sendMail } from "@/lib/mail";
 import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
@@ -16,7 +17,9 @@ const MINISTRIES: Record<string, { label: string; team: string; to: string }> = 
 };
 
 export async function POST(req: NextRequest) {
-  const { ministry, name, email, message } = await req.json();
+  const p = await parseForm(req, "contact", 5);
+  if (p.res) return p.res;
+  const { ministry, name, email, message } = p.body as Record<string, any>;
 
   const m = typeof ministry === "string" ? MINISTRIES[ministry] : undefined;
   if (!m) {

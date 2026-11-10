@@ -7,6 +7,7 @@
 // error for the visitor.
 
 import { sendMail } from "@/lib/mail";
+import { overLimit } from "@/lib/guard";
 import { buildContactConfirmationHtml } from "@/lib/email-templates";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,6 +29,8 @@ export async function sendContactConfirmation({
 }): Promise<void> {
   const address = to?.trim();
   if (!address || !EMAIL_RE.test(address)) return;
+  // Stop the receipt being used to flood someone else's inbox.
+  if (overLimit(`receipt:${address.toLowerCase()}`, 2, 60 * 60_000)) return;
   try {
     await sendMail({
       to: address,

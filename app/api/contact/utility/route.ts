@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseForm } from "@/lib/guard";
 import { sendMail } from "@/lib/mail";
 import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
@@ -14,7 +15,9 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
-  const { category, name, email, message } = await req.json();
+  const p = await parseForm(req, "contact", 5);
+  if (p.res) return p.res;
+  const { category, name, email, message } = p.body as Record<string, any>;
 
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
     return NextResponse.json({ error: "Name, email, and message are required." }, { status: 400 });

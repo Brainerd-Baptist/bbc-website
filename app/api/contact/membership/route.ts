@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseForm } from "@/lib/guard";
 import { sendMail } from "@/lib/mail";
 import { sendContactConfirmation } from "@/lib/contact-mail";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
@@ -6,7 +7,9 @@ import { buildContactNotificationHtml } from "@/lib/email-templates";
 const TO = "membership@brainerdbaptist.org";
 
 export async function POST(req: NextRequest) {
-  const { name, email, phone, message } = await req.json();
+  const p = await parseForm(req, "contact", 5);
+  if (p.res) return p.res;
+  const { name, email, phone, message } = p.body as Record<string, any>;
 
   if (!name?.trim() || !email?.trim()) {
     return NextResponse.json({ error: "Name and email are required." }, { status: 400 });

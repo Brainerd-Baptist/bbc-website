@@ -25,6 +25,19 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Baseline browser protections for every page (added after the 2026-11
+        // security audit). No CSP yet: the BX map page injects inline scripts, so
+        // a strict policy needs its own test pass.
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+        ],
+      },
+      {
         // The map's offline worker lives at the site root but only controls /map.
         source: "/map-sw.js",
         headers: [

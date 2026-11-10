@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityWriteClient, hasSanityWriteToken } from "@/lib/sanity-write";
 import { fetchResourceMeta } from "@/lib/resource-enrich";
+import { bearerOk } from "@/lib/guard";
 
 export const maxDuration = 60;
 
@@ -21,7 +22,7 @@ const BATCH = 12;
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
-  if (req.headers.get("authorization") !== `Bearer ${secret}`) {
+  if (!bearerOk(req.headers.get("authorization"), secret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   if (!hasSanityWriteToken()) return NextResponse.json({ error: "SANITY_API_TOKEN not configured" }, { status: 500 });
