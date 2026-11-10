@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { NotesPDFDocument, htmlToNotesBlocks, notesBlocksHaveContent } from "@/lib/notes-pdf";
 import { sendMail } from "@/lib/mail";
+import { clientIp, overLimit } from "@/lib/guard";
 import { buildNotesEmailHtml } from "@/lib/email-templates";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,11 @@ export const dynamic = "force-dynamic";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: NextRequest) {
+  // Sends mail from our domain to whatever address is typed in, so keep it tight:
+  // a few per visitor, and only one note email per recipient address per hour.
+  if (overLimit(`notes:${clientIp(req)}`, 5, 10 * 60_000)) {
+    return NextResponse.json({ error: "Too many requests. Please try again in a few minutes." }, { status: 429 });
+  }
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -28,8 +34,8 @@ export async function POST(req: NextRequest) {
   }
 
   const to = typeof body.to === "string" ? body.to.trim() : "";
-  const title = typeof body.title === "string" ? body.title : "";
-  const notesHtml = typeof body.notesHtml === "string" ? body.notesHtml : "";
+  const title = typeof body.title === "string" ? body.title.slice(0, 200) : "";
+  const notesHtml = typeof body.notesHtml === "string" ? body.notesHtml.slice(0, 200_000) : "";
 
   if (!EMAIL_RE.test(to)) {
     return NextResponse.json({ error: "A valid email address is required" }, { status: 400 });
@@ -37,12 +43,15 @@ export async function POST(req: NextRequest) {
   if (!title.trim()) {
     return NextResponse.json({ error: "title is required" }, { status: 400 });
   }
+  if (to.length > 254 || overLimit(`notes-to:${to.toLowerCase()}`, 1, 60 * 60_000)) {
+    return NextResponse.json({ error: "A notes email was just sent to that address. Please try again later." }, { status: 429 });
+  }
 
-  const series = typeof body.series === "string" ? body.series : "";
-  const passage = typeof body.passage === "string" ? body.passage : "";
-  const speaker = typeof body.speaker === "string" ? body.speaker : "";
-  const formattedDate = typeof body.formattedDate === "string" ? body.formattedDate : "";
-  const accentColor = typeof body.accentColor === "string" ? body.accentColor : undefined;
+  const series = typeof body.series === "string" ? body.series.slice(0, 200) : "";
+  const passage = typeof body.passage === "string" ? body.passage.slice(0, 200) : "";
+  const speaker = typeof body.speaker === "string" ? body.speaker.slice(0, 200) : "";
+  const formattedDate = typeof body.formattedDate === "string" ? body.formattedDate.slice(0, 200) : "";
+  const accentColor = typeof body.accentColor === "string" && /^#[0-9a-fA-F]{6}$/.test(body.accentColor) ? body.accentColor : undefined;
 
   const blocks = htmlToNotesBlocks(notesHtml);
   if (!notesBlocksHaveContent(blocks)) {

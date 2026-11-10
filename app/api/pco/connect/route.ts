@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseForm } from "@/lib/guard";
 import { registerNextStepInPco } from "@/lib/pco-next-step";
 import { sendMail } from "@/lib/mail";
 import { sendContactConfirmation } from "@/lib/contact-mail";
@@ -20,12 +21,9 @@ export async function POST(req: NextRequest) {
   const appId = process.env.PCO_APP_ID;
   const secret = process.env.PCO_SECRET;
 
-  let body: ConnectBody;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
-  }
+  const p = await parseForm(req, "connect", 5);
+  if (p.res) return p.res;
+  const body = p.body as unknown as ConnectBody;
 
   const { firstName, lastName, email, phone, howHeard, interests, wantsMembership, notes } = body;
 

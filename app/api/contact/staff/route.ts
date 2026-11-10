@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseForm } from "@/lib/guard";
 import { sendMail } from "@/lib/mail";
 import { sendContactConfirmation } from "@/lib/contact-mail";
 import { SPEAKERS, staffEmail } from "@/lib/speakers";
 import { buildContactNotificationHtml } from "@/lib/email-templates";
 
 export async function POST(req: NextRequest) {
-  const { staffName, name, email, message } = await req.json();
+  const p = await parseForm(req, "contact", 5);
+  if (p.res) return p.res;
+  const { staffName, name, email, message } = p.body as Record<string, any>;
 
   if (!staffName || !name?.trim() || !email?.trim() || !message?.trim()) {
     return NextResponse.json({ error: "Staff member, name, email, and message are required." }, { status: 400 });

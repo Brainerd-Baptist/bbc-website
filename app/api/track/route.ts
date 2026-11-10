@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { clientIp, overLimit } from "@/lib/guard";
 
 const SUPABASE_URL  = process.env.SUPABASE_URL!;
 const SUPABASE_KEY  = process.env.SUPABASE_ANON_KEY!;
 
 export async function POST(req: NextRequest) {
   try {
+    if (overLimit(`track:${clientIp(req)}`, 60, 10 * 60_000)) return NextResponse.json({ ok: true });
     const body = await req.json();
     const { slug, title, mediaType, event } = body;
+    if (typeof slug !== "string" || slug.length > 200 || (title != null && (typeof title !== "string" || title.length > 300))) {
+      return NextResponse.json({ error: "invalid value" }, { status: 400 });
+    }
 
     if (!slug || !mediaType || !event) {
       return NextResponse.json({ error: "missing fields" }, { status: 400 });

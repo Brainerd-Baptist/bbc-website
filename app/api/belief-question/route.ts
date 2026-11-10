@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { parseForm } from "@/lib/guard";
 
 const SYSTEM_PROMPT = `You are a warm, knowledgeable guide for Brainerd Baptist Church in Chattanooga, TN. You help people understand what BBC believes and why. Answer questions about theology, church practices, and what Brainerd Baptist believes — clearly and accessibly, without assuming the person has a church background.
 
@@ -25,7 +26,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "AI not configured" }, { status: 503 });
   }
 
-  const { question } = await req.json();
+  const p = await parseForm(req, "belief", 8, { longFields: { question: 1000 } });
+  if (p.res) return p.res;
+  const { question } = p.body as { question?: string };
   if (!question?.trim()) {
     return NextResponse.json({ error: "No question provided" }, { status: 400 });
   }
